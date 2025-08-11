@@ -125,7 +125,7 @@ export default function SellItem() {
       }
 
       setMessage(
-        `Item "${formData.title}" listed successfully with ${photoUrls.length} photos!`
+        `Thanks for listing! "${formData.title}" is now part of the circular economy.`
       );
 
       // Reset form
@@ -141,15 +141,65 @@ export default function SellItem() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-2xl mx-auto px-6">
-        <div className="bg-white rounded-xl shadow-sm p-8">
+        <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-light text-gray-900 mb-2">
-              Sell Your Item
+            <h1 className="text-3xl font-light text-gray-900 mb-2 font-display">
+              List an Item – Save Resources
             </h1>
             <p className="text-gray-600">
-              Welcome back, {user?.user_metadata?.username || user?.email}! List
-              your item for sale on Reloop
+              Welcome back, {user?.user_metadata?.username || user?.email}! Give
+              your clothes a second life and help reduce waste.
             </p>
+
+            {/* Progress Indicator */}
+            <div className="mt-6">
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+                    photos.length > 0
+                      ? "bg-brand-600 text-white"
+                      : "bg-gray-200 text-gray-500"
+                  }`}
+                >
+                  1
+                </div>
+                <div
+                  className={`w-12 h-0.5 transition-all duration-300 ${
+                    formData.title ? "bg-brand-600" : "bg-gray-200"
+                  }`}
+                ></div>
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+                    formData.title
+                      ? "bg-brand-600 text-white"
+                      : "bg-gray-200 text-gray-500"
+                  }`}
+                >
+                  2
+                </div>
+                <div
+                  className={`w-12 h-0.5 transition-all duration-300 ${
+                    formData.category && formData.price
+                      ? "bg-brand-600"
+                      : "bg-gray-200"
+                  }`}
+                ></div>
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+                    formData.category && formData.price
+                      ? "bg-brand-600 text-white"
+                      : "bg-gray-200 text-gray-500"
+                  }`}
+                >
+                  3
+                </div>
+              </div>
+              <div className="flex justify-between text-xs text-gray-500 max-w-xs mx-auto">
+                <span>Photos</span>
+                <span>Details</span>
+                <span>Pricing</span>
+              </div>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -160,7 +210,7 @@ export default function SellItem() {
               </label>
 
               {/* Upload Area */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+              <div className="border-2 border-dashed border-brand-300 rounded-xl p-6 text-center hover:border-brand-500 transition-colors">
                 <input
                   type="file"
                   accept="image/*"
@@ -208,16 +258,35 @@ export default function SellItem() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Item Title *
               </label>
-              <input
-                type="text"
-                required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                placeholder="e.g., Vintage Leather Jacket"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  required
+                  className="input-field pr-10"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  placeholder="e.g., Vintage Leather Jacket"
+                />
+                {formData.title && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <svg
+                      className="w-5 h-5 text-green-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div>
@@ -226,7 +295,7 @@ export default function SellItem() {
               </label>
               <select
                 required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
                 value={formData.category}
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
@@ -251,7 +320,7 @@ export default function SellItem() {
                 required
                 min="0"
                 step="0.01"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
                 value={formData.price}
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
@@ -266,7 +335,7 @@ export default function SellItem() {
               </label>
               <textarea
                 rows="4"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none"
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none resize-none"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -278,8 +347,8 @@ export default function SellItem() {
             {message && (
               <div
                 className={`p-3 rounded-lg text-sm ${
-                  message.includes("successfully")
-                    ? "bg-green-50 text-green-700 border border-green-200"
+                  message.includes("Thanks for listing")
+                    ? "bg-brand-50 text-brand-700 border border-brand-200"
                     : "bg-red-50 text-red-700 border border-red-200"
                 }`}
               >
@@ -290,9 +359,9 @@ export default function SellItem() {
             <button
               type="submit"
               disabled={uploading}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full brand-gradient text-white py-3 px-6 rounded-full transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {uploading ? "Uploading Photos..." : "List Item for Sale"}
+              {uploading ? "Uploading Photos..." : "List Item & Save CO₂"}
             </button>
           </form>
         </div>
