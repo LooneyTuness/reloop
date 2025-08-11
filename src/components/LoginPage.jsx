@@ -51,22 +51,22 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen hero-gradient flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <Link
             to="/"
             className="flex items-center justify-center space-x-3 group mb-8"
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-300 to-pink-300 rounded-full transition-transform duration-300 group-hover:scale-110"></div>
-            <span className="text-2xl font-light text-black transition-colors duration-300 group-hover:text-purple-600">
+            <div className="w-8 h-8 brand-gradient rounded-xl transition-transform duration-300 group-hover:scale-110"></div>
+            <span className="text-2xl font-light text-black transition-colors duration-300 group-hover:text-brand-600 font-display">
               Reloop
             </span>
           </Link>
-          <h2 className="text-3xl font-light text-gray-900 mb-2">
+          <h2 className="text-3xl font-light text-gray-900 mb-2 font-display">
             Welcome back
           </h2>
-          <p className="text-gray-600">Sign in to your account to continue</p>
+          <p className="text-gray-600">Sign in and keep fashion circular</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-lg p-8">
@@ -78,7 +78,7 @@ export default function LoginPage() {
               <input
                 type="email"
                 required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -94,7 +94,7 @@ export default function LoginPage() {
               <input
                 type="password"
                 required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 className={`p-3 rounded-lg text-sm ${
                   message.includes("Welcome") ||
                   message.includes("successfully")
-                    ? "bg-green-50 text-green-700 border border-green-200"
+                    ? "bg-brand-50 text-brand-700 border border-brand-200"
                     : "bg-red-50 text-red-700 border border-red-200"
                 }`}
               >
@@ -119,7 +119,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full brand-gradient text-white py-3 px-6 rounded-full transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </button>
@@ -130,7 +130,7 @@ export default function LoginPage() {
               Don't have an account?{" "}
               <Link
                 to="/"
-                className="text-purple-600 hover:text-purple-800 font-medium transition-colors"
+                className="text-brand-600 hover:text-brand-800 font-medium transition-colors"
               >
                 Sign up here
               </Link>
