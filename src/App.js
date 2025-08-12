@@ -9,6 +9,7 @@ import NotFound from "./components/NotFound";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import LoginPage from "./components/LoginPage";
+import Catalog from "./components/Catalog";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <SellItem />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "catalog",
+        element: (
+          <ProtectedRoute>
+            <Catalog />
           </ProtectedRoute>
         ),
       },

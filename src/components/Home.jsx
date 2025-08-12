@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Catalog from "./Catalog";
 
 export default function Home() {
   const [showWelcomeToast, setShowWelcomeToast] = useState(false);
@@ -138,19 +139,24 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <h1 className="heading-xl mb-8 animate-fade-in">
             <span className="inline-block transform hover:scale-105 transition-transform duration-500">
-              Save the Nature,
+              Buy & Sell Pre-Loved Fashion
             </span>
             <br />
             <span className="inline-block transform hover:scale-105 transition-transform duration-500 delay-100 text-gradient">
-              choose pre‑loved
+              in Minutes, Not Hours
             </span>
           </h1>
           <p
             className="body-lg text-gray-600 mb-12 max-w-2xl mx-auto animate-fade-in"
             style={{ animationDelay: "0.2s" }}
           >
-            Shop and sell second‑hand clothing to cut waste, save water, and
-            lower CO₂. Sustainable style that puts the planet first.
+            Skip the hassle of traditional resale. List items instantly,
+            discover unique pieces effortlessly, and make money from your
+            closet.
+            <span className="font-semibold text-gray-800">
+              {" "}
+              Start free — no credit card required.
+            </span>
           </p>
 
           {/* Enhanced CTA with search preview */}
@@ -158,7 +164,9 @@ export default function Home() {
             className="space-y-6 animate-fade-in"
             style={{ animationDelay: "0.4s" }}
           >
-            <button className="button-primary">Explore Eco Collection</button>
+            <button className="button-primary">
+              Start Selling & Shopping Free
+            </button>
 
             {/* Enhanced Quick Search Bar */}
             <div className="max-w-md mx-auto relative">
@@ -854,315 +862,288 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Enhanced Footer */}
-      <footer className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-brand-900 to-purple-900">
-        {/* Background Elements */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-accent-blue/30 to-accent-teal/30 rounded-full blur-xl animate-float"></div>
+      {/* Redesigned Footer - Optimized Layout */}
+      <footer className="relative overflow-hidden bg-gradient-to-br from-brand-50/50 via-white to-accent-blue/10">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-20 left-1/4 w-32 h-32 bg-gradient-to-br from-brand-100/40 to-accent-blue/20 rounded-full blur-2xl animate-float"></div>
           <div
-            className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br from-purple-400/30 to-pink-400/30 rounded-full blur-xl animate-float"
+            className="absolute bottom-20 right-1/4 w-40 h-40 bg-gradient-to-br from-accent-teal/20 to-green-200/30 rounded-full blur-3xl animate-float"
             style={{ animationDelay: "2s" }}
           ></div>
-          <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-gradient-to-br from-brand-300/20 to-accent-blue/20 rounded-full blur-lg animate-pulse-slow"></div>
+          <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-lg animate-pulse-slow"></div>
         </div>
 
-        <div className="relative z-10 py-16">
-          <div className="max-w-6xl mx-auto px-6">
-            {/* Top Section */}
-            <div className="grid lg:grid-cols-2 gap-12 mb-12">
-              {/* Brand & Mission */}
-              <div className="space-y-8">
-                <div className="group">
-                  <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-12 h-12 brand-gradient rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">
-                      <span className="text-white text-xl font-bold">R</span>
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-light text-white transition-colors duration-300 group-hover:text-gradient">
-                        Reloop
-                      </h3>
-                      <div className="text-xs text-gray-400 uppercase tracking-wider">
-                        Circular Fashion Platform
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-gray-300 leading-relaxed">
-                    We're not just another marketplace — we're the{" "}
-                    <span className="text-gradient font-semibold">
-                      movement
-                    </span>{" "}
-                    that's making sustainable fashion the new cool. Join 50k+
-                    eco warriors reshaping how the world thinks about style.
-                  </p>
-                </div>
+        <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
+          {/* Newsletter CTA - Prominent placement */}
+          <div className="text-center mb-16">
+            <div className="inline-block bg-gradient-to-br from-white to-brand-50/50 rounded-3xl p-8 border border-brand-200 shadow-xl max-w-md mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-br from-brand-500 to-accent-blue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-white text-2xl">📧</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Stay in the Loop
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Get sustainable fashion updates, early access to drops, and
+                eco-tips
+              </p>
+              <div className="space-y-3">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                />
+                <button className="w-full px-6 py-3 brand-gradient rounded-xl text-white font-semibold hover:scale-105 transition-transform duration-300 shadow-lg">
+                  Join 50k+ Eco Warriors
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-3">
+                No spam, just planet-friendly updates ✨
+              </p>
+            </div>
+          </div>
 
-                {/* Live Impact Stats */}
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center group">
-                    <div className="text-xl font-bold text-accent-teal mb-1 group-hover:scale-110 transition-transform duration-300">
-                      142.5k
-                    </div>
-                    <div className="text-xs text-gray-400 uppercase tracking-wide">
-                      kg CO₂ Saved
-                    </div>
-                  </div>
-                  <div className="text-center group">
-                    <div className="text-xl font-bold text-accent-blue mb-1 group-hover:scale-110 transition-transform duration-300">
-                      50k+
-                    </div>
-                    <div className="text-xs text-gray-400 uppercase tracking-wide">
-                      Community
-                    </div>
-                  </div>
-                  <div className="text-center group">
-                    <div className="text-xl font-bold text-green-400 mb-1 group-hover:scale-110 transition-transform duration-300">
-                      89%
-                    </div>
-                    <div className="text-xs text-gray-400 uppercase tracking-wide">
-                      Love Rate
-                    </div>
-                  </div>
+          {/* Main Footer Navigation */}
+          <div className="grid lg:grid-cols-5 md:grid-cols-3 gap-8 mb-12">
+            {/* Brand Section - Compact */}
+            <div className="lg:col-span-1 md:col-span-3">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 brand-gradient rounded-xl flex items-center justify-center shadow-md">
+                  <span className="text-white font-bold">R</span>
                 </div>
-
-                {/* Newsletter Signup */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
-                  <h4 className="text-white font-medium mb-2">
-                    Stay in the loop 🔄
-                  </h4>
-                  <p className="text-gray-300 text-sm mb-4">
-                    Get the latest drops, sustainability tips, and exclusive
-                    community perks.
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Reloop</h3>
+                  <p className="text-gray-500 text-xs uppercase tracking-wide">
+                    Circular Fashion Platform
                   </p>
-                  <div className="flex space-x-3">
-                    <input
-                      type="email"
-                      placeholder="your@email.com"
-                      className="flex-1 px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent-blue text-sm"
-                    />
-                    <button className="px-5 py-2.5 brand-gradient rounded-xl text-white font-medium hover:scale-105 transition-transform duration-300 text-sm">
-                      Join
-                    </button>
-                  </div>
                 </div>
               </div>
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                Making sustainable fashion{" "}
+                <span className="text-gradient font-medium">the new cool</span>
+              </p>
 
-              {/* Enhanced Navigation */}
-              <div className="grid grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="text-white font-medium mb-4 flex items-center">
-                      <span className="w-2 h-2 bg-accent-blue rounded-full mr-3 animate-pulse"></span>
-                      Discover
-                    </h4>
-                    <ul className="space-y-4">
-                      {[
-                        "Trending Now",
-                        "Vintage Finds",
-                        "Designer Steals",
-                        "Eco Essentials",
-                        "Local Drops",
-                      ].map((item, i) => (
-                        <li key={i}>
-                          <a
-                            href="#"
-                            className="text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-2 flex items-center group"
-                          >
-                            <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-accent-teal transition-colors duration-300"></span>
-                            {item}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h4 className="text-white font-medium mb-6 flex items-center">
-                      <span className="w-2 h-2 bg-accent-teal rounded-full mr-3 animate-pulse"></span>
-                      Impact
-                    </h4>
-                    <ul className="space-y-4">
-                      {[
-                        "Carbon Calculator",
-                        "Sustainability Report",
-                        "Community Stories",
-                        "Eco Education",
-                        "Brand Partnerships",
-                      ].map((item, i) => (
-                        <li key={i}>
-                          <a
-                            href="#"
-                            className="text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-2 flex items-center group"
-                          >
-                            <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-accent-blue transition-colors duration-300"></span>
-                            {item}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+              {/* Compact Stats */}
+              <div className="flex items-center space-x-4 text-xs">
+                <div className="text-center">
+                  <div className="font-bold text-accent-teal">142.5k</div>
+                  <div className="text-gray-500">CO₂ Saved</div>
                 </div>
-
-                <div className="space-y-8">
-                  <div>
-                    <h4 className="text-white font-medium mb-6 flex items-center">
-                      <span className="w-2 h-2 bg-purple-400 rounded-full mr-3 animate-pulse"></span>
-                      Community
-                    </h4>
-                    <ul className="space-y-4">
-                      {[
-                        "Join Discord",
-                        "Instagram",
-                        "TikTok",
-                        "Style Challenges",
-                        "Ambassador Program",
-                      ].map((item, i) => (
-                        <li key={i}>
-                          <a
-                            href="#"
-                            className="text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-2 flex items-center group"
-                          >
-                            <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-purple-400 transition-colors duration-300"></span>
-                            {item}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h4 className="text-white font-medium mb-6 flex items-center">
-                      <span className="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></span>
-                      Support
-                    </h4>
-                    <ul className="space-y-4">
-                      {[
-                        "Help Center",
-                        "Seller Guide",
-                        "Size Guide",
-                        "Returns",
-                        "Contact Us",
-                      ].map((item, i) => (
-                        <li key={i}>
-                          <a
-                            href="#"
-                            className="text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-2 flex items-center group"
-                          >
-                            <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-green-400 transition-colors duration-300"></span>
-                            {item}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                <div className="text-center">
+                  <div className="font-bold text-accent-blue">50k+</div>
+                  <div className="text-gray-500">Members</div>
+                </div>
+                <div className="text-center">
+                  <div className="font-bold text-green-500">89%</div>
+                  <div className="text-gray-500">Love Rate</div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Section */}
-            <div className="border-t border-white/20 pt-8">
-              <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
-                <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-8">
-                  <p className="text-gray-400 text-sm text-center lg:text-left">
-                    &copy; 2025 Reloop.{" "}
-                    <span className="text-gradient font-medium">
-                      Buy less, choose well, make it last.
-                    </span>
-                  </p>
-                  <div className="flex items-center space-x-6 text-xs text-gray-500">
-                    <a href="#" className="hover:text-white transition-colors">
-                      Privacy
+            {/* Shop Navigation */}
+            <div>
+              <h4 className="text-gray-900 font-semibold mb-4 text-lg">Shop</h4>
+              <ul className="space-y-3">
+                {[
+                  "Trending Now",
+                  "Vintage Finds",
+                  "Designer Steals",
+                  "Eco Essentials",
+                  "Local Drops",
+                ].map((link, i) => (
+                  <li key={i}>
+                    <a
+                      href="#"
+                      className="text-gray-600 hover:text-gray-900 transition-colors text-sm hover:underline decoration-brand-300 underline-offset-2"
+                    >
+                      {link}
                     </a>
-                    <a href="#" className="hover:text-white transition-colors">
-                      Terms
-                    </a>
-                    <a href="#" className="hover:text-white transition-colors">
-                      Cookies
-                    </a>
-                  </div>
-                </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-                {/* Social Links */}
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-400 text-sm mr-4">
-                    Follow the movement:
+            {/* Sell & Earn */}
+            <div>
+              <h4 className="text-gray-900 font-semibold mb-4 text-lg">
+                Sell & Earn
+              </h4>
+              <ul className="space-y-3">
+                {[
+                  "Start Selling",
+                  "Seller Guide",
+                  "Pricing Tips",
+                  "Success Stories",
+                  "Payout Info",
+                ].map((link, i) => (
+                  <li key={i}>
+                    <a
+                      href="#"
+                      className="text-gray-600 hover:text-gray-900 transition-colors text-sm hover:underline decoration-brand-300 underline-offset-2"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Community & Impact */}
+            <div>
+              <h4 className="text-gray-900 font-semibold mb-4 text-lg">
+                Community
+              </h4>
+              <ul className="space-y-3">
+                {[
+                  "Join Community",
+                  "Carbon Calculator",
+                  "Sustainability Report",
+                  "Eco Education",
+                  "Brand Partnerships",
+                ].map((link, i) => (
+                  <li key={i}>
+                    <a
+                      href="#"
+                      className="text-gray-600 hover:text-gray-900 transition-colors text-sm hover:underline decoration-brand-300 underline-offset-2"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Support */}
+            <div>
+              <h4 className="text-gray-900 font-semibold mb-4 text-lg">
+                Support
+              </h4>
+              <ul className="space-y-3">
+                {[
+                  "Help Center",
+                  "Size Guide",
+                  "Returns & Refunds",
+                  "Contact Us",
+                  "Safety Tips",
+                ].map((link, i) => (
+                  <li key={i}>
+                    <a
+                      href="#"
+                      className="text-gray-600 hover:text-gray-900 transition-colors text-sm hover:underline decoration-brand-300 underline-offset-2"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Section */}
+          <div className="border-t border-brand-200/60 pt-8">
+            <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
+              {/* Copyright & Legal */}
+              <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
+                <p className="text-gray-600 text-sm text-center sm:text-left">
+                  © 2025 Reloop.{" "}
+                  <span className="text-gradient font-medium">
+                    Buy less, choose well, make it last.
                   </span>
-                  <div className="flex space-x-3">
-                    {[
-                      {
-                        name: "Instagram",
-                        icon: (
-                          <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                          </svg>
-                        ),
-                        bgColor: "bg-pink-500/20 hover:bg-pink-500/30",
-                      },
-                      {
-                        name: "TikTok",
-                        icon: (
-                          <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M19.321 5.562a5.124 5.124 0 01-.443-.258 6.228 6.228 0 01-1.137-.966c-.849-.849-1.365-1.958-1.423-3.096h-3.59v14.555c0 1.41-1.135 2.545-2.545 2.545-1.41 0-2.545-1.135-2.545-2.545 0-1.41 1.135-2.545 2.545-2.545.294 0 .576.05.84.143V9.691c-.264-.036-.534-.054-.807-.054C6.59 9.637 3 13.227 3 17.753s3.59 8.116 8.116 8.116c4.526 0 8.116-3.59 8.116-8.116V11.32a9.626 9.626 0 005.768 1.905v-3.672c0-.018-.015-.033-.033-.033a6.251 6.251 0 01-5.646-3.958z" />
-                          </svg>
-                        ),
-                        bgColor: "bg-red-500/20 hover:bg-red-500/30",
-                      },
-                      {
-                        name: "Discord",
-                        icon: (
-                          <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
-                          </svg>
-                        ),
-                        bgColor: "bg-indigo-500/20 hover:bg-indigo-500/30",
-                      },
-                      {
-                        name: "Twitter",
-                        icon: (
-                          <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                          </svg>
-                        ),
-                        bgColor: "bg-blue-500/20 hover:bg-blue-500/30",
-                      },
-                    ].map((social, i) => (
-                      <a
-                        key={i}
-                        href="#"
-                        className={`w-10 h-10 ${social.bgColor} backdrop-blur-sm rounded-lg flex items-center justify-center text-white hover:scale-105 transition-all duration-300 border border-white/10`}
-                        title={social.name}
-                      >
-                        {social.icon}
-                      </a>
-                    ))}
-                  </div>
+                </p>
+                <div className="flex items-center space-x-6 text-sm text-gray-500">
+                  <a
+                    href="#"
+                    className="hover:text-gray-900 transition-colors hover:underline"
+                  >
+                    Privacy
+                  </a>
+                  <a
+                    href="#"
+                    className="hover:text-gray-900 transition-colors hover:underline"
+                  >
+                    Terms
+                  </a>
+                  <a
+                    href="#"
+                    className="hover:text-gray-900 transition-colors hover:underline"
+                  >
+                    Cookies
+                  </a>
+                </div>
+              </div>
+
+              {/* Social Links - Better spacing */}
+              <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <span className="text-gray-600 text-sm font-medium">
+                  Follow the movement:
+                </span>
+                <div className="flex space-x-3">
+                  {[
+                    {
+                      name: "Instagram",
+                      icon: (
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                      ),
+                    },
+                    {
+                      name: "TikTok",
+                      icon: (
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M19.321 5.562a5.124 5.124 0 01-.443-.258 6.228 6.228 0 01-1.137-.966c-.849-.849-1.365-1.958-1.423-3.096h-3.59v14.555c0 1.41-1.135 2.545-2.545 2.545-1.41 0-2.545-1.135-2.545-2.545 0-1.41 1.135-2.545 2.545-2.545.294 0 .576.05.84.143V9.691c-.264-.036-.534-.054-.807-.054C6.59 9.637 3 13.227 3 17.753s3.59 8.116 8.116 8.116c4.526 0 8.116-3.59 8.116-8.116V11.32a9.626 9.626 0 005.768 1.905v-3.672c0-.018-.015-.033-.033-.033a6.251 6.251 0 01-5.646-3.958z" />
+                        </svg>
+                      ),
+                    },
+                    {
+                      name: "Discord",
+                      icon: (
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+                        </svg>
+                      ),
+                    },
+                    {
+                      name: "Twitter",
+                      icon: (
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                        </svg>
+                      ),
+                    },
+                  ].map((social, i) => (
+                    <a
+                      key={i}
+                      href="#"
+                      className="w-9 h-9 bg-white/70 hover:bg-white/95 rounded-xl flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-300 border border-brand-200 hover:border-brand-300 shadow-sm hover:shadow-md hover:scale-110"
+                      title={social.name}
+                      aria-label={`Follow us on ${social.name}`}
+                    >
+                      {social.icon}
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Planet Love Section */}
-            <div className="text-center mt-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer border border-white/10">
-                <span className="text-xs text-gray-400">Made with</span>
-                <span className="text-sm text-green-400">💚</span>
-                <span className="text-xs text-gray-400">for the planet</span>
-              </div>
-            </div>
+            {/* Planet Love Badge */}
           </div>
         </div>
       </footer>
