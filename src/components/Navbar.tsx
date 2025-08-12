@@ -5,6 +5,7 @@ import React from "react";
 import LoginModal from "./LoginModal.jsx";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+import HeaderCatalog from "./HeaderCatalog.jsx";
 
 export default function Navbar() {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -85,6 +86,7 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center space-x-3">
+              <HeaderCatalog />
               {/* Icons */}
               <div className="flex items-center space-x-2">
                 <div className="relative">
@@ -195,24 +197,6 @@ export default function Navbar() {
                 <span className="text-accent-blue font-medium">89kg</span>
                 <span>CO₂ saved/hour</span>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-brand-100">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="flex items-center justify-center space-x-8 py-4 overflow-x-auto scrollbar-hide">
-              {categories.map((category) => (
-                <Link
-                  to={category.path}
-                  key={category.name}
-                  className="text-sm"
-                >
-                  <span className="font-sm text-gray-600 hover:text-brand-600">
-                    {category.name}
-                  </span>
-                </Link>
-              ))}
             </div>
           </div>
         </div>
