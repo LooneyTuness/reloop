@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function SellItem() {
   const [photos, setPhotos] = useState([]);
@@ -13,12 +14,13 @@ export default function SellItem() {
   });
   const [uploading, setUploading] = useState(false);
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   function handlePhotoSelect(e) {
     const files = Array.from(e.target.files);
 
     if (files.length + photos.length > 5) {
-      setMessage("You can only upload up to 5 photos");
+      setMessage(t("maxPhotos"));
       return;
     }
 
@@ -27,12 +29,12 @@ export default function SellItem() {
       const isValidSize = file.size <= 10 * 1024 * 1024;
 
       if (!isImage) {
-        setMessage("Only image files are allowed");
+        setMessage(t("onlyImages"));
         return false;
       }
 
       if (!isValidSize) {
-        setMessage("File size must be less than 5MB");
+        setMessage(t("fileTooLarge"));
         return false;
       }
 
@@ -92,11 +94,11 @@ export default function SellItem() {
     e.preventDefault();
 
     if (!formData.title || !formData.category || !formData.price) {
-      setMessage("Please fill in all fields");
+      setMessage(t("fillAllFields"));
       return;
     }
     if (photos.length === 0) {
-      setMessage("Please add at least one photo");
+      setMessage(t("addPhotos"));
       return;
     }
 
@@ -124,9 +126,7 @@ export default function SellItem() {
         throw new Error(`Database error: $ ${error.message}`);
       }
 
-      setMessage(
-        `Thanks for listing! "${formData.title}" is now part of the circular economy.`
-      );
+      setMessage(t("listingSuccess").replace("{title}", formData.title));
 
       // Reset form
       setFormData({ title: "", category: "", price: "", description: "" });
@@ -139,78 +139,78 @@ export default function SellItem() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-2xl mx-auto px-6">
-        <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-light text-gray-900 mb-2 font-display">
-              List an Item – Save Resources
+    <div className="min-h-screen bg-white py-12">
+      <div className="max-w-2xl mx-auto px-8">
+        <div className="bg-white border border-gray-200 p-8">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl font-light text-black mb-4">
+              {t("listItemTitle")}
             </h1>
-            <p className="text-gray-600">
-              Welcome back, {user?.user_metadata?.username || user?.email}! Give
-              your clothes a second life and help reduce waste.
+            <p className="text-gray-600 font-light">
+              {t("welcomeBack")}, {user?.user_metadata?.username || user?.email}
+              ! {t("listItemWelcome")}
             </p>
 
             {/* Progress Indicator */}
-            <div className="mt-6">
-              <div className="flex items-center justify-center space-x-2 mb-2">
+            <div className="mt-8">
+              <div className="flex items-center justify-center space-x-4 mb-4">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+                  className={`w-8 h-8 flex items-center justify-center text-xs font-light transition-all duration-300 ${
                     photos.length > 0
-                      ? "bg-brand-600 text-white"
+                      ? "bg-black text-white"
                       : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   1
                 </div>
                 <div
-                  className={`w-12 h-0.5 transition-all duration-300 ${
-                    formData.title ? "bg-brand-600" : "bg-gray-200"
+                  className={`w-12 h-px transition-all duration-300 ${
+                    formData.title ? "bg-black" : "bg-gray-200"
                   }`}
                 ></div>
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+                  className={`w-8 h-8 flex items-center justify-center text-xs font-light transition-all duration-300 ${
                     formData.title
-                      ? "bg-brand-600 text-white"
+                      ? "bg-black text-white"
                       : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   2
                 </div>
                 <div
-                  className={`w-12 h-0.5 transition-all duration-300 ${
+                  className={`w-12 h-px transition-all duration-300 ${
                     formData.category && formData.price
-                      ? "bg-brand-600"
+                      ? "bg-black"
                       : "bg-gray-200"
                   }`}
                 ></div>
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+                  className={`w-8 h-8 flex items-center justify-center text-xs font-light transition-all duration-300 ${
                     formData.category && formData.price
-                      ? "bg-brand-600 text-white"
+                      ? "bg-black text-white"
                       : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   3
                 </div>
               </div>
-              <div className="flex justify-between text-xs text-gray-500 max-w-xs mx-auto">
-                <span>Photos</span>
-                <span>Details</span>
-                <span>Pricing</span>
+              <div className="flex justify-between text-xs text-gray-500 max-w-xs mx-auto font-light">
+                <span>{t("steps.photos")}</span>
+                <span>{t("steps.details")}</span>
+                <span>{t("steps.pricing")}</span>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {/* Photo Upload Section */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Photos ({photos.length}/5)
+              <label className="block text-sm font-light text-gray-600 mb-4">
+                {t("uploadPhotos")} ({photos.length}/5)
               </label>
 
               {/* Upload Area */}
-              <div className="border-2 border-dashed border-brand-300 rounded-xl p-6 text-center hover:border-brand-500 transition-colors">
+              <div className="border-2 border-dashed border-gray-200 p-8 text-center hover:border-black transition-colors">
                 <input
                   type="file"
                   accept="image/*"
@@ -220,30 +220,29 @@ export default function SellItem() {
                   id="photo-upload"
                 />
                 <label htmlFor="photo-upload" className="cursor-pointer">
-                  <div className="text-gray-400 mb-2 text-3xl">📸</div>
-                  <p className="text-sm text-gray-600">
-                    Click to upload or drag and drop images
+                  <p className="text-sm text-gray-600 font-light">
+                    {t("clickToUpload")}
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    PNG, JPG up to 5MB each (max 5 photos)
+                  <p className="text-xs text-gray-400 mt-2 font-light">
+                    {t("maxPhotosInfo")}
                   </p>
                 </label>
               </div>
 
               {/* Photo Previews */}
               {photos.length > 0 && (
-                <div className="grid grid-cols-3 gap-4 mt-4">
+                <div className="grid grid-cols-3 gap-4 mt-6">
                   {photos.map((photo, index) => (
                     <div key={index} className="relative">
                       <img
                         src={photo.preview}
                         alt={`Preview ${index + 1}`}
-                        className="w-full h-24 object-cover rounded-lg border"
+                        className="w-full h-24 object-cover border border-gray-200"
                       />
                       <button
                         type="button"
                         onClick={() => removePhoto(index)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs hover:bg-red-600 transition-colors"
+                        className="absolute -top-2 -right-2 bg-black text-white w-6 h-6 text-xs hover:bg-gray-900 transition-colors"
                       >
                         ×
                       </button>
@@ -255,24 +254,24 @@ export default function SellItem() {
 
             {/* Item Details */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Item Title *
+              <label className="block text-sm font-light text-gray-600 mb-3">
+                {t("itemTitle")} {t("required")}
               </label>
               <div className="relative">
                 <input
                   type="text"
                   required
-                  className="input-field pr-10"
+                  className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all font-light"
                   value={formData.title}
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
-                  placeholder="e.g., Vintage Leather Jacket"
+                  placeholder={t("itemTitlePlaceholder")}
                 />
                 {formData.title && (
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                     <svg
-                      className="w-5 h-5 text-green-500"
+                      className="w-5 h-5 text-black"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -280,7 +279,7 @@ export default function SellItem() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
+                        strokeWidth={1.5}
                         d="M5 13l4 4L19 7"
                       />
                     </svg>
@@ -290,37 +289,37 @@ export default function SellItem() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category *
+              <label className="block text-sm font-light text-gray-600 mb-3">
+                {t("category")} {t("required")}
               </label>
               <select
                 required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all font-light"
                 value={formData.category}
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
                 }
               >
-                <option value="">Select a category</option>
-                <option value="clothing">Clothing</option>
-                <option value="bags">Bags</option>
-                <option value="shoes">Shoes</option>
-                <option value="watches">Watches</option>
-                <option value="home">Home</option>
-                <option value="books">Books</option>
+                <option value="">{t("selectCategory")}</option>
+                <option value="clothing">{t("categoryClothing")}</option>
+                <option value="bags">{t("categoryBags")}</option>
+                <option value="shoes">{t("categoryShoes")}</option>
+                <option value="watches">{t("categoryWatches")}</option>
+                <option value="home">{t("categoryHome")}</option>
+                <option value="books">{t("categoryBooks")}</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Price ($) *
+              <label className="block text-sm font-light text-gray-600 mb-3">
+                {t("price")} {t("required")}
               </label>
               <input
                 type="number"
                 required
                 min="0"
                 step="0.01"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all font-light"
                 value={formData.price}
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
@@ -330,25 +329,25 @@ export default function SellItem() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
+              <label className="block text-sm font-light text-gray-600 mb-3">
+                {t("description")}
               </label>
               <textarea
                 rows="4"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none resize-none"
+                className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none resize-none transition-all font-light"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                placeholder="Describe your item's condition, size, features..."
+                placeholder={t("descriptionPlaceholder")}
               />
             </div>
 
             {message && (
               <div
-                className={`p-3 rounded-lg text-sm ${
+                className={`p-4 text-sm font-light ${
                   message.includes("Thanks for listing")
-                    ? "bg-brand-50 text-brand-700 border border-brand-200"
+                    ? "bg-gray-50 text-black border border-gray-200"
                     : "bg-red-50 text-red-700 border border-red-200"
                 }`}
               >
@@ -359,9 +358,9 @@ export default function SellItem() {
             <button
               type="submit"
               disabled={uploading}
-              className="w-full brand-gradient text-white py-3 px-6 rounded-full transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-black text-white py-4 px-6 transition-all duration-300 font-light hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {uploading ? "Uploading Photos..." : "List Item & Save CO₂"}
+              {uploading ? t("uploadingPhotos") : t("listItemButton")}
             </button>
           </form>
         </div>
