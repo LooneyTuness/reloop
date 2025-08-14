@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
+import { useLanguage } from "../contexts/LanguageContext";
 import { Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -13,14 +14,18 @@ export default function Login() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
+  const { t, language } = useLanguage();
 
   if (user) {
     return <Navigate to="/" replace />;
   }
 
-  async function handleSignIn() {
+  async function handleSignIn(e) {
+    e.preventDefault();
+
     if (formData.email === "" || formData.password === "") {
-      setMessage("Please fill in all fields");
+      setMessage(t("fillAllFields"));
+      return;
     }
 
     setIsLoading(true);
@@ -36,74 +41,84 @@ export default function Login() {
       }
 
       if (data.user) {
-        setMessage("Welcome back!");
+        setMessage(t("welcomeBackUser"));
       }
     } catch (error) {
-      setMessage("An error occurred. Please try again.");
+      setMessage(t("errorOccurred"));
       console.error("Sign in error:", error);
     } finally {
       setIsLoading(false);
     }
   }
+
   return (
-    <div className="min-h-screen hero-gradient flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-white flex items-center justify-center py-16 px-4">
+      <div className="max-w-md w-full space-y-12">
+        {/* Header */}
         <div className="text-center">
           <Link
             to="/"
-            className="flex items-center justify-center space-x-3 group mb-8"
+            className="flex items-center justify-center space-x-4 group mb-12"
           >
-            <div className="w-8 h-8 brand-gradient rounded-xl transition-transform duration-300 group-hover:scale-110"></div>
-            <span className="text-2xl font-light text-black transition-colors duration-300 group-hover:text-brand-600 font-display">
-              Reloop
-            </span>
+            <div className="w-10 h-10 bg-black transition-transform duration-300 group-hover:scale-110"></div>
+            <div className="text-left">
+              <span className="text-xl font-light text-black transition-colors duration-300 group-hover:text-gray-600 block">
+                Reloop
+              </span>
+              <span className="text-xs text-gray-500 uppercase tracking-widest -mt-1 font-light">
+                {language === "mk" ? "Кружна Мода" : "Circular Fashion"}
+              </span>
+            </div>
           </Link>
-          <h2 className="text-3xl font-light text-gray-900 mb-2 font-display">
-            Welcome back
+
+          <h2 className="text-3xl font-light text-black mb-4 tracking-wide">
+            {t("loginTitle")}
           </h2>
-          <p className="text-gray-600">Sign in and keep fashion circular</p>
+          <p className="text-gray-600 font-light">{t("loginSubtitle")}</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <form onSubmit={handleSignIn} className="space-y-6">
+        {/* Form */}
+        <div className="bg-white border border-gray-200 p-8">
+          <form onSubmit={handleSignIn} className="space-y-8">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+              <label className="block text-sm font-light text-gray-700 mb-3">
+                {t("email")}
               </label>
               <input
                 type="email"
                 required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all font-light"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                placeholder="Enter your email"
+                placeholder={t("enterEmail")}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+              <label className="block text-sm font-light text-gray-700 mb-3">
+                {t("password")}
               </label>
               <input
                 type="password"
                 required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all font-light"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                placeholder="Enter your password"
+                placeholder={t("enterPassword")}
               />
             </div>
 
             {message && (
               <div
-                className={`p-3 rounded-lg text-sm ${
+                className={`p-4 text-sm font-light ${
                   message.includes("Welcome") ||
-                  message.includes("successfully")
-                    ? "bg-brand-50 text-brand-700 border border-brand-200"
+                  message.includes("successfully") ||
+                  message.includes("Добредојде")
+                    ? "bg-gray-50 text-black border border-gray-200"
                     : "bg-red-50 text-red-700 border border-red-200"
                 }`}
               >
@@ -114,20 +129,20 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full brand-gradient text-white py-3 px-6 rounded-full transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-black text-white py-4 px-6 font-light hover:bg-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Signing In..." : "Sign In"}
+              {isLoading ? t("signingIn") : t("signIn")}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-600 font-light">
+              {t("dontHaveAccount")}{" "}
               <Link
                 to="/"
-                className="text-brand-600 hover:text-brand-800 font-medium transition-colors"
+                className="text-black hover:text-gray-600 font-light transition-colors"
               >
-                Sign up here
+                {t("signUpHere")}
               </Link>
             </p>
           </div>
