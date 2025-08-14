@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   // If user is already logged in, redirect to home
   if (user) {
@@ -21,7 +23,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      setMessage("Please fill in all fields");
+      setMessage(t("fillAllFields"));
       return;
     }
 
@@ -39,11 +41,11 @@ export default function LoginPage() {
       }
 
       if (data.user) {
-        setMessage("Welcome back!");
+        setMessage(t("welcomeBackUser"));
         // Navigation will happen automatically due to auth state change
       }
     } catch (error) {
-      setMessage("An error occurred. Please try again.");
+      setMessage(t("errorOccurred"));
       console.error("Sign in error:", error);
     } finally {
       setIsLoading(false);
@@ -64,16 +66,16 @@ export default function LoginPage() {
             </span>
           </Link>
           <h2 className="text-3xl font-light text-gray-900 mb-2 font-display">
-            Welcome back
+            {t("loginTitle")}
           </h2>
-          <p className="text-gray-600">Sign in and keep fashion circular</p>
+          <p className="text-gray-600">{t("loginSubtitle")}</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-lg p-8">
           <form onSubmit={handleSignIn} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+                {t("email")}
               </label>
               <input
                 type="email"
@@ -83,13 +85,13 @@ export default function LoginPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                placeholder="Enter your email"
+                placeholder={t("enterEmail")}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+                {t("password")}
               </label>
               <input
                 type="password"
@@ -99,7 +101,7 @@ export default function LoginPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                placeholder="Enter your password"
+                placeholder={t("enterPassword")}
               />
             </div>
 
@@ -121,18 +123,18 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full brand-gradient text-white py-3 px-6 rounded-full transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Signing In..." : "Sign In"}
+              {isLoading ? t("signingIn") : t("signIn")}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
+              {t("dontHaveAccount")}{" "}
               <Link
                 to="/"
                 className="text-brand-600 hover:text-brand-800 font-medium transition-colors"
               >
-                Sign up here
+                {t("signUpHere")}
               </Link>
             </p>
           </div>
