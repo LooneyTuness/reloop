@@ -2,51 +2,22 @@
   "name": "reloop",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.14",
-    "@radix-ui/themes": "^3.2.1",
-    "@supabase/supabase-js": "^2.53.0",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "lucide-react": "^0.525.0",
-    "next": "^15.4.6",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "web-vitals": "^2.1.4"
-  },
+
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "jest"
+    "dev": "cd web && npm run dev",
+    "build": "cd web && npm run build",
+    "start": "cd web && npm run start",
+    "lint": "cd web && npm run lint",
+    "dev:server": "cd server && npm run start:dev",
+    "build:server": "cd server && npm run build",
+    "start:server": "cd server && npm run start:prod",
+    "install:all": "npm install && cd web && npm install && cd ../server && npm install"
   },
-  "eslintConfig": {
-    "extends": [
-      "next/core-web-vitals"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.21",
-    "eslint": "^9.33.0",
-    "eslint-config-next": "^15.4.6",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.0"
+  "workspaces": [
+    "web",
+    "server"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
