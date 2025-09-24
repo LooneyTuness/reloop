@@ -9,8 +9,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: [
-          "Plus Jakarta Sans",
+        sans: [
+          "Inter",
+          "var(--font-inter)",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -21,8 +22,9 @@ module.exports = {
           "Noto Sans",
           "sans-serif",
         ],
-        body: [
+        display: [
           "Inter",
+          "var(--font-inter)",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -36,21 +38,22 @@ module.exports = {
       },
       colors: {
         brand: {
-          DEFAULT: "#6366F1", // indigo-500 - more professional
-          50: "#EEF2FF",
-          100: "#E0E7FF",
-          200: "#C7D2FE",
-          300: "#A5B4FC",
-          400: "#818CF8",
-          500: "#6366F1",
-          600: "#4F46E5",
-          700: "#4338CA",
-          800: "#3730A3",
-          900: "#312E81",
+          DEFAULT: "#00C853", // Swish vibrant green
+          50: "#E8F8F0",
+          100: "#C8F0D8",
+          200: "#9FE4B8",
+          300: "#6ED498",
+          400: "#4ACA7C",
+          500: "#00C853",
+          600: "#00B248",
+          700: "#009A3E",
+          800: "#008234",
+          900: "#005A25",
         },
-        accent: {
-          blue: "#0EA5E9", // sky-500 - professional blue
-          teal: "#14B8A6", // teal-500 - sophisticated teal
+        swish: {
+          green: "#00C853",
+          light: "#4CAF50",
+          accent: "#8BC34A",
         },
       },
       boxShadow: {
@@ -99,8 +102,8 @@ module.exports = {
           "50%": { transform: "translateY(-10px)" },
         },
         glow: {
-          "0%": { boxShadow: "0 0 5px rgba(99, 102, 241, 0.2)" },
-          "100%": { boxShadow: "0 0 20px rgba(99, 102, 241, 0.4)" },
+          "0%": { boxShadow: "0 0 5px rgba(0, 200, 83, 0.2)" },
+          "100%": { boxShadow: "0 0 20px rgba(0, 200, 83, 0.4)" },
         },
         "heart-beat": {
           "0%": { transform: "scale(1)" },

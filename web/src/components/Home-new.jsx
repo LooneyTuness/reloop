@@ -6,37 +6,12 @@ import { useLanguage } from "../contexts/LanguageContext";
 import Image from "next/image";
 
 export default function Home() {
-  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
-
-  const trendingSearches =
-    language === "mk"
-      ? [
-          "Винтаж Левис 501",
-          "Шанел Класична Торба",
-          "Еколошки Патики",
-          "Артизански Накит",
-          "Рециклиран Деним",
-          "Дизајнерски Торби",
-          "Винтаж Фустани",
-          "Еколошки Спортска Облека",
-        ]
-      : [
-          "Vintage Levi's 501",
-          "Chanel Classic Flap",
-          "Sustainable Sneakers",
-          "Artisan Jewelry",
-          "Upcycled Denim",
-          "Designer Bags",
-          "Vintage Dresses",
-          "Eco-Friendly Activewear",
-        ];
 
   return (
     <div
@@ -66,38 +41,26 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Hero Section - Left Side Gradient */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center bg-white">
-        {/* Left Side Gradient Overlay */}
-        <div className="absolute inset-0 left-gradient-overlay pointer-events-none"></div>
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center justify-center">
+        <div className="max-w-7xl mx-auto px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
             <div
-              className={`space-y-8 lg:space-y-12 pt-8 lg:pt-16 transition-all duration-1000 ${
+              className={`space-y-12 transition-all duration-1000 ${
                 isLoaded
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10"
               }`}
             >
-              <div className="space-y-6 lg:space-y-8">
-                {/* Project Badge - Modern Glass Style */}
+              <div className="space-y-8">
+                {/* Project Badge */}
                 <div
-                  className="inline-flex items-center space-x-3 text-white px-6 py-3 rounded-2xl text-xs font-bold tracking-wider uppercase"
-                  style={{ backgroundColor: "#00C853" }}
+                  className="inline-flex items-center space-x-3 text-white px-6 py-3 rounded-full text-xs font-black tracking-wider uppercase"
+                  style={{
+                    backgroundColor: "#00C853",
+                  }}
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
                   <span>
                     {language === "mk"
                       ? "Second-Hand Fashion"
@@ -105,49 +68,64 @@ export default function Home() {
                   </span>
                 </div>
 
-                {/* Brand Typography - Modern Style */}
-                <div className="space-y-4 lg:space-y-6">
-                  <div className="space-y-3">
-                    <h1 className="text-4xl lg:text-6xl xl:text-7xl font-black text-gray-900 tracking-tight leading-[0.9]">
-                      {language === "mk"
-                        ? "SECOND-HAND FASHION APP"
-                        : "SECOND-HAND FASHION APP"}
-                    </h1>
+                {/* Brand Typography */}
+                <div className="space-y-4">
+                  <h1
+                    className="text-7xl lg:text-8xl font-black leading-none tracking-tighter"
+                    style={{
+                      fontWeight: "900",
+                      transform: "scaleY(1.1)",
+                      lineHeight: "1.0",
+                      color: "#00C853",
+                    }}
+                  >
+                    Swish
+                  </h1>
+                  <div className="space-y-2">
+                    <h2
+                      className="text-2xl lg:text-3xl font-black text-gray-900 uppercase tracking-wide"
+                      style={{}}
+                    >
+                      {language === "mk" ? "Кружна мода." : "Circular fashion."}
+                    </h2>
                   </div>
                 </div>
 
-                {/* Description - Enhanced Style */}
+                {/* Brand Messages */}
+                <div
+                  className="flex items-center justify-between text-gray-600 text-sm font-black uppercase tracking-widest"
+                  style={{}}
+                >
+                  <span>NEW? NOT REALLY</span>
+                  <span>STILL GOT IT</span>
+                </div>
+
+                {/* Description */}
                 <div className="space-y-6">
-                  <p className="text-lg lg:text-xl xl:text-2xl text-gray-600 leading-relaxed max-w-2xl font-medium">
+                  <p
+                    className="text-lg text-gray-700 leading-relaxed max-w-lg font-semibold"
+                    style={{}}
+                  >
                     {language === "mk"
                       ? "Модерна платформа за купување и продавање на второработени модни парчиња. Фокусирана на одржливост и стил."
                       : "Modern platform for buying and selling second-hand fashion pieces. Focused on sustainability and style."}
                   </p>
-                  <div className="flex flex-wrap gap-3">
-                    <span className="glass-card px-4 py-2 text-sm font-semibold text-gray-700 rounded-xl">
-                      ♻️ Одржливо
-                    </span>
-                    <span className="glass-card px-4 py-2 text-sm font-semibold text-gray-700 rounded-xl">
-                      ✨ Курирано
-                    </span>
-                    <span className="glass-card px-4 py-2 text-sm font-semibold text-gray-700 rounded-xl">
-                      🌱 Еколошко
-                    </span>
-                  </div>
                 </div>
               </div>
 
-              {/* CTA Buttons - Modern Glass Style */}
-              <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
                 <button
-                  className="text-white px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold tracking-wide transition-all duration-300 transform hover:scale-105 hover:rotate-1 flex items-center justify-center space-x-3 text-base lg:text-lg group"
-                  style={{ backgroundColor: "#00C853" }}
+                  className="text-white px-8 py-4 rounded-full font-black tracking-wide transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3 text-sm"
+                  style={{
+                    backgroundColor: "#00C853",
+                  }}
                 >
                   <span>
                     {language === "mk" ? "Започни Купување" : "Start Shopping"}
                   </span>
                   <svg
-                    className="w-5 h-5 transition-transform group-hover:translate-x-1"
+                    className="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -161,14 +139,17 @@ export default function Home() {
                   </svg>
                 </button>
                 <button
-                  className="glass-card border-2 px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold tracking-wide transition-all duration-300 transform hover:scale-105 hover:-rotate-1 flex items-center justify-center space-x-3 text-base lg:text-lg hover:bg-white/40 group"
-                  style={{ borderColor: "#00C853", color: "#00C853" }}
+                  className="border-2 px-8 py-4 rounded-full font-black tracking-wide transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3 text-sm"
+                  style={{
+                    borderColor: "#00C853",
+                    color: "#00C853",
+                  }}
                 >
                   <span>
                     {language === "mk" ? "Продај Парчиња" : "Sell Items"}
                   </span>
                   <svg
-                    className="w-5 h-5 transition-transform group-hover:rotate-45"
+                    className="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -185,14 +166,20 @@ export default function Home() {
             </div>
 
             {/* Right Visual - Mobile Mockup Image */}
-            <div className="relative group flex justify-center">
-              <div className="relative z-10 transform transition-all duration-700 hover:scale-105 hover:rotate-2">
+            <div
+              className={`relative transition-all duration-1000 delay-300 ${
+                isLoaded
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-10"
+              }`}
+            >
+              <div className="relative group flex justify-center">
                 <Image
                   src="/mobile-mockup.png"
                   alt="Swish Mobile App Mockup"
-                  width={750}
+                  width={400}
                   height={640}
-                  className="object-contain"
+                  className="object-contain shadow-2xl"
                   priority
                 />
               </div>
