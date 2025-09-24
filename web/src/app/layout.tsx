@@ -9,12 +9,13 @@ import LanguageProvider from "@/contexts/LanguageContext";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "Reloop - Buy & Sell Pre-Loved Fashion in Minutes | Free to Start",
+  title: "Swish - Second-hand. First rate. | Buy & Sell Pre-Loved Fashion",
   description:
-    "Reloop: Save the Nature. Buy and sell pre-loved clothing to reduce waste, save water, and cut CO₂. Sustainable, stylish, second‑hand fashion.",
+    "Swish: Second-hand. First rate. Buy and sell pre-loved clothing with style. Sustainable fashion that's NEW? NOT REALLY but STILL GOT IT.",
 };
 
 export default function RootLayout({
@@ -26,17 +27,9 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#8B5CF6" />
+        <meta name="theme-color" content="#00C853" />
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="manifest" href="/manifest.json" />
-
-        {/* Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap"
-          rel="stylesheet"
-        />
       </head>
       <body className={`${inter.variable} antialiased`}>
         <LanguageProvider>

@@ -1,3 +1,34 @@
+export function SwishLogo({ className, ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      className={className}
+      {...props}
+    >
+      {/* Sunburst/Star Logo for Swish */}
+      <g fill="#00C853">
+        {/* Central circle */}
+        <circle cx="12" cy="12" r="3" />
+
+        {/* Primary rays */}
+        <path d="M12 1 L13 6 L12 9 L11 6 Z" />
+        <path d="M23 12 L18 11 L15 12 L18 13 Z" />
+        <path d="M12 23 L11 18 L12 15 L13 18 Z" />
+        <path d="M1 12 L6 13 L9 12 L6 11 Z" />
+
+        {/* Secondary rays (diagonal) */}
+        <path d="M19.07 4.93 L15.95 7.05 L13.83 5.17 L16.76 2.24 Z" />
+        <path d="M19.07 19.07 L16.95 15.95 L18.83 13.83 L21.76 16.76 Z" />
+        <path d="M4.93 19.07 L8.05 15.95 L10.17 18.83 L7.24 21.76 Z" />
+        <path d="M4.93 4.93 L7.05 8.05 L5.17 10.17 L2.24 7.24 Z" />
+      </g>
+    </svg>
+  );
+}
+
 export function GoogleIcon() {
   return (
     <svg

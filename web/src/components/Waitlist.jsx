@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import Image from "next/image";
 
 export default function Waitlist() {
   const [email, setEmail] = useState("");
@@ -104,23 +107,35 @@ export default function Waitlist() {
           <div className="text-center mb-16">
             {/* Logo */}
             <div className="inline-flex items-center space-x-4 mb-10">
-              <div className="w-20 h-20 brand-gradient rounded-3xl flex items-center justify-center shadow-2xl">
-                <span className="text-white text-3xl font-bold">R</span>
+              <div className="w-20 h-20 flex items-center justify-center shadow-2xl">
+                <Image
+                  src="/swish-logo.png"
+                  alt="Swish Logo"
+                  width={80}
+                  height={80}
+                  className="object-contain"
+                />
               </div>
               <div className="text-left">
-                <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
-                  Reloop
+                <h1 className="text-4xl font-black text-gray-900 tracking-tight">
+                  Swish
                 </h1>
-                <p className="text-base text-gray-500 uppercase tracking-widest font-semibold">
-                  Circular Fashion
+                <p className="text-base text-gray-500 uppercase tracking-widest font-black">
+                  Second-hand. First rate.
                 </p>
               </div>
             </div>
 
             {/* Badge */}
-            <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-full mb-10 shadow-xl">
+            <div
+              className="inline-flex items-center space-x-3 text-white px-8 py-4 rounded-full mb-10 shadow-xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, #00C853 0%, #4CAF50 50%, #8BC34A 100%)",
+              }}
+            >
               <span className="w-3 h-3 bg-white rounded-full animate-pulse"></span>
-              <span className="text-lg font-bold">The Solution is Here</span>
+              <span className="text-lg font-black">Кружна мода.</span>
             </div>
 
             {/* Main Headline */}
