@@ -121,10 +121,11 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    font-family: 'Inter', var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(135deg, #fafafa 0%, #f8fafc 50%, #f1f5f9 100%);
   }
   .container {
     @apply mx-auto px-4;
@@ -196,20 +197,94 @@
   }
 }
 
-/* Reloop Custom Styles */
+/* Modern Gen Z Swish Styles */
 @layer components {
   .glass-header {
-    @apply bg-white/70 backdrop-blur-md border-b border-gray-200 shadow-lg;
+    @apply bg-white/70 backdrop-blur-xl border-0 shadow-sm;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
   }
 
   .brand-gradient {
-    background-image: linear-gradient(135deg, #6366F1 0%, #0EA5E9 50%, #14B8A6 100%);
+    background: linear-gradient(135deg, #00C853 0%, #4CAF50 30%, #66BB6A 60%, #81C784 100%);
+    box-shadow: 0 8px 32px rgba(0, 200, 83, 0.3);
   }
 
   .hero-gradient {
-    background: radial-gradient(1200px 600px at 10% -10%, rgba(99,102,241,.08), transparent 60%),
-                radial-gradient(800px 400px at 110% 10%, rgba(14,165,233,.06), transparent 50%),
-                radial-gradient(1000px 500px at 50% 120%, rgba(20,184,166,.05), transparent 60%),
-                linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 100%);
+    background: 
+      radial-gradient(1400px 700px at 10% -10%, rgba(0,200,83,.12), transparent 60%),
+      radial-gradient(900px 450px at 110% 10%, rgba(76,175,80,.08), transparent 50%),
+      radial-gradient(1200px 600px at 50% 120%, rgba(139,195,74,.06), transparent 60%),
+      linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%);
   }
+
+  /* Left side gradient options - choose one */
+  .left-gradient-overlay {
+    background: linear-gradient(
+      90deg,
+      rgba(0, 200, 83, 0.08) 0%,
+      rgba(76, 175, 80, 0.05) 30%,
+      rgba(46, 125, 50, 0.03) 50%,
+      transparent 70%,
+      transparent 100%
+    );
+  }
+
+  /* Alternative 1: Softer green with darker accent */
+  .left-gradient-dark {
+    background: linear-gradient(
+      90deg,
+      rgba(27, 94, 32, 0.06) 0%,
+      rgba(0, 200, 83, 0.04) 25%,
+      rgba(76, 175, 80, 0.02) 45%,
+      transparent 65%,
+      transparent 100%
+    );
+  }
+
+  /* Alternative 2: Multi-tone green palette */
+  .left-gradient-multi {
+    background: linear-gradient(
+      90deg,
+      rgba(46, 125, 50, 0.08) 0%,
+      rgba(0, 200, 83, 0.06) 20%,
+      rgba(76, 175, 80, 0.04) 35%,
+      rgba(129, 199, 132, 0.02) 50%,
+      transparent 70%,
+      transparent 100%
+    );
+  }
+
+  /* Alternative 3: Subtle with gray blend */
+  .left-gradient-subtle {
+    background: linear-gradient(
+      90deg,
+      rgba(0, 200, 83, 0.04) 0%,
+      rgba(96, 125, 139, 0.02) 30%,
+      rgba(158, 158, 158, 0.01) 50%,
+      transparent 70%,
+      transparent 100%
+    );
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  }
+
+  .neo-morphism {
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    box-shadow: 20px 20px 60px #d1d1d1, -20px -20px 60px #ffffff;
+  }
+
+  .glow-green {
+    box-shadow: 0 0 20px rgba(0, 200, 83, 0.5), 0 0 40px rgba(0, 200, 83, 0.3), 0 0 80px rgba(0, 200, 83, 0.1);
+  }
+
+
 }
