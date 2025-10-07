@@ -1,255 +1,157 @@
 "use client";
-
+import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Products from "./Products";
 import { useLanguage } from "../contexts/LanguageContext";
-import Image from "next/image";
 
 export default function Home() {
-  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
+  const router = useRouter();
+  const { t } = useLanguage();
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+  const [items, setItems] = useState([]);
 
-  const trendingSearches =
-    language === "mk"
-      ? [
-          "Винтаж Левис 501",
-          "Шанел Класична Торба",
-          "Еколошки Патики",
-          "Артизански Накит",
-          "Рециклиран Деним",
-          "Дизајнерски Торби",
-          "Винтаж Фустани",
-          "Еколошки Спортска Облека",
-        ]
-      : [
-          "Vintage Levi's 501",
-          "Chanel Classic Flap",
-          "Sustainable Sneakers",
-          "Artisan Jewelry",
-          "Upcycled Denim",
-          "Designer Bags",
-          "Vintage Dresses",
-          "Eco-Friendly Activewear",
-        ];
+  useEffect(() => {
+    const fetchItems = async () => {
+      const { data, error } = await supabase
+        .from("items")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error) setItems(data || []);
+    };
+    fetchItems();
+  }, []);
 
   return (
     <div
-      className="min-h-screen bg-white relative overflow-hidden"
+      className="min-h-screen relative "
       style={{ fontFamily: "DM Sans, system-ui, -apple-system, sans-serif" }}
     >
-      {/* Floating Action Button */}
-      <div className="group">
-        <button
-          onClick={() => (window.location.href = "/sell")}
-          className="fixed bottom-8 right-8 w-14 h-14 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-105 z-50"
-          style={{ backgroundColor: "#00C853" }}
+      {/* Hero Section */}
+      <section className="relative w-full min-h-[800px] hero-gradient hero-overlap">
+        {/* Background video */}
+        <video
+          src="/images/video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        />
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/50 z-10"></div>
+
+        {/* Content */}
+        <div
+          className="relative max-w-7xl mx-auto px-6 lg:px-12 py-40 flex flex-col lg:flex-row items-center gap-12 lg:gap-16 z-20"
+          style={{ marginTop: "10px", marginBottom: "70px" }}
         >
-          <svg
-            className="w-6 h-6 mx-auto"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-        </button>
-      </div>
-
-      {/* Hero Section - Left Side Gradient */}
-      <section className="relative min-h-screen flex items-center justify-center bg-white">
-        {/* Left Side Gradient Overlay */}
-        <div className="absolute inset-0 left-gradient-overlay pointer-events-none"></div>
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center justify-center">
-            {/* Left Content */}
-            <div
-              className={`space-y-8 lg:space-y-12 pt-8 lg:pt-16 transition-all duration-1000 ${
-                isLoaded
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
-            >
-              <div className="space-y-6 lg:space-y-8">
-                {/* Project Badge - Modern Glass Style */}
-                <div
-                  className="inline-flex items-center space-x-3 text-white px-6 py-3 rounded-2xl text-xs font-bold tracking-wider uppercase"
-                  style={{ backgroundColor: "#00C853" }}
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>
-                    {language === "mk"
-                      ? "Second-Hand Fashion"
-                      : "Second-Hand Fashion"}
-                  </span>
-                </div>
-
-                {/* Brand Typography - Modern Style */}
-                <div className="space-y-4 lg:space-y-6">
-                  <div className="space-y-3">
-                    <h1 className="text-4xl lg:text-6xl xl:text-7xl font-black text-gray-900 tracking-tight leading-[0.9]">
-                      {language === "mk"
-                        ? "SECOND-HAND FASHION APP"
-                        : "SECOND-HAND FASHION APP"}
-                    </h1>
-                  </div>
-                </div>
-
-                {/* Description - Enhanced Style */}
-                <div className="space-y-6">
-                  <p className="text-lg lg:text-xl xl:text-2xl text-gray-600 leading-relaxed max-w-2xl font-medium">
-                    {language === "mk"
-                      ? "Модерна платформа за купување и продавање на второработени модни парчиња. Фокусирана на одржливост и стил."
-                      : "Modern platform for buying and selling second-hand fashion pieces. Focused on sustainability and style."}
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <span className="glass-card px-4 py-2 text-sm font-semibold text-gray-700 rounded-xl">
-                      ♻️ Одржливо
-                    </span>
-                    <span className="glass-card px-4 py-2 text-sm font-semibold text-gray-700 rounded-xl">
-                      ✨ Курирано
-                    </span>
-                    <span className="glass-card px-4 py-2 text-sm font-semibold text-gray-700 rounded-xl">
-                      🌱 Еколошко
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Buttons - Modern Glass Style */}
-              <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
-                <button
-                  className="text-white px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold tracking-wide transition-all duration-300 transform hover:scale-105 hover:rotate-1 flex items-center justify-center space-x-3 text-base lg:text-lg group"
-                  style={{ backgroundColor: "#00C853" }}
-                >
-                  <span>
-                    {language === "mk" ? "Започни Купување" : "Start Shopping"}
-                  </span>
-                  <svg
-                    className="w-5 h-5 transition-transform group-hover:translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </button>
-                <button
-                  className="glass-card border-2 px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold tracking-wide transition-all duration-300 transform hover:scale-105 hover:-rotate-1 flex items-center justify-center space-x-3 text-base lg:text-lg hover:bg-white/40 group"
-                  style={{ borderColor: "#00C853", color: "#00C853" }}
-                >
-                  <span>
-                    {language === "mk" ? "Продај Парчиња" : "Sell Items"}
-                  </span>
-                  <svg
-                    className="w-5 h-5 transition-transform group-hover:rotate-45"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                </button>
-              </div>
+          {/* Left: text/buttons */}
+          <div className="flex-1 space-y-6 text-center lg:text-left">
+            <div className="hero-band text-sm text-white/90">
+              Новите парчиња стигнаа • Избрани со љубов
             </div>
-
-            {/* Right Visual - Mobile Mockup Image */}
-            <div className="relative group flex justify-center">
-              <div className="relative z-10 transform transition-all duration-700 hover:scale-105 hover:rotate-2">
-                <Image
-                  src="/mobile-mockup.png"
-                  alt="Swish Mobile App Mockup"
-                  width={750}
-                  height={640}
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Products Section - Swish Style */}
-      <section className="py-24 bg-white relative">
-        <div className="max-w-7xl mx-auto px-8 relative z-10">
-          {/* Section Header */}
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center space-x-3 bg-gray-50 px-6 py-3 mb-8">
-              <span
-                className="text-sm font-bold uppercase tracking-widest text-gray-600"
-                style={{}}
-              >
-                {language === "mk"
-                  ? "Пре-сакана Колекција"
-                  : "Pre-Loved Collection"}
-              </span>
-            </div>
-
-            <h2
-              className="text-4xl lg:text-6xl font-black text-black mb-6 tracking-wide"
-              style={{}}
-            >
-              <span className="font-black">
-                {language === "mk" ? "Откриј" : "Discover"}
-              </span>{" "}
-              <span className="font-black">
-                {language === "mk" ? "Уникатни Парчиња" : "Unique Pieces"}
-              </span>
-            </h2>
-
-            <p
-              className="text-lg text-gray-600 max-w-3xl mx-auto font-semibold leading-relaxed"
-              style={{}}
-            >
+            <h1 className="mt-2 text-6xl lg:text-7xl font-extrabold text-white leading-tight">
               {language === "mk"
-                ? "Курирана мода што заштедува ресурси и намалува отпад."
-                : "Curated fashion that saves resources and reduces waste."}{" "}
-              <span className="text-black font-black">
-                {language === "mk"
-                  ? "Секое парче раскажува приказна за одржливост."
-                  : "Every piece tells a story of sustainability."}
-              </span>
+                ? "Втора рака. Прв избор."
+                : "Second-hand. First Pick."}
+            </h1>
+            <p className="text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 font-medium text-white/90 leading-relaxed">
+              {language === "mk"
+                ? "Зошто да платиш повеќе? Зошто да загадиш? Избери стил што вреди - без компромис."
+                : "Why pay more? Why pollute? Choose a style that's worth it - without compromise."}
             </p>
 
-            {/* Decorative line */}
-            <div className="w-16 h-px bg-gray-300 mx-auto mt-8"></div>
-          </div>
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 mt-6 justify-center lg:justify-start">
+              <Link
+                href="/products"
+                className="px-8 py-4 rounded-2xl font-bold tracking-wide bg-primary text-primary-foreground text-center transform transition-transform duration-200 hover:scale-[1.03] hero-cta-primary"
+              >
+                {language === "mk" ? "Започни купување" : "Start Shopping"}
+              </Link>
+              <Link
+                href="/sell"
+                className="backdrop-blur-sm bg-white/70 border-1 border-white text-black px-8 py-4 rounded-2xl font-bold tracking-wide text-center transition-colors duration-200 hover:bg-primary hover:text-primary-foreground hero-cta-secondary"
+              >
+                {language === "mk"
+                  ? "Додади ја својата приказна"
+                  : "Add Your Story"}
+              </Link>
+            </div>
 
-          <Products />
+            {/* Trust strip */}
+            <div className="mt-6 text-sm text-gray-700 flex flex-wrap justify-center lg:justify-start items-center gap-3">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-gray-200 backdrop-blur">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M12 1.75a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V2.5A.75.75 0 0112 1.75zM4.72 4.72a.75.75 0 011.06 0l1.06 1.06a.75.75 0 11-1.06 1.06L4.72 5.78a.75.75 0 010-1.06zM1.75 12a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H2.5A.75.75 0 011.75 12zm17.03-7.28a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 11-1.06-1.06l1.06-1.06zM12 18.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V19a.75.75 0 01.75-.75zM18.22 18.22a.75.75 0 011.06 0l1.06 1.06a.75.75 0 11-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zM18.25 12a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H19a.75.75 0 01-.75-.75z" />
+                </svg>
+                {language === "mk" ? "Безбедни плаќања" : "Secure Payments"}
+              </span>
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-gray-200 backdrop-blur">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1 14l-4-4 1.5-1.5L11 12l5.5-5.5L18 8l-7 8z" />
+                </svg>
+                {language === "mk" ? "Проверени продавачи" : "Verified Sellers"}
+              </span>
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-gray-200 backdrop-blur">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M3 7h13a2 2 0 012 2v7h-1a3 3 0 11-6 0H9a3 3 0 11-6 0H2V9a2 2 0 011-2zm15 2h2.5a1.5 1.5 0 011.5 1.5V15h-4V9z" />
+                </svg>
+                {language === "mk" ? "Брза достава" : "Fast Delivery"}
+              </span>
+            </div>
+          </div>
         </div>
       </section>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 section-separator">
+        <span className="line" />
+      </div>
+
+      {/* Products Section */}
+      <section className="py-1">
+        <div className="max-w-7xl mx-auto px-6 content-surface">
+          <div className="text-center mb-10"></div>
+          <Products limit={4} showViewAllTile />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 py-12 ">
+        <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row items-right md:items-start justify-between gap-6">
+          <div>
+            <div className="text-xl font-black text-black">vtoraraka.mk</div>
+            <p className="text-sm text-gray-600 mt-2 max-w-sm italic">
+              {language === "mk"
+                ? "Пазарете свесно. Одберете стил кој трае."
+                : "Shop consciously. Choose style that lasts."}
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
