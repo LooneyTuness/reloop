@@ -2,7 +2,6 @@
   "name": "reloop",
   "version": "0.1.0",
   "private": true,
-
   "scripts": {
     "dev": "cd web && npm run dev",
     "build": "cd web && npm run build",
@@ -13,10 +12,6 @@
     "start:server": "cd server && npm run start:prod",
     "install:all": "npm install && cd web && npm install && cd ../server && npm install"
   },
-  "workspaces": [
-    "web",
-    "server"
-  ],
   "engines": {
     "node": ">=18.0.0"
   }
