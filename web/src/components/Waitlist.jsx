@@ -110,7 +110,7 @@ export default function Waitlist() {
               <div className="w-20 h-20 flex items-center justify-center shadow-2xl">
                 <Image
                   src="/swish-logo.png"
-                  alt="Swish Logo"
+                  alt="vtoraraka Logo"
                   width={80}
                   height={80}
                   className="object-contain"
@@ -118,7 +118,7 @@ export default function Waitlist() {
               </div>
               <div className="text-left">
                 <h1 className="text-4xl font-black text-gray-900 tracking-tight">
-                  Swish
+                  vtoraraka
                 </h1>
                 <p className="text-base text-gray-500 uppercase tracking-widest font-black">
                   Second-hand. First rate.
@@ -342,7 +342,7 @@ function WaitlistSuccess() {
             </h2>
             <p className="text-xl text-gray-600 leading-relaxed">
               Welcome to the sustainable fashion revolution! We'll notify you as
-              soon as Reloop launches.
+              soon as vtoraraka launches.
             </p>
           </div>
 

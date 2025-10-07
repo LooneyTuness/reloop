@@ -13,9 +13,9 @@ const translations = {
     saveNature: "Зачувај ја природата: Одбери претходно сакано",
 
     // Products
-    preLoved: "Парчиња со приказна кои штедат ресурси и го намалуваат отпадот",
-    viewAll: "Види сè",
     quickView: "Брз преглед",
+    discoverProducts: "Откриј парчиња",
+    viewAll: "Види ги сите",
 
     // Home & Landing
     heroTitle: "Купувај и продавај претходно сакана мода",
@@ -116,9 +116,9 @@ const translations = {
     saveNature: "Save Nature: Choose Pre-Loved",
 
     // Products
-    preLoved: "Story pieces that save resources and reduce waste",
-    viewAll: "View All",
     quickView: "Quick View",
+    discoverProducts: "Discover the pieces",
+    viewAll: "View all",
 
     // Home & Landing
     heroTitle: "Buy and sell pre-loved fashion",

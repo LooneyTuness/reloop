@@ -1,10 +1,14 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import Catalog from "./Catalog";
+import Link from "next/link";
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 
 export default function About() {
   const [showWelcomeToast, setShowWelcomeToast] = useState(false);
   const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Show welcome toast after a short delay
@@ -27,11 +31,11 @@ export default function About() {
               </div>
               <div className="flex-1">
                 <h4 className="text-sm font-medium text-gray-900 mb-1">
-                  Welcome to Reloop!
+                  Добредојде на vtoraraka!
                 </h4>
                 <p className="text-xs text-gray-600">
-                  Join 50k+ eco-warriors saving the planet through sustainable
-                  fashion.
+                  Придружи се на 50k+ еко-борци кои постојано ја спасуваат
+                  планетата преку одржлива мода.
                 </p>
               </div>
               <button
@@ -78,8 +82,10 @@ export default function About() {
           </svg>
         </button>
         <div className="fixed bottom-20 right-4 bg-gray-900 text-white px-3 py-2 rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap transform translate-y-2 group-hover:translate-y-0">
-          <div className="text-white font-medium">Sell Item</div>
-          <div className="text-gray-300 text-[10px]">Earn & help planet</div>
+          <div className="text-white font-medium">Продај парче</div>
+          <div className="text-gray-300 text-[10px]">
+            Заработи & помогни и на планетата
+          </div>
           <div className="absolute bottom-0 right-4 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-gray-900 transform translate-y-full"></div>
         </div>
       </div>
@@ -88,36 +94,9 @@ export default function About() {
       <section className="py-28 hero-gradient relative overflow-hidden">
         {/* Floating Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Floating Product Images */}
-          <div className="absolute top-20 left-10 w-32 h-32 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg transform rotate-12 animate-float">
-            <div className="w-full h-full bg-gradient-to-br from-pink-100 to-purple-100 rounded-2xl flex items-center justify-center">
-              <div className="text-4xl">👗</div>
-            </div>
-          </div>
-          <div
-            className="absolute top-40 right-16 w-24 h-24 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg transform -rotate-6 animate-float"
-            style={{ animationDelay: "2s" }}
-          >
-            <div className="w-full h-full bg-gradient-to-br from-accent-blue/20 to-brand-100 rounded-2xl flex items-center justify-center">
-              <div className="text-3xl">👟</div>
-            </div>
-          </div>
-          <div
-            className="absolute bottom-32 left-20 w-28 h-28 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg transform rotate-6 animate-float"
-            style={{ animationDelay: "4s" }}
-          >
-            <div className="w-full h-full bg-gradient-to-br from-accent-teal/20 to-green-100 rounded-2xl flex items-center justify-center">
-              <div className="text-3xl">👜</div>
-            </div>
-          </div>
-
           {/* Bottom Right Element - Similar to reference */}
-          <div
-            className="absolute bottom-16 right-16 w-36 h-36 bg-white/60 backdrop-blur-sm rounded-3xl shadow-lg transform rotate-12 animate-float"
-            style={{ animationDelay: "1.5s" }}
-          >
+          <div>
             <div className="w-full h-full bg-gradient-to-br from-accent-teal/20 to-brand-100 rounded-3xl flex items-center justify-center relative overflow-hidden">
-              <div className="text-5xl">🌱</div>
               <div className="absolute top-3 left-3 pill bg-brand-600 text-white text-[10px]">
                 eco-impact
               </div>
@@ -139,142 +118,33 @@ export default function About() {
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <h1 className="heading-xl mb-8 animate-fade-in">
             <span className="inline-block transform hover:scale-105 transition-transform duration-500">
-              Buy & Sell Pre-Loved Fashion
+              Купи & Продај Пре-Сакани Парчиња
             </span>
             <br />
             <span className="inline-block transform hover:scale-105 transition-transform duration-500 delay-100 text-gradient">
-              in Minutes, Not Hours
+              во Минути, Не Часови
             </span>
           </h1>
           <p
             className="body-lg text-gray-600 mb-12 max-w-2xl mx-auto animate-fade-in"
             style={{ animationDelay: "0.2s" }}
           >
-            Skip the hassle of traditional resale. List items instantly,
-            discover unique pieces effortlessly, and make money from your
-            closet.
+            Прескокни ја маката од традиционална препродажба. Листај облека
+            инстантно, откриј уникатни парчиња без проблем и заработи пари преку
+            твојот плакар.
             <span className="font-semibold text-gray-800">
               {" "}
-              Start free — no credit card required.
+              Започни - Бесплатно е!
             </span>
           </p>
 
-          {/* Enhanced CTA with search preview */}
-          <div
-            className="space-y-6 animate-fade-in"
-            style={{ animationDelay: "0.4s" }}
+          {/* Start Free Now */}
+          <Link
+            href="/sell"
+            className="px-4 py-2 text-sm font-bold rounded-md text-white bg-green-600 hover:bg-green-700"
           >
-            <button className="button-primary">
-              Start Selling & Shopping Free
-            </button>
-
-            {/* Enhanced Quick Search Bar */}
-            <div className="max-w-md mx-auto relative">
-              <input
-                type="search"
-                placeholder="Quick search: vintage, dresses, shoes..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setShowSearchSuggestions(true)}
-                onBlur={() =>
-                  setTimeout(() => setShowSearchSuggestions(false), 200)
-                }
-                className="w-full px-6 py-4 rounded-full border border-brand-200 bg-white/80 backdrop-blur-sm 
-                          focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent 
-                          transition-all duration-300 text-sm"
-              />
-              <button className="absolute right-2 top-2 w-10 h-10 brand-gradient rounded-full flex items-center justify-center text-white transition-transform hover:scale-105">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-
-              {/* Search Suggestions Dropdown */}
-              {showSearchSuggestions && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden animate-fade-in-up z-50">
-                  <div className="p-4">
-                    <div className="text-xs font-medium text-gray-500 mb-3">
-                      Popular searches
-                    </div>
-                    <div className="space-y-2">
-                      {[
-                        "Vintage leather jackets",
-                        "Designer dresses",
-                        "Sustainable shoes",
-                        "Eco-friendly bags",
-                      ].map((suggestion, i) => (
-                        <button
-                          key={i}
-                          className="w-full text-left px-3 py-2 rounded-lg hover:bg-brand-50 transition-colors duration-200 text-sm text-gray-700 flex items-center space-x-3"
-                          onClick={() => {
-                            setSearchQuery(suggestion);
-                            setShowSearchSuggestions(false);
-                          }}
-                        >
-                          <svg
-                            className="w-4 h-4 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                          </svg>
-                          <span>{suggestion}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="bg-gradient-to-r from-brand-50 to-accent-blue/10 px-4 py-3 border-t border-brand-100">
-                    <div className="text-xs text-brand-600 font-medium">
-                      🌱 Every search helps reduce fashion waste
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-16 mt-20 pt-12 border-t border-brand-100">
-            <div className="text-center group">
-              <div className="text-3xl font-light text-black mb-2 transition-all duration-300 group-hover:text-emerald-600 group-hover:scale-110">
-                50k+
-              </div>
-              <div className="text-sm text-gray-400 group-hover:text-emerald-400 transition-colors duration-300">
-                Conscious Members
-              </div>
-            </div>
-            <div className="text-center group">
-              <div className="text-3xl font-light text-black mb-2 transition-all duration-300 group-hover:text-green-600 group-hover:scale-110">
-                200k+
-              </div>
-              <div className="text-sm text-gray-400 group-hover:text-green-400 transition-colors duration-300">
-                Items Re‑loved
-              </div>
-            </div>
-            <div className="text-center group">
-              <div className="text-3xl font-light text-black mb-2 transition-all duration-300 group-hover:text-lime-600 group-hover:scale-110">
-                85%
-              </div>
-              <div className="text-sm text-gray-400 group-hover:text-lime-500 transition-colors duration-300">
-                Waste Reduced
-              </div>
-            </div>
-          </div>
+            {t("startFreeNow")}
+          </Link>
         </div>
       </section>
 
@@ -295,26 +165,25 @@ export default function About() {
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-brand-100 to-accent-blue/20 px-6 py-3 rounded-full mb-6 animate-fade-in">
               <span className="text-2xl">🌍</span>
               <span className="text-sm font-medium text-brand-700">
-                Real Talk
+                Реален муабет
               </span>
             </div>
             <h2
               className="heading-lg mb-6 animate-fade-in"
               style={{ animationDelay: "0.1s" }}
             >
-              Why Your Fashion Choices Actually Matter
+              Зошто вашите модни избори се навистина важни
             </h2>
             <p
               className="body-lg text-gray-600 max-w-3xl mx-auto animate-fade-in"
               style={{ animationDelay: "0.2s" }}
             >
-              Let's be real - fast fashion is literally destroying our planet.
-              But here's the plot twist:
+              Да бидеме реални - брзата мода буквално ја уништува нашата
+              планета. Но, еве го пресвртот во заплетот:
               <span className="text-gradient font-semibold">
                 {" "}
-                your closet can be the main character in saving it
+                вашиот плакар може да биде главниот лик во нејзиното спасување.
               </span>
-              .
             </p>
           </div>
 
@@ -328,10 +197,10 @@ export default function About() {
                   2,700L
                 </div>
                 <div className="text-sm text-gray-600 mb-3">
-                  water to make ONE cotton t-shirt
+                  вода за да се направи ЕДНА памучна маица
                 </div>
                 <div className="text-xs text-red-500 font-medium bg-red-50 px-3 py-1 rounded-full">
-                  That's 18 bathtubs full!
+                  Тоа се 18 полни кади!
                 </div>
               </div>
             </div>
@@ -345,10 +214,10 @@ export default function About() {
                   92M
                 </div>
                 <div className="text-sm text-gray-600 mb-3">
-                  tons of clothing waste yearly
+                  тони отпад од облека годишно
                 </div>
                 <div className="text-xs text-orange-500 font-medium bg-orange-50 px-3 py-1 rounded-full">
-                  Enough to fill NYC!
+                  Доволно за да се наполни NYC!
                 </div>
               </div>
             </div>
@@ -362,10 +231,10 @@ export default function About() {
                   70%
                 </div>
                 <div className="text-sm text-gray-600 mb-3">
-                  less CO₂ when you buy pre-loved
+                  помалку CO₂ кога купувате претходно купена маица
                 </div>
                 <div className="text-xs text-green-500 font-medium bg-green-50 px-3 py-1 rounded-full">
-                  You're literally a hero!
+                  Вие сте буквално херој!
                 </div>
               </div>
             </div>
@@ -380,12 +249,12 @@ export default function About() {
                 </div>
                 <div>
                   <h3 className="heading-sm text-black mb-2 group-hover:text-brand-600 transition-colors">
-                    Your wallet will thank you
+                    Вашиот новчаник ќе ви се заблагодари
                   </h3>
                   <p className="body-md text-gray-600">
-                    Designer pieces at 60-80% off? That's not just sustainable,
-                    that's smart AF. More money for experiences, less for
-                    landfills.
+                    Дизајнерски парчиња на 60-80% попуст? Тоа не е само
+                    одржливо, тоа е smart AF. Повеќе пари за искуства, помалку
+                    за депонии.
                   </p>
                 </div>
               </div>
@@ -396,12 +265,12 @@ export default function About() {
                 </div>
                 <div>
                   <h3 className="heading-sm text-black mb-2 group-hover:text-accent-teal transition-colors">
-                    Unique style, zero copying
+                    Уникатен стил, 0 копирање
                   </h3>
                   <p className="body-md text-gray-600">
-                    Find one-of-a-kind vintage pieces that nobody else has.
-                    Stand out from the fast fashion crowd and express your
-                    actual personality.
+                    Пронајдете уникатни винтиџ парчиња што никој друг ги нема.
+                    Издвојте се од толпата на брзата мода и изразете ја вашата
+                    вистинска личност.
                   </p>
                 </div>
               </div>
@@ -415,9 +284,9 @@ export default function About() {
                     Planet-friendly flex
                   </h3>
                   <p className="body-md text-gray-600">
-                    Every pre-loved purchase is literally saving the planet.
-                    Post that environmental impact story - your followers will
-                    respect the consciousness.
+                    Секое претходно-сакано парче буквално ја спасува планетата.
+                    Објавете ја оваа приказна - вашите следбеници ќе ја ценат
+                    свеста.
                   </p>
                 </div>
               </div>
@@ -429,7 +298,7 @@ export default function About() {
                 <div className="text-center z-10">
                   <div className="text-6xl mb-4">🔄</div>
                   <div className="heading-md text-brand-700 mb-2">
-                    Circular Fashion
+                    Циркуларна Мода
                   </div>
                   <div className="body-sm text-brand-600">
                     One person's "meh" is your new favorite outfit
@@ -442,16 +311,13 @@ export default function About() {
           </div>
 
           {/* Call to Action */}
-          <div className="text-center mt-16">
+          {/* <div className="text-center mt-16">
             <div className="inline-flex items-center space-x-4 bg-white rounded-full p-2 shadow-lg border border-brand-100">
               <button className="button-primary">
-                Start Your Sustainable Journey
-              </button>
-              <button className="px-6 py-3 text-brand-700 hover:text-brand-800 transition-colors text-sm font-medium">
-                Learn More
+                Започни
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
 
@@ -478,14 +344,14 @@ export default function About() {
               className="heading-lg mb-6 animate-fade-in"
               style={{ animationDelay: "0.1s" }}
             >
-              Join 50k+ Eco Warriors Making Waves
+              Придружи се на 50k+ еко борци
             </h2>
             <p
               className="body-lg text-gray-600 max-w-3xl mx-auto animate-fade-in"
               style={{ animationDelay: "0.2s" }}
             >
-              Be part of the coolest sustainable fashion movement. Share your
-              finds, earn rewards, and flex your eco-impact.
+              Бидете дел од најкул движењето за одржлива мода. Споделете ги
+              вашите откритија и проширете го вашето еколошко влијание.
             </p>
           </div>
 
@@ -904,149 +770,13 @@ export default function About() {
             </div>
           </div>
 
-          {/* Main Footer Navigation */}
-          <div className="grid lg:grid-cols-5 md:grid-cols-3 gap-8 mb-12">
-            {/* Brand Section - Compact */}
-            <div className="lg:col-span-1 md:col-span-3">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 brand-gradient rounded-xl flex items-center justify-center shadow-md">
-                  <span className="text-white font-bold">R</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">Reloop</h3>
-                  <p className="text-gray-500 text-xs uppercase tracking-wide">
-                    Circular Fashion Platform
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                Making sustainable fashion{" "}
-                <span className="text-gradient font-medium">the new cool</span>
-              </p>
-
-              {/* Compact Stats */}
-              <div className="flex items-center space-x-4 text-xs">
-                <div className="text-center">
-                  <div className="font-bold text-accent-teal">142.5k</div>
-                  <div className="text-gray-500">CO₂ Saved</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-bold text-accent-blue">50k+</div>
-                  <div className="text-gray-500">Members</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-bold text-green-500">89%</div>
-                  <div className="text-gray-500">Love Rate</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Shop Navigation */}
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-4 text-lg">Shop</h4>
-              <ul className="space-y-3">
-                {[
-                  "Trending Now",
-                  "Vintage Finds",
-                  "Designer Steals",
-                  "Eco Essentials",
-                  "Local Drops",
-                ].map((link, i) => (
-                  <li key={i}>
-                    <a
-                      href="#"
-                      className="text-gray-600 hover:text-gray-900 transition-colors text-sm hover:underline decoration-brand-300 underline-offset-2"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Sell & Earn */}
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-4 text-lg">
-                Sell & Earn
-              </h4>
-              <ul className="space-y-3">
-                {[
-                  "Start Selling",
-                  "Seller Guide",
-                  "Pricing Tips",
-                  "Success Stories",
-                  "Payout Info",
-                ].map((link, i) => (
-                  <li key={i}>
-                    <a
-                      href="#"
-                      className="text-gray-600 hover:text-gray-900 transition-colors text-sm hover:underline decoration-brand-300 underline-offset-2"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Community & Impact */}
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-4 text-lg">
-                Community
-              </h4>
-              <ul className="space-y-3">
-                {[
-                  "Join Community",
-                  "Carbon Calculator",
-                  "Sustainability Report",
-                  "Eco Education",
-                  "Brand Partnerships",
-                ].map((link, i) => (
-                  <li key={i}>
-                    <a
-                      href="#"
-                      className="text-gray-600 hover:text-gray-900 transition-colors text-sm hover:underline decoration-brand-300 underline-offset-2"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-4 text-lg">
-                Support
-              </h4>
-              <ul className="space-y-3">
-                {[
-                  "Help Center",
-                  "Size Guide",
-                  "Returns & Refunds",
-                  "Contact Us",
-                  "Safety Tips",
-                ].map((link, i) => (
-                  <li key={i}>
-                    <a
-                      href="#"
-                      className="text-gray-600 hover:text-gray-900 transition-colors text-sm hover:underline decoration-brand-300 underline-offset-2"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
           {/* Bottom Section */}
           <div className="border-t border-brand-200/60 pt-8">
             <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
               {/* Copyright & Legal */}
               <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
                 <p className="text-gray-600 text-sm text-center sm:text-left">
-                  © 2025 Reloop.{" "}
+                  © 2025 vtoraraka.{" "}
                   <span className="text-gradient font-medium">
                     Buy less, choose well, make it last.
                   </span>

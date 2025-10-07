@@ -5,6 +5,8 @@ import { GlobalProvider } from "@/providers/global-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import LanguageProvider from "@/contexts/LanguageContext";
+import { CartProvider } from "@/contexts/CartContext";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,9 +15,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Swish - Second-hand. First rate. | Buy & Sell Pre-Loved Fashion",
+  title: "vtoraraka - Second-hand. First rate. | Buy & Sell Pre-Loved Fashion",
   description:
-    "Swish: Second-hand. First rate. Buy and sell pre-loved clothing with style. Sustainable fashion that's NEW? NOT REALLY but STILL GOT IT.",
+    "vtoraraka: Second-hand. First rate. Buy and sell pre-loved clothing with style. Sustainable fashion that's NEW? NOT REALLY but STILL GOT IT.",
 };
 
 export default function RootLayout({
@@ -26,20 +28,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#00C853" />
+        <link rel="icon" href="/logo192.png" type="image/png" />
+        <meta name="theme-color" content="#000000" />
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${inter.variable} antialiased`}>
-        <LanguageProvider>
-          <AuthProvider>
-            <GlobalProvider>
-              {children}
-              <Toaster />
-            </GlobalProvider>
-          </AuthProvider>
-        </LanguageProvider>
+        <AuthProvider>
+          <CartProvider>
+            <LanguageProvider>
+              <GlobalProvider>
+                <Navbar />
+                {children}
+                <Toaster />
+              </GlobalProvider>
+            </LanguageProvider>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

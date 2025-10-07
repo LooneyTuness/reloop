@@ -1,19 +1,34 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
 import Products from "@/components/Products";
+import { createServerClient } from "@/lib/supabase/supabase.server";
 
 export const metadata: Metadata = {
-  title: "Products - Reloop | Pre-Loved Fashion",
+  title: "Products - vtoraraka | Pre-Loved Fashion",
   description: "Browse our curated collection of pre-loved fashion items",
 };
 
-export default function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: { search?: string };
+}) {
+  const supabase = await createServerClient();
+  const term = (searchParams?.search || "").trim();
+  const like = term ? `%${term}%` : undefined;
+
+  let query = supabase
+    .from("items")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (like) {
+    // Search in title or description
+    query = query.or(`title.ilike.${like},description.ilike.${like}`);
+  }
+  const { data: items, error } = await (query as any);
+
   return (
-    <>
-      <Navbar />
-      <main>
-        <Products />
-      </main>
-    </>
+    <main>
+      <Products items={items || []} />
+    </main>
   );
 }

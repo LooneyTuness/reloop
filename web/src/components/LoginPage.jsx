@@ -68,7 +68,7 @@ export default function LoginPage() {
           >
             <div className="w-8 h-8 brand-gradient rounded-xl transition-transform duration-300 group-hover:scale-110"></div>
             <span className="text-2xl font-light text-black transition-colors duration-300 group-hover:text-brand-600 font-display">
-              Reloop
+              vtoraraka
             </span>
           </Link>
           <h2 className="text-3xl font-light text-gray-900 mb-2 font-display">
