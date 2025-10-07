@@ -68,7 +68,7 @@ export default function Login() {
             <div className="w-10 h-10 bg-black transition-transform duration-300 group-hover:scale-110"></div>
             <div className="text-left">
               <span className="text-xl font-light text-black transition-colors duration-300 group-hover:text-gray-600 block">
-                Reloop
+                vtoraraka
               </span>
               <span className="text-xs text-gray-500 uppercase tracking-widest -mt-1 font-light">
                 {language === "mk" ? "Кружна Мода" : "Circular Fashion"}

@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
 import Home from "@/components/Home";
 import Waitlist from "@/components/Waitlist";
 
@@ -24,11 +23,10 @@ export default function HomePage() {
   }
 
   return (
-    <>
-      <Navbar />
+    <div className="bg-white">
       <main>
         <Home />
       </main>
-    </>
+    </div>
   );
 }
