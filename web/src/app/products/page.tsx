@@ -7,15 +7,13 @@ export const metadata: Metadata = {
   description: "Browse our curated collection of pre-loved fashion items",
 };
 
-interface ProductsPageProps {
-  searchParams?: { search?: string };
-}
-
 export default async function ProductsPage({
-  searchParams = {},
-}: ProductsPageProps) {
+  searchParams,
+}: {
+  searchParams?: { search?: string };
+}) {
   const supabase = await createServerClient();
-  const term = (searchParams.search || "").trim();
+  const term = (searchParams?.search || "").trim();
   const like = term ? `%${term}%` : undefined;
 
   let query = supabase
