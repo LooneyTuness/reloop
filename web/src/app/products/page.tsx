@@ -12,17 +12,17 @@ export default async function ProductsPage({
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const supabase = await createServerClient();
+  const supabase = createServerClient();
   const term = typeof searchParams?.search === "string" ? searchParams.search.trim() : "";
   const like = term ? `%${term}%` : undefined;
 
-  let query = supabase
-    .from("items")
+  let query = (await supabase)
+    .from("items" as any)
     .select("*")
     .order("created_at", { ascending: false });
 
   if (like) {
-    query = query.or(`title.ilike.${like},description.ilike.${like}`);
+    query = query.or(`(title.ilike.${like}),(description.ilike.${like})`);
   }
 
   const { data: items, error } = await query;
@@ -34,7 +34,7 @@ export default async function ProductsPage({
 
   return (
     <main>
-      <Products items={items || []} limit={items?.length ?? 0} />
+      <Products items={(items as any) || []} limit={items?.length ?? 0} />
     </main>
   );
 }
