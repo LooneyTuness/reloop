@@ -37,6 +37,10 @@ module.exports = {
         ],
       },
       colors: {
+        primary: {
+          DEFAULT: "rgb(34, 197, 94)",
+          foreground: "hsl(var(--primary-foreground))",
+        },
         brand: {
           DEFAULT: "#00C853", // Swish vibrant green
           50: "#E8F8F0",
