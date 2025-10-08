@@ -160,7 +160,9 @@ export default function Home() {
       <footer className="border-t border-gray-200 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center md:items-start justify-between gap-4 sm:gap-6">
           <div className="text-center md:text-left">
-            <div className="text-lg sm:text-xl font-black text-black">vtoraraka.mk</div>
+            <div className="text-lg sm:text-xl font-black text-black">
+              vtoraraka.mk
+            </div>
             <p className="text-xs sm:text-sm text-gray-600 mt-2 max-w-sm italic">
               {language === "mk"
                 ? "Пазарете свесно. Одберете стил кој трае."
