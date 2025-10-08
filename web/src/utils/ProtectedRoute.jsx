@@ -2,31 +2,39 @@
 
 import { useAuth } from "../contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/login");
+      setShouldRedirect(true);
+      // Include the current path as returnUrl so user can be redirected back after login
+      const currentPath = window.location.pathname;
+      router.push(`/sign-in?returnUrl=${encodeURIComponent(currentPath)}`);
+    } else if (!loading && user) {
+      setShouldRedirect(false);
     }
   }, [user, loading, router]);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
+        <LoadingSpinner size="lg" text="Loading..." />
       </div>
     );
   }
 
-  if (!user) {
-    return null; // Will redirect via useEffect
+  if (shouldRedirect || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner size="lg" text="Redirecting to sign in..." />
+      </div>
+    );
   }
 
   return children;

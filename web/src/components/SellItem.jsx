@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -11,12 +12,14 @@ export default function SellItem() {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
+    size: "",
     price: "",
     description: "",
   });
   const [uploading, setUploading] = useState(false);
   const { user } = useAuth();
   const { t } = useLanguage();
+  const router = useRouter();
 
   function handlePhotoSelect(e) {
     const files = Array.from(e.target.files);
@@ -113,10 +116,12 @@ export default function SellItem() {
         .from("items")
         .insert([
           {
+            name: formData.title,
             title: formData.title,
             description: formData.description,
             price: formData.price,
             category: formData.category,
+            size: formData.size || null,
             photos: photoUrls,
             user_id: user.id,
             user_email: user.email,
@@ -131,8 +136,19 @@ export default function SellItem() {
       setMessage(t("listingSuccess").replace("{title}", formData.title));
 
       // Reset form
-      setFormData({ title: "", category: "", price: "", description: "" });
+      setFormData({
+        title: "",
+        category: "",
+        size: "",
+        price: "",
+        description: "",
+      });
       setPhotos([]);
+
+      // Navigate to home page after 2 seconds
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     } finally {
@@ -141,62 +157,62 @@ export default function SellItem() {
   };
 
   return (
-    <div className="min-h-screen bg-white py-6 sm:py-12">
-      <div className="max-w-2xl mx-auto px-4 sm:px-8">
-        <div className="bg-white border border-gray-200 p-4 sm:p-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h1 className="text-2xl sm:text-3xl font-light text-black mb-4">
+    <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {t("listItemTitle")}
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 font-light">
+            <p className="text-gray-600">
               {t("welcomeBack")}, {user?.user_metadata?.username || user?.email}
-              ! {t("listItemWelcome")}
+              !
             </p>
 
             {/* Progress Indicator */}
-            <div className="mt-6 sm:mt-8">
-              <div className="flex items-center justify-center space-x-2 sm:space-x-4 mb-4">
+            <div className="mt-6">
+              <div className="flex items-center justify-center space-x-4 mb-3">
                 <div
-                  className={`w-8 h-8 flex items-center justify-center text-xs font-light transition-all duration-300 ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
                     photos.length > 0
-                      ? "bg-black text-white"
+                      ? "bg-primary text-white"
                       : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   1
                 </div>
                 <div
-                  className={`w-12 h-px transition-all duration-300 ${
-                    formData.title ? "bg-black" : "bg-gray-200"
+                  className={`w-16 h-1 rounded transition-all duration-300 ${
+                    formData.title ? "bg-primary" : "bg-gray-200"
                   }`}
                 ></div>
                 <div
-                  className={`w-8 h-8 flex items-center justify-center text-xs font-light transition-all duration-300 ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
                     formData.title
-                      ? "bg-black text-white"
+                      ? "bg-primary text-white"
                       : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   2
                 </div>
                 <div
-                  className={`w-12 h-px transition-all duration-300 ${
+                  className={`w-16 h-1 rounded transition-all duration-300 ${
                     formData.category && formData.price
-                      ? "bg-black"
+                      ? "bg-primary"
                       : "bg-gray-200"
                   }`}
                 ></div>
                 <div
-                  className={`w-8 h-8 flex items-center justify-center text-xs font-light transition-all duration-300 ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
                     formData.category && formData.price
-                      ? "bg-black text-white"
+                      ? "bg-primary text-white"
                       : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   3
                 </div>
               </div>
-              <div className="flex justify-between text-xs text-gray-500 max-w-xs mx-auto font-light">
+              <div className="flex justify-between text-xs text-gray-600 max-w-sm mx-auto">
                 <span>{t("steps.photos")}</span>
                 <span>{t("steps.details")}</span>
                 <span>{t("steps.pricing")}</span>
@@ -204,15 +220,15 @@ export default function SellItem() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Photo Upload Section */}
             <div>
-              <label className="block text-sm font-light text-gray-600 mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t("uploadPhotos")} ({photos.length}/5)
               </label>
 
               {/* Upload Area */}
-              <div className="border-2 border-dashed border-gray-200 p-8 text-center hover:border-black transition-colors">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer bg-gray-50">
                 <input
                   type="file"
                   accept="image/*"
@@ -256,47 +272,28 @@ export default function SellItem() {
 
             {/* Item Details */}
             <div>
-              <label className="block text-sm font-light text-gray-600 mb-3">
-                {t("itemTitle")} {t("required")}
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t("itemTitle")} <span className="text-red-500">*</span>
               </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  required
-                  className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all font-light"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  placeholder={t("itemTitlePlaceholder")}
-                />
-                {formData.title && (
-                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                    <svg
-                      className="w-5 h-5 text-black"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                )}
-              </div>
+              <input
+                type="text"
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                placeholder={t("itemTitlePlaceholder")}
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-light text-gray-600 mb-3">
-                {t("category")} {t("required")}
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t("category")} <span className="text-red-500">*</span>
               </label>
               <select
                 required
-                className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all font-light"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                 value={formData.category}
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
@@ -313,15 +310,48 @@ export default function SellItem() {
             </div>
 
             <div>
-              <label className="block text-sm font-light text-gray-600 mb-3">
-                {t("price")} {t("required")}
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t("sizeLabel")}
+              </label>
+              <select
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                value={formData.size}
+                onChange={(e) =>
+                  setFormData({ ...formData, size: e.target.value })
+                }
+              >
+                <option value="">{t("selectSize")}</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+                <option value="XXXL">XXXL</option>
+                <option value="36">36</option>
+                <option value="37">37</option>
+                <option value="38">38</option>
+                <option value="39">39</option>
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42">42</option>
+                <option value="43">43</option>
+                <option value="44">44</option>
+                <option value="45">45</option>
+                <option value="46">46</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t("price")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
                 required
                 min="0"
                 step="0.01"
-                className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all font-light"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                 value={formData.price}
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
@@ -331,12 +361,12 @@ export default function SellItem() {
             </div>
 
             <div>
-              <label className="block text-sm font-light text-gray-600 mb-3">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t("description")}
               </label>
               <textarea
                 rows="4"
-                className="w-full px-4 py-3 border border-gray-200 focus:ring-1 focus:ring-black focus:border-black outline-none resize-none transition-all font-light"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none transition-all"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -347,10 +377,11 @@ export default function SellItem() {
 
             {message && (
               <div
-                className={`p-4 text-sm font-light ${
-                  message.includes("Thanks for listing")
-                    ? "bg-gray-50 text-black border border-gray-200"
-                    : "bg-red-50 text-red-700 border border-red-200"
+                className={`p-4 rounded-lg text-sm ${
+                  message.includes("Thanks for listing") ||
+                  message.includes("успешно")
+                    ? "bg-green-50 text-green-800 border border-green-200"
+                    : "bg-red-50 text-red-800 border border-red-200"
                 }`}
               >
                 {message}
@@ -360,7 +391,7 @@ export default function SellItem() {
             <button
               type="submit"
               disabled={uploading}
-              className="w-full bg-black text-white py-4 px-6 transition-all duration-300 font-light hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploading ? t("uploadingPhotos") : t("listItemButton")}
             </button>

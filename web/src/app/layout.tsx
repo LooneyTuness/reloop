@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import LanguageProvider from "@/contexts/LanguageContext";
 import { CartProvider } from "@/contexts/CartContext";
 import Navbar from "@/components/Navbar";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,17 +35,19 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${inter.variable} antialiased`}>
-        <AuthProvider>
-          <CartProvider>
-            <LanguageProvider>
-              <GlobalProvider>
-                <Navbar />
-                {children}
-                <Toaster />
-              </GlobalProvider>
-            </LanguageProvider>
-          </CartProvider>
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <CartProvider>
+              <LanguageProvider>
+                <GlobalProvider>
+                  <Navbar />
+                  {children}
+                  <Toaster />
+                </GlobalProvider>
+              </LanguageProvider>
+            </CartProvider>
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

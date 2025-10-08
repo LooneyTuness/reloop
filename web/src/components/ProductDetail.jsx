@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useCart } from "../contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -13,6 +14,7 @@ export default function ProductDetail() {
   const { addToCart } = useCart();
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { t } = useLanguage();
 
   useEffect(() => {
     async function fetchProduct() {
@@ -26,7 +28,7 @@ export default function ProductDetail() {
         .single();
 
       if (error) {
-        console.error("Грешка при вчитување на продукт:", error.message);
+        console.error(t("errorLoadingProduct"), error.message);
       } else {
         setProduct(data);
         setCurrentIndex(0);
@@ -55,7 +57,7 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="p-10 text-red-500 text-center">
-        Продуктот не е најден.
+        {t("productNotFound")}
       </div>
     );
   }
@@ -70,10 +72,10 @@ export default function ProductDetail() {
         image_url: product.photos,
         quantity: 1,
       });
-      toast.success("Додадено во кошничка");
+      toast.success(t("addedToCart"));
     } catch (error) {
       console.error("Error adding to cart:", error);
-      toast.error("Грешка при додавање во кошничка");
+      toast.error(t("errorAddingToCart"));
     }
     // Stay on the product page after adding; user can open cart from navbar
   };
@@ -122,7 +124,7 @@ export default function ProductDetail() {
           )}
           {product.is_eco && (
             <span className="absolute top-4 left-4 bg-green-600 text-white text-xs px-3 py-1 rounded-full">
-              ♻ Еко избор
+              ♻ {t("ecoChoice")}
             </span>
           )}
         </div>
@@ -159,11 +161,11 @@ export default function ProductDetail() {
         {/* Цена */}
         <div className="flex items-center gap-4">
           <span className="text-2xl font-bold text-black">
-            {product.price} ден
+            {product.price} {t("currency")}
           </span>
           {product.old_price && (
             <span className="text-gray-400 line-through">
-              {product.old_price} ден
+              {product.old_price} {t("currency")}
             </span>
           )}
         </div>
@@ -171,14 +173,14 @@ export default function ProductDetail() {
         {/* Состојба */}
         <div>
           <p className="text-sm text-gray-500 mb-2">
-            Состојба:{" "}
+            {t("condition")}:{" "}
             <span className="text-black font-medium">
-              {product.condition || "Претходно користено"}
+              {product.condition || t("Used")}
             </span>
           </p>
           {product.size && (
             <p className="text-sm text-gray-500 mb-2">
-              Големина:{" "}
+              {t("size")}:{" "}
               <span className="text-black font-medium">{product.size}</span>
             </p>
           )}
@@ -186,9 +188,9 @@ export default function ProductDetail() {
 
         {/* Доверба и добавувач */}
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <p className="text-sm text-gray-500">Продавач:</p>
+          <p className="text-sm text-gray-500">{t("seller")}:</p>
           <p className="text-black font-semibold">
-            {product.seller || "Анонимен продавач"}
+            {product.seller || t("anonymousSeller")}
           </p>
         </div>
 
@@ -198,18 +200,20 @@ export default function ProductDetail() {
             className="flex-1 bg-green-500 text-white px-6 py-4 rounded-xl font-bold hover:opacity-90 transition cursor-pointer"
             onClick={handleAddToCart}
           >
-            Додади во кошничка
+            {t("addToCart")}
           </button>
           {/* Removed wishlist/heart button */}
         </div>
 
         {/* Одржливост */}
         <div className="pt-6 border-t">
-          <h2 className="text-lg font-bold text-black mb-3">Одржливост</h2>
+          <h2 className="text-lg font-bold text-black mb-3">
+            {t("sustainability")}
+          </h2>
           <ul className="list-disc pl-6 text-sm text-gray-600 space-y-2">
-            <li>Заштеда на ресурси споредено со нов производ</li>
-            <li>Производот е задржан во употреба подолго</li>
-            <li>Испорака во минимално пакување без пластика</li>
+            <li>{t("resourceSavings")}</li>
+            <li>{t("extendedUse")}</li>
+            <li>{t("minimalPackaging")}</li>
           </ul>
         </div>
       </div>

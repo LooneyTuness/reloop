@@ -17,17 +17,21 @@ import {
 } from "@/components/ui/form";
 import { signUpSchema } from "@/app/api/auth/sign-up/sign-up.schema";
 import { useSignUpWithEmail } from "@/app/api/auth/sign-up/sign-up.hook";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignUpForm() {
   const signUpWithEmail = useSignUpWithEmail();
+  const { t } = useLanguage();
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
+      fullName: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -41,13 +45,33 @@ export function SignUpForm() {
       >
         <FormField
           control={form.control}
+          name="fullName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("fullName")}</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder={t("enterFullName")}
+                  type="text"
+                  autoComplete="name"
+                  disabled={signUpWithEmail.isPending}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("email")}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="you@example.com"
+                  placeholder={t("enterEmail")}
                   type="email"
                   autoComplete="email"
                   disabled={signUpWithEmail.isPending}
@@ -64,10 +88,29 @@ export function SignUpForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("password")}</FormLabel>
               <FormControl>
                 <PasswordInput
-                  placeholder="••••••••"
+                  placeholder={t("enterPassword")}
+                  autoComplete="new-password"
+                  disabled={signUpWithEmail.isPending}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("confirmPassword")}</FormLabel>
+              <FormControl>
+                <PasswordInput
+                  placeholder={t("confirmPasswordPlaceholder")}
                   autoComplete="new-password"
                   disabled={signUpWithEmail.isPending}
                   {...field}
@@ -83,7 +126,7 @@ export function SignUpForm() {
           className="w-full"
           isPending={signUpWithEmail.isPending}
         >
-          Sign up with Email
+          {t("createAccountButton")}
         </Button>
       </form>
     </Form>

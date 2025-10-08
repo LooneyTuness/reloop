@@ -14,16 +14,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signUpSchema } from "@/app/api/auth/sign-up/sign-up.schema";
+import { signInSchema } from "@/app/api/auth/sign-in/sign-in.schema";
 import { useSignInWithEmail } from "@/app/api/auth/sign-in/sign-in.hook";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type AuthFormValues = z.infer<typeof signUpSchema>;
+type AuthFormValues = z.infer<typeof signInSchema>;
 
 export function SignInForm() {
   const signInWithEmail = useSignInWithEmail();
+  const { t } = useLanguage();
 
   const form = useForm<AuthFormValues>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -43,10 +45,10 @@ export function SignInForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("email")}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="you@example.com"
+                  placeholder={t("enterEmail")}
                   type="email"
                   autoComplete="email"
                   disabled={signInWithEmail.isPending}
@@ -63,10 +65,10 @@ export function SignInForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("password")}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="••••••••"
+                  placeholder={t("enterPassword")}
                   type="password"
                   autoComplete="current-password"
                   disabled={signInWithEmail.isPending}
@@ -83,7 +85,7 @@ export function SignInForm() {
           className="w-full"
           isPending={signInWithEmail.isPending}
         >
-          Sign in with Email
+          {t("signIn")}
         </Button>
       </form>
     </Form>

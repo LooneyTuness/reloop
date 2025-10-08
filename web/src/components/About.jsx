@@ -64,7 +64,7 @@ export default function About() {
       {/* Enhanced Floating Action Button */}
       <div className="group">
         <button
-          onClick={() => (window.location.href = "/sell")}
+          onClick={() => (window.location.href = "/sign-up")}
           className="btn-floating group"
         >
           <svg
@@ -140,7 +140,7 @@ export default function About() {
 
           {/* Start Free Now */}
           <Link
-            href="/sell"
+            href="/sign-up"
             className="px-4 py-2 text-sm font-bold rounded-md text-white bg-green-600 hover:bg-green-700"
           >
             {t("startFreeNow")}

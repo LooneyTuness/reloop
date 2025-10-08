@@ -41,57 +41,72 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState<boolean>(false);
 
   // Hydrate from localStorage once on mount (supports anonymous users and avoids empty state on navigation)
   useEffect(() => {
+    if (hasLoadedFromStorage) {
+      return; // Prevent multiple loads
+    }
+    
     try {
       const raw = localStorage.getItem("cart:v1");
-      if (raw) {
+      if (raw && raw !== "[]") { // Don't load empty arrays
         const parsed = JSON.parse(raw) as CartItem[];
-        if (Array.isArray(parsed)) setCart(parsed);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setCart(parsed);
+        }
       }
-    } catch {}
-  }, []);
+      setHasLoadedFromStorage(true);
+    } catch {
+      setHasLoadedFromStorage(true);
+    }
+  }, [hasLoadedFromStorage]);
 
   // Persist to localStorage on changes
   useEffect(() => {
     try {
       localStorage.setItem("cart:v1", JSON.stringify(cart));
-    } catch {}
+    } catch {
+      // Handle localStorage error silently
+    }
   }, [cart]);
 
-  // If user is logged in, sync cart with Supabase (merge local → server, then refresh)
+  // Track previous user state to detect logout vs initial load
+  const [prevUser, setPrevUser] = useState<typeof user | null>(null);
+  const [hasInitialized, setHasInitialized] = useState(false);
+  
+  // Clear cart only when user explicitly logs out (not on initial load)
+  useEffect(() => {
+    if (!hasInitialized) {
+      setPrevUser(user);
+      setHasInitialized(true);
+      return;
+    }
+    
+    // Clear cart if user logged out
+    if (prevUser && !user) {
+      setCart([]);
+    }
+    
+    // SECURITY: Clear anonymous cart when user logs in to prevent merging
+    if (!prevUser && user) {
+      setCart([]);
+    }
+    
+    setPrevUser(user);
+  }, [user, prevUser, hasInitialized]);
+
+  // If user is logged in, sync cart with Supabase (SECURITY: don't merge anonymous cart)
   useEffect(() => {
     const sync = async () => {
-      if (!user) return; // keep local cart for guests
-      setLoading(true);
-      // Merge local cart into server
-      if (cart.length > 0) {
-        const payload = cart.map((i) => ({
-          user_id: user.id,
-          item_id: i.id,
-          name: i.name,
-          price: i.price,
-          quantity: i.quantity,
-          image_url: i.image_url ?? null,
-        }));
-        await (
-          supabase as unknown as {
-            from: (table: string) => {
-              upsert: (
-                values: CartRow[],
-                options?: { onConflict?: string }
-              ) => Promise<{ error: { message: string } | null }>;
-            };
-          }
-        )
-          .from("cart_items")
-          .upsert(payload as unknown as CartRow[], {
-            onConflict: "user_id,item_id",
-          });
+      if (!user) {
+        return; // keep local cart for guests - don't clear it
       }
-
-      // Fetch server cart
+      
+      setLoading(true);
+      
+      // Fetch server cart first
       const { data, error } = await (
         supabase as unknown as {
           from: (table: string) => {
@@ -110,23 +125,63 @@ export function CartProvider({ children }: { children: ReactNode }) {
         .from("cart_items")
         .select("item_id,name,price,quantity,image_url")
         .eq("user_id", user.id);
-      if (!error && data) {
-        const rows = data as CartRow[];
-        setCart(
-          rows.map((row) => ({
-            id: row.item_id,
-            name: row.name,
-            price: row.price,
-            quantity: row.quantity,
-            image_url: row.image_url ?? undefined,
-          }))
-        );
+      
+      if (error) {
+        setLoading(false);
+        return;
       }
+
+      const serverCart = data as CartRow[] || [];
+      
+      const serverCartItems = serverCart.map((row) => ({
+        id: row.item_id,
+        name: row.name,
+        price: row.price,
+        quantity: row.quantity,
+        image_url: row.image_url ?? undefined,
+      }));
+
+      // SECURITY: Always use server cart only when user is logged in
+      // Don't merge anonymous cart to prevent security issues
+      setCart(serverCartItems);
+      const finalCart = serverCartItems;
+
+      // Sync cart back to server (only if there are items to sync)
+      const cartToSync = finalCart;
+      if (cartToSync.length > 0) {
+        const payload = cartToSync.map((i) => ({
+          user_id: user.id,
+          item_id: i.id,
+          name: i.name,
+          price: i.price,
+          quantity: i.quantity,
+          image_url: i.image_url ?? null,
+        }));
+        
+        const { error: upsertError } = await (
+          supabase as unknown as {
+            from: (table: string) => {
+              upsert: (
+                values: CartRow[],
+                options?: { onConflict?: string }
+              ) => Promise<{ error: { message: string } | null }>;
+            };
+          }
+        )
+          .from("cart_items")
+          .upsert(payload as unknown as CartRow[], {
+            onConflict: "user_id,item_id",
+          });
+          
+        if (upsertError) {
+          // Handle sync error silently
+        }
+      }
+      
       setLoading(false);
     };
     sync();
-    // Only re-run when user changes; use local cart snapshot on first login to merge
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Only re-run when user changes
   }, [user]);
 
   const addToCart = async (item: CartItem) => {
@@ -148,12 +203,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
       // Update localStorage immediately
       try {
         localStorage.setItem("cart:v1", JSON.stringify(nextCart));
-      } catch {}
+      } catch {
+        // Handle localStorage error silently
+      }
       
       return nextCart;
     });
 
-    if (!user) return; // anonymous user keeps local cart only
+    if (!user) {
+      return; // anonymous user keeps local cart only
+    }
+
+    // Check if user exists in auth.users before proceeding
+    try {
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData.user) {
+        throw new Error("User not authenticated");
+      }
+    } catch (error) {
+      throw error;
+    }
 
     // Upsert to Supabase
     const payload = {
@@ -180,7 +249,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         .upsert([payload], { onConflict: "user_id,item_id" });
         
       if (error) {
-        console.error("Error adding to cart:", error);
         // Revert the optimistic update on error
         setCart((prev) => {
           const reverted = prev.filter((i) => i.id !== item.id);
@@ -189,9 +257,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
           } catch {}
           return reverted;
         });
+        throw error; // Re-throw to be caught by calling component
       }
     } catch (error) {
-      console.error("Error adding to cart:", error);
       // Revert the optimistic update on error
       setCart((prev) => {
         const reverted = prev.filter((i) => i.id !== item.id);
@@ -200,6 +268,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         } catch {}
         return reverted;
       });
+      throw error; // Re-throw to be caught by calling component
     }
   };
 

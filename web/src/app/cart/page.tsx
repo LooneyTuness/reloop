@@ -3,12 +3,14 @@ import { useCart } from "@/contexts/CartContext";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function CartPage() {
   const { cart, removeFromCart, clearCart, total, loading } = useCart();
   const { user } = useAuth();
+  const { language, t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [checkout, setCheckout] = useState({
     full_name: "",
@@ -152,7 +154,7 @@ export default function CartPage() {
           emailToItems.set(email, arr);
         });
 
-        await Promise.all(
+        const sellerNotificationResults = await Promise.allSettled(
           Array.from(emailToItems.entries()).map(
             ([sellerEmail, itemsForSeller]) =>
               fetch("/api/orders/notify-sellers", {
@@ -162,18 +164,62 @@ export default function CartPage() {
                   sellerEmail,
                   items: itemsForSeller,
                   orderId: orderData.id,
+                  buyerName: checkout.full_name,
+                  totalAmount: total,
+                  language: language,
                 }),
               })
           )
         );
+
+        // Check for seller notification failures
+        const sellerFailures = sellerNotificationResults.filter(result => result.status === 'rejected');
+        if (sellerFailures.length > 0) {
+          console.warn("Some seller notifications failed:", sellerFailures);
+        }
       } catch (e) {
         console.warn("Failed to notify seller(s)", e);
       }
 
-      // 4) Clear cart (both local and server)
+      // 4) Notify buyer with order confirmation
+      try {
+        const buyerNotificationResult = await fetch("/api/orders/notify-buyer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            buyerEmail: checkout.email,
+            buyerName: checkout.full_name,
+            items: cart.map((item) => ({
+              name: item.name,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            orderId: orderData.id,
+            totalAmount: total,
+            shippingAddress: {
+              full_name: checkout.full_name,
+              address_line1: checkout.address_line1,
+              address_line2: checkout.address_line2,
+              city: checkout.city,
+              postal_code: checkout.postal_code,
+              phone: checkout.phone,
+            },
+            language: language,
+          }),
+        });
+
+        if (!buyerNotificationResult.ok) {
+          const errorData = await buyerNotificationResult.json();
+          console.warn("Buyer notification failed:", errorData);
+        }
+      } catch (e) {
+        console.warn("Failed to notify buyer", e);
+      }
+
+      // 5) Clear cart (both local and server)
       await clearCart();
-      // 5) Notify and redirect
-      toast.success("Нарачката е креирана. Плаќање при преземање!", {
+      // 6) Notify and redirect
+      toast.success(t("orderCreated"), {
         duration: 8000,
       });
       setTimeout(() => {
@@ -181,7 +227,7 @@ export default function CartPage() {
       }, 3000);
     } catch (err) {
       console.error("Failed to place order", err);
-      alert("Настана грешка при креирање на нарачка. Обидете се повторно.");
+      alert(t("orderError"));
     } finally {
       setSubmitting(false);
     }
@@ -236,22 +282,22 @@ export default function CartPage() {
   if (cart.length === 0)
     return (
       <div className="max-w-7xl mx-auto px-6 py-24 text-center">
-        <h1 className="text-3xl font-bold mb-2">Вашата кошничка е празна</h1>
+        <h1 className="text-3xl font-bold mb-2">{t("cartEmpty")}</h1>
         <p className="text-gray-600 mb-6">
-          Додајте производи и вратете се овде за да завршите со нарачката.
+          {t("cartEmptyDescription")}
         </p>
         <Link
           href="/products"
           className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:opacity-90"
         >
-          Почни со купување
+          {t("startShopping")}
         </Link>
       </div>
     );
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-16">
-      <h1 className="text-3xl font-bold mb-6">Кошничка</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("cart")}</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Items list */}
         <div className="lg:col-span-2 space-y-4">
@@ -287,19 +333,19 @@ export default function CartPage() {
                   <div>
                     <h2 className="font-bold text-lg">{item.name}</h2>
                     <p className="text-gray-600 text-sm">
-                      {item.quantity} x {item.price.toLocaleString()} ден
+                      {item.quantity} x {item.price.toLocaleString()} {t("currency")}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="font-bold whitespace-nowrap">
-                    {(item.quantity * item.price).toLocaleString()} ден
+                    {(item.quantity * item.price).toLocaleString()} {t("currency")}
                   </span>
                   <button
                     onClick={() => removeFromCart(item.id)}
                     className="px-3 py-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50"
                   >
-                    Избриши
+                    {t("remove")}
                   </button>
                 </div>
               </div>
@@ -309,15 +355,15 @@ export default function CartPage() {
 
         {/* Summary card */}
         <div className="border rounded-xl p-6 h-fit sticky top-6">
-          <h2 className="text-xl font-bold mb-4">Резиме на нарачка</h2>
+          <h2 className="text-xl font-bold mb-4">{t("orderSummary")}</h2>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600">Субтотал</span>
-              <span className="font-medium">{total.toLocaleString()} ден</span>
+              <span className="text-gray-600">{t("subtotal")}</span>
+              <span className="font-medium">{total.toLocaleString()} {t("currency")}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Испорака</span>
-              <span className="font-medium">Ќе се пресмета при плаќање</span>
+              <span className="text-gray-600">{t("shipping")}</span>
+              <span className="font-medium">{t("shippingCalculated")}</span>
             </div>
           </div>
           {/* Checkout details */}
@@ -325,7 +371,7 @@ export default function CartPage() {
             <div className="grid grid-cols-2 gap-3">
               <input
                 className="border rounded px-3 py-2 col-span-2"
-                placeholder="Име и презиме"
+                placeholder={t("fullName")}
                 value={checkout.full_name}
                 onChange={(e) =>
                   setCheckout({ ...checkout, full_name: e.target.value })
@@ -333,7 +379,7 @@ export default function CartPage() {
               />
               <input
                 className="border rounded px-3 py-2"
-                placeholder="E-mail"
+                placeholder={t("email")}
                 value={checkout.email}
                 onChange={(e) =>
                   setCheckout({ ...checkout, email: e.target.value })
@@ -341,7 +387,7 @@ export default function CartPage() {
               />
               <input
                 className="border rounded px-3 py-2"
-                placeholder="Телефон"
+                placeholder={t("phone")}
                 value={checkout.phone}
                 onChange={(e) =>
                   setCheckout({ ...checkout, phone: e.target.value })
@@ -349,7 +395,7 @@ export default function CartPage() {
               />
               <input
                 className="border rounded px-3 py-2"
-                placeholder="Град"
+                placeholder={t("city")}
                 value={checkout.city}
                 onChange={(e) =>
                   setCheckout({ ...checkout, city: e.target.value })
@@ -357,7 +403,7 @@ export default function CartPage() {
               />
               <input
                 className="border rounded px-3 py-2 col-span-2"
-                placeholder="Адреса (улица и број)"
+                placeholder={t("address")}
                 value={checkout.address_line1}
                 onChange={(e) =>
                   setCheckout({ ...checkout, address_line1: e.target.value })
@@ -365,7 +411,7 @@ export default function CartPage() {
               />
               <input
                 className="border rounded px-3 py-2 col-span-2"
-                placeholder="Додатна адреса (опционално)"
+                placeholder={t("additionalAddress")}
                 value={checkout.address_line2}
                 onChange={(e) =>
                   setCheckout({ ...checkout, address_line2: e.target.value })
@@ -373,7 +419,7 @@ export default function CartPage() {
               />
               <input
                 className="border rounded px-3 py-2 col-span-2"
-                placeholder="Поштенски код"
+                placeholder={t("postalCode")}
                 value={checkout.postal_code}
                 onChange={(e) =>
                   setCheckout({ ...checkout, postal_code: e.target.value })
@@ -381,7 +427,7 @@ export default function CartPage() {
               />
               <textarea
                 className="border rounded px-3 py-2 col-span-2"
-                placeholder="Забелешка (опционално)"
+                placeholder={t("notes")}
                 value={checkout.notes}
                 onChange={(e) =>
                   setCheckout({ ...checkout, notes: e.target.value })
@@ -389,13 +435,13 @@ export default function CartPage() {
               />
             </div>
             <p className="text-gray-500 text-xs">
-              Вашите податоци се користат само за испорака на нарачката.
+              {t("dataUsageNote")}
             </p>
           </div>
           <div className="border-t mt-4 pt-4 flex justify-between items-center">
-            <span className="text-lg font-bold">Вкупно</span>
+            <span className="text-lg font-bold">{t("total")}</span>
             <span className="text-lg font-bold">
-              {total.toLocaleString()} ден
+              {total.toLocaleString()} {t("currency")}
             </span>
           </div>
           <div className="mt-6 space-y-3">
@@ -405,20 +451,20 @@ export default function CartPage() {
               className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:opacity-90 disabled:opacity-60"
             >
               {submitting
-                ? "Се процесира..."
-                : "Заврши нарачка (плаќање при преземање)"}
+                ? t("processing")
+                : t("completeOrder")}
             </button>
             <Link
               href="/products"
               className="block w-full text-center px-6 py-3 border rounded-lg hover:bg-gray-50"
             >
-              Продолжи со купување
+              {t("continueShopping")}
             </Link>
             <button
               onClick={clearCart}
               className="w-full px-6 py-3 text-red-600 border border-red-200 rounded-lg hover:bg-red-50"
             >
-              Избриши кошничка
+              {t("clearCart")}
             </button>
           </div>
         </div>

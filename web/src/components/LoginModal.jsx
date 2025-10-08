@@ -25,7 +25,13 @@ export default function LoginModal({ open, onOpenChange, onSwitchToSignUp }) {
       });
 
       if (error) {
-        setMessage(error.message);
+        if (error.message.includes("Email not confirmed")) {
+          setMessage("Please check your email and click the confirmation link before signing in.");
+        } else if (error.message.includes("Invalid login credentials")) {
+          setMessage("Invalid email or password. Please check your credentials and try again.");
+        } else {
+          setMessage(error.message);
+        }
         return;
       }
 
