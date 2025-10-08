@@ -1,14 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { SignInForm } from "@/app/(auth)/sign-in/sign-in-form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import * as Routes from "@/lib/routes";
 import { SocialLoginForm } from "../social-login-form";
 
