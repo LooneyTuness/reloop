@@ -130,10 +130,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const addToCart = async (item: CartItem) => {
+    console.log("Adding to cart:", item);
     // Optimistic update + immediate localStorage persist to survive route transitions
-    let nextCart: CartItem[] = [];
     setCart((prev) => {
+      console.log("Previous cart state:", prev);
       const existing = prev.find((i) => i.id === item.id);
+      let nextCart: CartItem[];
+      
       if (existing) {
         nextCart = prev.map((i) =>
           i.id === item.id
@@ -143,9 +146,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       } else {
         nextCart = [...prev, { ...item, quantity: item.quantity || 1 }];
       }
+      
+      console.log("New cart state:", nextCart);
+      
+      // Update localStorage immediately
       try {
         localStorage.setItem("cart:v1", JSON.stringify(nextCart));
       } catch {}
+      
       return nextCart;
     });
 
@@ -160,21 +168,42 @@ export function CartProvider({ children }: { children: ReactNode }) {
       quantity: item.quantity || 1,
       image_url: item.image_url ?? null,
     };
-    const { error } = await (
-      supabase as unknown as {
-        from: (table: string) => {
-          upsert: (
-            values: CartRow[],
-            options?: { onConflict?: string }
-          ) => Promise<{ error: { message: string } | null }>;
-        };
+    
+    try {
+      const { error } = await (
+        supabase as unknown as {
+          from: (table: string) => {
+            upsert: (
+              values: CartRow[],
+              options?: { onConflict?: string }
+            ) => Promise<{ error: { message: string } | null }>;
+          };
+        }
+      )
+        .from("cart_items")
+        .upsert([payload], { onConflict: "user_id,item_id" });
+        
+      if (error) {
+        console.error("Error adding to cart:", error);
+        // Revert the optimistic update on error
+        setCart((prev) => {
+          const reverted = prev.filter((i) => i.id !== item.id);
+          try {
+            localStorage.setItem("cart:v1", JSON.stringify(reverted));
+          } catch {}
+          return reverted;
+        });
       }
-    )
-      .from("cart_items")
-      .upsert([payload], { onConflict: "user_id,item_id" });
-    if (error) {
-      // revert on error
-      setCart((prev) => prev);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      // Revert the optimistic update on error
+      setCart((prev) => {
+        const reverted = prev.filter((i) => i.id !== item.id);
+        try {
+          localStorage.setItem("cart:v1", JSON.stringify(reverted));
+        } catch {}
+        return reverted;
+      });
     }
   };
 

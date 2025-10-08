@@ -60,16 +60,21 @@ export default function ProductDetail() {
     );
   }
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!product) return;
-    addToCart({
-      id: product.id,
-      name: product.name || product.title,
-      price: product.price,
-      image_url: product.photos,
-      quantity: 1,
-    });
-    toast.success("Додадено во кошничка");
+    try {
+      await addToCart({
+        id: product.id,
+        name: product.name || product.title,
+        price: product.price,
+        image_url: product.photos,
+        quantity: 1,
+      });
+      toast.success("Додадено во кошничка");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Грешка при додавање во кошничка");
+    }
     // Stay on the product page after adding; user can open cart from navbar
   };
 
