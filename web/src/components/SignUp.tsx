@@ -1,3 +1,5 @@
+"use client";
+
 import * as Dialog from "@radix-ui/react-dialog";
 import React, { useState } from "react";
 import { supabase } from "../lib/supabase";
@@ -17,7 +19,8 @@ export default function SignUpForm(props: SignUpFormProps) {
   });
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { user, loading } = useAuth();
+  // Removed unused user and loading from useAuth
+  useAuth();
   const { t } = useLanguage();
 
   async function handleSignIn() {
@@ -42,14 +45,22 @@ export default function SignUpForm(props: SignUpFormProps) {
     }
 
     setIsLoading(true);
-    console.log("");
+    setMessage(""); // Clear previous messages
 
     try {
+      // Check if user already exists
       const { data: existingUser, error: signInError } =
         await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         });
+
+      if (signInError) {
+        // Handle error from signInWithPassword
+        setMessage(signInError.message);
+        setIsLoading(false);
+        return;
+      }
 
       if (existingUser.user) {
         setMessage(t("accountExists"));
@@ -57,6 +68,7 @@ export default function SignUpForm(props: SignUpFormProps) {
         return;
       }
 
+      // Create new user
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -69,6 +81,7 @@ export default function SignUpForm(props: SignUpFormProps) {
 
       if (error) {
         setMessage(error.message);
+        setIsLoading(false);
         return;
       }
 
@@ -86,6 +99,7 @@ export default function SignUpForm(props: SignUpFormProps) {
       setIsLoading(false);
     }
   }
+
   return (
     <Dialog.Root open={props.open} onOpenChange={props.onOpenChange}>
       <Dialog.Portal>
@@ -181,14 +195,16 @@ export default function SignUpForm(props: SignUpFormProps) {
               <button
                 onClick={() => props.onOpenChange?.(false)}
                 className="flex-1 px-6 py-3 border border-gray-200 text-gray-600 hover:text-black hover:border-black transition-all font-light"
+                disabled={isLoading}
               >
                 {t("cancel")}
               </button>
               <button
                 onClick={handleSignIn}
                 className="flex-1 px-6 py-3 bg-black text-white transition-all font-light hover:bg-gray-900"
+                disabled={isLoading}
               >
-                {t("createAccount")}
+                {isLoading ? t("creatingAccount") : t("createAccount")}
               </button>
             </div>
 
@@ -198,6 +214,7 @@ export default function SignUpForm(props: SignUpFormProps) {
                 <button
                   onClick={props.onSwitchToLogin}
                   className="text-black hover:text-gray-600 font-light transition-colors"
+                  disabled={isLoading}
                 >
                   {t("logInHere")}
                 </button>

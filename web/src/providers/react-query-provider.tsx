@@ -29,7 +29,7 @@ function getQueryClient() {
   }
 }
 
-export const ReactQueryProvider = ({ children }: PropsWithChildren<{}>) => {
+export const ReactQueryProvider = ({ children }: PropsWithChildren) => {
   const queryClient = getQueryClient();
 
   return (
