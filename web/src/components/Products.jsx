@@ -38,9 +38,9 @@ export default function Products({
 
   if (loading) {
     return (
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="py-10 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {[
               ...Array(
                 limit ? Math.min(limit + (showViewAllTile ? 1 : 0), 4) : 8
@@ -48,7 +48,7 @@ export default function Products({
             ].map((_, i) => (
               <div
                 key={i}
-                className="aspect-[4/5] bg-black rounded-2xl animate-pulse"
+                className="aspect-[4/5] bg-black rounded-xl sm:rounded-2xl animate-pulse"
               ></div>
             ))}
           </div>
@@ -186,14 +186,14 @@ export default function Products({
   const displayedItems = limit ? items.slice(0, limit) : items;
 
   return (
-    <section className="py-10">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section className="py-6 sm:py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {displayedItems.map((item) => (
             <Link
               key={item.id}
               href={`/products/${item.id}`}
-              className="block bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              className="block bg-white rounded-xl sm:rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
             >
               <div className="aspect-[4/5] relative overflow-hidden">
                 <img
@@ -206,20 +206,20 @@ export default function Products({
                   className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                 />
 
-                <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-xs font-light rounded-full">
+                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black text-white px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-light rounded-full">
                   ♻ Eco
                 </div>
               </div>
 
-              <div className="p-4 space-y-1">
-                <h3 className="text-lg font-extrabold text-black">
+              <div className="p-3 sm:p-4 space-y-1">
+                <h3 className="text-sm sm:text-lg font-extrabold text-black line-clamp-2">
                   {item.title}
                 </h3>
-                <p className="text-sm text-gray-500">{item.description}</p>
+                <p className="text-xs sm:text-sm text-gray-500 line-clamp-2">{item.description}</p>
                 {item.size && (
-                  <p className="text-xs text-gray-600">Size: {item.size}</p>
+                  <p className="text-[10px] sm:text-xs text-gray-600">Size: {item.size}</p>
                 )}
-                <span className="text-black font-bold text-lg">
+                <span className="text-black font-bold text-sm sm:text-lg">
                   {item.price} ден
                 </span>
               </div>
@@ -228,14 +228,15 @@ export default function Products({
           {showViewAllTile && (
             <Link
               href="/products"
-              className="flex items-center justify-center bg-white rounded-2xl border border-gray-200 hover:border-black hover:shadow-md transition-all duration-200 min-h-[220px]"
+              className="flex items-center justify-center bg-white rounded-xl sm:rounded-2xl border border-gray-200 hover:border-black hover:shadow-md transition-all duration-200 min-h-[180px] sm:min-h-[220px]"
             >
-              <span className="inline-flex items-center gap-2 text-black font-bold">
-                {t("viewAll")}
+              <span className="inline-flex items-center gap-1 sm:gap-2 text-black font-bold text-sm sm:text-base">
+                <span className="hidden sm:inline">{t("viewAll")}</span>
+                <span className="sm:hidden">Сите</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  className="w-5 h-5"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
                 >
                   <path d="M13.19 7.47a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 11-1.06-1.06l2.97-2.97H6.75a.75.75 0 010-1.5h9.41l-2.97-2.97a.75.75 0 010-1.06z" />
                 </svg>
