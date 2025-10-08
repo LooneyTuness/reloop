@@ -7,23 +7,26 @@ export const metadata: Metadata = {
   description: "Browse our curated collection of pre-loved fashion items",
 };
 
+interface ProductsPageProps {
+  searchParams?: { search?: string };
+}
+
 export default async function ProductsPage({
-  searchParams,
-}: {
-  searchParams: { search?: string };
-}) {
+  searchParams = {},
+}: ProductsPageProps) {
   const supabase = await createServerClient();
-  const term = (searchParams?.search || "").trim();
+  const term = (searchParams.search || "").trim();
   const like = term ? `%${term}%` : undefined;
 
   let query = supabase
     .from("items")
     .select("*")
     .order("created_at", { ascending: false });
+
   if (like) {
-    // Search in title or description
     query = query.or(`title.ilike.${like},description.ilike.${like}`);
   }
+
   const { data: items, error } = await query;
 
   if (error) {
