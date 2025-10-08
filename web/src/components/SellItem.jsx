@@ -524,21 +524,21 @@ export default function SellItem() {
   };
 
   return (
-    <div className="min-h-screen bg-white py-12">
-      <div className="max-w-2xl mx-auto px-8">
-        <div className="bg-white border border-gray-200 p-8">
-          <div className="text-center mb-12">
-            <h1 className="text-3xl font-light text-black mb-4">
+    <div className="min-h-screen bg-white py-6 sm:py-12">
+      <div className="max-w-2xl mx-auto px-4 sm:px-8">
+        <div className="bg-white border border-gray-200 p-4 sm:p-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-2xl sm:text-3xl font-light text-black mb-4">
               {t("listItemTitle")}
             </h1>
-            <p className="text-gray-600 font-light">
+            <p className="text-sm sm:text-base text-gray-600 font-light">
               {t("welcomeBack")}, {user?.user_metadata?.username || user?.email}
               ! {t("listItemWelcome")}
             </p>
 
             {/* Progress Indicator */}
-            <div className="mt-8">
-              <div className="flex items-center justify-center space-x-4 mb-4">
+            <div className="mt-6 sm:mt-8">
+              <div className="flex items-center justify-center space-x-2 sm:space-x-4 mb-4">
                 <div
                   className={`w-8 h-8 flex items-center justify-center text-xs font-light transition-all duration-300 ${
                     photos.length > 0
