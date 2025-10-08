@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { SignUpForm } from "@/app/(auth)/sign-up/sign-up-form";
-import * as Routes from "@/lib/routes";
 import { SocialLoginForm } from "../social-login-form";
 
 export const metadata: Metadata = {

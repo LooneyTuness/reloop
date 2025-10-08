@@ -24,11 +24,11 @@ export default async function ProductsPage({
     // Search in title or description
     query = query.or(`title.ilike.${like},description.ilike.${like}`);
   }
-  const { data: items, error } = await (query as any);
+  const { data: items } = await (query as any);
 
   return (
     <main>
-      <Products items={items || []} />
+      <Products items={items || []} limit={items?.length ?? 0} />
     </main>
   );
 }
