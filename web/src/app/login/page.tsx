@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Login from "@/components/Login";
+import AuthDebug from "@/components/AuthDebug";
 
 export const metadata: Metadata = {
   title: "Login - vtoraraka | Access Your Account",
@@ -8,5 +9,12 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
-  return <Login />;
+  return (
+    <div>
+      <Login />
+      <div className="mt-8">
+        <AuthDebug />
+      </div>
+    </div>
+  );
 }

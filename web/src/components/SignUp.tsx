@@ -86,7 +86,11 @@ export default function SignUpForm(props: SignUpFormProps) {
       }
 
       if (data.user) {
-        setMessage(t("accountCreated"));
+        if (data.user.email_confirmed_at) {
+          setMessage(t("accountCreated"));
+        } else {
+          setMessage("Account created! Please check your email and click the confirmation link to activate your account.");
+        }
       }
 
       setTimeout(() => {
