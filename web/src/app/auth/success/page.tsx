@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function AuthSuccessPage() {
+function AuthSuccessContent() {
   const [user, setUser] = useState<{ id: string; email?: string; email_confirmed_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -185,5 +185,21 @@ export default function AuthSuccessPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AuthSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Ја потврдуваме вашата е-пошта...</p>
+          <p className="text-sm text-gray-500 mt-2">Ве молиме почекајте...</p>
+        </div>
+      </div>
+    }>
+      <AuthSuccessContent />
+    </Suspense>
   );
 }
