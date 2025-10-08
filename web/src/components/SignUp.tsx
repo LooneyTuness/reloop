@@ -1,8 +1,4 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { Button } from "@radix-ui/themes";
-import { TextField } from "@radix-ui/themes";
-import { Flex } from "@radix-ui/themes";
-import { Text } from "@radix-ui/themes";
 import React, { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
@@ -172,11 +168,10 @@ export default function SignUpForm(props: SignUpFormProps) {
 
             {message && (
               <div
-                className={`mt-6 p-4 text-sm font-light ${
-                  message.includes("successfully")
+                className={`mt-6 p-4 text-sm font-light ${message.includes("successfully")
                     ? "bg-gray-50 text-black border border-gray-200"
                     : "bg-red-50 text-red-700 border border-red-200"
-                }`}
+                  }`}
               >
                 {message}
               </div>

@@ -12,7 +12,6 @@ export function SocialLoginForm() {
   return (
     <div className="flex flex-col gap-4">
       <SocialLoginButton
-        provider="google"
         icon={<GoogleIcon />}
         onClick={() => signInWithSocial.mutate("google")}
         disabled={signInWithSocial.isPending}
@@ -24,12 +23,10 @@ export function SocialLoginForm() {
 }
 
 interface SocialLoginButtonProps extends ButtonProps {
-  provider: "google";
   icon: React.ReactNode;
 }
 
 function SocialLoginButton({
-  provider,
   icon,
   children,
   ...props
