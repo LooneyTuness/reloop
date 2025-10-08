@@ -23,7 +23,7 @@ export default function SignUpForm(props: SignUpFormProps) {
   useAuth();
   const { t } = useLanguage();
 
-  async function handleSignIn() {
+  async function handleSignUp() {
     if (
       !formData.username ||
       !formData.email ||
@@ -44,54 +44,61 @@ export default function SignUpForm(props: SignUpFormProps) {
       return;
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setMessage("Please enter a valid email address");
+      return;
+    }
+
     setIsLoading(true);
     setMessage(""); // Clear previous messages
 
     try {
-      // Check if user already exists
-      const { data: existingUser, error: signInError } =
-        await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: formData.password,
-        });
-
-      if (signInError) {
-        // Handle error from signInWithPassword
-        setMessage(signInError.message);
-        setIsLoading(false);
-        return;
-      }
-
-      if (existingUser.user) {
-        setMessage(t("accountExists"));
-        setIsLoading(false);
-        return;
-      }
-
-      // Create new user
+      // Debug: Log the email being sent
+      console.log("Attempting to sign up with email:", formData.email);
+      console.log("Email validation:", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email));
+      
+      // Try to create new user first
       const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
+        email: formData.email.trim().toLowerCase(), // Trim whitespace and convert to lowercase
         password: formData.password,
         options: {
           data: {
             username: formData.username,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`
         },
       });
 
       if (error) {
-        setMessage(error.message);
+        console.error("Sign up error:", error);
+        // Check if user already exists
+        if (error.message.includes("already registered") || error.message.includes("User already registered")) {
+          setMessage(t("accountExists"));
+        } else if (error.message.includes("Email address is invalid")) {
+          setMessage("Please enter a valid email address");
+        } else {
+          setMessage(error.message);
+        }
         setIsLoading(false);
         return;
       }
 
       if (data.user) {
-        setMessage(t("accountCreated"));
+        if (data.user.email_confirmed_at) {
+          setMessage("Account created and confirmed! You can now sign in.");
+          setTimeout(() => {
+            props.onOpenChange?.(false);
+          }, 2000);
+        } else {
+          setMessage("Account created! Please check your email and click the confirmation link to complete your registration.");
+          // Don't close the modal immediately - let user see the message
+          setTimeout(() => {
+            props.onOpenChange?.(false);
+          }, 5000);
+        }
       }
-
-      setTimeout(() => {
-        props.onOpenChange?.(false);
-      }, 2000);
     } catch (error) {
       setMessage(t("errorOccurred"));
       console.error("Sign up error:", error);
@@ -200,7 +207,7 @@ export default function SignUpForm(props: SignUpFormProps) {
                 {t("cancel")}
               </button>
               <button
-                onClick={handleSignIn}
+                onClick={handleSignUp}
                 className="flex-1 px-6 py-3 bg-black text-white transition-all font-light hover:bg-gray-900"
                 disabled={isLoading}
               >

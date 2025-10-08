@@ -5,8 +5,10 @@ import { usePostHog } from "posthog-js/react";
 import { useSignInWithEmail } from "../sign-in/sign-in.hook";
 
 export type SignUpValues = {
+  fullName: string;
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 export function useSignUpWithEmail() {
@@ -21,6 +23,9 @@ export function useSignUpWithEmail() {
         email: data.email,
         password: data.password,
         options: {
+          data: {
+            full_name: data.fullName,
+          },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });

@@ -24,7 +24,10 @@ export function useSignInWithEmail() {
       }
     },
     onSuccess: () => {
-      router.push(Routes.DASHBOARD.getPath());
+      // Check if there's a return URL in the query params, otherwise go to home
+      const urlParams = new URLSearchParams(window.location.search);
+      const returnUrl = urlParams.get('returnUrl') || Routes.HOME.getPath();
+      router.push(returnUrl);
     },
     onError: (error) => {
       switch (error.message) {
@@ -52,7 +55,7 @@ export function useSignInWithSocial() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-        redirectTo: `${window.origin}/api/auth/callback?next=${searchParams.get('next') ?? Routes.DASHBOARD.getPath()}`,
+        redirectTo: `${window.origin}/api/auth/callback?next=${searchParams.get('next') ?? Routes.HOME.getPath()}`,
       },
       });
       

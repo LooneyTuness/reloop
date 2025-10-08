@@ -78,7 +78,7 @@ export default function Home() {
                 {language === "mk" ? "Започни купување" : "Start Shopping"}
               </Link>
               <Link
-                href="/sell"
+                href="/sign-up"
                 className="backdrop-blur-sm bg-white/70 border-1 border-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold tracking-wide text-center transition-colors duration-200 hover:bg-primary hover:text-primary-foreground hero-cta-secondary text-sm sm:text-base"
               >
                 {language === "mk"

@@ -1,42 +1,35 @@
-import Link from "next/link";
-import { Metadata } from "next";
-import { SignUpForm } from "@/app/(auth)/sign-up/sign-up-form";
-import { SocialLoginForm } from "../social-login-form";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Sign Up | Bazzly",
-  description: "Create your Bazzly account",
-};
+import Link from "next/link";
+import { SignUpForm } from "@/app/(auth)/sign-up/sign-up-form";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function SignUp() {
+  const { t } = useLanguage();
+
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <div className="container mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[400px]">
         <div className="flex flex-col space-y-3 text-center">
           <h1 className="text-3xl font-semibold tracking-tight">
-            Create your Bazzly account
+            {t("signUpTitle")}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Start driving qualified traffic on autopilot
+            {t("signUpSubtitle")}
           </p>
         </div>
 
         <div className="flex flex-col space-y-6">
-          <div className="grid gap-6">
-            <SocialLoginForm />
+          <SignUpForm />
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <SignUpForm />
+          <div className="text-sm text-center text-muted-foreground">
+            {t("alreadyHaveAccount")}{" "}
+            <Link
+              href="/sign-in"
+              className="underline underline-offset-4 hover:text-primary font-medium"
+            >
+              {t("signIn")}
+            </Link>
           </div>
 
           <div className="text-xs text-center text-muted-foreground">

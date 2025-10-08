@@ -7,107 +7,176 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          operationName?: string
-          query?: string
-          variables?: Json
-          extensions?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
-      projects: {
+      items: {
         Row: {
-          created_at: string | null
-          icp: string | null
           id: string
-          keywords: string[] | null
-          product_description: string | null
-          product_name: string
-          product_url: string
-          profile_embedding: string | null
-          updated_at: string | null
-          user_id: string | null
-          watch_interval_min: number | null
-          watched_subreddits: string[] | null
+          name?: string
+          title: string
+          price: number
+          old_price?: number
+          condition?: string
+          size?: string
+          seller?: string
+          photos: string | string[]
+          description?: string
+          user_id?: string
+          user_email?: string
+          category?: string
+          created_at?: string
+          updated_at?: string
         }
         Insert: {
-          created_at?: string | null
-          icp?: string | null
           id?: string
-          keywords?: string[] | null
-          product_description?: string | null
-          product_name: string
-          product_url: string
-          profile_embedding?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-          watch_interval_min?: number | null
-          watched_subreddits?: string[] | null
+          name?: string
+          title: string
+          price: number
+          old_price?: number
+          condition?: string
+          size?: string
+          seller?: string
+          photos: string | string[]
+          description?: string
+          user_id?: string
+          user_email?: string
+          category?: string
+          created_at?: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
-          icp?: string | null
           id?: string
-          keywords?: string[] | null
-          product_description?: string | null
-          product_name?: string
-          product_url?: string
-          profile_embedding?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-          watch_interval_min?: number | null
-          watched_subreddits?: string[] | null
+          name?: string
+          title?: string
+          price?: number
+          old_price?: number
+          condition?: string
+          size?: string
+          seller?: string
+          photos?: string | string[]
+          description?: string
+          user_id?: string
+          user_email?: string
+          category?: string
+          created_at?: string
+          updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "projects_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      users: {
+      cart_items: {
         Row: {
-          created_at: string | null
-          email: string
           id: string
-          name: string | null
-          updated_at: string | null
+          user_id: string
+          item_id: string
+          name: string
+          price: number
+          quantity: number
+          image_url: string | null
+          created_at?: string
+          updated_at?: string
         }
         Insert: {
-          created_at?: string | null
-          email: string
-          id: string
-          name?: string | null
-          updated_at?: string | null
+          id?: string
+          user_id: string
+          item_id: string
+          name: string
+          price: number
+          quantity: number
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
-          email?: string
           id?: string
-          name?: string | null
-          updated_at?: string | null
+          user_id?: string
+          item_id?: string
+          name?: string
+          price?: number
+          quantity?: number
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          id: string
+          user_id: string | null
+          total_amount: number
+          payment_method: string
+          status: string
+          full_name?: string
+          email?: string
+          phone?: string
+          address_line1?: string
+          address_line2?: string
+          city?: string
+          postal_code?: string
+          notes?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          total_amount: number
+          payment_method: string
+          status: string
+          full_name?: string
+          email?: string
+          phone?: string
+          address_line1?: string
+          address_line2?: string
+          city?: string
+          postal_code?: string
+          notes?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          total_amount?: number
+          payment_method?: string
+          status?: string
+          full_name?: string
+          email?: string
+          phone?: string
+          address_line1?: string
+          address_line2?: string
+          city?: string
+          postal_code?: string
+          notes?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          id: string
+          order_id: string
+          item_id: string
+          quantity: number
+          price: number
+          created_at?: string
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          item_id: string
+          quantity: number
+          price: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          item_id?: string
+          quantity?: number
+          price?: number
+          created_at?: string
         }
         Relationships: []
       }
@@ -203,41 +272,14 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
+  PublicEnumNameOrOptions extends
+    | keyof Database["public"]["Enums"]
     | { schema: keyof Database },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
+    ? Database["public"]["Enums"][PublicEnumNameOrOptions]
     : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
-
-export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
-  public: {
-    Enums: {},
-  },
-} as const
-
