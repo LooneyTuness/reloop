@@ -35,25 +35,21 @@ export default function LoginPage() {
 
     setIsLoading(true);
 
+    // Debug: Check environment variables
+    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log("Supabase Anon Key:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "Set" : "Not set");
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       });
 
+      console.log("Login response:", { data, error });
+
       if (error) {
         console.error("Login error details:", error);
-        if (error.message === "Invalid login credentials") {
-          setMessage(
-            "Invalid email or password. If you just signed up, please check your email for a confirmation link."
-          );
-        } else if (error.message === "Email not confirmed") {
-          setMessage(
-            "Please check your email and click the confirmation link before logging in."
-          );
-        } else {
-          setMessage(error.message);
-        }
+        setMessage(error.message);
         return;
       }
 
