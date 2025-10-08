@@ -130,10 +130,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const addToCart = async (item: CartItem) => {
-    console.log("Adding to cart:", item);
     // Optimistic update + immediate localStorage persist to survive route transitions
     setCart((prev) => {
-      console.log("Previous cart state:", prev);
       const existing = prev.find((i) => i.id === item.id);
       let nextCart: CartItem[];
       
@@ -146,8 +144,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       } else {
         nextCart = [...prev, { ...item, quantity: item.quantity || 1 }];
       }
-      
-      console.log("New cart state:", nextCart);
       
       // Update localStorage immediately
       try {
