@@ -44,9 +44,13 @@ export default function LoginPage() {
       if (error) {
         console.error("Login error details:", error);
         if (error.message === "Invalid login credentials") {
-          setMessage("Invalid email or password. If you just signed up, please check your email for a confirmation link.");
+          setMessage(
+            "Invalid email or password. If you just signed up, please check your email for a confirmation link."
+          );
         } else if (error.message === "Email not confirmed") {
-          setMessage("Please check your email and click the confirmation link before logging in.");
+          setMessage(
+            "Please check your email and click the confirmation link before logging in."
+          );
         } else {
           setMessage(error.message);
         }
