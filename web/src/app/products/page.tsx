@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[]>;
+  searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const supabase = await createServerClient();
   const term = typeof searchParams?.search === "string" ? searchParams.search.trim() : "";
