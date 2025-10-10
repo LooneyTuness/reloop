@@ -66,8 +66,8 @@ export default function Navbar() {
 
       {/* Main Navigation */}
       <header className="eco-glass-header">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
             
             {/* Logo */}
             <Link href="/" className="flex-shrink-0 hover:scale-105 transition-all duration-300 group">
@@ -156,14 +156,14 @@ export default function Navbar() {
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
               
               {/* Mobile Search Button */}
               <button
                 onClick={() => {
                   window.location.href = "/products";
                 }}
-                className="lg:hidden p-2.5 text-gray-800 hover:text-gray-900 transition-all duration-300 rounded-xl hover:bg-white/30 backdrop-blur-xl border border-white/20 hover:border-white/40 shadow-lg hover:shadow-xl"
+                className="lg:hidden p-2 sm:p-2.5 text-gray-800 hover:text-gray-900 transition-all duration-300 rounded-xl hover:bg-white/30 backdrop-blur-xl border border-white/20 hover:border-white/40 shadow-lg hover:shadow-xl"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -173,7 +173,7 @@ export default function Navbar() {
               {/* Cart */}
               <button
                 onClick={() => window.location.href = "/cart"}
-                className="relative p-2.5 text-gray-800 hover:text-gray-900 transition-all duration-300 rounded-xl hover:bg-white/30 backdrop-blur-xl border border-white/20 hover:border-white/40 shadow-lg hover:shadow-xl"
+                className="relative p-2 sm:p-2.5 text-gray-800 hover:text-gray-900 transition-all duration-300 rounded-xl hover:bg-white/30 backdrop-blur-xl border border-white/20 hover:border-white/40 shadow-lg hover:shadow-xl"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5-5M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z" />
@@ -188,7 +188,7 @@ export default function Navbar() {
               {/* Language Switcher */}
               <button
                 onClick={toggleLanguage}
-                className="px-3 py-2 text-sm font-semibold text-gray-800 hover:text-gray-900 border border-white/30 rounded-xl transition-all duration-300 hover:bg-white/30 backdrop-blur-xl hover:border-white/50 shadow-lg hover:shadow-xl"
+                className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-gray-800 hover:text-gray-900 border border-white/30 rounded-xl transition-all duration-300 hover:bg-white/30 backdrop-blur-xl hover:border-white/50 shadow-lg hover:shadow-xl"
               >
                 {language === "mk" ? "EN" : "МК"}
               </button>
@@ -234,7 +234,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   href={user ? "/dashboard" : "/sign-up?redirect=/dashboard"}
-                  className="px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-emerald-500/30 min-h-[40px] flex items-center justify-center"
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-emerald-500/30 min-h-[36px] sm:min-h-[40px] flex items-center justify-center whitespace-nowrap"
                 >
                   Продај
                 </Link>

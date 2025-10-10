@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { useSignInWithMagicLink } from "@/app/api/auth/sign-in/sign-in.hook";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "sonner";
 
 const magicLinkSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -23,8 +24,10 @@ const magicLinkSchema = z.object({
 type MagicLinkFormValues = z.infer<typeof magicLinkSchema>;
 
 export function SignInForm() {
-  const signInWithMagicLink = useSignInWithMagicLink();
   const { t } = useLanguage();
+  const signInWithMagicLink = useSignInWithMagicLink(() => {
+    toast.error(t("magicLinkFailed"));
+  });
 
   const form = useForm<MagicLinkFormValues>({
     resolver: zodResolver(magicLinkSchema),
