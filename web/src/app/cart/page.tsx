@@ -6,12 +6,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
 import { toast } from "sonner";
+import MagicLinkSignupModal from "@/components/MagicLinkSignupModal";
 
 export default function CartPage() {
   const { cart, removeFromCart, clearCart, total, loading } = useCart();
   const { user } = useAuth();
   const { language, t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
   const [checkout, setCheckout] = useState({
     full_name: "",
     email: "",
@@ -22,6 +24,14 @@ export default function CartPage() {
     postal_code: "",
     notes: "",
   });
+
+  const handleCloseSignupModal = () => {
+    setShowSignupModal(false);
+    // Redirect to home after closing modal
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
+  };
 
   const handlePlaceOrder = async () => {
     if (submitting) return;
@@ -218,13 +228,20 @@ export default function CartPage() {
 
       // 5) Clear cart (both local and server)
       await clearCart();
-      // 6) Notify and redirect
+      // 6) Notify and show signup modal for non-authenticated users
       toast.success(t("orderCreated"), {
         duration: 8000,
       });
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 3000);
+      
+      // Show magic link signup modal for non-authenticated users
+      if (!user) {
+        setShowSignupModal(true);
+      } else {
+        // Redirect authenticated users immediately
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
+      }
     } catch (err) {
       console.error("Failed to place order", err);
       alert(t("orderError"));
@@ -247,30 +264,31 @@ export default function CartPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="h-7 w-40 bg-gray-200 rounded mb-6 animate-pulse" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-4 border rounded-lg"
-              >
-                <div className="flex items-center gap-4 w-full">
-                  <div className="w-20 h-20 bg-gray-200 rounded-lg animate-pulse" />
-                  <div className="flex-1">
-                    <div className="h-4 w-2/3 bg-gray-200 rounded mb-2 animate-pulse" />
-                    <div className="h-4 w-1/3 bg-gray-200 rounded animate-pulse" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="h-7 w-40 bg-gray-200 rounded mb-6 animate-pulse" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="professional-card p-4 animate-pulse"
+                >
+                  <div className="flex items-center gap-4 w-full">
+                    <div className="w-20 h-20 bg-gray-200 rounded-lg animate-pulse" />
+                    <div className="flex-1">
+                      <div className="h-4 w-2/3 bg-gray-200 rounded mb-2 animate-pulse" />
+                      <div className="h-4 w-1/3 bg-gray-200 rounded animate-pulse" />
+                    </div>
                   </div>
                 </div>
-                <div className="w-24 h-4 bg-gray-200 rounded animate-pulse" />
-              </div>
-            ))}
-          </div>
-          <div className="border rounded-lg p-6 h-fit space-y-4">
-            <div className="h-5 w-32 bg-gray-200 rounded animate-pulse" />
-            <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
-            <div className="h-10 w-full bg-gray-200 rounded animate-pulse" />
+              ))}
+            </div>
+            <div className="professional-card p-6 h-fit space-y-4">
+              <div className="h-5 w-32 bg-gray-200 rounded animate-pulse" />
+              <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
+              <div className="h-10 w-full bg-gray-200 rounded animate-pulse" />
+            </div>
           </div>
         </div>
       </div>
@@ -281,96 +299,139 @@ export default function CartPage() {
 
   if (cart.length === 0)
     return (
-      <div className="max-w-7xl mx-auto px-6 py-24 text-center">
-        <h1 className="text-3xl font-bold mb-2">{t("cartEmpty")}</h1>
-        <p className="text-gray-600 mb-6">
-          {t("cartEmptyDescription")}
-        </p>
-        <Link
-          href="/products"
-          className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:opacity-90"
-        >
-          {t("startShopping")}
-        </Link>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+          <div className="professional-card p-12 max-w-md mx-auto">
+            <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5-5M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">{t("cartEmpty")}</h1>
+            <p className="text-gray-600 mb-8">
+              {t("cartEmptyDescription")}
+            </p>
+            <Link
+              href="/products"
+              className="hero-primary-button inline-flex items-center justify-center gap-2"
+            >
+              <span className="tracking-wide">{t("startShopping")}</span>
+              <svg
+                className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </Link>
+          </div>
+        </div>
       </div>
     );
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-16">
-      <h1 className="text-3xl font-bold mb-6">{t("cart")}</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Items list */}
-        <div className="lg:col-span-2 space-y-4">
-          {cart.map((item) => {
-            // Normalize possible shapes: string URL, array of URLs, or JSON stringified array
-            let imageSrc: string | undefined;
-            if (Array.isArray(item.image_url)) {
-              imageSrc = (item.image_url[0] as unknown as string) || undefined;
-            } else if (typeof item.image_url === "string") {
-              // Try to parse JSON array first
-              try {
-                const parsed = JSON.parse(item.image_url as string);
-                if (Array.isArray(parsed) && parsed.length > 0) {
-                  imageSrc = parsed[0];
-                } else {
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h1 
+          className="text-3xl font-black text-gray-900 mb-8 tracking-tight"
+          style={{ fontFamily: "var(--font-poppins)" }}
+        >
+          {t("cart")}
+        </h1>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Items list */}
+          <div className="lg:col-span-2 space-y-4">
+            {cart.map((item) => {
+              // Normalize possible shapes: string URL, array of URLs, or JSON stringified array
+              let imageSrc: string | undefined;
+              if (Array.isArray(item.image_url)) {
+                imageSrc = (item.image_url[0] as unknown as string) || undefined;
+              } else if (typeof item.image_url === "string") {
+                // Try to parse JSON array first
+                try {
+                  const parsed = JSON.parse(item.image_url as string);
+                  if (Array.isArray(parsed) && parsed.length > 0) {
+                    imageSrc = parsed[0];
+                  } else {
+                    imageSrc = item.image_url;
+                  }
+                } catch {
                   imageSrc = item.image_url;
                 }
-              } catch {
-                imageSrc = item.image_url;
               }
-            }
-            return (
-              <div
-                key={item.id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:shadow-sm transition"
-              >
-                <div className="flex items-center gap-4">
-                  <img
-                    src={imageSrc || "/placeholder.jpg"}
-                    alt={item.name}
-                    className="w-24 h-24 object-cover rounded-lg"
-                  />
-                  <div>
-                    <h2 className="font-bold text-lg">{item.name}</h2>
-                    <p className="text-gray-600 text-sm">
-                      {item.quantity} x {item.price.toLocaleString()} {t("currency")}
-                    </p>
+              return (
+                <div
+                  key={item.id}
+                  className="professional-card p-4 hover:shadow-md transition-all duration-200"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={imageSrc || "/placeholder.jpg"}
+                        alt={item.name}
+                        className="w-24 h-24 object-cover rounded-lg"
+                      />
+                      <div>
+                        <h2 
+                          className="font-black text-lg text-gray-900 tracking-tight"
+                          style={{ fontFamily: "var(--font-poppins)" }}
+                        >
+                          {item.name}
+                        </h2>
+                        <p 
+                          className="text-gray-600 text-sm tracking-wide"
+                          style={{ fontFamily: "var(--font-poppins)" }}
+                        >
+                          {item.quantity} x {item.price.toLocaleString()} {t("currency")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold text-lg text-gray-900 whitespace-nowrap">
+                        {(item.quantity * item.price).toLocaleString()} {t("currency")}
+                      </span>
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="px-3 py-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors duration-200 hover:scale-105 transform"
+                      >
+                        {t("remove")}
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className="font-bold whitespace-nowrap">
-                    {(item.quantity * item.price).toLocaleString()} {t("currency")}
-                  </span>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="px-3 py-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50"
-                  >
-                    {t("remove")}
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
 
-        {/* Summary card */}
-        <div className="border rounded-xl p-6 h-fit sticky top-6">
-          <h2 className="text-xl font-bold mb-4">{t("orderSummary")}</h2>
-          <div className="space-y-3 text-sm">
+          {/* Summary card */}
+          <div className="professional-card p-6 h-fit sticky top-6">
+          <h2 
+            className="text-xl font-black text-gray-900 mb-6 tracking-tight"
+            style={{ fontFamily: "var(--font-poppins)" }}
+          >
+            {t("orderSummary")}
+          </h2>
+          <div className="space-y-3 text-sm mb-6">
             <div className="flex justify-between">
               <span className="text-gray-600">{t("subtotal")}</span>
-              <span className="font-medium">{total.toLocaleString()} {t("currency")}</span>
+              <span className="font-semibold text-gray-900">{total.toLocaleString()} {t("currency")}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">{t("shipping")}</span>
-              <span className="font-medium">{t("shippingCalculated")}</span>
+              <span className="font-semibold text-gray-900">{t("shippingCalculated")}</span>
             </div>
           </div>
           {/* Checkout details */}
-          <div className="mt-4 space-y-3 text-sm">
+          <div className="space-y-4 text-sm">
             <div className="grid grid-cols-2 gap-3">
               <input
-                className="border rounded px-3 py-2 col-span-2"
+                className="professional-input col-span-2"
                 placeholder={t("fullName")}
                 value={checkout.full_name}
                 onChange={(e) =>
@@ -378,7 +439,7 @@ export default function CartPage() {
                 }
               />
               <input
-                className="border rounded px-3 py-2"
+                className="professional-input"
                 placeholder={t("email")}
                 value={checkout.email}
                 onChange={(e) =>
@@ -386,7 +447,7 @@ export default function CartPage() {
                 }
               />
               <input
-                className="border rounded px-3 py-2"
+                className="professional-input"
                 placeholder={t("phone")}
                 value={checkout.phone}
                 onChange={(e) =>
@@ -394,7 +455,7 @@ export default function CartPage() {
                 }
               />
               <input
-                className="border rounded px-3 py-2"
+                className="professional-input"
                 placeholder={t("city")}
                 value={checkout.city}
                 onChange={(e) =>
@@ -402,7 +463,7 @@ export default function CartPage() {
                 }
               />
               <input
-                className="border rounded px-3 py-2 col-span-2"
+                className="professional-input col-span-2"
                 placeholder={t("address")}
                 value={checkout.address_line1}
                 onChange={(e) =>
@@ -410,7 +471,7 @@ export default function CartPage() {
                 }
               />
               <input
-                className="border rounded px-3 py-2 col-span-2"
+                className="professional-input col-span-2"
                 placeholder={t("additionalAddress")}
                 value={checkout.address_line2}
                 onChange={(e) =>
@@ -418,7 +479,7 @@ export default function CartPage() {
                 }
               />
               <input
-                className="border rounded px-3 py-2 col-span-2"
+                className="professional-input col-span-2"
                 placeholder={t("postalCode")}
                 value={checkout.postal_code}
                 onChange={(e) =>
@@ -426,7 +487,7 @@ export default function CartPage() {
                 }
               />
               <textarea
-                className="border rounded px-3 py-2 col-span-2"
+                className="professional-input col-span-2"
                 placeholder={t("notes")}
                 value={checkout.notes}
                 onChange={(e) =>
@@ -438,9 +499,9 @@ export default function CartPage() {
               {t("dataUsageNote")}
             </p>
           </div>
-          <div className="border-t mt-4 pt-4 flex justify-between items-center">
-            <span className="text-lg font-bold">{t("total")}</span>
-            <span className="text-lg font-bold">
+          <div className="border-t border-gray-200 mt-6 pt-6 flex justify-between items-center">
+            <span className="text-lg font-bold text-gray-900">{t("total")}</span>
+            <span className="text-lg font-bold text-gray-900">
               {total.toLocaleString()} {t("currency")}
             </span>
           </div>
@@ -448,27 +509,64 @@ export default function CartPage() {
             <button
               disabled={submitting}
               onClick={handlePlaceOrder}
-              className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:opacity-90 disabled:opacity-60"
+              className="hero-primary-button w-full flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              {submitting
-                ? t("processing")
-                : t("completeOrder")}
+              <span className="tracking-wide">
+                {submitting ? t("processing") : t("completeOrder")}
+              </span>
+              {!submitting && (
+                <svg
+                  className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              )}
             </button>
             <Link
               href="/products"
-              className="block w-full text-center px-6 py-3 border rounded-lg hover:bg-gray-50"
+              className="hero-secondary-button w-full flex items-center justify-center gap-2"
             >
-              {t("continueShopping")}
+              <span className="tracking-wide">{t("continueShopping")}</span>
+              <svg
+                className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
             </Link>
             <button
               onClick={clearCart}
-              className="w-full px-6 py-3 text-red-600 border border-red-200 rounded-lg hover:bg-red-50"
+              className="w-full px-6 py-3 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors duration-200"
             >
               {t("clearCart")}
             </button>
           </div>
         </div>
+        </div>
       </div>
+
+      {/* Magic Link Signup Modal */}
+      <MagicLinkSignupModal
+        isOpen={showSignupModal}
+        onClose={handleCloseSignupModal}
+        buyerEmail={checkout.email}
+        buyerName={checkout.full_name}
+      />
     </div>
   );
 }

@@ -1,16 +1,48 @@
 type LogoProps = {
   className?: string;
   alt?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  showText?: boolean;
 };
 
-export function VtorarakaLogo({ className, alt = "vtoraraka.mk" }: LogoProps) {
+export function VtorarakaLogo({ 
+  className = "", 
+  alt = "vtoraraka", 
+  size = 'md',
+  showText = true 
+}: LogoProps) {
+  const sizeClasses = {
+    sm: 'w-6 h-6',
+    md: 'w-7 h-7 sm:w-9 sm:h-9',
+    lg: 'w-12 h-12 sm:w-16 sm:h-16',
+    xl: 'w-16 h-16 sm:w-20 sm:h-20'
+  };
+
+  const textSizeClasses = {
+    sm: 'text-sm sm:text-base',
+    md: 'text-lg sm:text-xl',
+    lg: 'text-2xl sm:text-3xl',
+    xl: 'text-3xl sm:text-4xl'
+  };
+
+  const iconSizeClasses = {
+    sm: 'text-xs sm:text-sm',
+    md: 'text-sm sm:text-lg',
+    lg: 'text-lg sm:text-xl',
+    xl: 'text-xl sm:text-2xl'
+  };
+
   return (
-    // Using img for simplicity; can be swapped to next/image if desired
-    <img
-      src="/images/Black White Bold Modern Clothing Brand Logo.png"
-      alt={alt}
-      className={className}
-    />
+    <div className={`flex items-center space-x-2 sm:space-x-3 ${className}`}>
+      <div className={`${sizeClasses[size]} bg-gradient-to-br from-gray-900 to-gray-700 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm`}>
+        <span className={`text-white font-bold ${iconSizeClasses[size]}`}>V</span>
+      </div>
+      {showText && (
+        <span className={`font-bold text-gray-900 tracking-tight ${textSizeClasses[size]}`}>
+          vtoraraka
+        </span>
+      )}
+    </div>
   );
 }
 

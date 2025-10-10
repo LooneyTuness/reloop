@@ -13,7 +13,7 @@ function AuthSuccessContent() {
   const confirmed = searchParams.get('confirmed');
   const errorParam = searchParams.get('error');
   const errorDescription = searchParams.get('description');
-  const emailParam = searchParams.get('email');
+  const fromMagicLink = searchParams.get('from') === 'magiclink';
 
   useEffect(() => {
     // Handle errors from callback
@@ -72,50 +72,57 @@ function AuthSuccessContent() {
     });
 
     return () => subscription.unsubscribe();
-  }, [confirmed]);
+  }, [confirmed, errorParam, errorDescription]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p>Ја потврдуваме вашата е-пошта...</p>
-            <p className="text-sm text-gray-500 mt-2">Ве молиме почекајте...</p>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-full max-w-md space-y-6 px-6 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <div className="space-y-2">
+            <p className="text-lg font-medium text-gray-900">Confirming your email...</p>
+            <p className="text-sm text-gray-500">Please wait a moment</p>
           </div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-full max-w-md space-y-6 px-6 text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
             <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Грешка при потврда</h1>
-          <p className="text-gray-600 mb-6">
-            Се случи грешка при потврдувањето на вашата е-пошта.
-          </p>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-red-700">
-              <strong>Грешка:</strong> {error}
+          
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-gray-900">Confirmation Error</h1>
+            <p className="text-lg text-gray-600">
+              There was an error confirming your email address.
             </p>
           </div>
+          
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
+            <p className="text-sm text-red-700">
+              <strong>Error:</strong> {error}
+            </p>
+          </div>
+          
           <div className="space-y-3">
             <button
               onClick={() => router.push('/sign-up')}
-              className="w-full bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+              className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
             >
-              Обиди се повторно
+              Try Again
             </button>
             <button
               onClick={() => router.push('/')}
               className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm transition-colors"
             >
-              Кон почетна страница
+              Go to Homepage
             </button>
           </div>
         </div>
@@ -124,61 +131,94 @@ function AuthSuccessContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="w-full max-w-md space-y-8 px-6">
         {user ? (
-          <div>
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="text-center space-y-6">
+            {/* Success Icon */}
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Добредојдовте на vtoraraka.mk!</h1>
-            <p className="text-gray-600 mb-6">
-              Вашата е-пошта е успешно потврдена. Сега можете да започнете со купување и продавање.
-            </p>
+
+            {/* Success Message */}
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Welcome to vtoraraka.mk!
+              </h1>
+              <p className="text-lg text-gray-600">
+                {fromMagicLink 
+                  ? "You're now signed in! Start your sustainable fashion journey."
+                  : "Your email has been successfully confirmed. Start your sustainable fashion journey now."
+                }
+              </p>
+            </div>
+
+            {/* Action Button */}
             <button
               onClick={() => router.push('/')}
-              className="w-full bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+              className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
             >
-              Започни купување
+              Start Shopping
             </button>
+
+            {/* Playful annotation */}
+            <div className="text-center">
+              <p className="text-sm text-green-600 font-medium">
+                Ready to make a difference
+                <span className="ml-1">♻️</span>
+              </p>
+            </div>
           </div>
         ) : (
-          <div>
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="text-center space-y-6">
+            {/* Email Icon */}
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
               <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Проверете ја вашата е-пошта</h1>
-            <p className="text-gray-600 mb-6">
-              Испративме линк за потврда на вашата е-пошта. Кликнете на линкот за да ја активирате вашата сметка и да започнете со купување и продавање.
-            </p>
+
+            {/* Email Confirmation Message */}
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold text-gray-900">
+                {fromMagicLink ? "Check your email" : "Check your email"}
+              </h1>
+              <p className="text-lg text-gray-600">
+                {fromMagicLink 
+                  ? "We&apos;ve sent you a magic link. Click it to sign in and start your sustainable fashion journey."
+                  : "We&apos;ve sent you a confirmation link. Click it to activate your account and start your sustainable fashion journey."
+                }
+              </p>
+            </div>
             
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
-              <p className="text-sm text-gray-700 mb-2">
-                <strong>Не го најдовте е-мејлот?</strong>
+            {/* Help Section */}
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-left">
+              <p className="text-sm text-gray-700 mb-2 font-medium">
+                Can&apos;t find the {fromMagicLink ? "magic link" : "email"}?
               </p>
               <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                <li>Проверете го вашиот spam/junk фолдер</li>
-                <li>Почекајте неколку минути и обидете се повторно</li>
-                <li>Проверете дали е-мејлот е точен</li>
+                <li>Check your spam/junk folder</li>
+                <li>Wait a few minutes and try again</li>
+                <li>Make sure the email address is correct</li>
+                {fromMagicLink && <li>Magic links expire after 1 hour for security</li>}
               </ul>
             </div>
 
+            {/* Action Buttons */}
             <div className="space-y-3">
               <button
                 onClick={() => router.push('/')}
-                className="w-full bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
               >
-                Разгледај производи во меѓувреме
+                Browse products in the meantime
               </button>
               <button
                 onClick={() => window.location.reload()}
                 className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm transition-colors"
               >
-                Веќе го потврдив е-мејлот
+                I already confirmed my email
               </button>
             </div>
           </div>
@@ -191,11 +231,13 @@ function AuthSuccessContent() {
 export default function AuthSuccessPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Ја потврдуваме вашата е-пошта...</p>
-          <p className="text-sm text-gray-500 mt-2">Ве молиме почекајте...</p>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-full max-w-md space-y-6 px-6 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <div className="space-y-2">
+            <p className="text-lg font-medium text-gray-900">Confirming your email...</p>
+            <p className="text-sm text-gray-500">Please wait a moment</p>
+          </div>
         </div>
       </div>
     }>

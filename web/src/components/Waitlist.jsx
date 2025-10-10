@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import Image from "next/image";
+import { VtorarakaLogo } from "./icons";
 
 export default function Waitlist() {
   const [email, setEmail] = useState("");
@@ -106,24 +107,8 @@ export default function Waitlist() {
           {/* Header */}
           <div className="text-center mb-16">
             {/* Logo */}
-            <div className="inline-flex items-center space-x-4 mb-10">
-              <div className="w-20 h-20 flex items-center justify-center shadow-2xl">
-                <Image
-                  src="/swish-logo.png"
-                  alt="vtoraraka Logo"
-                  width={80}
-                  height={80}
-                  className="object-contain"
-                />
-              </div>
-              <div className="text-left">
-                <h1 className="text-4xl font-black text-gray-900 tracking-tight">
-                  vtoraraka
-                </h1>
-                <p className="text-base text-gray-500 uppercase tracking-widest font-black">
-                  Second-hand. First rate.
-                </p>
-              </div>
+            <div className="flex justify-center mb-10">
+              <VtorarakaLogo size="xl" />
             </div>
 
             {/* Badge */}
