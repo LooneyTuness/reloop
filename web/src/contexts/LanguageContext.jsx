@@ -242,7 +242,6 @@ const translations = {
     privacyPolicy: "Политика за приватност",
 
     // Magic Link Modal
-    checkYourEmail: "Провери ја твојата е-пошта!",
     createYourAccount: "Креирај ја твојата сметка",
     magicLinkSent: "Испративме магичен линк за најава и следење на нарачките.",
     magicLinkDescription:
@@ -253,7 +252,34 @@ const translations = {
     trackOrderStatus: "• Следи го статусот на твојата нарачка",
     saveShippingDetails: "• Зачувај ги деталите за достава",
     getNotified: "• Добивај известувања за нови парчиња",
-    easyCheckout: "• Лесна наплата за идни нарачки",
+    // Auth Success Messages
+    youreNowSignedIn:
+      "Сега сте најавени! Започнете ја вашата одржлива модна патување.",
+    emailConfirmed:
+      "Вашата е-пошта е успешно потврдена. Започнете ја вашата одржлива модна патување сега.",
+    startShopping: "Започни купување",
+    readyToMakeDifference: "Готови да направите разлика",
+    checkYourEmail: "Провери ја твојата е-пошта",
+    magicLinkSent:
+      "Испративме магичен линк. Кликнете на него за да се најавите и да започнете.",
+    confirmationLinkSent:
+      "Испративме потврдна врска. Кликнете на неа за да ја активирате вашата сметка и да започнете ја вашата одржлива модна патување.",
+    cantFindEmail: "Не можете да ја најдете е-поштата?",
+    cantFindMagicLink: "Не можете да го најдете магичниот линк?",
+    checkSpamFolder: "Проверете ја папката за спам/непожелни",
+    waitFewMinutes: "Почекајте неколку минути и обидете се повторно",
+    makeSureEmailCorrect: "Проверете дали е-поштата е точна",
+    magicLinksExpire: "Магичните линкови истекуваат по 1 час за безбедност",
+    browseProductsMeantime: "Прегледајте производи во меѓувреме",
+    alreadyConfirmedEmail: "Веќе ја потврдив мојата е-пошта",
+    magicLinkFailed:
+      "Неуспешно испраќање на магичниот линк. Обидете се повторно.",
+    confirmingYourEmail: "Ја потврдуваме вашата е-пошта...",
+    confirmationError: "Грешка при потврда",
+    thereWasAnError: "Имаше грешка при потврдувањето на вашата е-пошта.",
+    tryAgain: "Обиди се повторно",
+    goToHomepage: "Оди на почетна страница",
+    error: "Грешка:",
   },
   en: {
     // Navigation
@@ -494,7 +520,6 @@ const translations = {
     privacyPolicy: "Privacy Policy",
 
     // Magic Link Modal
-    checkYourEmail: "Check your email!",
     createYourAccount: "Create your account",
     magicLinkSent:
       "We've sent you a magic link to sign in and track your orders.",
@@ -507,6 +532,33 @@ const translations = {
     saveShippingDetails: "• Save your shipping details",
     getNotified: "• Get notified about new items",
     easyCheckout: "• Easy checkout for future orders",
+
+    // Auth Success Messages
+    youreNowSignedIn:
+      "You're now signed in! Start your sustainable fashion journey.",
+    emailConfirmed:
+      "Your email has been successfully confirmed. Start your sustainable fashion journey now.",
+    startShopping: "Start Shopping",
+    readyToMakeDifference: "Ready to make a difference",
+    checkYourEmail: "Check your email",
+    magicLinkSent:
+      "We've sent you a magic link. Click it to sign in and start your sustainable fashion journey.",
+    confirmationLinkSent:
+      "We've sent you a confirmation link. Click it to activate your account and start your sustainable fashion journey.",
+    cantFindEmail: "Can't find the email?",
+    cantFindMagicLink: "Can't find the magic link?",
+    checkSpamFolder: "Check your spam/junk folder",
+    waitFewMinutes: "Wait a few minutes and try again",
+    makeSureEmailCorrect: "Make sure the email address is correct",
+    magicLinksExpire: "Magic links expire after 1 hour for security",
+    browseProductsMeantime: "Browse products in the meantime",
+    magicLinkFailed: "Failed to send magic link. Please try again.",
+    confirmingYourEmail: "Confirming your email...",
+    confirmationError: "Confirmation Error",
+    thereWasAnError: "There was an error confirming your email address.",
+    tryAgain: "Try Again",
+    goToHomepage: "Go to Homepage",
+    error: "Error:",
   },
 };
 

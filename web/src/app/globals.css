@@ -254,6 +254,18 @@ html, body {
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    /* Ensure navbar doesn't get cut off on mobile */
+    min-height: 64px;
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* iPhone specific fixes */
+  @media screen and (max-width: 480px) {
+    .eco-glass-header {
+      min-height: 64px;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
   }
 
   .glass-header {

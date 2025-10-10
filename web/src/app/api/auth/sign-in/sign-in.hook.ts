@@ -70,7 +70,7 @@ export function useSignInWithSocial() {
   });
 }
 
-export function useSignInWithMagicLink() {
+export function useSignInWithMagicLink(onError?: (error: any) => void) {
   const router = useRouter();
   const posthog = usePostHog();
 
@@ -117,7 +117,11 @@ export function useSignInWithMagicLink() {
     },
     onError: (error) => {
       posthog.captureException(error);
-      toast.error('Failed to send magic link. Please try again.');
+      if (onError) {
+        onError(error);
+      } else {
+        toast.error('Failed to send magic link. Please try again.');
+      }
     },
   });
 }

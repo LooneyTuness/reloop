@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { useSignInWithMagicLink } from '@/app/api/auth/sign-in/sign-in.hook';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { VtorarakaLogo } from '@/components/icons';
+import { toast } from 'sonner';
 
 const magicLinkSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -29,8 +30,10 @@ export default function MagicLinkSignupModal({
   buyerEmail = ""
 }: MagicLinkSignupModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const signInWithMagicLink = useSignInWithMagicLink();
   const { t } = useLanguage();
+  const signInWithMagicLink = useSignInWithMagicLink(() => {
+    toast.error(t("magicLinkFailed"));
+  });
 
   const form = useForm<MagicLinkFormValues>({
     resolver: zodResolver(magicLinkSchema),
@@ -72,7 +75,7 @@ export default function MagicLinkSignupModal({
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <div>
               <Input
-                placeholder="you@example.com"
+                placeholder={t("enterEmailAddress")}
                 type="email"
                 autoComplete="email"
                 disabled={signInWithMagicLink.isPending}
@@ -114,7 +117,7 @@ export default function MagicLinkSignupModal({
                 </svg>
               </div>
               <p className="text-sm text-gray-600 mb-4">
-                Check your email and click the magic link to sign in. You can close this window and continue shopping.
+                {t("magicLinkSent")}
               </p>
             </div>
 

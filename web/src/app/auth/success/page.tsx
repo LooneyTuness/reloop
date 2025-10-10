@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 function AuthSuccessContent() {
   const [user, setUser] = useState<{ id: string; email?: string; email_confirmed_at?: string } | null>(null);
@@ -10,6 +11,7 @@ function AuthSuccessContent() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useLanguage();
   const confirmed = searchParams.get('confirmed');
   const errorParam = searchParams.get('error');
   const errorDescription = searchParams.get('description');
@@ -80,8 +82,8 @@ function AuthSuccessContent() {
         <div className="w-full max-w-md space-y-6 px-6 text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
           <div className="space-y-2">
-            <p className="text-lg font-medium text-gray-900">Confirming your email...</p>
-            <p className="text-sm text-gray-500">Please wait a moment</p>
+            <p className="text-lg font-medium text-gray-900">{t("confirmingYourEmail")}</p>
+            <p className="text-sm text-gray-500">{t("pleaseWait")}</p>
           </div>
         </div>
       </div>
@@ -99,15 +101,15 @@ function AuthSuccessContent() {
           </div>
           
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">Confirmation Error</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{t("confirmationError")}</h1>
             <p className="text-lg text-gray-600">
-              There was an error confirming your email address.
+              {t("thereWasAnError")}
             </p>
           </div>
           
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
             <p className="text-sm text-red-700">
-              <strong>Error:</strong> {error}
+              <strong>{t("error")}</strong> {error}
             </p>
           </div>
           
@@ -116,13 +118,13 @@ function AuthSuccessContent() {
               onClick={() => router.push('/sign-up')}
               className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
             >
-              Try Again
+              {t("tryAgain")}
             </button>
             <button
               onClick={() => router.push('/')}
               className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm transition-colors"
             >
-              Go to Homepage
+              {t("goToHomepage")}
             </button>
           </div>
         </div>
@@ -145,13 +147,12 @@ function AuthSuccessContent() {
             {/* Success Message */}
             <div className="space-y-2">
               <h1 className="text-3xl font-bold text-gray-900">
-                Welcome to vtoraraka.mk!
+                {t("welcomeToVtoraraka")}!
               </h1>
               <p className="text-lg text-gray-600">
                 {fromMagicLink 
-                  ? "You're now signed in! Start your sustainable fashion journey."
-                  : "Your email has been successfully confirmed. Start your sustainable fashion journey now."
-                }
+                  ? t("youreNowSignedIn")
+                  : t("emailConfirmed")}
               </p>
             </div>
 
@@ -160,13 +161,13 @@ function AuthSuccessContent() {
               onClick={() => router.push('/')}
               className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
             >
-              Start Shopping
+              {t("startShopping")}
             </button>
 
             {/* Playful annotation */}
             <div className="text-center">
               <p className="text-sm text-green-600 font-medium">
-                Ready to make a difference
+                {t("readyToMakeDifference")}
                 <span className="ml-1">♻️</span>
               </p>
             </div>
@@ -183,26 +184,25 @@ function AuthSuccessContent() {
             {/* Email Confirmation Message */}
             <div className="space-y-2">
               <h1 className="text-3xl font-bold text-gray-900">
-                {fromMagicLink ? "Check your email" : "Check your email"}
+                {t("checkYourEmail")}
               </h1>
               <p className="text-lg text-gray-600">
                 {fromMagicLink 
-                  ? "We&apos;ve sent you a magic link. Click it to sign in and start your sustainable fashion journey."
-                  : "We&apos;ve sent you a confirmation link. Click it to activate your account and start your sustainable fashion journey."
-                }
+                  ? t("magicLinkSent")
+                  : t("confirmationLinkSent")}
               </p>
             </div>
             
             {/* Help Section */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-left">
               <p className="text-sm text-gray-700 mb-2 font-medium">
-                Can&apos;t find the {fromMagicLink ? "magic link" : "email"}?
+                {fromMagicLink ? t("cantFindMagicLink") : t("cantFindEmail")}
               </p>
               <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                <li>Check your spam/junk folder</li>
-                <li>Wait a few minutes and try again</li>
-                <li>Make sure the email address is correct</li>
-                {fromMagicLink && <li>Magic links expire after 1 hour for security</li>}
+                <li>{t("checkSpamFolder")}</li>
+                <li>{t("waitFewMinutes")}</li>
+                <li>{t("makeSureEmailCorrect")}</li>
+                {fromMagicLink && <li>{t("magicLinksExpire")}</li>}
               </ul>
             </div>
 
@@ -212,13 +212,13 @@ function AuthSuccessContent() {
                 onClick={() => router.push('/')}
                 className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
               >
-                Browse products in the meantime
+                {t("browseProductsMeantime")}
               </button>
               <button
                 onClick={() => window.location.reload()}
                 className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm transition-colors"
               >
-                I already confirmed my email
+                {t("alreadyConfirmedEmail")}
               </button>
             </div>
           </div>
