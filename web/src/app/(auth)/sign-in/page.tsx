@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { SignInForm } from "@/app/(auth)/sign-in/sign-in-form";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { VtorarakaLogo } from "@/components/icons";
 
-export default function SignIn() {
+function SignInContent() {
   const { t } = useLanguage();
 
   return (
@@ -91,5 +92,34 @@ export default function SignIn() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/90 to-white/80 backdrop-blur-xl"></div>
+        <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 pt-24 sm:pt-28 pb-8">
+          <div className="w-full max-w-md">
+            <div className="professional-card p-8 sm:p-10 shadow-luxury animate-fade-in-up">
+              <div className="text-center mb-8 animate-scale-in delay-100">
+                <VtorarakaLogo size="lg" className="mx-auto" />
+              </div>
+              <div className="text-center space-y-3 mb-8 animate-fade-in-up delay-200">
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
+                  Loading...
+                </h1>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Please wait a moment
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <SignInContent />
+    </Suspense>
   );
 }
