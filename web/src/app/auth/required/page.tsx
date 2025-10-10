@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { SignUpForm } from '@/app/(auth)/sign-up/sign-up-form';
 import { SignInForm } from '@/app/(auth)/sign-in/sign-in-form';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-export default function AuthRequiredPage() {
+function AuthRequiredContent() {
   const [isSignUp, setIsSignUp] = useState(true);
   const router = useRouter();
   const { t } = useLanguage();
@@ -55,5 +55,32 @@ export default function AuthRequiredPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthRequiredPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 pt-32 sm:pt-36">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Loading...
+            </h1>
+            <p className="text-gray-600">
+              Please wait a moment
+            </p>
+          </div>
+          <div className="animate-pulse">
+            <div className="h-12 bg-gray-200 rounded-lg mb-4"></div>
+            <div className="h-12 bg-gray-200 rounded-lg mb-4"></div>
+            <div className="h-12 bg-gray-200 rounded-lg mb-4"></div>
+            <div className="h-12 bg-gray-200 rounded-lg"></div>
+          </div>
+        </div>
+      </div>
+    }>
+      <AuthRequiredContent />
+    </Suspense>
   );
 }
