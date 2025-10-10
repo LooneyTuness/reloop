@@ -71,7 +71,7 @@ export default function Login() {
                 vtoraraka
               </span>
               <span className="text-xs text-gray-500 uppercase tracking-widest -mt-1 font-light">
-                {language === "mk" ? "Кружна Мода" : "Circular Fashion"}
+                {t("circularFashion")}
               </span>
             </div>
           </Link>

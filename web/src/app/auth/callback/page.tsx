@@ -21,13 +21,22 @@ export default function AuthCallbackPage() {
         // Create Supabase client
         const supabase = createBrowserClient();
 
-        // Get URL parameters for debugging
+        // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(window.location.hash.slice(1));
         const code = urlParams.get('code');
         const error = urlParams.get('error');
         const errorDescription = urlParams.get('error_description');
+        const typeQuery = urlParams.get('type');
+        const typeHash = hashParams.get('type');
+        const type = typeHash || typeQuery; // Prefer hash type, Supabase uses hash for magic links
+        const redirectParam = urlParams.get('redirect');
 
-        console.log('Processing callback with code:', !!code);
+        console.log('Processing callback with code:', !!code, 'type:', type);
+        console.log('Redirect parameter from URL:', redirectParam);
+        console.log('Full URL:', window.location.href);
+        console.log('All URL params:', Object.fromEntries(urlParams.entries()));
+        console.log('All HASH params:', Object.fromEntries(hashParams.entries()));
 
         // Handle OAuth errors
         if (error) {
@@ -37,17 +46,86 @@ export default function AuthCallbackPage() {
           return;
         }
 
-        // For email confirmations, the simplest approach is to just redirect
-        // The email confirmation should have already been processed by Supabase
-        // when the user clicked the link in their email
-        console.log('Email confirmation link clicked - redirecting to home page');
-        
-        // Show success message
-        toast.success("Вашата е-пошта е успешно потврдена! Сега можете да се најавите.", {
-          duration: 5000,
-        });
+        // Handle magic link authentication (Supabase uses hash tokens, no code)
+        if (type === 'magiclink') {
+          console.log('Processing magic link authentication');
 
-        // Redirect to home page
+          // Wait briefly for Supabase to process the URL hash and set the session
+          for (let i = 0; i < 6; i++) {
+            const { data: sessionData } = await supabase.auth.getSession();
+            if (sessionData.session) {
+              console.log('Magic link authentication successful');
+
+              // Check for redirect URL from URL params first, then localStorage
+              const redirectUrl = redirectParam || localStorage.getItem('auth_redirect');
+              console.log('Redirect URL (from URL param or localStorage):', redirectUrl);
+
+              toast.success("Welcome! You're now signed in.", {
+                duration: 5000,
+              });
+
+              if (redirectUrl) {
+                console.log('Redirecting to:', redirectUrl);
+                localStorage.removeItem('auth_redirect');
+                router.push(redirectUrl);
+              } else {
+                console.log('No redirect URL found, going to home page');
+                router.push('/');
+              }
+              setLoading(false);
+              return;
+            }
+            await new Promise(r => setTimeout(r, 300));
+          }
+
+          console.warn('Magic link: no session found after waiting');
+        }
+
+        // Handle email confirmations (signup)
+        if (type === 'signup' || type === 'recovery') {
+          console.log('Email confirmation link clicked');
+          
+          // Check for redirect URL from URL params first, then localStorage
+          const redirectUrl = redirectParam || localStorage.getItem('auth_redirect');
+          console.log('Redirect URL after email confirmation (from URL param or localStorage):', redirectUrl);
+          
+          toast.success("Your email has been confirmed! You can now sign in.", {
+            duration: 5000,
+          });
+          
+          if (redirectUrl) {
+            console.log('Redirecting to:', redirectUrl);
+            localStorage.removeItem('auth_redirect');
+            router.push(redirectUrl);
+          } else {
+            console.log('No redirect URL found after email confirmation, going to sign-in');
+            router.push('/sign-in');
+          }
+          setLoading(false);
+          return;
+        }
+
+        // If we have a code but no type, still try to exchange the code (email link variant)
+        if (code) {
+          console.log('Type not provided but code present - waiting for session (detectSessionInUrl)');
+          // detectSessionInUrl=true should process the code automatically; poll for session
+          for (let i = 0; i < 10; i++) {
+            const { data: sessionData } = await supabase.auth.getSession();
+            if (sessionData.session) {
+              const redirectUrl = redirectParam || localStorage.getItem('auth_redirect') || '/';
+              console.log('Session detected via auto handling. Redirecting to:', redirectUrl);
+              localStorage.removeItem('auth_redirect');
+              router.push(redirectUrl);
+              setLoading(false);
+              return;
+            }
+            await new Promise(r => setTimeout(r, 300));
+          }
+          console.warn('No session detected after waiting; falling back to home');
+        }
+
+        // Fallback - redirect to home
+        console.log('No specific type detected, redirecting to home');
         router.push('/');
         setLoading(false);
 
@@ -59,15 +137,17 @@ export default function AuthCallbackPage() {
     };
 
     handleAuthCallback();
-  }, [router, loading]);
+  }, [router]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <h1 className="text-xl font-semibold text-gray-900 mb-2">Потврдуваме вашата е-пошта...</h1>
-          <p className="text-gray-600">Ве молиме почекајте...</p>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-full max-w-md space-y-6 px-6 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <div className="space-y-2">
+            <p className="text-lg font-medium text-gray-900">Processing authentication...</p>
+            <p className="text-sm text-gray-500">Please wait a moment</p>
+          </div>
         </div>
       </div>
     );
@@ -75,34 +155,39 @@ export default function AuthCallbackPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-full max-w-md space-y-6 px-6 text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
             <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Грешка при потврда</h1>
-          <p className="text-gray-600 mb-6">
-            Се случи грешка при потврдувањето на вашата е-пошта.
-          </p>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-red-700">
-              <strong>Грешка:</strong> {error}
+          
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-gray-900">Authentication Error</h1>
+            <p className="text-lg text-gray-600">
+              There was an error processing your authentication.
             </p>
           </div>
+          
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
+            <p className="text-sm text-red-700">
+              <strong>Error:</strong> {error}
+            </p>
+          </div>
+          
           <div className="space-y-3">
             <button
-              onClick={() => router.push('/sign-up')}
-              className="w-full bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+              onClick={() => router.push('/sign-in')}
+              className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
             >
-              Обиди се повторно
+              Try Again
             </button>
             <button
               onClick={() => router.push('/')}
               className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm transition-colors"
             >
-              Кон почетна страница
+              Go to Homepage
             </button>
           </div>
         </div>

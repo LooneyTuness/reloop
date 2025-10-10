@@ -69,3 +69,55 @@ export function useSignInWithSocial() {
     }
   });
 }
+
+export function useSignInWithMagicLink() {
+  const router = useRouter();
+  const posthog = usePostHog();
+
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const supabase = createBrowserClient();
+      
+      // Check if there's a redirect URL in the query params
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectUrlFromQuery = urlParams.get('redirect');
+      const redirectUrlFromStorage = localStorage.getItem('auth_redirect') || '';
+      const redirectUrl = redirectUrlFromQuery || redirectUrlFromStorage || '/dashboard';
+      console.log('Magic link hook - chosen redirect URL:', redirectUrl, {
+        fromQuery: redirectUrlFromQuery,
+        fromStorage: redirectUrlFromStorage,
+      });
+      
+      // Include redirect URL in the magic link callback URL
+      const emailRedirectTo = redirectUrl 
+        ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectUrl)}`
+        : `${window.location.origin}/auth/callback`;
+      
+      console.log('Magic link email redirect to:', emailRedirectTo);
+      
+      // Also store in localStorage as backup
+      localStorage.setItem('auth_redirect', redirectUrl);
+      console.log('Stored redirect URL in localStorage:', redirectUrl);
+      
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo,
+        },
+      });
+      
+      if (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success('Check your email for the magic link!');
+      // Redirect to success page with magic link indicator
+      router.push('/auth/success?from=magiclink');
+    },
+    onError: (error) => {
+      posthog.captureException(error);
+      toast.error('Failed to send magic link. Please try again.');
+    },
+  });
+}

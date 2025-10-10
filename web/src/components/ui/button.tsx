@@ -5,27 +5,35 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring/50",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+          "bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:ring-emerald-600/20",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600/20",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300 focus-visible:ring-emerald-600/20",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "bg-emerald-100 text-emerald-900 hover:bg-emerald-200 focus-visible:ring-emerald-600/20",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "text-emerald-700 hover:bg-emerald-100 hover:text-emerald-900 focus-visible:ring-emerald-600/20",
+        link: "text-emerald-600 underline-offset-4 hover:underline focus-visible:ring-emerald-600/20",
+        // New clean professional variants
+        primary:
+          "bg-gradient-to-r from-emerald-600 to-emerald-700 text-white hover:from-emerald-700 hover:to-emerald-800 focus-visible:ring-emerald-600/20 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-emerald-500/30",
+        clean:
+          "bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300 focus-visible:ring-emerald-600/20 rounded-lg",
+        minimal:
+          "text-emerald-700 hover:text-emerald-900 hover:bg-emerald-50 focus-visible:ring-emerald-600/20 rounded-lg",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
+        default: "h-10 px-4 py-2 has-[>svg]:px-3",
+        sm: "h-8 rounded-lg gap-1.5 px-3 has-[>svg]:px-2.5 text-xs",
+        lg: "h-12 rounded-lg px-6 has-[>svg]:px-4 text-base",
+        xl: "h-14 rounded-lg px-8 has-[>svg]:px-6 text-base font-semibold",
+        icon: "size-10 rounded-lg",
       },
     },
     defaultVariants: {

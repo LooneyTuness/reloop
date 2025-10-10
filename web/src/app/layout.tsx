@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { GlobalProvider } from "@/providers/global-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -8,11 +8,12 @@ import LanguageProvider from "@/contexts/LanguageContext";
 import { CartProvider } from "@/contexts/CartContext";
 import Navbar from "@/components/Navbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import PageTransitionWrapper from "@/components/PageTransitionWrapper";
 
-const inter = Inter({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -34,14 +35,16 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${poppins.variable} antialiased`}>
         <ErrorBoundary>
           <AuthProvider>
             <CartProvider>
               <LanguageProvider>
                 <GlobalProvider>
                   <Navbar />
-                  {children}
+                  <PageTransitionWrapper>
+                    {children}
+                  </PageTransitionWrapper>
                   <Toaster />
                 </GlobalProvider>
               </LanguageProvider>
