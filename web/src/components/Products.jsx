@@ -1,9 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
+import { toast } from "sonner";
 
 export default function Products({
   items: initialItems = [],
@@ -17,9 +21,90 @@ export default function Products({
   const [loading, setLoading] = useState(initialItems.length === 0);
   const [error, setError] = useState("");
   const { t, language } = useLanguage();
+  const { addToCart, isInCart } = useCart();
+  const { user } = useAuth();
 
-  const fetchItems = async () => {
+  const handleAddToCart = async (item) => {
     try {
+      // First, try to reserve the item if reservation system is available
+      if (item.status === "active" && item.quantity > 0) {
+        try {
+          const { data: reserved, error: reserveError } = await supabase.rpc(
+            "reserve_item",
+            {
+              item_uuid: item.id,
+              user_uuid: user?.id,
+              reserve_minutes: 15,
+            }
+          );
+
+          if (reserveError) throw reserveError;
+
+          if (!reserved) {
+            toast.error(t("itemNotAvailable") || "Item not available");
+            return;
+          }
+        } catch (reserveError) {
+          console.log(
+            "Reservation system not available, proceeding with normal cart add"
+          );
+        }
+      }
+
+      await addToCart({
+        id: item.id,
+        name: item.title,
+        price: item.price,
+        image_url: item.photos,
+        quantity: 1,
+      });
+      toast.success(t("addedToCart"));
+
+      // Refresh the product list to show updated status
+      if (initialItems.length === 0) {
+        fetchItems();
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+
+      // Release reservation if cart add failed
+      try {
+        await supabase.rpc("release_reservation", {
+          item_uuid: item.id,
+        });
+      } catch (releaseError) {
+        console.error("Error releasing reservation:", releaseError);
+      }
+
+      if (error.message === "Item already in cart") {
+        toast.error(t("alreadyInCart"));
+      } else {
+        toast.error(t("errorAddingToCart"));
+      }
+    }
+  };
+
+  const fetchItems = useCallback(async () => {
+    try {
+      // Try to use the new status system first, fallback to is_active
+      let query = supabase.from("items").select("*");
+
+      try {
+        // Try the new status-based query
+        const { data, error } = await query
+          .eq("status", "active")
+          .eq("quantity", ">", 0)
+          .is("deleted_at", null)
+          .order("created_at", { ascending: false });
+
+        if (!error) {
+          setItems(data || []);
+          return;
+        }
+      } catch (statusError) {
+      }
+
+      // Fallback to the old is_active system
       const { data, error } = await supabase
         .from("items")
         .select("*")
@@ -29,16 +114,69 @@ export default function Products({
       if (error) throw error;
       setItems(data || []);
     } catch (err) {
-      console.error("Error:", err);
       setError("Error loading items: " + err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (initialItems.length === 0) fetchItems();
-  }, [initialItems.length]);
+  }, [initialItems.length, fetchItems]);
+
+  // Status badge component
+  const getStatusBadge = (item) => {
+    if (item.status === "active") {
+      if (item.quantity <= 0) {
+        return {
+          text: t("outOfStock") || "Out of Stock",
+          className: "bg-red-100 text-red-800",
+        };
+      }
+      if (item.reserved_until && new Date(item.reserved_until) > new Date()) {
+        const timeLeft = Math.ceil(
+          (new Date(item.reserved_until) - new Date()) / 1000 / 60
+        );
+        return {
+          text: `${t("reserved") || "Reserved"} (${timeLeft}m)`,
+          className: "bg-yellow-100 text-yellow-800",
+        };
+      }
+      return {
+        text: t("available") || "Available",
+        className: "bg-green-100 text-green-800",
+      };
+    }
+    if (item.status === "sold") {
+      return {
+        text: t("sold") || "Sold",
+        className: "bg-gray-100 text-gray-800",
+      };
+    }
+    if (item.status === "reserved") {
+      return {
+        text: t("reserved") || "Reserved",
+        className: "bg-yellow-100 text-yellow-800",
+      };
+    }
+    if (item.status === "inactive") {
+      return {
+        text: t("inactive") || "Inactive",
+        className: "bg-gray-100 text-gray-800",
+      };
+    }
+    return null;
+  };
+
+  const canAddToCart = (item) => {
+    if (item.status === "active" && item.quantity > 0) {
+      if (item.reserved_until && new Date(item.reserved_until) > new Date()) {
+        return false; // Item is reserved
+      }
+      return !isInCart(item.id);
+    }
+    return false;
+  };
 
   if (loading) {
     return (
@@ -267,24 +405,17 @@ export default function Products({
                   </div>
 
                   {/* Actual Image */}
-                  <img
+                  <Image
                     src={
                       (Array.isArray(item.photos)
                         ? item.photos[0]
                         : item.photos) || "/placeholder.jpg"
                     }
                     alt={item.title}
-                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 opacity-0"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
                     loading="lazy"
-                    onLoad={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.previousElementSibling.style.opacity = "0";
-                    }}
-                    onError={(e) => {
-                      e.target.src = "/placeholder.jpg";
-                      e.target.style.opacity = "1";
-                      e.target.previousElementSibling.style.opacity = "0";
-                    }}
                   />
                 </div>
 
@@ -314,31 +445,76 @@ export default function Products({
                   </div>
                 </div>
 
+                {/* Status Badge */}
+                {getStatusBadge(item) && (
+                  <div
+                    className={`absolute ${
+                      compact
+                        ? "top-1 sm:top-2 right-1 sm:right-2"
+                        : "top-2 sm:top-3 right-2 sm:right-3"
+                    }`}
+                  >
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        getStatusBadge(item).className
+                      }`}
+                    >
+                      {getStatusBadge(item).text}
+                    </span>
+                  </div>
+                )}
+
                 {/* Luxury Quick Add to Cart Button */}
                 <div className="absolute bottom-3 sm:bottom-5 right-3 sm:right-5 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      console.log("Add to cart:", item.id);
-                    }}
-                    className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-white/80 backdrop-blur-xl hover:bg-white/90 rounded-xl sm:rounded-2xl flex items-center justify-center text-slate-700 hover:text-slate-900 transition-all duration-500 border border-white/40 shadow-2xl hover:shadow-3xl hover:scale-110 hover:rotate-6 hover:bg-gradient-to-br hover:from-white/90 hover:to-white/70 btn-touch-friendly"
-                    title="Add to cart"
-                  >
-                    <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  {!canAddToCart(item) ? (
+                    <button
+                      className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gray-500/80 backdrop-blur-xl rounded-xl sm:rounded-2xl flex items-center justify-center text-white transition-all duration-500 border border-gray-400/40 shadow-2xl btn-touch-friendly cursor-not-allowed"
+                      title={
+                        isInCart(item.id)
+                          ? t("alreadyInCart")
+                          : t("notAvailable") || "Not Available"
+                      }
+                      disabled
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5-5M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleAddToCart(item);
+                      }}
+                      className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-white/80 backdrop-blur-xl hover:bg-white/90 rounded-xl sm:rounded-2xl flex items-center justify-center text-slate-700 hover:text-slate-900 transition-all duration-500 border border-white/40 shadow-2xl hover:shadow-3xl hover:scale-110 hover:rotate-6 hover:bg-gradient-to-br hover:from-white/90 hover:to-white/70 btn-touch-friendly"
+                      title={t("addToCart")}
+                    >
+                      <svg
+                        className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5-5M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"
+                        />
+                      </svg>
+                    </button>
+                  )}
                 </div>
 
                 {/* Luxury Gradient Overlay */}
@@ -403,7 +579,7 @@ export default function Products({
                     }`}
                     style={{ fontFamily: "var(--font-poppins)" }}
                   >
-                    {item.price} ден
+                    {item.price} MKD
                   </span>
                 </div>
               </div>

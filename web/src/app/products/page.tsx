@@ -29,7 +29,6 @@ export default async function ProductsPage({
   const { data: items, error } = await query;
 
   if (error) {
-    console.error(error);
     return <main>Error loading products</main>;
   }
 

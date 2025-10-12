@@ -104,13 +104,7 @@ export default function Home() {
         >
           {isRefreshing ? "⟳" : "↓"}
         </span>
-        {isRefreshing
-          ? language === "mk"
-            ? "Се освежува..."
-            : "Refreshing..."
-          : language === "mk"
-          ? "Повлечете за освежување"
-          : "Pull to refresh"}
+        {isRefreshing ? t("refreshing") : t("pullToRefresh")}
       </div>
       {/* Hero Section */}
       <section
@@ -126,11 +120,7 @@ export default function Home() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover hero-video z-0"
-          aria-label={
-            language === "mk"
-              ? "Позадинско видео за модна платформа"
-              : "Background video for fashion platform"
-          }
+          aria-label={t("backgroundVideoLabel")}
           onLoadStart={() => console.log("Video loading started")}
           onCanPlay={() => {
             console.log("Video can play");
@@ -206,12 +196,10 @@ export default function Home() {
               {/* Error Message */}
               <div className="text-center space-y-2">
                 <div className="text-white/80 text-sm font-medium">
-                  {language === "mk" ? "Видео недостижно" : "Video unavailable"}
+                  {t("videoUnavailable")}
                 </div>
                 <div className="text-white/60 text-xs">
-                  {language === "mk"
-                    ? "Продолжете со преглед на содржината"
-                    : "Continue browsing our content"}
+                  {t("continueBrowsing")}
                 </div>
               </div>
             </div>
@@ -276,11 +264,11 @@ export default function Home() {
 
                 {/* Secondary CTA - Enhanced */}
                 <Link
-                  href={user ? "/dashboard" : "/sign-up?redirect=/dashboard"}
+                  href="/seller-application"
                   className="hero-secondary-button flex items-center justify-center gap-2 group btn-touch-friendly"
-                  aria-label={t("addStoryLabel")}
+                  aria-label={t("applyToSell")}
                 >
-                  <span className="tracking-wide">{t("addYourStory")}</span>
+                  <span className="tracking-wide">{t("becomeSeller")}</span>
                   <svg
                     className="w-5 h-5 transform group-hover:rotate-90 transition-transform duration-300"
                     fill="none"
@@ -385,12 +373,10 @@ export default function Home() {
             <div className="lg:col-span-1">
               <div className="mb-8">
                 <h2 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">
-                  {language === "mk" ? "vtoraraka.mk" : "vtoraraka.mk"}
+                  {t("footerEmail")}
                 </h2>
                 <p className="text-gray-600 leading-relaxed max-w-sm">
-                  {language === "mk"
-                    ? "Прескокни ја маката од традиционална препродажба. Листај облека инстантно, откриј уникатни парчиња без проблем."
-                    : "Skip the hassle of traditional resale. Browse clothing instantly, discover unique pieces without the trouble."}
+                  {t("footerDescription")}
                 </p>
               </div>
 
@@ -413,7 +399,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <span className="text-gray-700 font-medium">
-                    vtoraraka.mk
+                    {t("footerEmail")}
                   </span>
                 </div>
               </div>
@@ -432,7 +418,7 @@ export default function Home() {
                   {t("allProducts")}
                 </Link>
                 <Link
-                  href="/dashboard"
+                  href="/seller-application"
                   className="block text-gray-600 hover:text-emerald-600 transition-colors duration-300 font-medium"
                 >
                   {t("sellWithUs")}

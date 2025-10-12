@@ -4,8 +4,10 @@ import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import Image from "next/image";
 import { VtorarakaLogo } from "./icons";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Waitlist() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [interests, setInterests] = useState([]);
@@ -16,27 +18,27 @@ export default function Waitlist() {
   const interestOptions = [
     {
       id: "selling",
-      label: "Selling my clothes",
+      label: t("waitlistInterests.selling.label"),
       icon: "💰",
-      description: "Turn your closet into cash",
+      description: t("waitlistInterests.selling.description"),
     },
     {
       id: "buying",
-      label: "Buying sustainable fashion",
+      label: t("waitlistInterests.buying.label"),
       icon: "🛍️",
-      description: "Discover unique pre-loved pieces",
+      description: t("waitlistInterests.buying.description"),
     },
     {
       id: "community",
-      label: "Joining eco community",
+      label: t("waitlistInterests.community.label"),
       icon: "🌱",
-      description: "Connect with like-minded people",
+      description: t("waitlistInterests.community.description"),
     },
     {
       id: "impact",
-      label: "Tracking my eco impact",
+      label: t("waitlistInterests.impact.label"),
       icon: "📊",
-      description: "See your environmental difference",
+      description: t("waitlistInterests.impact.description"),
     },
   ];
 
@@ -52,7 +54,7 @@ export default function Waitlist() {
     e.preventDefault();
 
     if (!email.trim()) {
-      setMessage("Please enter your email address");
+      setMessage(t("waitlistForm.pleaseEnterEmail"));
       return;
     }
 
@@ -71,7 +73,7 @@ export default function Waitlist() {
 
       if (error) {
         if (error.code === "23505") {
-          setMessage("You're already on our waitlist! We'll be in touch soon.");
+          setMessage(t("waitlistForm.alreadyOnWaitlist"));
         } else {
           throw error;
         }
@@ -80,7 +82,7 @@ export default function Waitlist() {
       }
     } catch (error) {
       console.error("Waitlist signup error:", error);
-      setMessage("Something went wrong. Please try again.");
+      setMessage(t("waitlistForm.somethingWentWrong"));
     } finally {
       setIsSubmitting(false);
     }
@@ -120,24 +122,17 @@ export default function Waitlist() {
               }}
             >
               <span className="w-3 h-3 bg-white rounded-full animate-pulse"></span>
-              <span className="text-lg font-black">Кружна мода.</span>
+              <span className="text-lg font-black">{t("waitlistBadge")}</span>
             </div>
 
             {/* Main Headline */}
             <div className="space-y-8 mb-12">
               <h2 className="text-5xl sm:text-7xl font-black text-gray-900 leading-none">
-                Tired of{" "}
-                <span className="relative inline-block">
-                  <span className="line-through text-gray-400 decoration-red-500 decoration-4">
-                    Overpriced
-                  </span>
-                </span>
-                <br />
-                <span className="text-gray-800">Fast Fashion?</span>
+                {t("waitlistTitle")}
               </h2>
 
               <h3 className="text-4xl sm:text-6xl font-black bg-gradient-to-r from-brand-600 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight">
-                Welcome to Circular Style
+                {t("waitlistSubtitle")}
               </h3>
             </div>
 
@@ -145,19 +140,19 @@ export default function Waitlist() {
             <div className="grid md:grid-cols-3 gap-6 mb-12">
               <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
                 <div className="text-3xl font-black text-gray-900 mb-2">60</div>
-                <div className="text-sm text-gray-600">seconds to sell</div>
+                <div className="text-sm text-gray-600">{t("waitlistStats.secondsToSell")}</div>
               </div>
               <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
                 <div className="text-3xl font-black text-green-600 mb-2">
                   70%
                 </div>
-                <div className="text-sm text-gray-600">off retail prices</div>
+                <div className="text-sm text-gray-600">{t("waitlistStats.offRetailPrices")}</div>
               </div>
               <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
                 <div className="text-3xl font-black text-blue-600 mb-2">
                   100%
                 </div>
-                <div className="text-sm text-gray-600">sustainable impact</div>
+                <div className="text-sm text-gray-600">{t("waitlistStats.sustainableImpact")}</div>
               </div>
             </div>
           </div>
@@ -171,9 +166,9 @@ export default function Waitlist() {
                   htmlFor="name"
                   className="block text-lg font-bold text-gray-800"
                 >
-                  Name{" "}
+                  {t("waitlistForm.nameLabel")}{" "}
                   <span className="text-gray-500 font-normal text-base">
-                    (optional)
+                    {t("waitlistForm.nameOptional")}
                   </span>
                 </label>
                 <input
@@ -181,7 +176,7 @@ export default function Waitlist() {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
+                  placeholder={t("waitlistForm.namePlaceholder")}
                   className="w-full px-6 py-5 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 transition-all duration-300 text-lg text-gray-900 placeholder-gray-400"
                 />
               </div>
@@ -192,14 +187,14 @@ export default function Waitlist() {
                   htmlFor="email"
                   className="block text-lg font-bold text-gray-800"
                 >
-                  Email address <span className="text-red-500">*</span>
+                  {t("waitlistForm.emailLabel")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
+                  placeholder={t("waitlistForm.emailPlaceholder")}
                   required
                   className="w-full px-6 py-5 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 transition-all duration-300 text-lg text-gray-900 placeholder-gray-400"
                 />
@@ -208,9 +203,9 @@ export default function Waitlist() {
               {/* Interests */}
               <div className="space-y-5">
                 <label className="block text-lg font-bold text-gray-800">
-                  What interests you most?{" "}
+                  {t("waitlistForm.interestsLabel")}{" "}
                   <span className="text-gray-500 font-normal text-base">
-                    (select all that apply)
+                    {t("waitlistForm.interestsOptional")}
                   </span>
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -260,11 +255,11 @@ export default function Waitlist() {
                 {isSubmitting ? (
                   <div className="flex items-center justify-center space-x-3">
                     <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Joining waitlist...</span>
+                    <span>{t("waitlistForm.submittingButton")}</span>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center space-x-3">
-                    <span>Join the Waitlist</span>
+                    <span>{t("waitlistForm.submitButton")}</span>
                     <span className="text-2xl">🚀</span>
                   </div>
                 )}
@@ -288,12 +283,12 @@ export default function Waitlist() {
           {/* Trust Indicators */}
           <div className="text-center">
             <p className="text-sm text-gray-500 mb-4">
-              🔒 No spam, ever. Unsubscribe with one click.
+              {t("waitlistTrust.noSpam")}
             </p>
             <div className="flex justify-center space-x-8 text-xs text-gray-400">
-              <span>✓ GDPR Compliant</span>
-              <span>✓ Secure Data</span>
-              <span>✓ Privacy First</span>
+              <span>{t("waitlistTrust.gdprCompliant")}</span>
+              <span>{t("waitlistTrust.secureData")}</span>
+              <span>{t("waitlistTrust.privacyFirst")}</span>
             </div>
           </div>
         </div>
@@ -304,6 +299,8 @@ export default function Waitlist() {
 
 // Enhanced Success Component
 function WaitlistSuccess() {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50 relative overflow-hidden">
       {/* Background Elements */}
@@ -323,24 +320,23 @@ function WaitlistSuccess() {
               <span className="text-5xl">🎉</span>
             </div>
             <h2 className="text-4xl font-black text-gray-900 mb-6">
-              You're on the list!
+              {t("waitlistSuccess.title")}
             </h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              Welcome to the sustainable fashion revolution! We'll notify you as
-              soon as vtoraraka launches.
+              {t("waitlistSuccess.description")}
             </p>
           </div>
 
           {/* What's Next */}
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 p-8 mb-8">
             <h3 className="font-black text-gray-900 mb-6 text-xl">
-              What happens next?
+              {t("waitlistSuccess.whatHappensNext")}
             </h3>
             <div className="space-y-5 text-left">
               {[
-                "You'll get early access when we launch",
-                "Exclusive updates on our progress",
-                "Special launch day perks and discounts",
+                t("waitlistSuccess.earlyAccess"),
+                t("waitlistSuccess.exclusiveUpdates"),
+                t("waitlistSuccess.specialPerks"),
               ].map((item, index) => (
                 <div key={index} className="flex items-center space-x-4">
                   <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -357,11 +353,11 @@ function WaitlistSuccess() {
             onClick={() => (window.location.href = "/")}
             className="w-full px-8 py-5 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-2xl hover:scale-105 transition-all duration-300 font-black text-lg shadow-xl mb-6"
           >
-            Back to Home
+            {t("waitlistSuccess.backToHome")}
           </button>
 
           <div className="text-gray-500">
-            <p className="text-sm mb-3">Follow us for updates:</p>
+            <p className="text-sm mb-3">{t("waitlistSuccess.followUs")}</p>
             <div className="flex justify-center space-x-6">
               {["Twitter", "Instagram", "LinkedIn"].map((social) => (
                 <a

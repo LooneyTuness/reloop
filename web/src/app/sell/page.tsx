@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import SellItem from "@/components/SellItem";
-import ProtectedRoute from "@/utils/ProtectedRoute";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Sell Items - vtoraraka | Turn Your Closet Into Cash",
@@ -9,11 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default function SellPage() {
-  return (
-    <main>
-      <ProtectedRoute>
-        <SellItem />
-      </ProtectedRoute>
-    </main>
-  );
+  // Redirect to seller application page
+  redirect('/seller-application');
 }

@@ -11,5 +11,5 @@ export const SIGN_UP = {
 }
 
 export const DASHBOARD = {
-  getPath: () => '/dashboard',
+  getPath: () => '/seller-dashboard',
 }

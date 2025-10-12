@@ -17,6 +17,21 @@ html, body {
   position: relative;
   overflow: hidden;
   width: 100%;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dashboard-specific transition improvements */
+.page-transition-container[data-route="dashboard"] {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth loading state transitions */
+.dashboard-loading {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.dashboard-content {
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
 }
 
 /* Ensure all pages have consistent background */
@@ -1884,10 +1899,8 @@ html, body {
   /* Premium Price Display */
   .premium-price {
     @apply font-black text-gray-900 tracking-tight mb-6;
-    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
     font-size: 2rem;
   }
 

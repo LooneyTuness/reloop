@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { GlobalProvider } from "@/providers/global-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import LanguageProvider from "@/contexts/LanguageContext";
 import { CartProvider } from "@/contexts/CartContext";
-import Navbar from "@/components/Navbar";
+import { NotificationProvider } from "@/contexts/NotificationContext";
+import { NotificationsProvider } from "@/contexts/NotificationsContext";
+import ConditionalNavbar from "@/components/ConditionalNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageTransitionWrapper from "@/components/PageTransitionWrapper";
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-inter",
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
@@ -35,19 +37,23 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${poppins.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`}>
         <ErrorBoundary>
           <AuthProvider>
             <CartProvider>
-              <LanguageProvider>
-                <GlobalProvider>
-                  <Navbar />
-                  <PageTransitionWrapper>
-                    {children}
-                  </PageTransitionWrapper>
-                  <Toaster />
-                </GlobalProvider>
-              </LanguageProvider>
+              <NotificationProvider>
+                <NotificationsProvider>
+                  <LanguageProvider>
+                    <GlobalProvider>
+                      <ConditionalNavbar />
+                      <PageTransitionWrapper>
+                        {children}
+                      </PageTransitionWrapper>
+                      <Toaster />
+                    </GlobalProvider>
+                  </LanguageProvider>
+                </NotificationsProvider>
+              </NotificationProvider>
             </CartProvider>
           </AuthProvider>
         </ErrorBoundary>

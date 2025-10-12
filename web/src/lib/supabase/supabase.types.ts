@@ -15,15 +15,16 @@ export type Database = {
           name?: string
           title: string
           price: number
-          old_price?: number
+          old_price?: number | null
           condition?: string
-          size?: string
-          seller?: string
+          size?: string | null
+          seller?: string | null
           photos: string | string[]
           description?: string
           user_id?: string
-          user_email?: string
+          user_email?: string | null
           category?: string
+          status?: string
           created_at?: string
           updated_at?: string
         }
@@ -32,15 +33,16 @@ export type Database = {
           name?: string
           title: string
           price: number
-          old_price?: number
+          old_price?: number | null
           condition?: string
-          size?: string
-          seller?: string
+          size?: string | null
+          seller?: string | null
           photos: string | string[]
           description?: string
           user_id?: string
-          user_email?: string
+          user_email?: string | null
           category?: string
+          status?: string
           created_at?: string
           updated_at?: string
         }
@@ -49,15 +51,16 @@ export type Database = {
           name?: string
           title?: string
           price?: number
-          old_price?: number
+          old_price?: number | null
           condition?: string
-          size?: string
-          seller?: string
+          size?: string | null
+          seller?: string | null
           photos?: string | string[]
           description?: string
           user_id?: string
-          user_email?: string
+          user_email?: string | null
           category?: string
+          status?: string
           created_at?: string
           updated_at?: string
         }

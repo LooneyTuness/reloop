@@ -31,6 +31,7 @@ interface CartContextType {
   addToCart: (item: CartItem) => Promise<void>;
   removeFromCart: (id: string | number) => Promise<void>;
   clearCart: () => Promise<void>;
+  isInCart: (id: string | number) => boolean;
   total: number;
   loading: boolean;
 }
@@ -319,6 +320,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       .eq("user_id", user.id);
   };
 
+  const isInCart = (id: string | number) => {
+    return cart.some((item) => item.id === id);
+  };
+
   const total = useMemo(
     () => cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
     [cart]
@@ -326,7 +331,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, clearCart, total, loading }}
+      value={{ cart, addToCart, removeFromCart, clearCart, isInCart, total, loading }}
     >
       {children}
     </CartContext.Provider>

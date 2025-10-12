@@ -14,7 +14,15 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    console.log("AuthContext: Initializing authentication...");
+
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      console.log("AuthContext: getSession result:");
+      console.log("- Session exists:", !!session);
+      console.log("- User exists:", !!session?.user);
+      console.log("- User ID:", session?.user?.id);
+      console.log("- User email:", session?.user?.email);
+      console.log("- Error:", error);
       setUser(session?.user ?? null);
       setLoading(false);
     });
@@ -22,6 +30,11 @@ export function AuthProvider({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("AuthContext: Auth state change:");
+      console.log("- Event:", event);
+      console.log("- Session exists:", !!session);
+      console.log("- User exists:", !!session?.user);
+      console.log("- User ID:", session?.user?.id);
       setUser(session?.user ?? null);
       setLoading(false);
     });
@@ -36,9 +49,12 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const logout = signOut; // Alias for compatibility
+
   const value = {
     user,
     signOut,
+    logout,
     loading,
   };
 

@@ -54,7 +54,7 @@ export default function Navbar() {
               </div>
             </div>
             <Link 
-              href={user ? "/dashboard" : "/sign-up?redirect=/dashboard"} 
+              href={user ? "/seller-dashboard" : "/sign-up?redirect=/seller-dashboard"} 
               className="px-3 py-1.5 bg-gradient-to-r from-gray-100/80 to-gray-200/80 hover:from-gray-200/90 hover:to-gray-300/90 backdrop-blur-sm rounded-full border border-gray-300/50 text-gray-700 hover:text-gray-900 transition-all duration-200 text-xs font-medium shadow-sm hover:shadow-md"
             >
               <span className="hidden sm:inline">Продај парчиња</span>
@@ -213,11 +213,11 @@ export default function Navbar() {
                   {showUserMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl shadow-lg py-2 z-50 overflow-hidden">
                       <Link
-                        href="/dashboard"
+                        href="/products"
                         className="block px-4 py-3 text-sm text-gray-700 hover:bg-white/20 transition-colors duration-200"
                         onClick={() => setShowUserMenu(false)}
                       >
-                        Dashboard
+                        Мои нарачки
                       </Link>
                       <button
                         onClick={() => {
@@ -233,10 +233,10 @@ export default function Navbar() {
                 </div>
               ) : (
                 <Link
-                  href={user ? "/dashboard" : "/sign-up?redirect=/dashboard"}
-                  className="px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-emerald-500/30 min-h-[36px] sm:min-h-[40px] flex items-center justify-center whitespace-nowrap"
+                  href="/sign-up"
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-800 hover:text-gray-900 transition-all duration-300 rounded-xl hover:bg-white/30 backdrop-blur-xl border border-white/20 hover:border-white/40 shadow-lg hover:shadow-xl min-h-[36px] sm:min-h-[40px] flex items-center justify-center whitespace-nowrap"
                 >
-                  Продај
+                  Регистрирај се
                 </Link>
               )}
             </div>

@@ -9,10 +9,13 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
   poweredByHeader: false,
+  generateEtags: true,
   images: {
     domains: ["wkttbmstlttzuavtqpxb.supabase.co"], // Add Supabase storage domain
     formats: ["image/webp", "image/avif"],
     minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   env: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -38,6 +41,19 @@ const nextConfig = {
             key: "Referrer-Policy",
             value: "origin-when-cross-origin",
           },
+          {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://app.posthog.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://app.posthog.com;",
+          },
         ],
       },
     ];
@@ -51,6 +67,14 @@ const nextConfig = {
     return [
       // Add any rewrites you need
     ];
+  },
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-label",
+    ],
   },
 };
 

@@ -11,9 +11,12 @@
     "type-check": "tsc --noEmit",
     "build:analyze": "ANALYZE=true npm run build",
     "build:production": "npm run type-check && npm run lint && npm run build",
+    "build:clean": "rm -rf .next && npm run build:production",
     "db:types": "supabase gen types typescript --local > src/lib/supabase/supabase.types.ts",
     "preview": "npm run build && npm run start",
-    "deploy:check": "npm run type-check && npm run lint"
+    "deploy:check": "npm run type-check && npm run lint",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "npm run build && netlify deploy --prod --dir=.next"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

@@ -69,8 +69,8 @@ export default function AuthCallbackPage() {
                 localStorage.removeItem('auth_redirect');
                 router.push(redirectUrl);
               } else {
-                console.log('No redirect URL found, going to home page');
-                router.push('/');
+                console.log('No redirect URL found, going to seller dashboard');
+                router.push('/seller-dashboard');
               }
               setLoading(false);
               return;
@@ -98,8 +98,8 @@ export default function AuthCallbackPage() {
             localStorage.removeItem('auth_redirect');
             router.push(redirectUrl);
           } else {
-            console.log('No redirect URL found after email confirmation, going to sign-in');
-            router.push('/sign-in');
+            console.log('No redirect URL found after email confirmation, going to seller dashboard');
+            router.push('/seller-dashboard');
           }
           setLoading(false);
           return;
@@ -124,9 +124,9 @@ export default function AuthCallbackPage() {
           console.warn('No session detected after waiting; falling back to home');
         }
 
-        // Fallback - redirect to home
-        console.log('No specific type detected, redirecting to home');
-        router.push('/');
+        // Fallback - redirect to seller dashboard
+        console.log('No specific type detected, redirecting to seller dashboard');
+        router.push('/seller-dashboard');
         setLoading(false);
 
       } catch (err) {

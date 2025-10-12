@@ -41,12 +41,12 @@ export function SignInForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Magic Link Form */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleMagicLinkSubmit)}
-          className="space-y-6"
+          className="space-y-4 sm:space-y-6"
         >
           <FormField
             control={form.control}
@@ -59,11 +59,11 @@ export function SignInForm() {
                     type="email"
                     autoComplete="email"
                     disabled={signInWithMagicLink.isPending}
-                    className="h-12 text-base border-gray-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-100 rounded-lg transition-all duration-200"
+                    className="h-11 sm:h-12 text-sm sm:text-base border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/20 rounded-lg transition-all duration-200"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className="text-sm text-red-500 mt-2" />
+                <FormMessage className="text-sm text-red-500 dark:text-red-400 mt-1 sm:mt-2" />
               </FormItem>
             )}
           />
@@ -72,33 +72,33 @@ export function SignInForm() {
             type="submit"
             variant="primary"
             size="xl"
-            className="w-full"
+            className="w-full h-11 sm:h-12 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200"
             disabled={signInWithMagicLink.isPending}
           >
             {signInWithMagicLink.isPending ? (
               <div className="flex items-center space-x-2">
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                <span>{t("sendingMagicLink")}</span>
+                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <span className="text-sm sm:text-base">{t("sendingMagicLink")}</span>
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                <span>{t("sendMagicLink")}</span>
+                <span className="text-sm sm:text-base">{t("sendMagicLink")}</span>
               </div>
             )}
           </Button>
         </form>
       </Form>
 
-      {/* Clean Professional annotation */}
-      <div className="text-center pt-4">
-        <div className="inline-flex items-center space-x-2 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
-          <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+      {/* Professional annotation - matching dashboard style */}
+      <div className="text-center pt-2 sm:pt-4">
+        <div className="inline-flex items-center space-x-1.5 sm:space-x-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
           </svg>
-          <p className="text-sm text-gray-600 font-medium">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
             {t("oneClickAndYoureIn")}
           </p>
         </div>

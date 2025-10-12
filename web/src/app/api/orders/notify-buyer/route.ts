@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     const itemsList = items
       .map((i) => 
         isMacedonian 
-          ? `• ${i.name} x${i.quantity} – ${i.price.toLocaleString()} ден`
+          ? `• ${i.name} x${i.quantity} – ${i.price.toLocaleString()} MKD`
           : `• ${i.name} x${i.quantity} – ${i.price.toLocaleString()} MKD`
       )
       .join("<br/>");
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
           <p style="margin: 0 0 15px 0;">${itemsList}</p>
           <div style="border-top: 1px solid #e5e7eb; padding-top: 10px;">
             <p style="margin: 0; font-size: 18px; font-weight: bold; color: #111827;">
-              ${isMacedonian ? 'Вкупно: ' : 'Total: '}${totalAmount.toLocaleString()} ${isMacedonian ? 'ден' : 'MKD'}
+              ${isMacedonian ? 'Вкупно: ' : 'Total: '}${totalAmount.toLocaleString()} MKD
             </p>
           </div>
         </div>

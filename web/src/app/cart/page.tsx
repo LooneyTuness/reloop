@@ -124,7 +124,86 @@ export default function CartPage() {
         .insert(orderItems);
       if (itemsError) throw itemsError;
 
-      // 3) Notify seller(s) using items.user_email from DB
+      // 3) Create notifications for sellers (vendors) whose items were ordered
+      try {
+        // Get seller information for each item in the cart
+        const itemIds = cart.map(item => item.id);
+        const { data: sellerData, error: sellerError } = await (
+          supabase as unknown as {
+            from: (table: string) => {
+              select: (cols: string) => {
+                in: (
+                  col: string,
+                  vals: (string | number)[]
+                ) => Promise<{
+                  data: Array<{ id: string | number; user_id: string | null; title: string }> | null;
+                  error: { message: string } | null;
+                }>;
+              };
+            };
+          }
+        )
+          .from("items")
+          .select("id,user_id,title")
+          .in("id", itemIds);
+
+        if (sellerError) {
+          console.error("Error fetching seller data:", sellerError);
+        } else if (sellerData) {
+          // Group items by seller
+          const sellerNotifications = new Map<string, { items: string[], sellerId: string }>();
+          
+          sellerData.forEach(item => {
+            if (item.user_id) {
+              const existing = sellerNotifications.get(item.user_id) || { items: [], sellerId: item.user_id };
+              existing.items.push(item.title);
+              sellerNotifications.set(item.user_id, existing);
+            }
+          });
+
+          // Create notifications for each seller
+          const notificationPromises = Array.from(sellerNotifications.values()).map(seller => {
+            return (
+              supabase as unknown as {
+                from: (table: string) => {
+                  insert: (
+                    rows: Array<{
+                      user_id: string;
+                      type: string;
+                      title: string;
+                      message: string;
+                      order_id: string;
+                      item_name: string;
+                      order_date: string;
+                    }>
+                  ) => Promise<{ error: { message: string } | null }>;
+                };
+              }
+            )
+              .from("notifications")
+              .insert([
+                {
+                  user_id: seller.sellerId,
+                  type: "order",
+                  title: t("orderConfirmation"),
+                  message: t("orderConfirmationMessage").replace("{orderId}", orderData.id.toString()),
+                  order_id: orderData.id.toString(),
+                  item_name: seller.items.join(", "),
+                  order_date: new Date().toISOString(),
+                },
+              ]);
+          });
+
+          const notificationResults = await Promise.allSettled(notificationPromises);
+          const notificationErrors = notificationResults.filter(result => result.status === 'rejected');
+          
+          if (notificationErrors.length > 0) {
+          }
+        }
+      } catch (error) {
+      }
+
+      // 4) Notify seller(s) using items.user_email from DB
       try {
         const ids = cart.map((c) => c.id);
         const { data: sellerRows } = await (

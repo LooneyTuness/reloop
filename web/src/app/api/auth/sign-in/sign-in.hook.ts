@@ -82,7 +82,7 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       const urlParams = new URLSearchParams(window.location.search);
       const redirectUrlFromQuery = urlParams.get('redirect');
       const redirectUrlFromStorage = localStorage.getItem('auth_redirect') || '';
-      const redirectUrl = redirectUrlFromQuery || redirectUrlFromStorage || '/dashboard';
+      const redirectUrl = redirectUrlFromQuery || redirectUrlFromStorage || '/seller-dashboard';
       console.log('Magic link hook - chosen redirect URL:', redirectUrl, {
         fromQuery: redirectUrlFromQuery,
         fromStorage: redirectUrlFromStorage,

@@ -32,11 +32,12 @@ const translations = {
     seller: "Продавач",
     addToCart: "Додади во кошничка",
     Used: "Претходно користено",
-    currency: "ден",
+    currency: "MKD",
     ecoChoice: "Еко избор",
     productNotFound: "Продуктот не е најден",
     errorLoadingProduct: "Грешка при вчитување на продукт",
     addedToCart: "Додадено во кошничка",
+    alreadyInCart: "Веќе во кошничка",
     errorAddingToCart: "Грешка при додавање во кошничка",
     anonymousSeller: "Анонимен продавач",
     sustainability: "Одржливост",
@@ -71,6 +72,35 @@ const translations = {
     completeOrder: "Заврши нарачка (плаќање при преземање)",
     orderCreated: "Нарачката е креирана. Плаќање при преземање!",
     orderError: "Настана грешка при креирање на нарачка. Обидете се повторно.",
+    orderConfirmation: "Нова нарачка",
+    orderConfirmationMessage:
+      "Некој нарача ваши производи! Нарачка #{orderId} - контактирајте го купувачот за испорака.",
+
+    // Notifications
+    notifications: "Известувања",
+    noNotifications: "Нема известувања",
+    noNotificationsDescription:
+      "Кога некој ќе нарача ваши производи, ќе добиете известување тука.",
+    markAsRead: "Означи како прочитано",
+    dismiss: "Отфрли",
+    dismissAll: "Отфрли ги сите",
+    orderNumber: "Број на нарачка",
+    items: "Производи",
+    orderDeleted: "Нарачката е избришана",
+
+    // Vendor Orders
+    vendorOrders: "Нарачки за моите производи",
+    totalOrders: "Вкупно нарачки",
+    totalItems: "Вкупно парчиња",
+    totalRevenue: "Вкупен приход",
+    pendingOrders: "Нерешени нарачки",
+    allOrders: "Сите нарачки",
+    pending: "Нерешени",
+    completed: "Завршени",
+    markCompleted: "Означи како завршена",
+    buyerInfo: "Информации за купувачот",
+    deliveryInfo: "Информации за испорака",
+    notes: "Забелешки",
 
     // Home & Landing
     heroTitle: "Купувај и продавај претходно сакана мода",
@@ -108,6 +138,8 @@ const translations = {
     backgroundVideoLabel: "Позадинско видео за модна платформа",
     startShoppingLabel: "Започни купување - прегледај ги сите продукти",
     addStoryLabel: "Додади ја својата приказна - започни продавање",
+    becomeSeller: "Стани продавач",
+    applyToSell: "Аплицирај за продавање",
 
     // Sell Item Page
     listItemTitle: "Листај предмет – штеди ресурси",
@@ -127,7 +159,7 @@ const translations = {
     categoryBooks: "Книги",
     sizeLabel: "Големина",
     selectSize: "Избери големина (опционално)",
-    price: "Цена (ден)",
+    price: "Цена (MKD)",
     description: "Опис",
     descriptionPlaceholder: "Опиши состојба, големина, карактеристики...",
     required: "*",
@@ -198,32 +230,7 @@ const translations = {
     beFirstToList: "Биди првиот што ќе листа предмет!",
     listItem: "Листај предмет",
 
-    // Dashboard
-    dashboard: "Табла",
-    loadingDashboard: "Се вчитува таблата...",
-    pleaseWait: "Ве молиме почекајте",
-    totalItems: "Вкупно производи",
-    activeItems: "Активни производи",
-    inactiveItems: "Неактивни производи",
-    yourItems: "Ваши производи",
-    welcomeBack: "Добредојде повторно",
-    addNewProduct: "Додади нов производ",
-    noProductsYet: "Сè уште нема производи",
-    startByAdding: "Почнете со додавање на вашиот прв производ за продажба",
-    addYourFirstProduct: "Додади го твојот прв производ",
-    active: "Активен",
-    inactive: "Неактивен",
-    deactivate: "Деактивирај",
-    activate: "Активирај",
-    delete: "Избриши",
-    deleteConfirm:
-      "Дали сте сигурни дека сакате да го избришете овој производ? Оваа акција не може да се врати.",
-    itemActivated: "Производот е активиран успешно",
-    itemDeactivated: "Производот е деактивиран успешно",
-    itemDeleted: "Производот е избришан успешно",
-    failedToLoadItems: "Неуспешно вчитување на производите",
-    failedToUpdateItem: "Неуспешно ажурирање на производот",
-    failedToDeleteItem: "Неуспешно бришење на производот",
+    // Dashboard - REMOVED (moved to seller dashboard)
 
     // Sign-up & Registration
     welcomeToVtoraraka: "Добредојде на vtoraraka.mk",
@@ -280,6 +287,81 @@ const translations = {
     tryAgain: "Обиди се повторно",
     goToHomepage: "Оди на почетна страница",
     error: "Грешка:",
+
+    // Waitlist Component
+    waitlistTitle: "Досадно ти е од скапата брза мода?",
+    waitlistSubtitle: "Добредојде во кружниот стил",
+    waitlistBadge: "Кружна мода.",
+    waitlistStats: {
+      secondsToSell: "секунди за продавање",
+      offRetailPrices: "попуштање од малопродажни цени",
+      sustainableImpact: "одржлив влијание",
+    },
+    waitlistForm: {
+      nameLabel: "Име",
+      nameOptional: "(опционално)",
+      namePlaceholder: "Твоето име",
+      emailLabel: "Е-пошта",
+      emailPlaceholder: "твоја@е-пошта.com",
+      interestsLabel: "Што те интересира најмногу?",
+      interestsOptional: "(избери сите што се однесуваат)",
+      submitButton: "Придружи се на листата за чекање",
+      submittingButton: "Се придружува на листата...",
+      alreadyOnWaitlist:
+        "Веќе си на нашата листа за чекање! Ќе те контактираме наскоро.",
+      somethingWentWrong: "Нешто не е во ред. Обиди се повторно.",
+      pleaseEnterEmail: "Ве молиме внесете ја вашата е-пошта",
+    },
+    waitlistInterests: {
+      selling: {
+        label: "Продавање на мојата облека",
+        description: "Претвори го гардеробата во пари",
+      },
+      buying: {
+        label: "Купување одржлива мода",
+        description: "Откриј уникатни претходно сакани парчиња",
+      },
+      community: {
+        label: "Придружување на еко заедница",
+        description: "Поврзи се со луѓе со слични интереси",
+      },
+      impact: {
+        label: "Следење на мојот еко влијание",
+        description: "Види ја твојата еколошка разлика",
+      },
+    },
+    waitlistSuccess: {
+      title: "Си на листата!",
+      description:
+        "Добредојде во револуцијата за одржлива мода! Ќе те известиме штом vtoraraka се лансира.",
+      whatHappensNext: "Што се случува следно?",
+      earlyAccess: "Ќе добиеш рано пристап кога ќе се лансираме",
+      exclusiveUpdates: "Ексклузивни ажурирања за нашиот напредок",
+      specialPerks: "Специјални придобивки и попусти на денот на лансирање",
+      backToHome: "Назад кон почетна",
+      followUs: "Следете не за ажурирања:",
+    },
+    waitlistTrust: {
+      noSpam: "🔒 Никаков спам, никогаш. Отпиши се со еден клик.",
+      gdprCompliant: "✓ GDPR усогласен",
+      secureData: "✓ Безбедни податоци",
+      privacyFirst: "✓ Приватност на прво место",
+    },
+
+    // Footer
+    footerDescription:
+      "Прескокни ја маката од традиционална препродажба. Листај облека инстантно, откриј уникатни парчиња без проблем.",
+    footerEmail: "vtoraraka.mk",
+
+    // Video Error Messages
+    videoUnavailable: "Видео недостижно",
+    continueBrowsing: "Продолжете со преглед на содржината",
+    pullToRefresh: "Повлечете за освежување",
+    backgroundVideoLabel: "Позадинско видео за модна платформа",
+
+    // Dashboard Status - REMOVED (moved to seller dashboard)
+
+    // Order Completion Messages - REMOVED (moved to seller dashboard)
   },
   en: {
     // Navigation
@@ -314,6 +396,7 @@ const translations = {
     productNotFound: "Product not found",
     errorLoadingProduct: "Error loading product",
     addedToCart: "Added to cart",
+    alreadyInCart: "Already in cart",
     errorAddingToCart: "Error adding to cart",
     anonymousSeller: "Anonymous seller",
     sustainability: "Sustainability",
@@ -348,6 +431,35 @@ const translations = {
     completeOrder: "Complete Order (Cash on Delivery)",
     orderCreated: "Order created. Payment on delivery!",
     orderError: "An error occurred while creating the order. Please try again.",
+    orderConfirmation: "New Order",
+    orderConfirmationMessage:
+      "Someone ordered your products! Order #{orderId} - contact the buyer for delivery.",
+
+    // Notifications
+    notifications: "Notifications",
+    noNotifications: "No notifications",
+    noNotificationsDescription:
+      "When someone orders your products, you'll receive a notification here.",
+    markAsRead: "Mark as read",
+    dismiss: "Dismiss",
+    dismissAll: "Dismiss all",
+    orderNumber: "Order number",
+    items: "Items",
+    orderDeleted: "Order deleted",
+
+    // Vendor Orders
+    vendorOrders: "Orders for My Products",
+    totalOrders: "Total Orders",
+    totalItems: "Total Items",
+    totalRevenue: "Total Revenue",
+    pendingOrders: "Pending Orders",
+    allOrders: "All Orders",
+    pending: "Pending",
+    completed: "Completed",
+    markCompleted: "Mark as Completed",
+    buyerInfo: "Buyer Information",
+    deliveryInfo: "Delivery Information",
+    notes: "Notes",
 
     // Home & Landing
     heroTitle: "Buy and sell pre-loved fashion",
@@ -386,36 +498,10 @@ const translations = {
     backgroundVideoLabel: "Background video for fashion platform",
     startShoppingLabel: "Start shopping - browse all products",
     addStoryLabel: "Add your story - start selling",
+    becomeSeller: "Become a Seller",
+    applyToSell: "Apply to Sell",
 
-    // Sell Item Page
-    listItemTitle: "List Item – Save Resources",
-    listItemWelcome: "Give clothing a second life and reduce waste.",
-    uploadPhotos: "Photos",
-    clickToUpload: "Click to upload or drag and drop",
-    maxPhotosInfo: "PNG, JPG up to 5MB (max 5 photos)",
-    itemTitle: "Item Title",
-    itemTitlePlaceholder: "e.g. Vintage leather jacket",
-    category: "Category",
-    selectCategory: "Select category",
-    categoryClothing: "Clothing",
-    categoryBags: "Bags",
-    categoryShoes: "Shoes",
-    categoryWatches: "Watches",
-    categoryHome: "Home",
-    categoryBooks: "Books",
-    sizeLabel: "Size",
-    selectSize: "Select size (optional)",
-    price: "Price (MKD)",
-    description: "Description",
-    descriptionPlaceholder: "Describe condition, size, features...",
-    required: "*",
-    steps: {
-      photos: "Photos",
-      details: "Details",
-      pricing: "Pricing",
-    },
-    uploadingPhotos: "Uploading photos...",
-    listItemButton: "List Item",
+    // Sell Item Page - REMOVED (moved to seller dashboard)
 
     // Login & Auth
     loginTitle: "Welcome Back",
@@ -476,32 +562,7 @@ const translations = {
     beFirstToList: "Be the first to list an item!",
     listItem: "List Item",
 
-    // Dashboard
-    dashboard: "Dashboard",
-    loadingDashboard: "Loading dashboard...",
-    pleaseWait: "Please wait a moment",
-    totalItems: "Total Items",
-    activeItems: "Active Items",
-    inactiveItems: "Inactive Items",
-    yourItems: "Your Items",
-    welcomeBack: "Welcome back",
-    addNewProduct: "Add New Product",
-    noProductsYet: "No products yet",
-    startByAdding: "Start by adding your first item to sell",
-    addYourFirstProduct: "Add Your First Product",
-    active: "Active",
-    inactive: "Inactive",
-    deactivate: "Deactivate",
-    activate: "Activate",
-    delete: "Delete",
-    deleteConfirm:
-      "Are you sure you want to delete this item? This action cannot be undone.",
-    itemActivated: "Item activated successfully",
-    itemDeactivated: "Item deactivated successfully",
-    itemDeleted: "Item deleted successfully",
-    failedToLoadItems: "Failed to load items",
-    failedToUpdateItem: "Failed to update item",
-    failedToDeleteItem: "Failed to delete item",
+    // Dashboard - REMOVED (moved to seller dashboard)
 
     // Sign-up & Registration
     welcomeToVtoraraka: "Welcome to vtoraraka.mk",
@@ -559,6 +620,81 @@ const translations = {
     tryAgain: "Try Again",
     goToHomepage: "Go to Homepage",
     error: "Error:",
+
+    // Waitlist Component
+    waitlistTitle: "Tired of Overpriced Fast Fashion?",
+    waitlistSubtitle: "Welcome to Circular Style",
+    waitlistBadge: "Кружна мода.",
+    waitlistStats: {
+      secondsToSell: "seconds to sell",
+      offRetailPrices: "off retail prices",
+      sustainableImpact: "sustainable impact",
+    },
+    waitlistForm: {
+      nameLabel: "Name",
+      nameOptional: "(optional)",
+      namePlaceholder: "Your name",
+      emailLabel: "Email address",
+      emailPlaceholder: "your@email.com",
+      interestsLabel: "What interests you most?",
+      interestsOptional: "(select all that apply)",
+      submitButton: "Join the Waitlist",
+      submittingButton: "Joining waitlist...",
+      alreadyOnWaitlist:
+        "You're already on our waitlist! We'll be in touch soon.",
+      somethingWentWrong: "Something went wrong. Please try again.",
+      pleaseEnterEmail: "Please enter your email address",
+    },
+    waitlistInterests: {
+      selling: {
+        label: "Selling my clothes",
+        description: "Turn your closet into cash",
+      },
+      buying: {
+        label: "Buying sustainable fashion",
+        description: "Discover unique pre-loved pieces",
+      },
+      community: {
+        label: "Joining eco community",
+        description: "Connect with like-minded people",
+      },
+      impact: {
+        label: "Tracking my eco impact",
+        description: "See your environmental difference",
+      },
+    },
+    waitlistSuccess: {
+      title: "You're on the list!",
+      description:
+        "Welcome to the sustainable fashion revolution! We'll notify you as soon as vtoraraka launches.",
+      whatHappensNext: "What happens next?",
+      earlyAccess: "You'll get early access when we launch",
+      exclusiveUpdates: "Exclusive updates on our progress",
+      specialPerks: "Special launch day perks and discounts",
+      backToHome: "Back to Home",
+      followUs: "Follow us for updates:",
+    },
+    waitlistTrust: {
+      noSpam: "🔒 No spam, ever. Unsubscribe with one click.",
+      gdprCompliant: "✓ GDPR Compliant",
+      secureData: "✓ Secure Data",
+      privacyFirst: "✓ Privacy First",
+    },
+
+    // Footer
+    footerDescription:
+      "Skip the hassle of traditional resale. Browse clothing instantly, discover unique pieces without the trouble.",
+    footerEmail: "vtoraraka.mk",
+
+    // Video Error Messages
+    videoUnavailable: "Video unavailable",
+    continueBrowsing: "Continue browsing our content",
+    pullToRefresh: "Pull to refresh",
+    backgroundVideoLabel: "Background video for fashion platform",
+
+    // Dashboard Status - REMOVED (moved to seller dashboard)
+
+    // Order Completion Messages - REMOVED (moved to seller dashboard)
   },
 };
 

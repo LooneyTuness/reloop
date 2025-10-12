@@ -1,183 +1,289 @@
-# 🚀 Production Deployment Guide
+# vtoraraka Seller Dashboard Deployment Guide
+
+This guide covers deploying both the buyer-facing application and the new seller dashboard.
+
+## Architecture Overview
+
+```
+┌─────────────────────┐    ┌─────────────────────┐
+│   Buyer App         │    │   Seller Dashboard   │
+│   (Port 3000)      │    │   (Port 3001)       │
+│                     │    │                     │
+│   - Browse products │    │   - Manage products  │
+│   - Cart & checkout │    │   - View orders      │
+│   - Order history   │    │   - Notifications   │
+│   - User auth       │    │   - Seller auth     │
+└─────────────────────┘    └─────────────────────┘
+           │                           │
+           └───────────┬───────────────┘
+                       │
+            ┌─────────────────────┐
+            │   Supabase Database │
+            │   - Shared data     │
+            │   - RLS policies    │
+            │   - Auth system     │
+            └─────────────────────┘
+```
 
 ## Prerequisites
 
-- [ ] Supabase project set up
-- [ ] Domain name purchased
-- [ ] Gmail account with app password
-- [ ] Hosting platform account (Vercel/Netlify/AWS)
+- Supabase project with database
+- Domain or subdomain for seller dashboard
+- Hosting platform (Vercel, Netlify, etc.)
 
-## Step 1: Environment Setup
+## Step 1: Database Setup
 
-### 1.1 Supabase Configuration
+1. **Run the database migration**:
 
-1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
-2. Create a new project or use existing
-3. Go to **Settings** → **API**
-4. Copy your project URL and anon key
+   ```sql
+   -- Execute the contents of seller-dashboard/database-migration.sql
+   -- in your Supabase SQL editor
+   ```
 
-### 1.2 Gmail SMTP Setup
+2. **Create your first admin user**:
 
-1. Enable 2-Factor Authentication on Gmail
-2. Go to [App Passwords](https://myaccount.google.com/apppasswords)
-3. Generate an app password for "Mail"
-4. Save the 16-character password
+   ```sql
+   INSERT INTO seller_profiles (user_id, email, role, is_approved)
+   SELECT id, email, 'admin', true
+   FROM auth.users
+   WHERE email = 'your-admin-email@domain.com';
+   ```
 
-### 1.3 Environment Variables
+3. **Verify RLS policies** are active and working correctly.
 
-Create `.env.local` in the `web` directory:
+## Step 2: Buyer App Cleanup
 
-```bash
-# Supabase Configuration (REQUIRED)
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+1. **Remove seller-specific components**:
 
-# Application Configuration
-NEXT_PUBLIC_WAITLIST_ONLY=false
-NEXT_PUBLIC_APP_URL=https://your-domain.com
+   ```bash
+   # Move these files to seller dashboard or delete
+   rm web/src/components/VendorOrdersPanel.tsx
+   rm web/src/components/NotificationPanel.tsx
+   rm web/src/components/SellItem.jsx
+   ```
 
-# Email Notifications (REQUIRED)
-EMAIL_USER=your-email@gmail.com
-EMAIL_APP_PASSWORD=your_gmail_app_password
+2. **Update dashboard page** to redirect sellers:
 
-# PostHog Analytics (Optional)
-NEXT_PUBLIC_POSTHOG_KEY=your_posthog_key
-NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
+   ```bash
+   # Replace with redirect logic (see BUYER_APP_CLEANUP.md)
+   ```
+
+3. **Update navigation** to remove seller links
+
+4. **Add environment variable**:
+   ```env
+   NEXT_PUBLIC_SELLER_DASHBOARD_URL=https://sellers.yourdomain.com
+   ```
+
+## Step 3: Deploy Buyer App
+
+1. **Build and deploy** the main application:
+
+   ```bash
+   cd web
+   npm run build
+   # Deploy to your hosting platform
+   ```
+
+2. **Configure domain**: `https://yourdomain.com`
+
+## Step 4: Deploy Seller Dashboard
+
+1. **Build seller dashboard**:
+
+   ```bash
+   cd web/seller-dashboard
+   npm run build
+   ```
+
+2. **Deploy to hosting platform**:
+
+   - Vercel: Connect GitHub repo and deploy
+   - Netlify: Drag and drop build folder
+   - Other platforms: Follow their deployment guides
+
+3. **Configure domain**: `https://sellers.yourdomain.com` or subdomain
+
+## Step 5: Environment Configuration
+
+### Buyer App Environment Variables
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
+NEXT_PUBLIC_SELLER_DASHBOARD_URL=https://sellers.yourdomain.com
 ```
 
-## Step 2: Database Setup
+### Seller Dashboard Environment Variables
 
-### 2.1 Run Database Migrations
-
-1. Go to Supabase Dashboard → **SQL Editor**
-2. Run the following SQL scripts in order:
-   - `fix-user-deletion-constraints.sql` (if not already run)
-   - Any other migration scripts
-
-### 2.2 Configure Row Level Security (RLS)
-
-Ensure RLS is enabled on all tables:
-
-- `items`
-- `cart_items`
-- `orders`
-
-## Step 3: Build and Test
-
-### 3.1 Local Production Build
-
-```bash
-# Windows
-.\build-production.ps1
-
-# Linux/Mac
-./build-production.sh
-
-# Or manually
-npm run build:production
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
+NEXT_PUBLIC_SELLER_DASHBOARD_URL=https://sellers.yourdomain.com
+NEXT_PUBLIC_MAIN_APP_URL=https://yourdomain.com
 ```
 
-### 3.2 Test Production Build
+## Step 6: Domain Configuration
 
-```bash
-npm run preview
+### Option 1: Subdomain Approach
+
+- Main app: `https://yourdomain.com`
+- Seller dashboard: `https://sellers.yourdomain.com`
+
+### Option 2: Path-based Approach
+
+- Main app: `https://yourdomain.com`
+- Seller dashboard: `https://yourdomain.com/sellers`
+
+### DNS Configuration
+
+```
+yourdomain.com          A    your-server-ip
+sellers.yourdomain.com  A    your-server-ip
 ```
 
-## Step 4: Deploy to Hosting Platform
+## Step 7: Testing
 
-### 4.1 Vercel (Recommended)
+### Buyer App Testing
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run: `vercel --prod`
-3. Configure environment variables in Vercel dashboard
-4. Set up custom domain
+1. ✅ Browse products
+2. ✅ Add to cart
+3. ✅ Checkout process
+4. ✅ Order confirmation
+5. ✅ User authentication
+6. ✅ Seller redirection (if seller tries to access buyer dashboard)
 
-### 4.2 Netlify
+### Seller Dashboard Testing
 
-1. Connect your GitHub repository
-2. Set build command: `npm run build`
-3. Set publish directory: `.next`
-4. Configure environment variables
-5. Set up custom domain
+1. ✅ Seller login
+2. ✅ Product management
+3. ✅ Order management
+4. ✅ Notifications
+5. ✅ Revenue tracking
+6. ✅ Access control (non-sellers can't access)
 
-### 4.3 AWS Amplify
+### Security Testing
 
-1. Connect your repository
-2. Set build settings:
-   - Build command: `npm run build`
-   - Base directory: `web`
-3. Configure environment variables
-4. Set up custom domain
+1. ✅ RLS policies working
+2. ✅ Seller data isolation
+3. ✅ Admin-only functions protected
+4. ✅ Authentication flows secure
 
-## Step 5: Post-Deployment
+## Step 8: Monitoring and Maintenance
 
-### 5.1 Domain Configuration
+### Database Monitoring
 
-1. Point your domain to the hosting platform
-2. Set up SSL certificate (usually automatic)
-3. Update `NEXT_PUBLIC_APP_URL` with your domain
+```sql
+-- Check seller profiles
+SELECT sp.*, au.email as auth_email
+FROM seller_profiles sp
+JOIN auth.users au ON sp.user_id = au.id;
 
-### 5.2 Supabase Configuration
+-- Monitor vendor orders
+SELECT COUNT(*) FROM vendor_orders;
 
-1. Update **Site URL** in Supabase Dashboard
-2. Add your domain to **Redirect URLs**
-3. Configure email templates if needed
+-- Check notifications
+SELECT COUNT(*) FROM notifications WHERE is_read = false;
+```
 
-### 5.3 Email Testing
+### Application Monitoring
 
-1. Test user registration
-2. Check email delivery
-3. Test email confirmation flow
-4. Verify seller/buyer notifications
-
-## Step 6: Monitoring and Maintenance
-
-### 6.1 Set Up Monitoring
-
-- [ ] Error tracking (Sentry, LogRocket)
-- [ ] Performance monitoring
-- [ ] Uptime monitoring
-- [ ] Database monitoring
-
-### 6.2 Security Checklist
-
-- [ ] All environment variables secured
-- [ ] HTTPS enabled
-- [ ] Security headers configured
-- [ ] Rate limiting enabled
-- [ ] Database backups configured
-
-### 6.3 Performance Optimization
-
-- [ ] Image optimization enabled
-- [ ] CDN configured
-- [ ] Caching strategies implemented
-- [ ] Bundle size optimized
+- Set up error tracking (Sentry, Bugsnag)
+- Monitor performance metrics
+- Track user authentication issues
+- Monitor database query performance
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Build fails**: Check environment variables
-2. **Email not working**: Verify Gmail app password
-3. **Database errors**: Check RLS policies
-4. **Domain issues**: Verify DNS settings
+1. **Seller can't access dashboard**:
 
-### Support
+   - Check seller profile exists in database
+   - Verify `is_approved = true`
+   - Check RLS policies
 
-- Check logs in hosting platform
-- Review Supabase logs
-- Test locally with production environment
+2. **Orders not showing**:
 
-## Success Metrics
+   - Verify `vendor_orders` view exists
+   - Check user permissions
+   - Validate data in `order_items` table
 
-- [ ] Site loads in < 3 seconds
-- [ ] All features working
-- [ ] Email notifications working
-- [ ] Mobile responsive
-- [ ] SEO optimized
-- [ ] Security headers present
+3. **Authentication issues**:
 
----
+   - Check Supabase configuration
+   - Verify environment variables
+   - Test auth flows
 
-**Your vtoraraka marketplace is now ready for production! 🎉**
+4. **Database connection errors**:
+   - Verify Supabase URL and keys
+   - Check network connectivity
+   - Validate RLS policies
+
+### Debug Queries
+
+```sql
+-- Check seller profiles
+SELECT * FROM seller_profiles WHERE email = 'seller@example.com';
+
+-- Check vendor orders
+SELECT * FROM vendor_orders WHERE vendor_id = 'user-uuid';
+
+-- Check notifications
+SELECT * FROM notifications WHERE user_id = 'user-uuid';
+
+-- Test RLS policies
+SET row_security = on;
+SELECT * FROM seller_profiles;
+```
+
+## Security Checklist
+
+- [ ] RLS policies enabled on all tables
+- [ ] Seller profiles table secured
+- [ ] Admin functions protected
+- [ ] Authentication flows secure
+- [ ] Data isolation verified
+- [ ] HTTPS enabled
+- [ ] Environment variables secured
+- [ ] Database access restricted
+
+## Performance Optimization
+
+1. **Database indexes**:
+
+   ```sql
+   CREATE INDEX idx_items_user_id_status ON items(user_id, status);
+   CREATE INDEX idx_vendor_orders_vendor_id ON vendor_orders(vendor_id);
+   ```
+
+2. **Caching**:
+
+   - Implement Redis for session caching
+   - Use CDN for static assets
+   - Cache database queries where appropriate
+
+3. **Monitoring**:
+   - Set up database query monitoring
+   - Track application performance metrics
+   - Monitor error rates and response times
+
+## Backup and Recovery
+
+1. **Database backups**:
+
+   - Enable Supabase automatic backups
+   - Test restore procedures
+   - Document recovery steps
+
+2. **Application backups**:
+   - Version control all code
+   - Backup environment configurations
+   - Document deployment procedures
+
+## Support and Documentation
+
+- Keep deployment documentation updated
+- Document any custom configurations
+- Maintain troubleshooting guides
+- Train team on new architecture
