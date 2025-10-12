@@ -158,6 +158,10 @@ export type Database = {
           id: string
           order_id: string
           item_id: string
+          vendor_id: string | null
+          buyer_name: string | null
+          buyer_email: string | null
+          buyer_phone: string | null
           quantity: number
           price: number
           created_at?: string
@@ -166,6 +170,10 @@ export type Database = {
           id?: string
           order_id: string
           item_id: string
+          vendor_id?: string | null
+          buyer_name?: string | null
+          buyer_email?: string | null
+          buyer_phone?: string | null
           quantity: number
           price: number
           created_at?: string
@@ -174,15 +182,277 @@ export type Database = {
           id?: string
           order_id?: string
           item_id?: string
+          vendor_id?: string | null
+          buyer_name?: string | null
+          buyer_email?: string | null
+          buyer_phone?: string | null
           quantity?: number
           price?: number
           created_at?: string
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: string
+          title: string
+          message: string
+          order_id: string | null
+          item_name: string | null
+          order_date: string | null
+          is_read: boolean
+          is_dismissed: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type?: string
+          title: string
+          message: string
+          order_id?: string | null
+          item_name?: string | null
+          order_date?: string | null
+          is_read?: boolean
+          is_dismissed?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: string
+          title?: string
+          message?: string
+          order_id?: string | null
+          item_name?: string | null
+          order_date?: string | null
+          is_read?: boolean
+          is_dismissed?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      vendor_sales: {
+        Row: {
+          id: string
+          vendor_id: string
+          item_id: string
+          order_id: string
+          item_title: string
+          item_price: number
+          item_category: string | null
+          item_photos: string[]
+          quantity_sold: number
+          total_amount: number
+          customer_name: string | null
+          customer_email: string | null
+          customer_phone: string | null
+          sale_date: string
+          payment_method: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          vendor_id: string
+          item_id: string
+          order_id: string
+          item_title: string
+          item_price: number
+          item_category?: string | null
+          item_photos: string[]
+          quantity_sold?: number
+          total_amount: number
+          customer_name?: string | null
+          customer_email?: string | null
+          customer_phone?: string | null
+          sale_date?: string
+          payment_method?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          vendor_id?: string
+          item_id?: string
+          order_id?: string
+          item_title?: string
+          item_price?: number
+          item_category?: string | null
+          item_photos?: string[]
+          quantity_sold?: number
+          total_amount?: number
+          customer_name?: string | null
+          customer_email?: string | null
+          customer_phone?: string | null
+          sale_date?: string
+          payment_method?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      seller_applications: {
+        Row: {
+          id: string
+          full_name: string
+          email: string
+          store_name: string | null
+          website_social: string | null
+          product_description: string
+          understands_application: boolean
+          status: 'pending' | 'approved' | 'rejected'
+          created_at: string
+          updated_at: string
+          reviewed_by: string | null
+          reviewed_at: string | null
+          notes: string | null
+        }
+        Insert: {
+          id?: string
+          full_name: string
+          email: string
+          store_name?: string | null
+          website_social?: string | null
+          product_description: string
+          understands_application?: boolean
+          status?: 'pending' | 'approved' | 'rejected'
+          created_at?: string
+          updated_at?: string
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          notes?: string | null
+        }
+        Update: {
+          id?: string
+          full_name?: string
+          email?: string
+          store_name?: string | null
+          website_social?: string | null
+          product_description?: string
+          understands_application?: boolean
+          status?: 'pending' | 'approved' | 'rejected'
+          created_at?: string
+          updated_at?: string
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      seller_profiles: {
+        Row: {
+          id: string
+          user_id: string
+          email: string
+          role: 'admin' | 'seller'
+          is_approved: boolean
+          full_name?: string
+          phone?: string
+          bio?: string
+          location?: string
+          website?: string
+          avatar_url?: string
+          business_name?: string
+          business_type?: string
+          tax_id?: string
+          bank_account?: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          email: string
+          role: 'admin' | 'seller'
+          is_approved?: boolean
+          full_name?: string
+          phone?: string
+          bio?: string
+          location?: string
+          website?: string
+          avatar_url?: string
+          business_name?: string
+          business_type?: string
+          tax_id?: string
+          bank_account?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          email?: string
+          role?: 'admin' | 'seller'
+          is_approved?: boolean
+          full_name?: string
+          phone?: string
+          bio?: string
+          location?: string
+          website?: string
+          avatar_url?: string
+          business_name?: string
+          business_type?: string
+          tax_id?: string
+          bank_account?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      seller_invites: {
+        Row: {
+          id: string
+          invite_code: string
+          email: string
+          invited_by: string
+          status: 'pending' | 'accepted' | 'expired'
+          expires_at: string
+          created_at: string
+          accepted_at: string | null
+          notes: string | null
+        }
+        Insert: {
+          id?: string
+          invite_code: string
+          email: string
+          invited_by: string
+          status?: 'pending' | 'accepted' | 'expired'
+          expires_at: string
+          created_at?: string
+          accepted_at?: string | null
+          notes?: string | null
+        }
+        Update: {
+          id?: string
+          invite_code?: string
+          email?: string
+          invited_by?: string
+          status?: 'pending' | 'accepted' | 'expired'
+          expires_at?: string
+          created_at?: string
+          accepted_at?: string | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      vendor_sales_summary: {
+        Row: {
+          vendor_id: string
+          total_sales: number
+          total_revenue: number
+          total_items_sold: number
+          average_sale_value: number
+          first_sale: string
+          last_sale: string
+          categories_sold: number
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
