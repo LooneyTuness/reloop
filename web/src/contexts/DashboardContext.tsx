@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabaseDataService } from '@/lib/supabase/data-service';
 import { useAuth } from '@/contexts/AuthContext';
 import { Database } from '@/lib/supabase/supabase.types';
@@ -11,16 +11,22 @@ type Order = Database['public']['Tables']['orders']['Row'];
 type OrderItem = Database['public']['Tables']['order_items']['Row'];
 
 interface DashboardOrder extends Order {
+  customer?: string;
   customer_name?: string;
   customer_email?: string;
+  product?: string;
   product_name?: string;
   product_image?: string;
+  amount?: string;
+  date?: string;
   order_items?: OrderItem[];
 }
 
-interface DashboardProduct extends Item {
+interface DashboardProduct extends Omit<Item, 'price'> {
+  name?: string;
   views?: number;
-  status?: 'active' | 'sold' | 'draft' | 'inactive';
+  price?: string;
+  status?: 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive';
 }
 
 interface DashboardStats {
@@ -32,6 +38,8 @@ interface DashboardStats {
   avgOrderValue: number;
   conversionRate: number;
   customerRating?: number;
+  totalViews: number;
+  viewsLast30Days: number;
 }
 
 interface Activity {
@@ -61,6 +69,7 @@ interface DashboardContextType {
   deleteProduct: (productId: string) => Promise<void>;
   searchProducts: (query: string) => Promise<DashboardProduct[]>;
   markActivityAsRead: (activityId: string) => void;
+  testUpdateProductStatuses: (status: string) => void;
 }
 
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
@@ -77,22 +86,33 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     totalOrders: 0,
     avgOrderValue: 0,
     conversionRate: 0,
-    customerRating: 4.5
+    customerRating: 4.5,
+    totalViews: 0,
+    viewsLast30Days: 0
   });
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Debug logging
-  console.log('DashboardProvider - User:', user);
-  console.log('DashboardProvider - User ID:', user?.id);
+  // Debug logging - only log when user is available
+  useEffect(() => {
+    if (user) {
+      console.log('DashboardProvider - User:', user);
+      console.log('DashboardProvider - User ID:', user.id);
+    } else {
+      console.log('DashboardProvider - No user available yet');
+    }
+  }, [user]);
 
-  const refreshData = async () => {
+  const refreshData = useCallback(async () => {
     if (!user?.id) {
       console.log('No user ID available, skipping data refresh');
       setIsLoading(false);
       return;
     }
+    
+    // Seller verification is handled by SellerVerification component
+    // No need to duplicate the check here
     
     console.log('Refreshing dashboard data for user:', user.id);
     setIsLoading(true);
@@ -100,11 +120,16 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     
     try {
       // Fetch all data in parallel with individual error handling
+      console.log('Fetching seller items for user:', user.id);
       const [sellerItems, sellerOrders, sellerStats] = await Promise.allSettled([
         supabaseDataService.getSellerItems(user.id),
         supabaseDataService.getSellerOrders(user.id),
         supabaseDataService.getSellerStats(user.id)
       ]);
+      
+      console.log('Seller items result:', sellerItems);
+      console.log('Seller orders result:', sellerOrders);
+      console.log('Seller stats result:', sellerStats);
 
       // Handle individual results
       const items = sellerItems.status === 'fulfilled' ? sellerItems.value : [];
@@ -130,25 +155,49 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       }
 
       // Transform items to dashboard products
-      const dashboardProducts: DashboardProduct[] = items.map(item => ({
-        ...item,
-        views: Math.floor(Math.random() * 1000) + 100, // Mock views for now
-        status: (item.status as any) || 'active'
-      }));
+      const dashboardProducts: DashboardProduct[] = items.map(item => {
+        // Map database status to Product Lifecycle status
+        let lifecycleStatus = 'listed';
+        switch (item.status) {
+          case 'active':
+            lifecycleStatus = 'listed';
+            break;
+          case 'sold':
+            lifecycleStatus = 'sold';
+            break;
+          case 'shipped':
+            lifecycleStatus = 'shipped';
+            break;
+          case 'delivered':
+            lifecycleStatus = 'delivered';
+            break;
+          default:
+            lifecycleStatus = 'listed';
+        }
+        
+        return {
+          ...item,
+          name: item.title,
+          views: 0, // Will be updated with real data after fetching
+          price: `${item.price?.toFixed(2) || '0.00'} MKD`,
+          status: lifecycleStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
+        };
+      });
 
       // Transform orders to dashboard orders
       const dashboardOrders: DashboardOrder[] = orders.map(order => {
-        const firstOrderItem = order.order_items?.[0];
-        const firstItem = firstOrderItem?.items;
         
         return {
           ...order,
+          customer: order.full_name || 'Unknown Customer',
           customer_name: order.full_name || 'Unknown Customer',
           customer_email: order.email || '',
-          product_name: firstItem?.title || 'Unknown Product',
-          product_image: Array.isArray(firstItem?.photos) 
-            ? firstItem.photos[0] 
-            : firstItem?.photos || '/api/placeholder/60/60'
+          product: 'Order Items', // Simplified for now
+          product_name: 'Order Items',
+          product_image: '/api/placeholder/60/60',
+          amount: `${order.total_amount?.toFixed(2) || '0.00'} MKD`,
+          date: new Date(order.created_at || '').toLocaleDateString(),
+          status: (order.status as 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled') || 'pending'
         };
       });
 
@@ -161,7 +210,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         totalOrders: stats.totalOrders,
         avgOrderValue: stats.avgOrderValue,
         conversionRate: stats.totalOrders > 0 ? (stats.soldItems / stats.totalItems) * 100 : 0,
-        customerRating: 4.5 // Default rating
+        customerRating: 4.5, // Default rating
+        totalViews: (stats as { totalViews?: number }).totalViews || 0,
+        viewsLast30Days: (stats as { viewsLast30Days?: number }).viewsLast30Days || 0
       };
 
       // Generate activities from recent data
@@ -182,7 +233,18 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         }))
       ];
 
-      setProducts(dashboardProducts);
+      // Fetch real view counts for products
+      const productsWithViews = await Promise.all(
+        dashboardProducts.map(async (product) => {
+          const viewCount = await supabaseDataService.getProductViewCount(product.id);
+          return {
+            ...product,
+            views: viewCount
+          };
+        })
+      );
+
+      setProducts(productsWithViews);
       setOrders(dashboardOrders);
       setStats(dashboardStats);
       setActivities(recentActivities);
@@ -197,16 +259,97 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
+  }, [user?.id]);
+
+  // Test function to manually update product statuses
+  const testUpdateProductStatuses = (status: string) => {
+    console.log(`🧪 Manually updating all products to status: ${status}`);
+    setProducts(prev => prev.map(product => {
+      console.log(`✅ Updating product ${product.id} (${product.name}) from '${product.status}' to '${status}'`);
+      return {
+        ...product,
+        status: status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
+      };
+    }));
   };
 
   const updateOrderStatus = async (orderId: string, status: string) => {
     try {
+      console.log('🚀 updateOrderStatus called with:', { orderId, status });
+      
       await supabaseDataService.updateOrderStatus(orderId, status);
       
       // Update local state
       setOrders(prev => prev.map(order => 
         order.id === orderId ? { ...order, status } : order
       ));
+      
+      // Map order status to product status for Product Lifecycle
+      // Use database-compatible status values
+      let productStatus: string = 'active';
+      switch (status) {
+        case 'pending':
+        case 'processing':
+          productStatus = 'sold';
+          break;
+        case 'shipped':
+          productStatus = 'shipped';
+          break;
+        case 'delivered':
+          productStatus = 'delivered';
+          break;
+        case 'cancelled':
+          productStatus = 'active';
+          break;
+        default:
+          productStatus = 'sold';
+      }
+      
+      console.log(`📦 Mapped order status '${status}' to product status '${productStatus}'`);
+      
+      // Get the specific products in this order
+      console.log('🔍 Fetching order items for order:', orderId, 'type:', typeof orderId);
+      
+      // Convert orderId to string if it's a number (database might return numbers)
+      const orderIdStr = String(orderId);
+      console.log('🔍 Using order ID as string:', orderIdStr);
+      
+      const orderItems = await supabaseDataService.getOrderItems(orderIdStr);
+      console.log('📦 Order items found:', orderItems);
+      const productIdsInOrder = orderItems.map(item => item.item_id);
+      console.log('🆔 Product IDs in order:', productIdsInOrder);
+      
+      // Only update products that are actually in this order
+      if (productIdsInOrder.length > 0) {
+        console.log('✅ Updating products with new status:', productStatus);
+        setProducts(prev => {
+          const updatedProducts = prev.map(product => {
+            if (productIdsInOrder.includes(product.id)) {
+              console.log(`🔄 Updating product ${product.id} (${product.name}) from ${product.status} to ${productStatus}`);
+              return {
+                ...product,
+                status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
+              };
+            }
+            return product; // Keep other products unchanged
+          });
+          console.log('📊 Updated products:', updatedProducts);
+          return updatedProducts;
+        });
+      } else {
+        console.log('⚠️ No products found in order, skipping product updates');
+      }
+      
+      // Update the database status for the specific products in this order
+      if (productIdsInOrder.length > 0) {
+        try {
+          await supabaseDataService.updateItemsStatus(productIdsInOrder, productStatus);
+        } catch (dbError) {
+          console.error('Error updating product statuses in database:', dbError);
+          // Don't throw here - the order status was already updated successfully
+        }
+      }
+      
       
       // Add activity
       const newActivity: Activity = {
@@ -217,28 +360,66 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         status: 'active'
       };
       setActivities(prev => [newActivity, ...prev]);
+      
+      
     } catch (err) {
-      console.error('Error updating order status:', err);
+      console.error('❌ Error updating order status:', err);
       setError(err instanceof Error ? err.message : 'Failed to update order status');
     }
   };
 
   const addNewProduct = async (productData: Partial<Item>) => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      console.error('No user ID available for product creation');
+      return;
+    }
+    
+    // Seller verification is handled by SellerVerification component
+    // No need to duplicate the check here
     
     try {
-      const newProduct = await supabaseDataService.createItem({
-        ...productData,
+      console.log('Creating product with data:', productData);
+      console.log('User ID:', user.id);
+      console.log('User email:', user.email);
+      
+      // Validate that user.id is a valid UUID format
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(user.id)) {
+        throw new Error(`Invalid user ID format: ${user.id}`);
+      }
+      
+      // Create item data with required fields
+      const itemData = {
+        name: productData.name || productData.title || 'Test Product',
+        title: productData.title || productData.name || 'Test Product',
+        price: productData.price || 0,
         user_id: user.id,
         user_email: user.email,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      } as any);
+        description: productData.description || null,
+        category: productData.category || null,
+        condition: productData.condition || 'excellent',
+        size: productData.size || null,
+        brand: productData.brand || null,
+        quantity: productData.quantity || 1,
+        status: productData.status || 'active',
+        photos: productData.photos || ['/api/placeholder/400/400']
+      };
+      
+      // Log the exact data being sent
+      console.log('User ID type:', typeof user.id, 'value:', user.id);
+      console.log('User email type:', typeof user.email, 'value:', user.email);
+      console.log('Item data user_id type:', typeof itemData.user_id, 'value:', itemData.user_id);
+      
+      console.log('Final item data being sent to database:', itemData);
+      
+      const newProduct = await supabaseDataService.createItem(itemData as Item);
+      console.log('Product created successfully:', newProduct);
 
       // Add to local state
       const dashboardProduct: DashboardProduct = {
         ...newProduct,
         views: 0,
+        price: `${newProduct.price?.toFixed(2) || '0.00'} MKD`,
         status: 'active'
       };
       setProducts(prev => [dashboardProduct, ...prev]);
@@ -254,16 +435,28 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       const newActivity: Activity = {
         id: `product-${Date.now()}`,
         type: 'product',
-        message: `New product "${newProduct.title}" listed`,
+        message: `New product "${newProduct.title || newProduct.name}" listed`,
         timestamp: 'Just now',
         status: 'active'
       };
       setActivities(prev => [newActivity, ...prev]);
+      
+      // Refresh data from database to ensure consistency
+      console.log('Refreshing data after product creation...');
+      await refreshData();
     } catch (err) {
       console.error('Error adding product:', err);
+      console.error('Error details:', {
+        message: err instanceof Error ? err.message : 'Unknown error',
+        stack: err instanceof Error ? err.stack : undefined,
+        productData,
+        user: user?.id
+      });
       setError(err instanceof Error ? err.message : 'Failed to add product');
+      throw err; // Re-throw to show error in UI
     }
   };
+
 
   const updateProduct = async (productId: string, updates: Partial<Item>) => {
     try {
@@ -271,7 +464,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       
       // Update local state
       setProducts(prev => prev.map(product => 
-        product.id === productId ? { ...product, ...updatedProduct } : product
+        product.id === productId ? { 
+          ...product, 
+          ...updatedProduct,
+          price: updatedProduct.price ? `${updatedProduct.price.toFixed(2)} MKD` : product.price,
+          status: (updatedProduct.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || product.status
+        } : product
       ));
     } catch (err) {
       console.error('Error updating product:', err);
@@ -306,7 +504,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return searchResults.map(item => ({
         ...item,
         views: Math.floor(Math.random() * 1000) + 100,
-        status: (item.status as any) || 'active'
+        price: `${item.price?.toFixed(2) || '0.00'} MKD`,
+        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || 'active'
       }));
     } catch (err) {
       console.error('Error searching products:', err);
@@ -329,7 +528,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       setError(null);
     }
-  }, [user?.id]);
+  }, [user?.id, refreshData]);
 
   const value: DashboardContextType = {
     orders,
@@ -344,7 +543,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     updateProduct,
     deleteProduct,
     searchProducts,
-    markActivityAsRead
+    markActivityAsRead,
+    testUpdateProductStatuses
   };
 
   return (

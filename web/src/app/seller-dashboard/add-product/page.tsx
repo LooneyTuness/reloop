@@ -1,376 +1,278 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
-import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
-import { ArrowLeft, Upload, X, Plus, Minus } from 'lucide-react';
+import { useDashboard } from '@/contexts/DashboardContext';
+import { ArrowLeft, Save } from 'lucide-react';
+import { toast } from 'sonner';
 
 function AddProductContent() {
+  const router = useRouter();
   const { addNewProduct } = useDashboard();
+  const [isLoading, setIsLoading] = useState(false);
+  
   const [formData, setFormData] = useState({
-    title: '',
+    name: '',
     description: '',
     price: '',
     category: '',
     condition: 'excellent',
     size: '',
-    seller: '',
-    photos: [] as string[],
-    old_price: '',
-    user_email: ''
+    brand: '',
+    quantity: '1',
+    status: 'active'
   });
-  const [images, setImages] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const categories = [
-    'Clothing', 'Shoes', 'Accessories', 'Bags', 'Jewelry', 
-    'Watches', 'Home & Living', 'Electronics', 'Books', 'Other'
-  ];
-
-  const conditions = [
-    { value: 'excellent', label: 'Excellent' },
-    { value: 'very-good', label: 'Very Good' },
-    { value: 'good', label: 'Good' },
-    { value: 'fair', label: 'Fair' }
-  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const newImages = files.map(file => URL.createObjectURL(file));
-    setImages(prev => [...prev, ...newImages].slice(0, 8)); // Max 8 images
-  };
-
-  const removeImage = (index: number) => {
-    setImages(prev => prev.filter((_, i) => i !== index));
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
+    
+    setIsLoading(true);
     try {
-      // Validate required fields
-      if (!formData.title || !formData.description || !formData.price || !formData.category) {
-        throw new Error('Please fill in all required fields');
-      }
-
-      // Prepare product data for Supabase
       const productData = {
-        title: formData.title,
+        name: formData.name,
+        title: formData.name, // Also set title for compatibility
         description: formData.description,
         price: parseFloat(formData.price),
         category: formData.category,
         condition: formData.condition,
         size: formData.size || null,
-        seller: formData.seller || null,
-        photos: images.length > 0 ? images : ['/api/placeholder/400/400'],
-        old_price: formData.old_price ? parseFloat(formData.old_price) : null,
-        user_email: formData.user_email || null,
-        status: 'active'
+        brand: formData.brand || null,
+        quantity: parseInt(formData.quantity),
+        status: formData.status,
+        photos: ['/api/placeholder/400/400'] as string[]
       };
 
       await addNewProduct(productData);
-
-      // Reset form
-      setFormData({
-        title: '',
-        description: '',
-        price: '',
-        category: '',
-        condition: 'excellent',
-        size: '',
-        seller: '',
-        photos: [],
-        old_price: '',
-        user_email: ''
-      });
-      setImages([]);
-      
-      alert('Product added successfully!');
+      toast.success('Product created successfully!');
+      router.push('/seller-dashboard/listings');
     } catch (error) {
-      console.error('Error adding product:', error);
-      setError(error instanceof Error ? error.message : 'Failed to add product. Please try again.');
+      console.error('Error creating product:', error);
+      toast.error('Failed to create product. Please try again.');
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <SellerDashboardLayout>
-      <div className="px-6 py-8">
-        {/* Header */}
+    <div className="px-6 py-8">
         <div className="flex items-center mb-8">
-          <button className="mr-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-            <ArrowLeft size={20} />
+          <button
+            onClick={() => router.back()}
+            className="mr-4 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"
+          >
+            <ArrowLeft size={20} className="mr-2" />
+            Back
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               Add New Product
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Create a new listing for your product
+              Create a new product listing
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="max-w-4xl">
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <p className="text-red-800 dark:text-red-200">{error}</p>
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Product Name *
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter product name"
+                  required
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left Column - Images */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Product Images
-              </h2>
-              
-              {/* Image Upload Area */}
-              <div className="mb-6">
-                <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-gray-400 dark:hover:border-gray-500 transition-colors">
-                  <Upload className="mx-auto text-gray-400 mb-4" size={48} />
-                  <p className="text-gray-600 dark:text-gray-400 mb-2">
-                    Upload product images
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
-                    Drag and drop or click to browse (max 8 images)
-                  </p>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <label
-                    htmlFor="image-upload"
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
-                  >
-                    <Upload size={16} className="mr-2" />
-                    Choose Images
+              <div>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Description
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Describe your product"
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Price (MKD) *
                   </label>
+                  <input
+                    id="price"
+                    name="price"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    placeholder="0.00"
+                    required
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Category
+                  </label>
+                  <input
+                    id="category"
+                    name="category"
+                    type="text"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    placeholder="e.g., Clothing, Electronics"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
               </div>
 
-              {/* Image Preview */}
-              {images.length > 0 && (
-                <div className="grid grid-cols-2 gap-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
-                      <img
-                        src={image}
-                        alt={`Product ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Right Column - Product Details */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Product Details
-              </h2>
-
-              <div className="space-y-6">
-                {/* Product Name */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Product Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter product name"
-                  />
-                </div>
-
-                {/* Description */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Description *
-                  </label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    required
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Describe your product in detail"
-                  />
-                </div>
-
-                {/* Price */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Price *
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                    <input
-                      type="number"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      required
-                      min="0"
-                      step="0.01"
-                      className="w-full pl-8 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="0.00"
-                    />
-                  </div>
-                </div>
-
-                {/* Category */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Category *
+                  <label htmlFor="condition" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Condition
                   </label>
                   <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select category</option>
-                    {categories.map(category => (
-                      <option key={category} value={category}>{category}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Condition */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Condition *
-                  </label>
-                  <select
+                    id="condition"
                     name="condition"
                     value={formData.condition}
                     onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    {conditions.map(condition => (
-                      <option key={condition.value} value={condition.value}>
-                        {condition.label}
-                      </option>
-                    ))}
+                    <option value="excellent">Excellent</option>
+                    <option value="good">Good</option>
+                    <option value="fair">Fair</option>
+                    <option value="poor">Poor</option>
                   </select>
                 </div>
 
-                {/* Size */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="size" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Size
                   </label>
                   <input
-                    type="text"
+                    id="size"
                     name="size"
+                    type="text"
                     value={formData.size}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g., M, L, 8, 10"
+                    placeholder="e.g., M, L, XL, 42"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
+              </div>
 
-                {/* Seller */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Seller Name
+                  <label htmlFor="brand" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Brand
                   </label>
                   <input
+                    id="brand"
+                    name="brand"
                     type="text"
-                    name="seller"
-                    value={formData.seller}
+                    value={formData.brand}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter seller name"
+                    placeholder="e.g., Nike, Apple, Samsung"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
-                {/* Old Price */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Original Price (Optional)
+                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Quantity
                   </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                    <input
-                      type="number"
-                      name="old_price"
-                      value={formData.old_price}
-                      onChange={handleInputChange}
-                      min="0"
-                      step="0.01"
-                      className="w-full pl-8 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="0.00"
-                    />
-                  </div>
+                  <input
+                    id="quantity"
+                    name="quantity"
+                    type="number"
+                    min="1"
+                    value={formData.quantity}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Status
+                  </label>
+                  <select
+                    id="status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="active">Active</option>
+                    <option value="draft">Draft</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="mt-8 flex justify-end space-x-4">
+          <div className="flex justify-end space-x-4">
             <button
               type="button"
-              className="px-6 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              onClick={() => router.back()}
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
-              Save as Draft
+              Cancel
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
+              disabled={isLoading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center"
             >
-              {isSubmitting ? (
+              {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Adding Product...
+                  Creating...
                 </>
               ) : (
-                'Add Product'
+                <>
+                  <Save size={20} className="mr-2" />
+                  Create Product
+                </>
               )}
             </button>
-          </div>
-        </form>
-      </div>
-    </SellerDashboardLayout>
+        </div>
+      </form>
+    </div>
   );
 }
 
 export default function AddProductPage() {
   return (
-    <DashboardProvider>
+    <SellerDashboardLayout>
       <AddProductContent />
-    </DashboardProvider>
+    </SellerDashboardLayout>
   );
 }
