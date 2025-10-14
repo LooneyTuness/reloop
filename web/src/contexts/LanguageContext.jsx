@@ -49,12 +49,12 @@ const translations = {
     cart: "Кошничка",
     cartEmpty: "Вашата кошничка е празна",
     cartEmptyDescription:
-      "Додајте производи и вратете се овде за да завршите со нарачката.",
-    startShopping: "Почни со купување",
+      "Додајте производи и вратете се тука за да завршите со нарачката.",
     orderSummary: "Резиме на нарачка",
     subtotal: "Субтотал",
     shipping: "Испорака",
     shippingCalculated: "Ќе се пресмета при плаќање",
+    shippingDetails: "Детали за достава",
     total: "Вкупно",
     fullName: "Име и презиме",
     email: "E-mail",
@@ -75,6 +75,9 @@ const translations = {
     orderConfirmation: "Нова нарачка",
     orderConfirmationMessage:
       "Некој нарача ваши производи! Нарачка #{orderId} - контактирајте го купувачот за испорака.",
+
+    // Trust Badges
+    secureCheckout: "Безбедна нарачка",
 
     // Notifications
     notifications: "Известувања",
@@ -106,7 +109,7 @@ const translations = {
     heroTitle: "Купувај и продавај претходно сакана мода",
     heroSubtitle: "за минути, не за часови",
     heroDescription:
-      "Прескокни ја комплицираната препродажба. Листај веднаш, откривај уникатни парчиња лесно и заработувај од гардеробата.",
+      "Прескокни ја маката од традиционална препродажба. Листај облека инстантно и откриј уникатни парчиња без проблем.",
     heroStartFree: "Започни бесплатно — без кредитна картичка.",
     newArrivals: "Новите парчиња стигнаа • Избрани со љубов",
     secondHand: "Втора рака.",
@@ -120,6 +123,281 @@ const translations = {
     fastDelivery: "Брза достава",
     curatedCollection: "Избрани парчиња",
     discoverUniquePieces: "Откриј уникатни парчиња од нашата селекција",
+    browseCategories: "Прелистај категории",
+    findYourStyle: "Најди го својот стил",
+    viewAllCategories: "Види ги сите категории",
+    shopByCategory: "Купувај по категорија",
+    womensFashion: "Женска мода",
+    womensFashionDesc: "Откриј елегантни и трендовски парчиња",
+    mensFashion: "Машка мода",
+    mensFashionDesc: "Стилска и удобна облека",
+    accessories: "Аксесоари",
+    accessoriesDesc: "Комплетирај го својот изглед со аксесоари",
+
+    // Additional Category Translations
+    allCategories: "Сите категории",
+    categories: "Категории",
+    filters: "Филтри",
+    allProducts: "Сите производи",
+    selectCategory: "Избери категорија",
+    selectSubcategory: "Избери подкатегорија",
+    selectType: "Избери тип",
+    selectBrand: "Избери бренд",
+    clearFilters: "Исчисти филтри",
+
+    // Navigation
+    menu: "Мени",
+    browseItems: "Прелистај парчиња",
+    startSelling: "Започни да продаваш",
+    settings: "Подесувања",
+    language: "Јазик",
+    loggedInUser: "Најавен корисник",
+    myOrders: "Мои нарачки",
+    signOut: "Одјави се",
+    signUp: "Регистрирај се",
+    signIn: "Најави се",
+
+    // Common UI text
+    noImage: "Нема слика",
+    unnamedProduct: "Неименуван производ",
+    noDescription: "Нема опис",
+    offRetail: "попуштање од малопродажни цени",
+    viewProduct: "Види продукт",
+    editProduct: "Уреди продукт",
+    checking: "Проверува...",
+    checkProfile: "Провери профил",
+    clickCheckProfile:
+      'Кликни "Провери профил" за да видиш дали твојот профил на продавач постои',
+    videoNotSupported: "Вашиот прелистувач не поддржува видео таг.",
+    close: "Затвори",
+    optional: "опционално",
+    cancel: "Откажи",
+    tryAgain: "Обиди се повторно",
+    notAvailable: "Не е достапно",
+    applicationSubmitted: "Апликацијата е успешно поднесена!",
+    applicationError: "Грешка при поднесување на апликацијата",
+    productDescriptionLabel: "Кажи ни за вашите производи",
+    productDescriptionPlaceholder:
+      "Опишете што продавате и зошто сакате да се придружите",
+    understandsApplicationText:
+      "Разбирам дека ова е апликација и не сите барања се прифатени.",
+    submittingApplication: "Се поднесува апликацијата...",
+    submitApplication: "Поднеси апликација",
+    thankYouForApplying: "Благодариме за апликацијата!",
+    applicationReceivedMessage:
+      "Добивме ја вашата апликација. Нашиот тим ќе ја прегледа вашата апликација и ќе ве контактира ако има соодветност. Следете ја вашата е-пошта!",
+    optionalFollowUp: "Дополнителни информации:",
+    contactUsIfNoResponse:
+      "Ако не слушнете од нас во рок од 7 дена, слободно контактирајте не на",
+    browseProducts: "Прегледај производи",
+    followUsForLatest: "Следете не за најнови парчиња:",
+    collection2025: "Колекција есен - зима 2025",
+    collection2025Short: "Колекција 2025",
+    sellItems: "Продај парчиња",
+    sell: "Продај",
+    searchItems: "Пребарај парчиња...",
+    applyToSellTitle: "Аплицирај за продавање на vtoraraka.mk",
+    yourName: "Вашето име",
+    emailPlaceholder: "ваша@е-пошта.com",
+    storeNameLabel: "Име на продавница или бренд",
+    storeNamePlaceholder: "Име на вашата продавница",
+    websiteSocialLabel: "Веб-сајт / Социјални мрежи",
+    websiteSocialPlaceholder: "Instagram, веб-сајт, итн.",
+    alreadyInvited: "Веќе поканет за продавање?",
+    loginToSellerAccount: "Најави се на твојата продавачка сметка тука",
+    sellerApplicationDescription:
+      "Работиме со селектирани продавачи кои се усогласуваат со нашите вредности и квалитет на производи. Пополни ја формата подолу, и ќе те контактираме ако има соодветност.",
+    loadingProducts: "Се вчитуваат продукти...",
+    unableToLoadProducts: "Не можам да ги вчитам продуктите",
+    productsLoadError:
+      "Има проблем со вчитувањето на продуктите. Ве молиме обидете се повторно.",
+    viewAllItems: "Прегледај ги сите парчиња",
+    discoverCompleteCollection: "Откриј ја целата колекција",
+
+    // Main Categories
+    shoes: "Обувки",
+    shoesDesc: "Обувки за секоја прилика",
+    home: "Дом",
+    homeDesc: "Домашен декор и мебел",
+    electronics: "Електроника",
+    electronicsDesc: "Телефони, лаптопи и техника",
+    books: "Книги",
+    booksDesc: "Книги и списанија",
+    sports: "Спорт",
+    sportsDesc: "Спортска опрема и облека",
+    beauty: "Убавина",
+    beautyDesc: "Козметика и парфеми",
+    kids: "Деца",
+    kidsDesc: "Облека и играчки за деца",
+
+    // Common category names that might be in database
+    women: "Жени",
+    men: "Мажи",
+    womens: "Жени",
+    mens: "Мажи",
+    womensfashion: "Женска мода",
+    mensfashion: "Машка мода",
+    children: "Деца",
+    childrens: "Деца",
+    childrensfashion: "Мода за деца",
+    kidsfashion: "Мода за деца",
+    womenswear: "Женска облека",
+    menswear: "Машка облека",
+    childrenswear: "Облека за деца",
+    kidswear: "Облека за деца",
+    womensfashionandaccessories: "Женска мода и аксесоари",
+    womensfashionaccessories: "Женска мода и аксесоари",
+
+    // Additional category translations
+    clothing: "Облека",
+    womensclothing: "Женска облека",
+    mensclothing: "Машка облека",
+    kidsclothing: "Облека за деца",
+    womensshoes: "Обувки за жени",
+    mensshoes: "Обувки за мажи",
+    kidsShoes: "Обувки за деца",
+    womensbags: "Торби за жени",
+    mensbags: "Торби за мажи",
+    womensjewelry: "Накит за жени",
+    menswatches: "Часовници за мажи",
+    mensgrooming: "Машки козметички производи",
+    grooming: "Козметички производи",
+
+    // Subcategories - Women's Fashion
+    womensTops: "Топови за жени",
+    womensDresses: "Фустани",
+    womensBottoms: "Долни делови",
+    womensOuterwear: "Надворешна облека",
+    womensSwimwear: "Пливачка облека",
+    womensActivewear: "Спортска облека за жени",
+    womensWeddingDresses: "Свадбени фустани",
+    weddingDresses: "Свадбени фустани",
+    weddingdresses: "Свадбени фустани",
+    womensJackets: "Јакни и палта",
+
+    // Subcategories - Men's Fashion
+    mensShirts: "Кошули за мажи",
+    mensTshirts: "Т-кошули за мажи",
+    mensTops: "Топови за мажи",
+    mensPants: "Панталони за мажи",
+    mensShorts: "Шорцеви за мажи",
+    mensBottoms: "Панталони",
+    mensJackets: "Јакни и палта за мажи",
+    mensSuits: "Одела за мажи",
+    mensOuterwear: "Јакни и палта",
+    mensUnderwear: "Долна облека",
+    mensSwimwear: "Пливачка облека",
+
+    // Subcategories - Accessories
+    bags: "Торби",
+    watches: "Часовници",
+    jewelry: "Накит",
+    sunglasses: "Очила за сонце",
+    belts: "Ремени",
+    scarves: "Марами и шалови",
+    hats: "Капи",
+
+    // Subcategories - Shoes
+    womensShoes: "Обувки за жени",
+    mensShoes: "Обувки за мажи",
+    sneakers: "Патики",
+    boots: "Чизми",
+    sandals: "Сандали",
+    heels: "Штикли",
+    flats: "Рамни обувки",
+    loafers: "Лофери",
+    dressShoes: "Официјални обувки",
+    dressshoes: "Официјални обувки",
+
+    // Subcategories - Home
+    furniture: "Мебел",
+    decor: "Декор",
+    kitchen: "Кујна",
+    bedroom: "Спална соба",
+    livingRoom: "Дневна соба",
+    garden: "Градина",
+
+    // Subcategories - Electronics
+    phones: "Телефони",
+    laptops: "Лаптопи",
+    tablets: "Таблети",
+    cameras: "Камери",
+    audio: "Аудио",
+    gaming: "Игри",
+
+    // Subcategories - Books
+    fiction: "Фантастика",
+    nonFiction: "Документарни",
+    textbooks: "Учебници",
+    magazines: "Списанија",
+    comics: "Стрипови",
+
+    // Subcategories - Sports
+    fitness: "Фитнес",
+    running: "Трчање",
+    football: "Фудбал",
+    basketball: "Кошарка",
+    tennis: "Тенис",
+    swimming: "Пливање",
+
+    // Subcategories - Beauty
+    makeup: "Шминка",
+    skincare: "Нега на кожа",
+    hair: "Коса",
+    fragrances: "Парфеми",
+    nails: "Нокти",
+
+    // Subcategories - Kids
+    babyClothes: "Облека за бебиња",
+    kidsClothes: "Облека за деца",
+    toys: "Играчки",
+    kidsBooks: "Книги за деца",
+    kidsShoes: "Обувки за деца",
+
+    // General Fashion Items
+    exploreNow: "Истражи сега",
+    dresses: "Фустани",
+    tops: "Топови",
+    bottoms: "Панталони",
+    sizes: "Големини",
+    styles: "Стилови",
+    trends: "Трендови",
+    shirts: "Кошули",
+    pants: "Панталони",
+    jackets: "Јакни",
+    casual: "Кежуал",
+    formal: "Формално",
+    sporty: "Спортски",
+
+    // Additional Fashion Subcategories
+    clothing: "Облека",
+    skirts: "Сукњи",
+    blouses: "Блузи",
+    jeans: "Фармерки",
+    shorts: "Шорцеви",
+    sweaters: "Џемпери",
+    hoodies: "Дуксери",
+    coats: "Палта",
+    blazers: "Блејзери",
+    suits: "Одела",
+    tshirts: "Маици",
+    tanktops: "Топови без ракави",
+    leggings: "Леггинси",
+    cardigans: "Кардигани",
+    polos: "Поло маици",
+    chinos: "Чино панталони",
+    cargo: "Карго панталони",
+    joggers: "Џогери",
+    overalls: "Комбинезони",
+    activewear: "Спортска облека",
+    wedding: "Свадба",
+    weddingDresses: "Свадбени фустани",
+    formalwear: "Формална облека",
+    readyToExplore: "Готови да истражите?",
+    discoverAllCategories:
+      "Откријте ги сите категории и најдете го совршениот стил",
+    browseAllProducts: "Прелистај сите продукти",
+    noCategoriesAvailable: "Нема достапни категории",
     shop: "Продавница",
     allProducts: "Сите продукти",
     sellWithUs: "Продај со нас",
@@ -264,7 +542,6 @@ const translations = {
       "Сега сте најавени! Започнете ја вашата одржлива модна патување.",
     emailConfirmed:
       "Вашата е-пошта е успешно потврдена. Започнете ја вашата одржлива модна патување сега.",
-    startShopping: "Започни купување",
     readyToMakeDifference: "Готови да направите разлика",
     checkYourEmail: "Провери ја твојата е-пошта",
     magicLinkSent:
@@ -359,6 +636,25 @@ const translations = {
     pullToRefresh: "Повлечете за освежување",
     backgroundVideoLabel: "Позадинско видео за модна платформа",
 
+    // Home Page
+    featuredItems: "Избрани парчиња",
+    discoverUniqueFinds: "Откриј уникатни парчиња",
+    handpickedSustainable:
+      "Рачно избрани одржливи модни парчиња кои заслужуваат втор живот. Секое парче раскажува приказна и помага да се намали модниот отпад.",
+    viewAllProducts: "Види ги сите производи",
+    noFeaturedProducts: "Моментално нема избрани производи.",
+    sustainable: "Одржливо",
+    affordable: "Достапно",
+    unique: "Уникатно",
+    shopSmarter: "Купувај паметно,",
+    wasteLess: "троши помалку",
+    buyAndSell:
+      "Купувај и продавај уникатна облека од втора рака – заработи од твојот плакар и поддржи одржлива мода.",
+    saveMoney: "Заштеди пари",
+    andThePlanet: "и планетата со секоја нарачка.",
+    sustainableFashionMarketplace: "Новите парчиња пристигнаа",
+    loadingVideo: "Се вчитува видеото...",
+
     // Dashboard Status - REMOVED (moved to seller dashboard)
 
     // Order Completion Messages - REMOVED (moved to seller dashboard)
@@ -409,11 +705,11 @@ const translations = {
     cartEmpty: "Your cart is empty",
     cartEmptyDescription:
       "Add products and return here to complete your order.",
-    startShopping: "Start Shopping",
     orderSummary: "Order Summary",
     subtotal: "Subtotal",
     shipping: "Shipping",
     shippingCalculated: "Will be calculated at checkout",
+    shippingDetails: "Shipping Details",
     total: "Total",
     fullName: "Full Name",
     email: "Email",
@@ -434,6 +730,9 @@ const translations = {
     orderConfirmation: "New Order",
     orderConfirmationMessage:
       "Someone ordered your products! Order #{orderId} - contact the buyer for delivery.",
+
+    // Trust Badges
+    secureCheckout: "Secure Checkout",
 
     // Notifications
     notifications: "Notifications",
@@ -465,7 +764,7 @@ const translations = {
     heroTitle: "Buy and sell pre-loved fashion",
     heroSubtitle: "in minutes, not hours",
     heroDescription:
-      "Skip the complicated resale. List instantly, discover unique pieces easily and earn from your wardrobe.",
+      "Skip the hassle of traditional resale. Browse clothing instantly and discover unique pieces without problems.",
     heroStartFree: "Start free — no credit card required.",
     newArrivals: "New arrivals • Curated with love",
     secondHand: "Second-hand.",
@@ -480,6 +779,280 @@ const translations = {
     curatedCollection: "Curated Collection",
     discoverUniquePieces:
       "Discover unique pieces from our carefully curated selection",
+    browseCategories: "Browse Categories",
+    findYourStyle: "Find Your Style",
+    viewAllCategories: "View All Categories",
+    shopByCategory: "Shop by Category",
+    womensFashion: "Women's Fashion",
+    womensFashionDesc: "Discover elegant and trendy pieces",
+    mensFashion: "Men's Fashion",
+    mensFashionDesc: "Stylish and comfortable clothing",
+    accessories: "Accessories",
+    accessoriesDesc: "Complete your look with accessories",
+
+    // Additional Category Translations
+    allCategories: "All Categories",
+    categories: "Categories",
+    filters: "Filters",
+    allProducts: "All Products",
+    selectCategory: "Select Category",
+    selectSubcategory: "Select Subcategory",
+    selectType: "Select Type",
+    selectBrand: "Select Brand",
+    clearFilters: "Clear Filters",
+
+    // Navigation
+    menu: "Menu",
+    browseItems: "Browse Items",
+    startSelling: "Start Selling",
+    settings: "Settings",
+    language: "Language",
+    loggedInUser: "Logged in user",
+    myOrders: "My Orders",
+    signOut: "Sign Out",
+    signUp: "Sign Up",
+    signIn: "Sign In",
+
+    // Common UI text
+    noImage: "No Image",
+    unnamedProduct: "Unnamed Product",
+    noDescription: "No Description",
+    offRetail: "off retail",
+    viewProduct: "View Product",
+    editProduct: "Edit Product",
+    checking: "Checking...",
+    checkProfile: "Check Profile",
+    clickCheckProfile:
+      'Click "Check Profile" to see if your seller profile exists',
+    videoNotSupported: "Your browser does not support the video tag.",
+    close: "Close",
+    optional: "optional",
+    cancel: "Cancel",
+    tryAgain: "Try Again",
+    notAvailable: "Not Available",
+    applicationSubmitted: "Application submitted successfully!",
+    applicationError: "Error submitting application",
+    productDescriptionLabel: "Tell us about your products",
+    productDescriptionPlaceholder:
+      "Briefly describe what you sell and why you want to join",
+    understandsApplicationText:
+      "I understand this is an application and not all requests are accepted.",
+    submittingApplication: "Submitting Application...",
+    submitApplication: "Submit Application",
+    thankYouForApplying: "Thank you for applying!",
+    applicationReceivedMessage:
+      "We've received your request. Our team will review your application and reach out if there's a fit. Keep an eye on your inbox!",
+    optionalFollowUp: "Optional follow-up:",
+    contactUsIfNoResponse:
+      "If you don't hear from us within 7 days, feel free to contact us at",
+    browseProducts: "Browse Products",
+    followUsForLatest: "Follow us for the latest pieces:",
+    collection2025: "Fall-Winter 2025 Collection",
+    collection2025Short: "Collection 2025",
+    sellItems: "Sell Items",
+    sell: "Sell",
+    searchItems: "Search items...",
+    applyToSellTitle: "Apply to Sell on vtoraraka.mk",
+    yourName: "Your name",
+    emailPlaceholder: "you@example.com",
+    storeNameLabel: "Store Name or Brand Name",
+    storeNamePlaceholder: "Your store name",
+    websiteSocialLabel: "Website / Social Media",
+    websiteSocialPlaceholder: "Instagram, Website, etc.",
+    alreadyInvited: "Already invited to sell?",
+    loginToSellerAccount: "Log in to your seller account here",
+    sellerApplicationDescription:
+      "We work with selected sellers who align with our values and product quality. Fill out the form below, and we'll get in touch if it's a good fit.",
+    loadingProducts: "Loading products...",
+    unableToLoadProducts: "Unable to load products",
+    productsLoadError:
+      "There's an issue loading the products. Please try again.",
+    viewAllItems: "View All Items",
+    discoverCompleteCollection: "Discover our complete collection",
+
+    // Main Categories
+    shoes: "Shoes",
+    shoesDesc: "Shoes for every occasion",
+    home: "Home",
+    homeDesc: "Home decor and furniture",
+    electronics: "Electronics",
+    electronicsDesc: "Phones, laptops and tech",
+    books: "Books",
+    booksDesc: "Books and magazines",
+    sports: "Sports",
+    sportsDesc: "Sports equipment and clothing",
+    beauty: "Beauty",
+    beautyDesc: "Cosmetics and fragrances",
+    kids: "Kids",
+    kidsDesc: "Clothing and toys for kids",
+
+    // Common category names that might be in database
+    women: "Women",
+    men: "Men",
+    womens: "Women",
+    mens: "Men",
+    womensfashion: "Women's Fashion",
+    mensfashion: "Men's Fashion",
+    children: "Children",
+    childrens: "Children",
+    childrensfashion: "Children's Fashion",
+    kidsfashion: "Kids' Fashion",
+    womenswear: "Women's Wear",
+    menswear: "Men's Wear",
+    childrenswear: "Children's Wear",
+    kidswear: "Kids' Wear",
+    womensfashionandaccessories: "Women's Fashion and Accessories",
+    womensfashionaccessories: "Women's Fashion and Accessories",
+
+    // Additional category translations
+    clothing: "Clothing",
+    womensclothing: "Women's Clothing",
+    mensclothing: "Men's Clothing",
+    kidsclothing: "Kids' Clothing",
+    womensshoes: "Women's Shoes",
+    mensshoes: "Men's Shoes",
+    kidsShoes: "Kids' Shoes",
+    womensbags: "Women's Bags",
+    mensbags: "Men's Bags",
+    womensjewelry: "Women's Jewelry",
+    menswatches: "Men's Watches",
+    mensgrooming: "Men's Grooming",
+    grooming: "Grooming",
+
+    // Subcategories - Women's Fashion
+    womensTops: "Women's Tops",
+    womensDresses: "Dresses",
+    womensBottoms: "Bottoms",
+    womensOuterwear: "Outerwear",
+    womensSwimwear: "Swimwear",
+    womensActivewear: "Women's Activewear",
+    womensWeddingDresses: "Wedding Dresses",
+    womensJackets: "Jackets & Coats",
+
+    // Subcategories - Men's Fashion
+    mensShirts: "Men's Shirts",
+    mensTshirts: "Men's T-Shirts",
+    mensTops: "Men's Tops",
+    mensPants: "Men's Pants",
+    mensShorts: "Men's Shorts",
+    mensBottoms: "Pants",
+    mensJackets: "Men's Jackets",
+    mensSuits: "Men's Suits",
+    mensOuterwear: "Jackets & Coats",
+    mensUnderwear: "Underwear",
+    mensSwimwear: "Swimwear",
+
+    // Subcategories - Accessories
+    bags: "Bags",
+    watches: "Watches",
+    jewelry: "Jewelry",
+    sunglasses: "Sunglasses",
+    belts: "Belts",
+    scarves: "Scarves",
+    hats: "Hats",
+
+    // Subcategories - Shoes
+    womensShoes: "Women's Shoes",
+    mensShoes: "Men's Shoes",
+    sneakers: "Sneakers",
+    boots: "Boots",
+    sandals: "Sandals",
+    heels: "Heels",
+    flats: "Flats",
+    loafers: "Loafers",
+    dressShoes: "Dress Shoes",
+    dressshoes: "Dress Shoes",
+
+    // Subcategories - Home
+    furniture: "Furniture",
+    decor: "Decor",
+    kitchen: "Kitchen",
+    bedroom: "Bedroom",
+    livingRoom: "Living Room",
+    garden: "Garden",
+
+    // Subcategories - Electronics
+    phones: "Phones",
+    laptops: "Laptops",
+    tablets: "Tablets",
+    cameras: "Cameras",
+    audio: "Audio",
+    gaming: "Gaming",
+
+    // Subcategories - Books
+    fiction: "Fiction",
+    nonFiction: "Non-Fiction",
+    textbooks: "Textbooks",
+    magazines: "Magazines",
+    comics: "Comics",
+
+    // Subcategories - Sports
+    fitness: "Fitness",
+    running: "Running",
+    football: "Football",
+    basketball: "Basketball",
+    tennis: "Tennis",
+    swimming: "Swimming",
+
+    // Subcategories - Beauty
+    makeup: "Makeup",
+    skincare: "Skincare",
+    hair: "Hair",
+    fragrances: "Fragrances",
+    nails: "Nails",
+
+    // Subcategories - Kids
+    babyClothes: "Baby Clothes",
+    kidsClothes: "Kids Clothes",
+    toys: "Toys",
+    kidsBooks: "Kids Books",
+    kidsShoes: "Kids Shoes",
+
+    // General Fashion Items
+    exploreNow: "Explore Now",
+    dresses: "Dresses",
+    tops: "Tops",
+    bottoms: "Bottoms",
+    sizes: "Sizes",
+    styles: "Styles",
+    trends: "Trends",
+    shirts: "Shirts",
+    pants: "Pants",
+    jackets: "Jackets",
+    casual: "Casual",
+    formal: "Formal",
+    sporty: "Sporty",
+
+    // Additional Fashion Subcategories
+    clothing: "Clothing",
+    skirts: "Skirts",
+    blouses: "Blouses",
+    jeans: "Jeans",
+    shorts: "Shorts",
+    sweaters: "Sweaters",
+    hoodies: "Hoodies",
+    coats: "Coats",
+    blazers: "Blazers",
+    suits: "Suits",
+    tshirts: "T-Shirts",
+    tanktops: "Tank Tops",
+    leggings: "Leggings",
+    cardigans: "Cardigans",
+    polos: "Polo Shirts",
+    chinos: "Chinos",
+    cargo: "Cargo Pants",
+    joggers: "Joggers",
+    overalls: "Overalls",
+    activewear: "Activewear",
+    wedding: "Wedding",
+    weddingDresses: "Wedding Dresses",
+    weddingdresses: "Wedding Dresses",
+    formalwear: "Formal Wear",
+    readyToExplore: "Ready to Explore?",
+    discoverAllCategories:
+      "Discover all categories and find your perfect style",
+    browseAllProducts: "Browse All Products",
+    noCategoriesAvailable: "No categories available",
     shop: "Shop",
     allProducts: "All Products",
     sellWithUs: "Sell With Us",
@@ -500,6 +1073,26 @@ const translations = {
     addStoryLabel: "Add your story - start selling",
     becomeSeller: "Become a Seller",
     applyToSell: "Apply to Sell",
+
+    // Home Page
+    featuredItems: "Featured Items",
+    discoverUniqueFinds: "Discover Unique Finds",
+    handpickedSustainable:
+      "Hand-picked sustainable fashion pieces that deserve a second life. Every piece tells a story and helps reduce fashion waste.",
+    viewAllProducts: "View All Products",
+    noFeaturedProducts: "No featured products at the moment.",
+    sustainable: "Sustainable",
+    affordable: "Affordable",
+    unique: "Unique",
+    shopSmarter: "Shop smart,",
+    wasteLess: "waste less",
+
+    buyAndSell:
+      "Buy and sell unique second-hand clothing – make money from your closet and support sustainable fashion.",
+    saveMoney: "Save money",
+    andThePlanet: "and the planet with every purchase.",
+    sustainableFashionMarketplace: "The new pieces have arrived",
+    loadingVideo: "Loading video...",
 
     // Sell Item Page - REMOVED (moved to seller dashboard)
 
@@ -599,7 +1192,6 @@ const translations = {
       "You're now signed in! Start your sustainable fashion journey.",
     emailConfirmed:
       "Your email has been successfully confirmed. Start your sustainable fashion journey now.",
-    startShopping: "Start Shopping",
     readyToMakeDifference: "Ready to make a difference",
     checkYourEmail: "Check your email",
     magicLinkSent:
@@ -692,6 +1284,26 @@ const translations = {
     pullToRefresh: "Pull to refresh",
     backgroundVideoLabel: "Background video for fashion platform",
 
+    // Home Page
+    featuredItems: "Featured Items",
+    discoverUniqueFinds: "Discover Unique Finds",
+    handpickedSustainable:
+      "Hand-picked sustainable fashion pieces that deserve a second life. Every piece tells a story and helps reduce fashion waste.",
+    viewAllProducts: "View All Products",
+    noFeaturedProducts: "No featured products at the moment.",
+    sustainable: "Sustainable",
+    affordable: "Affordable",
+    unique: "Unique",
+    shopSmarter: "Shop smart,",
+    wasteLess: "waste less",
+
+    buyAndSell:
+      "Buy and sell unique second-hand clothing – make money from your closet and support sustainable fashion.",
+    saveMoney: "Save money",
+    andThePlanet: "and the planet with every purchase.",
+    sustainableFashionMarketplace: "The new pieces have arrived",
+    loadingVideo: "Loading video...",
+
     // Dashboard Status - REMOVED (moved to seller dashboard)
 
     // Order Completion Messages - REMOVED (moved to seller dashboard)
@@ -703,14 +1315,21 @@ export default function LanguageProvider({ children }) {
 
   const toggleLanguage = () => {
     const newLanguage = language === "mk" ? "en" : "mk";
+    console.log("Toggling language from", language, "to", newLanguage);
     setLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
+    // Force a page refresh to ensure all components update
+    window.location.reload();
   };
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage && (savedLanguage === "en" || savedLanguage === "mk")) {
       setLanguage(savedLanguage);
+    } else {
+      // Ensure default is Macedonian
+      setLanguage("mk");
+      localStorage.setItem("language", "mk");
     }
   }, []);
 
@@ -718,10 +1337,33 @@ export default function LanguageProvider({ children }) {
     return translations[language][key] || key;
   };
 
+  // Helper function to translate category names
+  const translateCategory = (categoryName) => {
+    if (!categoryName) return categoryName;
+
+    // Force translation for Women category - this should always work
+    if (categoryName === "Women" && language === "mk") {
+      return "Жени";
+    }
+
+    // Convert category name to translation key
+    const translationKey = categoryName
+      .toLowerCase()
+      .replace(/\s+/g, "")
+      .replace(/[^a-z0-9]/g, "");
+
+    return translations[language][translationKey] || categoryName;
+  };
+
   const value = {
     language,
     toggleLanguage,
     t,
+    translateCategory,
+    // Add a key to force re-render when language changes
+    languageKey: `${language}-${Date.now()}`,
+    // Force re-render trigger
+    forceUpdate: Date.now(),
   };
 
   return (

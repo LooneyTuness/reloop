@@ -3,13 +3,18 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
-import { useDashboard } from '@/contexts/DashboardContext';
+import SimpleImageUpload from '@/components/seller-dashboard/SimpleImageUpload';
+import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
+import { CategoryProvider, useCategory } from '@/contexts/CategoryContext';
+import CategorySelector from '@/components/category/CategorySelector';
 import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
+import { CategoryHierarchy } from '@/types/category';
 
 function AddProductContent() {
   const router = useRouter();
   const { addNewProduct } = useDashboard();
+  const { getCategoryById } = useCategory();
   const [isLoading, setIsLoading] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -17,12 +22,21 @@ function AddProductContent() {
     description: '',
     price: '',
     category: '',
+    category_id: '',
     condition: 'excellent',
     size: '',
     brand: '',
     quantity: '1',
     status: 'active'
   });
+  
+  const [images, setImages] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryHierarchy | null>(null);
+  
+  // Debug: Log when images change
+  React.useEffect(() => {
+    console.log('Images state updated:', images);
+  }, [images]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -32,8 +46,29 @@ function AddProductContent() {
     }));
   };
 
+  const handleCategorySelect = (category: CategoryHierarchy | null) => {
+    setSelectedCategory(category);
+    setFormData(prev => ({
+      ...prev,
+      category: category ? category.name : '',
+      category_id: category ? category.id : ''
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate that at least one image is uploaded
+    if (images.length === 0) {
+      toast.error('Please upload at least one image for your product');
+      return;
+    }
+    
+    // Validate that brand is provided
+    if (!formData.brand || formData.brand.trim() === '') {
+      toast.error('Please provide a brand for your product');
+      return;
+    }
     
     setIsLoading(true);
     try {
@@ -43,12 +78,13 @@ function AddProductContent() {
         description: formData.description,
         price: parseFloat(formData.price),
         category: formData.category,
+        category_id: formData.category_id || null,
         condition: formData.condition,
         size: formData.size || null,
-        brand: formData.brand || null,
+        brand: formData.brand.trim(),
         quantity: parseInt(formData.quantity),
         status: formData.status,
-        photos: ['/api/placeholder/400/400'] as string[]
+        photos: images // Use uploaded images instead of placeholder
       };
 
       await addNewProduct(productData);
@@ -83,6 +119,16 @@ function AddProductContent() {
         </div>
 
         <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
+          {/* Image Upload Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <SimpleImageUpload
+              images={images}
+              onImagesChange={setImages}
+              maxImages={5}
+              required={true}
+            />
+          </div>
+
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div className="space-y-4">
               <div>
@@ -135,17 +181,12 @@ function AddProductContent() {
                 </div>
 
                 <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Category
-                  </label>
-                  <input
-                    id="category"
-                    name="category"
-                    type="text"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    placeholder="e.g., Clothing, Electronics"
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  <CategorySelector
+                    onCategorySelect={handleCategorySelect}
+                    selectedCategory={selectedCategory}
+                    placeholder="Select a category for your product"
+                    required={true}
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -188,7 +229,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="brand" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Brand
+                    Brand *
                   </label>
                   <input
                     id="brand"
@@ -196,7 +237,8 @@ function AddProductContent() {
                     type="text"
                     value={formData.brand}
                     onChange={handleInputChange}
-                    placeholder="e.g., Nike, Apple, Samsung"
+                    placeholder="e.g., Nike, Apple, Samsung, Other (Друго)"
+                    required
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -271,8 +313,12 @@ function AddProductContent() {
 
 export default function AddProductPage() {
   return (
-    <SellerDashboardLayout>
-      <AddProductContent />
-    </SellerDashboardLayout>
+    <DashboardProvider>
+      <CategoryProvider>
+        <SellerDashboardLayout>
+          <AddProductContent />
+        </SellerDashboardLayout>
+      </CategoryProvider>
+    </DashboardProvider>
   );
 }

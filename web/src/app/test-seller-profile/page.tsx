@@ -78,7 +78,7 @@ export default function SellerProfileTest() {
               disabled={loading || !user}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
-              {loading ? "Checking..." : "Check Profile"}
+              {loading ? t("checking") : t("checkProfile")}
             </button>
             
             {error && (
@@ -102,7 +102,7 @@ export default function SellerProfileTest() {
             <h2 className="text-xl font-semibold mb-4">Next Steps</h2>
             <ol className="list-decimal list-inside space-y-2 text-sm">
               <li>Make sure you're logged in with the same email you used for the seller application</li>
-              <li>Click "Check Profile" to see if your seller profile exists</li>
+              <li>{t("clickCheckProfile")}</li>
               <li>If profile exists and is_approved=true, you can access the seller dashboard</li>
               <li>If profile doesn't exist, the approval process may not have completed successfully</li>
               <li>Go to <code>/seller-dashboard</code> to access the dashboard</li>

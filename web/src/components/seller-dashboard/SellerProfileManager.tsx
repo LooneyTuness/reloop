@@ -5,6 +5,7 @@ import { supabaseDataService } from '@/lib/supabase/data-service';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
 import { User, Mail, Phone, MapPin, Globe, Save, Upload, Camera } from 'lucide-react';
+import ImageCropModal from './ImageCropModal';
 
 interface SellerProfile {
   id: string;
@@ -34,6 +35,8 @@ export default function SellerProfileManager() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -108,20 +111,50 @@ export default function SellerProfileManager() {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user?.id) return;
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image size must be less than 5MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const imageUrl = event.target?.result as string;
+      setSelectedImage(imageUrl);
+      setShowCropModal(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCropComplete = async (croppedImageBlob: Blob) => {
+    if (!user?.id) return;
 
     try {
-      // In a real app, you would upload to Supabase Storage
-      const imageUrl = URL.createObjectURL(file);
-      await supabaseDataService.updateSellerProfile(user.id, { avatar_url: imageUrl });
-      setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
-      // Update the global profile context
-      updateAvatar(imageUrl);
-      setSuccess('Profile picture updated!');
+      // Convert blob to data URL for display
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const imageUrl = event.target?.result as string;
+        
+        // In a real app, you would upload the blob to Supabase Storage
+        // For now, we'll use the data URL directly
+        await supabaseDataService.updateSellerProfile(user.id, { avatar_url: imageUrl });
+        setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
+        updateAvatar(imageUrl);
+        setSuccess('Profile picture updated!');
+      };
+      reader.readAsDataURL(croppedImageBlob);
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error uploading cropped image:', error);
       setError('Failed to update profile picture');
     }
   };
@@ -391,6 +424,19 @@ export default function SellerProfileManager() {
           </form>
         </div>
       </div>
+
+      {/* Image Crop Modal */}
+      {selectedImage && (
+        <ImageCropModal
+          isOpen={showCropModal}
+          onClose={() => {
+            setShowCropModal(false);
+            setSelectedImage(null);
+          }}
+          onCrop={handleCropComplete}
+          imageSrc={selectedImage}
+        />
+      )}
     </div>
   );
 }

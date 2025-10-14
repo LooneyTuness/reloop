@@ -171,33 +171,53 @@ function SettingsContent() {
 
   const renderBillingTab = () => (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-          Payment Methods
+      <div className="text-center py-12">
+        <div className="h-20 w-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CreditCard className="h-10 w-10 text-white" />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          Billing Coming Soon
         </h3>
-        <div className="space-y-4">
-          <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <CreditCard className="text-gray-400" size={24} />
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    **** **** **** 1234
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Expires 12/25
-                  </p>
-                </div>
-              </div>
-              <button className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm">
-                Edit
-              </button>
-            </div>
-          </div>
-          <button className="w-full p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500 transition-colors">
-            <CreditCard className="mx-auto mb-2" size={24} />
-            Add Payment Method
-          </button>
+        <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
+          We're working on a comprehensive billing system that will allow you to manage 
+          payment methods, view invoices, and handle subscription plans.
+        </p>
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 max-w-lg mx-auto">
+          <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-4">
+            Features Coming Soon:
+          </h4>
+          <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-2 text-left">
+            <li className="flex items-center">
+              <svg className="h-4 w-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Multiple payment methods (cards, bank accounts)
+            </li>
+            <li className="flex items-center">
+              <svg className="h-4 w-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Automated invoice generation
+            </li>
+            <li className="flex items-center">
+              <svg className="h-4 w-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Subscription management
+            </li>
+            <li className="flex items-center">
+              <svg className="h-4 w-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Tax reporting and documentation
+            </li>
+            <li className="flex items-center">
+              <svg className="h-4 w-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Payment history and analytics
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -237,6 +257,7 @@ function SettingsContent() {
               Currency
             </label>
             <select className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="MKD">Macedonian Denar (MKD)</option>
               <option value="USD">US Dollar ($)</option>
               <option value="EUR">Euro (€)</option>
               <option value="GBP">British Pound (£)</option>

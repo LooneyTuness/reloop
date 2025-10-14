@@ -218,7 +218,7 @@ export async function PUT(req: NextRequest) {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #059669; font-size: 28px; margin-bottom: 10px;">vtoraraka.mk</h1>
-            <p style="color: #6b7280; font-size: 16px;">Втора рака. Прв избор.</p>
+            <p style="color: #6b7280; font-size: 16px;">Second-hand. First choice.</p>
           </div>
           
           <div style="background: #f0fdf4; padding: 30px; border-radius: 12px; margin-bottom: 30px; border: 2px solid #059669;">
@@ -229,32 +229,32 @@ export async function PUT(req: NextRequest) {
             </p>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-              Одлично! Вашата апликација за продавач е одобрена! Сега можете да започнете да продавате на vtoraraka.mk.
+              Excellent! Your seller application has been approved! You can now start selling on vtoraraka.mk.
             </p>
             
             <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #059669;">
-              <h3 style="color: #1f2937; font-size: 18px; margin-bottom: 15px;">Следни чекори:</h3>
+              <h3 style="color: #1f2937; font-size: 18px; margin-bottom: 15px;">Next Steps:</h3>
               <ol style="color: #374151; font-size: 14px; line-height: 1.6;">
-                <li style="margin-bottom: 8px;">Користете ја вашата е-пошта за да се најавите</li>
-                <li style="margin-bottom: 8px;">Одете на продавачкиот панел</li>
-                <li style="margin-bottom: 8px;">Додадете ги вашите први производи</li>
-                <li style="margin-bottom: 8px;">Започнете да продавате!</li>
+                <li style="margin-bottom: 8px;">Use your email to sign in</li>
+                <li style="margin-bottom: 8px;">Go to the seller dashboard</li>
+                <li style="margin-bottom: 8px;">Add your first products</li>
+                <li style="margin-bottom: 8px;">Start selling!</li>
               </ol>
             </div>
 
             <div style="text-align: center; margin-top: 30px;">
               <a href="${process.env.NEXT_PUBLIC_APP_URL}/seller-dashboard" style="display: inline-block; background-color: #059669; color: #ffffff; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-                Отвори продавачки панел
+                Open Seller Dashboard
               </a>
             </div>
           </div>
 
           <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
             <p style="color: #6b7280; font-size: 14px; margin: 0;">
-              Ако имате прашања, контактирајте не на <a href="mailto:${process.env.EMAIL_USER}" style="color: #059669; text-decoration: none;">${process.env.EMAIL_USER}</a>.
+              If you have any questions, contact us at <a href="mailto:${process.env.EMAIL_USER}" style="color: #059669; text-decoration: none;">${process.env.EMAIL_USER}</a>.
             </p>
             <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">
-              &copy; ${new Date().getFullYear()} vtoraraka.mk. Сите права се задржани.
+              &copy; ${new Date().getFullYear()} vtoraraka.mk. All rights reserved.
             </p>
           </div>
         </div>
@@ -262,38 +262,38 @@ export async function PUT(req: NextRequest) {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #059669; font-size: 28px; margin-bottom: 10px;">vtoraraka.mk</h1>
-            <p style="color: #6b7280; font-size: 16px;">Втора рака. Прв избор.</p>
+            <p style="color: #6b7280; font-size: 16px;">Second-hand. First choice.</p>
           </div>
           
           <div style="background: #fef2f2; padding: 30px; border-radius: 12px; margin-bottom: 30px; border: 2px solid #dc2626;">
             <h2 style="color: #dc2626; font-size: 24px; margin-bottom: 20px;">Seller Application Update</h2>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-              Здраво ${application.full_name},
+              Hello ${application.full_name},
             </p>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-              Благодариме за вашето интерес за да станете продавач на vtoraraka.mk. По внимателно разгледување, за жал не можеме да ја одобриме вашата апликација во моментов.
+              Thank you for your interest in becoming a seller on vtoraraka.mk. After careful review, we unfortunately cannot approve your application at this time.
             </p>
             
             ${notes ? `
               <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #dc2626;">
-                <h3 style="color: #1f2937; font-size: 18px; margin-bottom: 15px;">Забелешки:</h3>
+                <h3 style="color: #1f2937; font-size: 18px; margin-bottom: 15px;">Notes:</h3>
                 <p style="color: #374151; font-size: 14px; line-height: 1.6;">${notes}</p>
               </div>
             ` : ''}
 
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-top: 20px; margin-bottom: 20px;">
-              Ве молиме, не се обесхрабрувате. Можете да аплицирате повторно во иднина кога ќе имате повеќе искуство или различни производи.
+              Please don't be discouraged. You can apply again in the future when you have more experience or different products.
             </p>
           </div>
 
           <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
             <p style="color: #6b7280; font-size: 14px; margin: 0;">
-              Ако имате прашања, контактирајте не на <a href="mailto:${process.env.EMAIL_USER}" style="color: #059669; text-decoration: none;">${process.env.EMAIL_USER}</a>.
+              If you have any questions, contact us at <a href="mailto:${process.env.EMAIL_USER}" style="color: #059669; text-decoration: none;">${process.env.EMAIL_USER}</a>.
             </p>
             <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">
-              &copy; ${new Date().getFullYear()} vtoraraka.mk. Сите права се задржани.
+              &copy; ${new Date().getFullYear()} vtoraraka.mk. All rights reserved.
             </p>
           </div>
         </div>

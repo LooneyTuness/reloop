@@ -9,42 +9,109 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      items: {
+      categories: {
         Row: {
           id: string
-          name?: string
-          title: string
-          price: number
-          old_price?: number | null
-          condition?: string
-          size?: string | null
-          seller?: string | null
-          photos: string | string[]
-          description?: string
-          user_id?: string
-          user_email?: string | null
-          category?: string
-          status?: string
+          name: string
+          slug: string
+          description?: string | null
+          parent_id?: string | null
+          level: number
+          sort_order: number
+          is_active: boolean
           created_at?: string
           updated_at?: string
         }
         Insert: {
           id?: string
+          name: string
+          slug: string
+          description?: string | null
+          parent_id?: string | null
+          level?: number
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
           name?: string
-          title: string
+          slug?: string
+          description?: string | null
+          parent_id?: string | null
+          level?: number
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      items: {
+        Row: {
+          id: string
+          name?: string
+          title?: string
           price: number
           old_price?: number | null
           condition?: string
           size?: string | null
-          seller?: string | null
-          photos: string | string[]
-          description?: string
-          user_id?: string
-          user_email?: string | null
+          brand?: string | null
           category?: string
+          category_id?: string | null
+          photos?: string[] | null
+          seller_id?: string | null
           status?: string
           created_at?: string
           updated_at?: string
+          user_id?: string
+          user_email?: string | null
+          is_active?: boolean
+          quantity?: number
+          sold_at?: string | null
+          buyer_id?: string | null
+          reserved_until?: string | null
+          reserved_by?: string | null
+          deleted_at?: string | null
+          seller?: string | null
+          description?: string
+        }
+        Insert: {
+          id?: string
+          name?: string
+          title?: string
+          price: number
+          old_price?: number | null
+          condition?: string
+          size?: string | null
+          brand?: string | null
+          category?: string
+          category_id?: string | null
+          photos?: string[] | null
+          seller_id?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+          user_email?: string | null
+          is_active?: boolean
+          quantity?: number
+          sold_at?: string | null
+          buyer_id?: string | null
+          reserved_until?: string | null
+          reserved_by?: string | null
+          deleted_at?: string | null
+          seller?: string | null
+          description?: string
         }
         Update: {
           id?: string
@@ -54,17 +121,35 @@ export type Database = {
           old_price?: number | null
           condition?: string
           size?: string | null
-          seller?: string | null
-          photos?: string | string[]
-          description?: string
-          user_id?: string
-          user_email?: string | null
+          brand?: string | null
           category?: string
+          category_id?: string | null
+          photos?: string[] | null
+          seller_id?: string | null
           status?: string
           created_at?: string
           updated_at?: string
+          user_id?: string
+          user_email?: string | null
+          is_active?: boolean
+          quantity?: number
+          sold_at?: string | null
+          buyer_id?: string | null
+          reserved_until?: string | null
+          reserved_by?: string | null
+          deleted_at?: string | null
+          seller?: string | null
+          description?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       cart_items: {
         Row: {
@@ -443,6 +528,24 @@ export type Database = {
       }
     }
     Views: {
+      category_hierarchy: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          description: string | null
+          level: number
+          parent_id: string | null
+          sort_order: number
+          is_active: boolean
+          parent_name: string | null
+          parent_slug: string | null
+          grandparent_name: string | null
+          grandparent_slug: string | null
+          full_path: string[] | null
+        }
+        Relationships: []
+      }
       vendor_sales_summary: {
         Row: {
           vendor_id: string

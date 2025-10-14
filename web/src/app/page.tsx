@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Home from "@/components/Home";
 import Waitlist from "@/components/Waitlist";
 import { toast } from "sonner";
+import { CategoryProvider } from "@/contexts/CategoryContext";
 
 function HomeContent() {
   const router = useRouter();
@@ -21,7 +22,7 @@ function HomeContent() {
     // Show success message if coming from email confirmation
     if (confirmed === 'true') {
       console.log('Showing success toast');
-      toast.success("Вашата е-пошта е успешно потврдена! Добредојдовте на vtoraraka.mk!", {
+      toast.success("Your email has been successfully confirmed! Welcome to vtoraraka.mk!", {
         duration: 5000,
       });
       // Clean up the URL
@@ -31,7 +32,7 @@ function HomeContent() {
     // Show error message if there was an error
     if (error) {
       console.log('Showing error toast:', error);
-      toast.error(`Грешка: ${decodeURIComponent(error)}`, {
+      toast.error(`Error: ${decodeURIComponent(error)}`, {
         duration: 7000,
       });
       // Clean up the URL
@@ -53,7 +54,9 @@ function HomeContent() {
   return (
     <div className="bg-white">
       <main>
-        <Home />
+        <CategoryProvider>
+          <Home />
+        </CategoryProvider>
       </main>
     </div>
   );
@@ -61,7 +64,7 @@ function HomeContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+    <Suspense fallback={<div className="min-h-screen bg-white dark:bg-gray-900" />}>
       <HomeContent />
     </Suspense>
   );

@@ -77,16 +77,16 @@ export default function LoginPage() {
           <p className="text-gray-600">{t("loginSubtitle")}</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <form onSubmit={handleSignIn} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t("email")}
               </label>
               <input
                 type="email"
                 required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
+                className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all bg-white dark:bg-gray-700 text-gray-900 placeholder-gray-500 dark:placeholder-gray-400"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -96,13 +96,13 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t("password")}
               </label>
               <input
                 type="password"
                 required
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
+                className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all bg-white dark:bg-gray-700 text-gray-900 placeholder-gray-500 dark:placeholder-gray-400"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
@@ -116,8 +116,8 @@ export default function LoginPage() {
                 className={`p-3 rounded-lg text-sm ${
                   message.includes("Welcome") ||
                   message.includes("successfully")
-                    ? "bg-brand-50 text-brand-700 border border-brand-200"
-                    : "bg-red-50 text-red-700 border border-red-200"
+                    ? "bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-700"
+                    : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700"
                 }`}
               >
                 {message}
@@ -138,7 +138,7 @@ export default function LoginPage() {
               {t("dontHaveAccount")}{" "}
               <Link
                 href="/"
-                className="text-brand-600 hover:text-brand-800 font-medium transition-colors"
+                className="text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 font-medium transition-colors"
               >
                 {t("signUpHere")}
               </Link>

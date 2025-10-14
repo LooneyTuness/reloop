@@ -19,7 +19,8 @@ export default async function ProductsPage({
   let query = (await supabase)
     .from("items" as any)
     .select("*")
-    .eq("is_active", true)
+    .or("and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)")
+    .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
   if (like) {
@@ -33,10 +34,10 @@ export default async function ProductsPage({
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <main className="min-h-screen bg-gray-50bg-gray-900">
       {/* Single Products Section */}
-      <section className="pt-24 sm:pt-32 pb-12 sm:pb-16 bg-gradient-to-br from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-24 sm:pt-32 pb-12 sm:pb-16 bg-gray-50bg-gray-900">
+        <div className="max-w-7xl mx-auto px-6 py-8">
           <Products items={(items as any) || []} limit={items?.length ?? 0} searchTerm={term} showViewAllButton={false} compact={true} />
         </div>
       </section>

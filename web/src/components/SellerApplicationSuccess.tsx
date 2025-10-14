@@ -28,26 +28,20 @@ export default function SellerApplicationSuccess() {
 
         {/* Success Message */}
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          {language === "mk" ? "Благодариме за апликацијата!" : "Thank you for applying!"}
+          {t("thankYouForApplying")}
         </h1>
 
         <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-          {language === "mk" 
-            ? "Добивме ја вашата апликација. Нашиот тим ќе ја прегледа вашата апликација и ќе ве контактира ако има соодветност. Следете ја вашата е-пошта!"
-            : "We've received your request. Our team will review your application and reach out if there's a fit. Keep an eye on your inbox!"
-          }
+          {t("applicationReceivedMessage")}
         </p>
 
         {/* Follow-up Information */}
         <div className="bg-gray-50 rounded-lg p-6 mb-8">
           <h3 className="text-lg font-semibold text-gray-900 mb-3">
-            {language === "mk" ? "Дополнителни информации:" : "Optional follow-up:"}
+            {t("optionalFollowUp")}
           </h3>
           <p className="text-gray-600">
-            {language === "mk" 
-              ? "Ако не слушнете од нас во рок од 7 дена, слободно контактирајте не на"
-              : "If you don't hear from us within 7 days, feel free to contact us at"
-            }
+            {t("contactUsIfNoResponse")}
             <a 
               href="mailto:info@vtoraraka.mk" 
               className="text-emerald-600 hover:text-emerald-700 font-medium ml-1"
@@ -63,21 +57,21 @@ export default function SellerApplicationSuccess() {
             href="/"
             className="bg-emerald-600 text-white py-3 px-8 rounded-lg font-medium hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors"
           >
-            {language === "mk" ? "Назад кон почетна" : "Back to Home"}
+            {t("backToHome")}
           </Link>
           
           <Link
             href="/products"
             className="border border-gray-300 text-gray-700 py-3 px-8 rounded-lg font-medium hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
           >
-            {language === "mk" ? "Прегледај производи" : "Browse Products"}
+            {t("browseProducts")}
           </Link>
         </div>
 
         {/* Social Media */}
         <div className="mt-8 pt-6 border-t border-gray-200">
           <p className="text-sm text-gray-600 mb-4">
-            {language === "mk" ? "Следете не за најнови парчиња:" : "Follow us for the latest pieces:"}
+            {t("followUsForLatest")}
           </p>
           <a
             href="https://www.instagram.com/relovedmk/"

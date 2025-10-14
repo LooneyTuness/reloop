@@ -6,7 +6,22 @@ import { useCart } from "../contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useProductView } from "../hooks/useProductView";
 import Link from "next/link";
+import {
+  ShoppingBag,
+  Heart,
+  Share2,
+  ArrowLeft,
+  CheckCircle,
+  Star,
+  Shield,
+  Truck,
+  Award,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -16,6 +31,12 @@ export default function ProductDetail() {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const { t } = useLanguage();
+
+  // Track product views
+  useProductView({
+    productId: String(id),
+    enabled: !!id && !!product,
+  });
 
   useEffect(() => {
     async function fetchProduct() {
@@ -44,11 +65,13 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="aspect-[4/5] professional-card animate-pulse" />
-            <div className="professional-card p-8 space-y-6">
+      <div className="min-h-screen bg-gray-50 font-poppins">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 p-6">
+              <div className="aspect-[4/5] bg-gray-200 rounded-2xl animate-pulse" />
+            </div>
+            <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 p-8 space-y-6">
               <div className="h-8 w-3/4 bg-gray-200 rounded animate-pulse" />
               <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
               <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse" />
@@ -62,10 +85,10 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <div className="professional-card p-12 max-w-md mx-auto">
-            <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-6">
+      <div className="min-h-screen bg-gray-50 font-poppins">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 p-12 text-center">
+            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <svg
                 className="w-8 h-8 text-red-500"
                 fill="none"
@@ -80,30 +103,18 @@ export default function ProductDetail() {
                 />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-3">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
               {t("productNotFound")}
             </h1>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 dark:text-gray-400 mb-8">
               The product you're looking for doesn't exist or has been removed.
             </p>
             <Link
-              href="/products"
-              className="hero-primary-button inline-flex items-center justify-center gap-2"
+              href="/catalog"
+              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              <span className="tracking-wide">Browse Products</span>
-              <svg
-                className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
+              <ShoppingBag className="w-4 h-4 mr-2" />
+              Browse Products
             </Link>
           </div>
         </div>
@@ -130,85 +141,102 @@ export default function ProductDetail() {
         toast.error(t("errorAddingToCart"));
       }
     }
-    // Stay on the product page after adding; user can open cart from navbar
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 product-detail-container">
-        <div className="grid md:grid-cols-2 gap-12 product-detail-grid">
-          {/* Лева страна: галерија */}
-          <div className="space-y-3 product-detail-image-section">
-            <div className="relative rounded-2xl overflow-hidden shadow-luxury aspect-[4/5] bg-white product-detail-image-container">
+    <div className="min-h-screen bg-gray-50 font-poppins">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        {/* Back Button */}
+        <div className="mb-6">
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </button>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Image Gallery */}
+          <div className="space-y-4">
+            <div className="relative bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden aspect-[4/5]">
               <img
                 src={
                   (Array.isArray(product.photos)
                     ? product.photos[currentIndex]
-                    : product.photos) || "/placeholder.jpg"
+                    : product.photos) || "/placeholder.svg"
                 }
                 alt={product.name}
-                className="w-full h-full object-cover transition-all duration-700 hover:scale-105 product-detail-image"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                }}
+                className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
               />
+
+              {/* Navigation arrows */}
               {Array.isArray(product.photos) && product.photos.length > 1 && (
                 <>
                   <button
-                    aria-label="Previous image"
                     onClick={() => {
                       const total = Array.isArray(product.photos)
                         ? product.photos.length
                         : 1;
                       setCurrentIndex((i) => (i === 0 ? total - 1 : i - 1));
                     }}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 backdrop-blur-xl text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-black/80 transition-all duration-300"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90/90 backdrop-blur-sm text-gray-900 dark:text-white p-2 rounded-xl hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 shadow-lg"
                   >
-                    ‹
+                    <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
-                    aria-label="Next image"
                     onClick={() => {
                       const total = Array.isArray(product.photos)
                         ? product.photos.length
                         : 1;
                       setCurrentIndex((i) => (i === total - 1 ? 0 : i + 1));
                     }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 backdrop-blur-xl text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-black/80 transition-all duration-300"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90/90 backdrop-blur-sm text-gray-900 dark:text-white p-2 rounded-xl hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 shadow-lg"
                   >
-                    ›
+                    <ChevronRight className="w-5 h-5" />
                   </button>
                 </>
               )}
+
+              {/* Eco badge */}
               {product.is_eco && (
                 <div className="absolute top-4 left-4">
-                  <div className="hero-trust-badge">
-                    <div className="hero-trust-icon">
-                      <span className="text-xs">♻</span>
-                    </div>
-                    <span className="tracking-wide">{t("ecoChoice")}</span>
+                  <div className="bg-green-500 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5">
+                    <span>♻</span>
+                    <span>{t("ecoChoice")}</span>
                   </div>
                 </div>
               )}
+
+              {/* Action buttons */}
+              <div className="absolute top-4 right-4 flex gap-2">
+                <button className="p-2 bg-white/90/90 backdrop-blur-sm rounded-xl hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 shadow-lg">
+                  <Heart className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                </button>
+                <button className="p-2 bg-white/90/90 backdrop-blur-sm rounded-xl hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 shadow-lg">
+                  <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                </button>
+              </div>
             </div>
 
+            {/* Thumbnail gallery */}
             {Array.isArray(product.photos) && product.photos.length > 1 && (
-              <div className="grid grid-cols-5 gap-2 w-full">
+              <div className="grid grid-cols-5 gap-2">
                 {product.photos.map((url, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
-                    className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all duration-300 hover:scale-105 w-full ${
+                    className={`relative aspect-square overflow-hidden rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
                       idx === currentIndex
-                        ? "border-emerald-500 shadow-lg"
-                        : "border-gray-200 hover:border-emerald-300"
+                        ? "border-blue-500 shadow-lg"
+                        : "border-gray-200 hover:border-blue-300"
                     }`}
                   >
                     <img
                       src={url}
                       alt={`thumb-${idx}`}
-                      className="w-full h-full object-cover transition-all duration-300 hover:scale-110"
+                      className="w-full h-full object-cover"
                     />
                   </button>
                 ))}
@@ -216,130 +244,110 @@ export default function ProductDetail() {
             )}
           </div>
 
-          {/* Десна страна: детали */}
-          <div className="premium-product-detail-card product-detail-content-section">
-            {/* Име и опис */}
-            <div>
-              <h1 className="premium-product-title product-detail-title">
+          {/* Product Details */}
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 p-8">
+            {/* Title and Description */}
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 {product.name || product.title || "Product"}
               </h1>
-              <p
-                className="premium-product-description"
-                style={{ fontFamily: "var(--font-poppins)" }}
-              >
+              <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
                 {product.description}
               </p>
             </div>
 
-            {/* Цена */}
-            <div className="premium-price flex items-center gap-4">
-              <span
-                className="text-2xl font-black text-gray-900 tracking-tight"
-                style={{ fontFamily: "var(--font-poppins)" }}
-              >
-                {product.price} {t("currency")}
-              </span>
-              {product.old_price && (
-                <span className="text-gray-400 line-through text-lg">
-                  {product.old_price} {t("currency")}
+            {/* Price */}
+            <div className="mb-6">
+              <div className="flex items-center gap-4">
+                <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {product.price} {t("currency")}
                 </span>
-              )}
-            </div>
-
-            {/* Состојба и големина */}
-            <div className="flex flex-wrap gap-3">
-              <div className="premium-attribute-tag">
-                <span className="tracking-wide">
-                  {t("condition")}: {product.condition || t("Used")}
-                </span>
-              </div>
-              {product.size && (
-                <div className="premium-attribute-tag">
-                  <span className="tracking-wide">
-                    {t("size")}: {product.size}
+                {product.old_price && (
+                  <span className="text-gray-400 line-through text-xl">
+                    {product.old_price} {t("currency")}
                   </span>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            {/* Доверба и добавувач */}
-            <div className="premium-seller-box">
-              <p className="text-sm text-gray-500 mb-2">{t("seller")}:</p>
-              <p className="text-gray-900 font-semibold">
+            {/* Attributes */}
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-3">
+                <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-xl text-sm font-semibold">
+                  {t("condition")}: {product.condition || t("Used")}
+                </div>
+                {product.size && (
+                  <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-3 py-2 rounded-xl text-sm font-semibold">
+                    {t("size")}: {product.size}
+                  </div>
+                )}
+                {product.brand && (
+                  <div className="bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 px-3 py-2 rounded-xl text-sm font-semibold">
+                    {product.brand}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Seller Info */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-2xl">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                {t("seller")}:
+              </p>
+              <p className="text-gray-900 dark:text-white font-semibold">
                 {product.seller || t("anonymousSeller")}
               </p>
             </div>
 
-            {/* Акција */}
-            <div className="flex gap-4">
+            {/* Add to Cart Button */}
+            <div className="mb-8">
               {isInCart(product.id) ? (
                 <button
-                  className="premium-add-to-cart-btn flex-1 flex items-center justify-center gap-2 group bg-gray-400 cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gray-400 text-white font-semibold rounded-xl cursor-not-allowed"
                   disabled
                 >
-                  <span className="tracking-wide">{t("alreadyInCart")}</span>
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <CheckCircle className="w-5 h-5" />
+                  <span>{t("alreadyInCart")}</span>
                 </button>
               ) : (
                 <button
-                  className="premium-add-to-cart-btn flex-1 flex items-center justify-center gap-2 group"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   onClick={handleAddToCart}
                 >
-                  <span className="tracking-wide">{t("addToCart")}</span>
-                  <svg
-                    className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5-5M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"
-                    />
-                  </svg>
+                  <ShoppingBag className="w-5 h-5" />
+                  <span>{t("addToCart")}</span>
                 </button>
               )}
             </div>
 
-            {/* Одржливост */}
-            <div className="premium-sustainability">
-              <h2
-                className="text-lg font-bold text-gray-900 mb-4 tracking-wide"
-                style={{ fontFamily: "var(--font-poppins)" }}
-              >
-                {t("sustainability")}
-              </h2>
+            {/* Features */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Why choose this item?
+              </h3>
               <div className="space-y-3">
-                <div className="premium-sustainability-item">
-                  <div className="premium-sustainability-icon">✓</div>
-                  <span className="text-sm text-gray-600">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  </div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
                     {t("resourceSavings")}
                   </span>
                 </div>
-                <div className="premium-sustainability-item">
-                  <div className="premium-sustainability-icon">✓</div>
-                  <span className="text-sm text-gray-600">
-                    {t("extendedUse")}
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
+                    <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Verified quality and authenticity
                   </span>
                 </div>
-                <div className="premium-sustainability-item">
-                  <div className="premium-sustainability-icon">✓</div>
-                  <span className="text-sm text-gray-600">
-                    {t("minimalPackaging")}
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900/20 rounded-lg flex items-center justify-center">
+                    <Truck className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                  </div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Fast and secure delivery
                   </span>
                 </div>
               </div>

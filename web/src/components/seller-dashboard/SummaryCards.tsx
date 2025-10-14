@@ -1,10 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Package, TrendingUp, DollarSign, Eye } from 'lucide-react';
 import SummaryCard from './SummaryCard';
 import { useDashboard } from '@/contexts/DashboardContext';
 
 export default function SummaryCards() {
   const { stats, isLoading } = useDashboard();
+  const [accurateAnalytics, setAccurateAnalytics] = useState<any>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
+
+  // Fetch accurate analytics data
+  useEffect(() => {
+    const fetchAccurateAnalytics = async () => {
+      if (!stats) return;
+      
+      setAnalyticsLoading(true);
+      try {
+        const { SupabaseDataService } = await import('@/lib/supabase/data-service');
+        const dataService = new SupabaseDataService();
+        
+        const userId = stats?.userId || '9a2b8c5f-3517-4f3a-9b03-cb43e1a95a98';
+        const analytics = await dataService.getAccurateAnalytics(userId, '30d');
+        setAccurateAnalytics(analytics);
+      } catch (error) {
+        console.error('Error fetching accurate analytics:', error);
+      } finally {
+        setAnalyticsLoading(false);
+      }
+    };
+
+    fetchAccurateAnalytics();
+  }, [stats]);
 
   // Provide default values to prevent undefined errors
   const safeStats = {
@@ -17,7 +42,53 @@ export default function SummaryCards() {
     conversionRate: stats?.conversionRate || 0
   };
 
-  const cards = [
+  // Use accurate analytics if available, otherwise fall back to estimates
+  const cards = accurateAnalytics ? [
+    {
+      title: 'Total Listings',
+      value: accurateAnalytics.current.totalListings.toString(),
+      change: accurateAnalytics.changes.totalListings > 0 ? 
+        `+${accurateAnalytics.changes.totalListings.toFixed(1)}% from last period` : 
+        accurateAnalytics.changes.totalListings < 0 ?
+        `${accurateAnalytics.changes.totalListings.toFixed(1)}% from last period` :
+        'No change',
+      changeType: accurateAnalytics.changes.totalListings > 0 ? 'positive' as const : 
+                 accurateAnalytics.changes.totalListings < 0 ? 'negative' as const : 'neutral' as const,
+      icon: <Package className="h-8 w-8 text-blue-500" />
+    },
+    {
+      title: 'Items Sold (This Month)',
+      value: accurateAnalytics.current.soldItems.toString(),
+      change: accurateAnalytics.changes.soldItems > 0 ? 
+        `+${accurateAnalytics.changes.soldItems.toFixed(1)}% from last period` : 
+        accurateAnalytics.changes.soldItems < 0 ?
+        `${accurateAnalytics.changes.soldItems.toFixed(1)}% from last period` :
+        'No change',
+      changeType: accurateAnalytics.changes.soldItems > 0 ? 'positive' as const : 
+                 accurateAnalytics.changes.soldItems < 0 ? 'negative' as const : 'neutral' as const,
+      icon: <TrendingUp className="h-8 w-8 text-green-500" />
+    },
+    {
+      title: 'Total Earnings',
+      value: `${accurateAnalytics.current.totalRevenue.toFixed(2)} MKD`,
+      change: accurateAnalytics.changes.totalRevenue > 0 ? 
+        `+${accurateAnalytics.changes.totalRevenue.toFixed(1)}% from last period` : 
+        accurateAnalytics.changes.totalRevenue < 0 ?
+        `${accurateAnalytics.changes.totalRevenue.toFixed(1)}% from last period` :
+        'No change',
+      changeType: accurateAnalytics.changes.totalRevenue > 0 ? 'positive' as const : 
+                 accurateAnalytics.changes.totalRevenue < 0 ? 'negative' as const : 'neutral' as const,
+      icon: <DollarSign className="h-8 w-8 text-emerald-500" />
+    },
+    {
+      title: 'Total Orders',
+      value: accurateAnalytics.current.totalOrders.toString(),
+      change: `${accurateAnalytics.current.conversionRate.toFixed(1)}% conversion`,
+      changeType: 'neutral' as const,
+      icon: <Eye className="h-8 w-8 text-orange-500" />
+    }
+  ] : [
+    // Fallback to estimates if accurate data is not available
     {
       title: 'Total Listings',
       value: safeStats.totalListings.toString(),
@@ -34,8 +105,8 @@ export default function SummaryCards() {
     },
     {
       title: 'Total Earnings',
-      value: `$${safeStats.totalEarnings.toFixed(2)}`,
-      change: '+$340 this month',
+      value: `${safeStats.totalEarnings.toFixed(2)} MKD`,
+      change: '+340 MKD this month',
       changeType: 'positive' as const,
       icon: <DollarSign className="h-8 w-8 text-emerald-500" />
     },
@@ -44,7 +115,7 @@ export default function SummaryCards() {
       value: safeStats.totalOrders.toString(),
       change: `${safeStats.conversionRate.toFixed(1)}% conversion`,
       changeType: 'neutral' as const,
-      icon: <Eye className="h-8 w-8 text-purple-500" />
+      icon: <Eye className="h-8 w-8 text-orange-500" />
     }
   ];
 

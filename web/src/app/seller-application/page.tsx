@@ -70,22 +70,22 @@ export default function SellerApplicationPage() {
   const isFormValid = formData.fullName && formData.email && formData.productDescription && formData.understandsApplication;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gray-50bg-gray-900 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Page Header */}
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+          <h1 className="text-4xl font-bold text-gray-900text-white mb-3">
             Apply to Sell on vtoraraka.mk
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
+          <p className="text-lg text-gray-600text-gray-400">
             We work with selected sellers who align with our values and product quality. Fill out the form below, and we'll get in touch if it's a good fit.
           </p>
         </div>
 
         {/* Application Form */}
-        <Card className="border-0 shadow-sm bg-white dark:bg-gray-800">
+        <Card className="border-0 shadow-sm bg-whitebg-gray-800">
           <CardHeader className="pb-6">
-            <CardTitle className="flex items-center gap-3 text-xl font-semibold text-gray-900 dark:text-white">
+            <CardTitle className="flex items-center gap-3 text-xl font-semibold text-gray-900text-white">
               <FileText className="w-6 h-6 text-blue-600" />
               Seller Application Form
             </CardTitle>
@@ -94,14 +94,14 @@ export default function SellerApplicationPage() {
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Personal Information Section */}
               <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-gray-900text-white flex items-center gap-2">
                   <User className="w-5 h-5 text-blue-600" />
                   Personal Information
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="fullName" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <Label htmlFor="fullName" className="text-sm font-medium text-gray-700text-gray-300">
                       Full Name *
                     </Label>
                     <div className="relative">
@@ -112,7 +112,7 @@ export default function SellerApplicationPage() {
                         type="text"
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        className="pl-10 border-gray-200 dark:border-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                        className="pl-10 border-gray-200border-gray-700 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Your full name"
                         required
                       />
@@ -120,7 +120,7 @@ export default function SellerApplicationPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <Label htmlFor="email" className="text-sm font-medium text-gray-700text-gray-300">
                       Email Address *
                     </Label>
                     <div className="relative">
@@ -131,7 +131,7 @@ export default function SellerApplicationPage() {
                         type="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="pl-10 border-gray-200 dark:border-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                        className="pl-10 border-gray-200border-gray-700 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="you@example.com"
                         required
                       />
@@ -142,14 +142,14 @@ export default function SellerApplicationPage() {
 
               {/* Business Information Section */}
               <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-gray-900text-white flex items-center gap-2">
                   <Store className="w-5 h-5 text-green-600" />
                   Business Information
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="storeName" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <Label htmlFor="storeName" className="text-sm font-medium text-gray-700text-gray-300">
                       Store Name or Brand Name
                     </Label>
                     <div className="relative">
@@ -160,14 +160,14 @@ export default function SellerApplicationPage() {
                         type="text"
                         value={formData.storeName}
                         onChange={handleInputChange}
-                        className="pl-10 border-gray-200 dark:border-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                        className="pl-10 border-gray-200border-gray-700 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Your store name"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="websiteSocial" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <Label htmlFor="websiteSocial" className="text-sm font-medium text-gray-700text-gray-300">
                       Website / Social Media
                     </Label>
                     <div className="relative">
@@ -178,7 +178,7 @@ export default function SellerApplicationPage() {
                         type="text"
                         value={formData.websiteSocial}
                         onChange={handleInputChange}
-                        className="pl-10 border-gray-200 dark:border-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                        className="pl-10 border-gray-200border-gray-700 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Instagram, Website, etc."
                       />
                     </div>
@@ -188,13 +188,13 @@ export default function SellerApplicationPage() {
 
               {/* Product Description Section */}
               <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-gray-900text-white flex items-center gap-2">
                   <FileText className="w-5 h-5 text-purple-600" />
                   Product Information
                 </h3>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="productDescription" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <Label htmlFor="productDescription" className="text-sm font-medium text-gray-700text-gray-300">
                     Tell us about your products *
                   </Label>
                   <textarea
@@ -203,7 +203,7 @@ export default function SellerApplicationPage() {
                     value={formData.productDescription}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    className="w-full px-4 py-3 border border-gray-200border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-whitebg-gray-800 text-gray-900text-white placeholder-gray-500placeholder-gray-400"
                     placeholder="Briefly describe what you sell and why you want to join our platform..."
                     required
                   />
@@ -212,7 +212,7 @@ export default function SellerApplicationPage() {
 
               {/* Terms and Conditions */}
               <div className="space-y-6">
-                <div className="flex items-start space-x-3 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="flex items-start space-x-3 p-4 bg-gray-50bg-gray-800/50 rounded-lg border border-gray-200border-gray-700">
                   <input
                     type="checkbox"
                     name="understandsApplication"
@@ -222,7 +222,7 @@ export default function SellerApplicationPage() {
                     required
                   />
                   <div className="flex-1">
-                    <Label htmlFor="understandsApplication" className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <Label htmlFor="understandsApplication" className="text-sm text-gray-700text-gray-300 cursor-pointer">
                       I understand this is an application and not all requests are accepted. I agree to the terms and conditions.
                     </Label>
                   </div>
@@ -252,8 +252,8 @@ export default function SellerApplicationPage() {
             </form>
 
             {/* Footer */}
-            <div className="text-center pt-8 border-t border-gray-200 dark:border-gray-700 mt-8">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+            <div className="text-center pt-8 border-t border-gray-200border-gray-700 mt-8">
+              <p className="text-sm text-gray-600text-gray-400 mb-2">
                 Already invited to sell?
               </p>
             <a

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Package, Eye, ShoppingCart, CheckCircle, Truck, Home } from 'lucide-react';
 import { useDashboard } from '@/contexts/DashboardContext';
+import ShimmerPlaceholder, { ShimmerCard } from '@/components/ui/ShimmerPlaceholder';
 
 interface Product {
   id: string;
   name: string;
-  status: 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered';
+  status: 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive';
   views: number;
   price: string;
   image?: string;
@@ -13,47 +14,92 @@ interface Product {
 
 export default function ProductLifecycle() {
   const { products, isLoading } = useDashboard();
+  
+  // Debug logging
+  console.log('🔄 ProductLifecycle: Received products:', products);
+  console.log('🔄 ProductLifecycle: Product statuses:', products.map(p => ({ id: p.id, name: p.name, status: p.status })));
+  
+  // Force re-render when products change
+  const renderKey = products.map(p => `${p.id}-${p.status}`).join(',');
+  console.log('🔑 ProductLifecycle render key:', renderKey);
 
   const lifecycleStages = [
-    { key: 'listed', label: 'Listed', icon: Home, color: 'bg-gray-500' },
-    { key: 'viewed', label: 'Viewed', icon: Eye, color: 'bg-blue-500' },
-    { key: 'in_cart', label: 'In Cart', icon: ShoppingCart, color: 'bg-yellow-500' },
-    { key: 'sold', label: 'Sold', icon: CheckCircle, color: 'bg-green-500' },
-    { key: 'shipped', label: 'Shipped', icon: Truck, color: 'bg-purple-500' },
-    { key: 'delivered', label: 'Delivered', icon: CheckCircle, color: 'bg-emerald-500' }
+    { key: 'listed', label: 'Listed', icon: Home, color: 'bg-gray-500', activeColor: 'bg-gray-600', textColor: 'text-gray-600' },
+    { key: 'viewed', label: 'Viewed', icon: Eye, color: 'bg-blue-500', activeColor: 'bg-blue-600', textColor: 'text-blue-600' },
+    { key: 'in_cart', label: 'In Cart', icon: ShoppingCart, color: 'bg-yellow-500', activeColor: 'bg-yellow-600', textColor: 'text-yellow-600' },
+    { key: 'sold', label: 'Sold', icon: CheckCircle, color: 'bg-green-500', activeColor: 'bg-green-600', textColor: 'text-green-600' },
+    { key: 'shipped', label: 'Shipped', icon: Truck, color: 'bg-orange-500', activeColor: 'bg-orange-600', textColor: 'text-orange-600' },
+    { key: 'delivered', label: 'Delivered', icon: CheckCircle, color: 'bg-emerald-500', activeColor: 'bg-emerald-600', textColor: 'text-emerald-600' }
   ];
 
-  const getStageIndex = (status: Product['status']) => {
+  const getStageIndex = (status: Product['status'] | undefined) => {
+    const validStatuses = ['listed', 'viewed', 'in_cart', 'sold', 'shipped', 'delivered'];
+    if (!status || !validStatuses.includes(status)) return 0;
     return lifecycleStages.findIndex(stage => stage.key === status);
   };
 
-  const getStatusColor = (status: Product['status']) => {
+  const getStatusColor = (status: Product['status'] | undefined) => {
+    const validStatuses = ['listed', 'viewed', 'in_cart', 'sold', 'shipped', 'delivered'];
+    if (!status || !validStatuses.includes(status)) return 'bg-gray-500';
     const stage = lifecycleStages.find(s => s.key === status);
     return stage ? stage.color : 'bg-gray-500';
   };
 
-  const getProgressPercentage = (status: Product['status']) => {
+  const getProgressPercentage = (status: Product['status'] | undefined) => {
+    const validStatuses = ['listed', 'viewed', 'in_cart', 'sold', 'shipped', 'delivered'];
+    if (!status || !validStatuses.includes(status)) return 0;
     const index = getStageIndex(status);
     return ((index + 1) / lifecycleStages.length) * 100;
   };
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <div className="flex items-center mb-6">
-          <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg mr-3 animate-pulse"></div>
-          <div>
-            <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded mb-2 animate-pulse"></div>
-            <div className="h-4 w-56 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+        {/* Static header - renders immediately */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <div className="h-12 w-12 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl flex items-center justify-center mr-4">
+              <Package className="h-6 w-6 text-green-600 dark:text-green-400" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                Product Lifecycle
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Track your products through the sales funnel
+              </p>
+            </div>
+          </div>
+          <div className="text-right">
+            <ShimmerPlaceholder className="h-8 w-12" />
+            <div className="text-sm text-gray-500 dark:text-gray-400">Total Products</div>
           </div>
         </div>
+
+        {/* Shimmer for sales funnel */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Sales Funnel</h4>
+            <ShimmerPlaceholder className="h-4 w-24" />
+          </div>
+          
+          <div className="flex items-center justify-between mb-4">
+            {lifecycleStages.map((stage) => (
+              <div key={stage.key} className="flex flex-col items-center">
+                <ShimmerPlaceholder className="h-12 w-12 rounded-2xl mb-2" />
+                <div className="text-center">
+                  <ShimmerPlaceholder className="h-3 w-4 mb-1" />
+                  <ShimmerPlaceholder className="h-3 w-12" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Shimmer for product cards */}
         <div className="space-y-4">
           {[...Array(3)].map((_, index) => (
-            <div key={index} className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg animate-pulse">
-              <div className="h-4 w-32 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
-              <div className="h-2 w-full bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
-              <div className="h-3 w-20 bg-gray-200 dark:bg-gray-600 rounded"></div>
-            </div>
+            <ShimmerCard key={index} />
           ))}
         </div>
       </div>
@@ -61,58 +107,106 @@ export default function ProductLifecycle() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-      <div className="flex items-center mb-6">
-        <div className="h-8 w-8 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center mr-3">
-          <Package className="h-4 w-4 text-green-600 dark:text-green-400" />
+    <div key={renderKey} className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <div className="h-12 w-12 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl flex items-center justify-center mr-4">
+            <Package className="h-6 w-6 text-green-600 dark:text-green-400" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+              Product Lifecycle
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              Track your products through the sales funnel
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Product Lifecycle
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            Track your products through the sales funnel
-          </p>
+        <div className="text-right">
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">{products.length}</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">Total Products</div>
         </div>
       </div>
 
-      {/* Lifecycle Stages Overview */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Sales Funnel</h4>
-          <div className="flex space-x-1">
+      {/* Enhanced Sales Funnel */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Sales Funnel</h4>
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            {products.filter(p => p.status === 'sold' || p.status === 'shipped' || p.status === 'delivered').length} products sold
+          </div>
+        </div>
+        
+        <div className="relative">
+          {/* Sales Funnel with Connecting Lines */}
+          <div className="flex items-center justify-between mb-4">
             {lifecycleStages.map((stage, index) => {
               const Icon = stage.icon;
+              const isActive = products.some(p => p.status === stage.key);
+              const count = products.filter(p => p.status === stage.key).length;
+              const isLastStage = index === lifecycleStages.length - 1;
+              
               return (
-                <div
-                  key={stage.key}
-                  className={`h-2 w-8 rounded-full ${stage.color} ${
-                    index < lifecycleStages.length - 1 ? 'mr-1' : ''
-                  }`}
-                  title={stage.label}
-                />
+                <div key={stage.key} className="flex items-center">
+                  {/* Stage Circle */}
+                  <div className="flex flex-col items-center relative z-10">
+                    <div className={`h-12 w-12 rounded-2xl flex items-center justify-center mb-2 transition-all duration-300 ${
+                      isActive 
+                        ? `${stage.activeColor} text-white shadow-lg scale-110` 
+                        : `${stage.color} text-white/70`
+                    }`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div className="text-center">
+                      <div className="text-xs font-medium text-gray-900 dark:text-white">{count}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{stage.label}</div>
+                    </div>
+                  </div>
+                  
+                  {/* Connecting Line */}
+                  {!isLastStage && (
+                    <div className="flex-1 mx-2 relative">
+                      {/* Background line */}
+                      <div className="h-0.5 bg-gray-200 dark:bg-gray-700 w-full"></div>
+                      {/* Active progress line */}
+                      <div 
+                        className={`absolute top-0 h-0.5 transition-all duration-500 ${
+                          isActive 
+                            ? 'bg-gradient-to-r from-current to-transparent' 
+                            : 'bg-transparent'
+                        }`}
+                        style={{
+                          width: isActive ? '100%' : '0%',
+                          background: isActive 
+                            ? `linear-gradient(to right, ${stage.color.replace('bg-', '')}, transparent)`
+                            : 'transparent'
+                        }}
+                      ></div>
+                      {/* Arrow indicator */}
+                      <div className={`absolute -right-1 top-1/2 transform -translate-y-1/2 w-0 h-0 transition-all duration-300 ${
+                        isActive 
+                          ? 'border-l-2 border-l-gray-400 border-t-1 border-b-1 border-t-transparent border-b-transparent' 
+                          : 'border-l-2 border-l-gray-300 border-t-1 border-b-1 border-t-transparent border-b-transparent'
+                      }`}></div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
         </div>
-        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-          {lifecycleStages.map((stage) => (
-            <span key={stage.key} className="text-center">
-              {stage.label}
-            </span>
-          ))}
-        </div>
       </div>
 
-      {/* Product Cards */}
+     {/* Product Cards */}
       <div className="space-y-4">
         {products.slice(0, 4).map((product) => {
           const progressPercentage = getProgressPercentage(product.status);
           const stageIndex = getStageIndex(product.status);
           
+          
           return (
             <div
-              key={product.id}
+              key={`${product.id}-${product.status}`}
               className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
             >
               <div className="flex items-center justify-between mb-3">
@@ -152,32 +246,56 @@ export default function ProductLifecycle() {
                 </div>
               </div>
 
-              {/* Stage Indicators */}
-              <div className="flex items-center justify-between">
+              {/* Stage Indicators with Connecting Lines */}
+              <div className="flex items-center justify-between relative">
                 {lifecycleStages.map((stage, index) => {
                   const Icon = stage.icon;
                   const isCompleted = index <= stageIndex;
                   const isCurrent = index === stageIndex;
+                  const isLastStage = index === lifecycleStages.length - 1;
                   
                   return (
-                    <div
-                      key={stage.key}
-                      className={`flex flex-col items-center space-y-1 ${
-                        index < lifecycleStages.length - 1 ? 'mr-2' : ''
-                      }`}
-                    >
-                      <div
-                        className={`h-6 w-6 rounded-full flex items-center justify-center transition-all duration-200 ${
-                          isCompleted
-                            ? `${stage.color} text-white`
-                            : 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500'
-                        } ${isCurrent ? 'ring-2 ring-offset-2 ring-blue-500' : ''}`}
-                      >
-                        <Icon className="h-3 w-3" />
+                    <div key={stage.key} className="flex items-center">
+                      {/* Stage Circle */}
+                      <div className="flex flex-col items-center space-y-1 relative z-10">
+                        <div
+                          className={`h-6 w-6 rounded-full flex items-center justify-center transition-all duration-200 ${
+                            isCompleted
+                              ? `${stage.color} text-white shadow-md`
+                              : 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500'
+                          } ${isCurrent ? 'ring-2 ring-offset-2 ring-blue-500 scale-110' : ''}`}
+                        >
+                          <Icon className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                          {stage.label}
+                        </span>
                       </div>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                        {stage.label}
-                      </span>
+                      
+                      {/* Connecting Line */}
+                      {!isLastStage && (
+                        <div className="flex-1 mx-1 relative">
+                          {/* Background line */}
+                          <div className="h-0.5 bg-gray-200 dark:bg-gray-600 w-full"></div>
+                          {/* Completed progress line */}
+                          <div 
+                            className={`absolute top-0 h-0.5 transition-all duration-300 ${
+                              isCompleted 
+                                ? 'bg-gradient-to-r from-gray-400 to-gray-300' 
+                                : 'bg-transparent'
+                            }`}
+                            style={{
+                              width: isCompleted ? '100%' : '0%'
+                            }}
+                          ></div>
+                          {/* Arrow indicator */}
+                          <div className={`absolute -right-0.5 top-1/2 transform -translate-y-1/2 w-0 h-0 transition-all duration-300 ${
+                            isCompleted 
+                              ? 'border-l-1 border-l-gray-400 border-t-0.5 border-b-0.5 border-t-transparent border-b-transparent' 
+                              : 'border-l-1 border-l-gray-300 border-t-0.5 border-b-0.5 border-t-transparent border-b-transparent'
+                          }`}></div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}

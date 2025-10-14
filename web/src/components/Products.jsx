@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Image from "next/image";
+import OptimizedProductImage from "./OptimizedProductImage";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -86,34 +87,20 @@ export default function Products({
 
   const fetchItems = useCallback(async () => {
     try {
-      // Try to use the new status system first, fallback to is_active
-      let query = supabase.from("items").select("*");
-
-      try {
-        // Try the new status-based query
-        const { data, error } = await query
-          .eq("status", "active")
-          .eq("quantity", ">", 0)
-          .is("deleted_at", null)
-          .order("created_at", { ascending: false });
-
-        if (!error) {
-          setItems(data || []);
-          return;
-        }
-      } catch (statusError) {
-      }
-
-      // Fallback to the old is_active system
+      // Use a comprehensive query that handles both filtering systems
       const { data, error } = await supabase
         .from("items")
         .select("*")
-        .eq("is_active", true)
+        .or(
+          "and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)"
+        )
+        .is("deleted_at", null)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
       setItems(data || []);
     } catch (err) {
+      console.error("Error loading items:", err);
       setError("Error loading items: " + err.message);
     } finally {
       setLoading(false);
@@ -209,11 +196,11 @@ export default function Products({
             {Array.from({ length: limit || 8 }).map((_, i) => (
               <div
                 key={i}
-                className="group overflow-hidden bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/30 animate-pulse"
+                className="group overflow-hidden bg-white/50 backdrop-blur-sm rounded-3xl border border-gray-200/30 animate-pulse"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
                 {/* Image Skeleton */}
-                <div className="relative overflow-hidden rounded-t-2xl bg-gradient-to-br from-gray-200 to-gray-300">
+                <div className="relative overflow-hidden rounded-t-3xl bg-gradient-to-br from-gray-200 to-gray-300">
                   <div className="aspect-square flex items-center justify-center">
                     <div className="w-16 h-16 bg-gray-400 rounded-full flex items-center justify-center">
                       <svg
@@ -262,9 +249,7 @@ export default function Products({
             <div className="inline-flex items-center space-x-2 text-gray-500">
               <div className="w-4 h-4 border-2 border-gray-300 border-t-emerald-500 rounded-full animate-spin"></div>
               <span className="text-sm font-medium">
-                {language === "mk"
-                  ? "Се вчитуваат продукти..."
-                  : "Loading products..."}
+                {t("loadingProducts")}
               </span>
             </div>
           </div>
@@ -303,15 +288,9 @@ export default function Products({
           {/* Error Message */}
           <div className="space-y-4 max-w-md mx-auto">
             <h3 className="text-lg font-semibold text-gray-900">
-              {language === "mk"
-                ? "Не можам да ги вчитам продуктите"
-                : "Unable to load products"}
+              {t("unableToLoadProducts")}
             </h3>
-            <p className="text-gray-600 text-sm">
-              {language === "mk"
-                ? "Има проблем со вчитувањето на продуктите. Ве молиме обидете се повторно."
-                : "There's an issue loading the products. Please try again."}
-            </p>
+            <p className="text-gray-600 text-sm">{t("productsLoadError")}</p>
 
             {/* Retry Button */}
             <button
@@ -335,7 +314,7 @@ export default function Products({
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              {language === "mk" ? "Обиди се повторно" : "Try Again"}
+              {t("tryAgain")}
             </button>
           </div>
         </div>
@@ -385,7 +364,7 @@ export default function Products({
               className="group animate-fade-in-up premium-product-card glass-morphism-strong"
               style={{ animationDelay: `${index * 150}ms` }}
             >
-              <div className="relative overflow-hidden rounded-t-2xl bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-sm">
+              <div className="relative overflow-hidden rounded-t-3xl bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-sm">
                 <div className="aspect-square relative">
                   {/* Loading Placeholder */}
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse flex items-center justify-center">
@@ -405,17 +384,11 @@ export default function Products({
                   </div>
 
                   {/* Actual Image */}
-                  <Image
-                    src={
-                      (Array.isArray(item.photos)
-                        ? item.photos[0]
-                        : item.photos) || "/placeholder.jpg"
-                    }
+                  <OptimizedProductImage
+                    src={item.photos}
                     alt={item.title}
-                    width={400}
-                    height={400}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
-                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
 
@@ -472,7 +445,7 @@ export default function Products({
                       title={
                         isInCart(item.id)
                           ? t("alreadyInCart")
-                          : t("notAvailable") || "Not Available"
+                          : t("notAvailable")
                       }
                       disabled
                     >
@@ -596,9 +569,7 @@ export default function Products({
                 className="premium-view-all-button group inline-flex items-center justify-center gap-3 px-8 py-4 text-white font-semibold rounded-2xl btn-touch-friendly"
               >
                 <span className="tracking-wide text-base">
-                  {language === "mk"
-                    ? "Прегледај ги сите парчиња"
-                    : "View All Items"}
+                  {t("viewAllItems")}
                 </span>
                 <svg
                   className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
@@ -623,9 +594,7 @@ export default function Products({
                   className="premium-divider-text"
                   style={{ fontFamily: "var(--font-poppins)" }}
                 >
-                  {language === "mk"
-                    ? "Откриј ја целата колекција"
-                    : "Discover our complete collection"}
+                  {t("discoverCompleteCollection")}
                 </p>
                 <div className="premium-divider-line"></div>
               </div>

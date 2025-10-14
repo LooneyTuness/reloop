@@ -48,7 +48,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
       const result = await response.json();
 
       if (response.ok) {
-        toast.success(result.message || (language === "mk" ? "Апликацијата е успешно поднесена!" : "Application submitted successfully!"));
+        toast.success(result.message || t("applicationSubmitted"));
         if (onSuccess) {
           onSuccess();
         }
@@ -62,11 +62,11 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
           understandsApplication: false,
         });
       } else {
-        toast.error(result.error || (language === "mk" ? "Грешка при поднесување на апликацијата" : "Error submitting application"));
+        toast.error(result.error || t("applicationError"));
       }
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error(language === "mk" ? "Грешка при поднесување на апликацијата" : "Error submitting application");
+      toast.error(t("applicationError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -82,20 +82,17 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
-                {language === "mk" ? "Аплицирај за продавање на vtoraraka.mk" : "Apply to Sell on vtoraraka.mk"}
+                {t("applyToSellTitle")}
               </h2>
               <p className="text-gray-600 mt-1">
-                {language === "mk" 
-                  ? "Работиме со селектирани продавачи кои се усогласуваат со нашите вредности и квалитет на производи. Пополни ја формата подолу, и ќе те контактираме ако има соодветност."
-                  : "We work with selected sellers who align with our values and product quality. Fill out the form below, and we'll get in touch if it's a good fit."
-                }
+                {t("sellerApplicationDescription")}
               </p>
             </div>
             {onClose && (
               <button
                 onClick={onClose}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label={language === "mk" ? "Затвори" : "Close"}
+                aria-label={t("close")}
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -110,7 +107,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
           {/* Full Name */}
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-              {language === "mk" ? "Име и презиме" : "Full Name"}
+              {t("fullName")}
               <span className="text-red-500 ml-1">*</span>
             </label>
             <input
@@ -119,7 +116,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              placeholder={language === "mk" ? "Вашето име" : "Your name"}
+              placeholder={t("yourName")}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               required
             />
@@ -128,7 +125,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              {language === "mk" ? "Е-пошта" : "Email Address"}
+              {t("emailAddress")}
               <span className="text-red-500 ml-1">*</span>
             </label>
             <input
@@ -137,7 +134,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              placeholder={language === "mk" ? "ваша@е-пошта.com" : "you@example.com"}
+              placeholder={t("emailPlaceholder")}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               required
             />
@@ -146,9 +143,9 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
           {/* Store Name */}
           <div>
             <label htmlFor="storeName" className="block text-sm font-medium text-gray-700 mb-2">
-              {language === "mk" ? "Име на продавница или бренд" : "Store Name or Brand Name"}
+              {t("storeNameLabel")}
               <span className="text-gray-500 text-sm ml-1">
-                ({language === "mk" ? "опционално" : "optional"})
+                ({t("optional")})
               </span>
             </label>
             <input
@@ -157,7 +154,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
               name="storeName"
               value={formData.storeName}
               onChange={handleInputChange}
-              placeholder={language === "mk" ? "Име на вашата продавница" : "Your store name"}
+              placeholder={t("storeNamePlaceholder")}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
@@ -165,9 +162,9 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
           {/* Website/Social Media */}
           <div>
             <label htmlFor="websiteSocial" className="block text-sm font-medium text-gray-700 mb-2">
-              {language === "mk" ? "Веб-сајт / Социјални мрежи" : "Website / Social Media"}
+              {t("websiteSocialLabel")}
               <span className="text-gray-500 text-sm ml-1">
-                ({language === "mk" ? "опционално" : "optional"})
+                ({t("optional")})
               </span>
             </label>
             <input
@@ -176,7 +173,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
               name="websiteSocial"
               value={formData.websiteSocial}
               onChange={handleInputChange}
-              placeholder={language === "mk" ? "Instagram, веб-сајт, итн." : "Instagram, Website, etc."}
+              placeholder={t("websiteSocialPlaceholder")}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
@@ -184,7 +181,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
           {/* Product Description */}
           <div>
             <label htmlFor="productDescription" className="block text-sm font-medium text-gray-700 mb-2">
-              {language === "mk" ? "Кажи ни за вашите производи" : "Tell us about your products"}
+              {t("productDescriptionLabel")}
               <span className="text-red-500 ml-1">*</span>
             </label>
             <textarea
@@ -192,7 +189,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
               name="productDescription"
               value={formData.productDescription}
               onChange={handleInputChange}
-              placeholder={language === "mk" ? "Опишете што продавате и зошто сакате да се придружите" : "Briefly describe what you sell and why you want to join"}
+              placeholder={t("productDescriptionPlaceholder")}
               rows={4}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-none"
               required
@@ -211,10 +208,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
               required
             />
             <label htmlFor="understandsApplication" className="text-sm text-gray-700">
-              {language === "mk" 
-                ? "Разбирам дека ова е апликација и не сите барања се прифатени."
-                : "I understand this is an application and not all requests are accepted."
-              }
+              {t("understandsApplicationText")}
             </label>
           </div>
 
@@ -226,8 +220,8 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
               className="flex-1 bg-emerald-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting 
-                ? (language === "mk" ? "Се поднесува апликацијата..." : "Submitting Application...")
-                : (language === "mk" ? "Поднеси апликација" : "Submit Application")
+                ? t("submittingApplication")
+                : t("submitApplication")
               }
             </button>
             
@@ -237,7 +231,7 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
                 onClick={onClose}
                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
               >
-                {language === "mk" ? "Откажи" : "Cancel"}
+                {t("cancel")}
               </button>
             )}
           </div>
@@ -245,13 +239,13 @@ export default function SellerApplicationForm({ onSuccess, onClose }: SellerAppl
           {/* Already Invited Link */}
           <div className="text-center pt-4 border-t border-gray-200">
             <p className="text-sm text-gray-600">
-              {language === "mk" ? "Веќе поканет за продавање?" : "Already invited to sell?"}
+              {t("alreadyInvited")}
             </p>
             <a
               href="/sign-in"
               className="text-emerald-600 hover:text-emerald-700 font-medium text-sm underline"
             >
-              {language === "mk" ? "Најави се на твојата продавачка сметка тука" : "Log in to your seller account here"}
+              {t("loginToSellerAccount")}
             </a>
           </div>
         </form>

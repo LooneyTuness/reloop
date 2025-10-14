@@ -103,7 +103,7 @@ export default function AuthTest() {
         
         <button
           onClick={goToSignIn}
-          className="w-full px-3 py-2 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
+          className="w-full px-3 py-2 bg-orange-600 text-white text-sm rounded hover:bg-orange-700"
         >
           Go to Sign In Page
         </button>

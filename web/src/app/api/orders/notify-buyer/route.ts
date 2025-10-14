@@ -47,62 +47,45 @@ export async function POST(req: NextRequest) {
       )
       .join("<br/>");
 
-    const addressText = isMacedonian
-      ? `
-        <p><strong>Адреса за испорака:</strong></p>
-        <p>
-          ${shippingAddress.full_name}<br/>
-          ${shippingAddress.address_line1}<br/>
-          ${shippingAddress.address_line2 ? shippingAddress.address_line2 + '<br/>' : ''}
-          ${shippingAddress.postal_code} ${shippingAddress.city}<br/>
-          Телефон: ${shippingAddress.phone}
-        </p>
-      `
-      : `
-        <p><strong>Shipping Address:</strong></p>
-        <p>
-          ${shippingAddress.full_name}<br/>
-          ${shippingAddress.address_line1}<br/>
-          ${shippingAddress.address_line2 ? shippingAddress.address_line2 + '<br/>' : ''}
-          ${shippingAddress.postal_code} ${shippingAddress.city}<br/>
-          Phone: ${shippingAddress.phone}
-        </p>
-      `;
+    const addressText = `
+      <p><strong>Shipping Address:</strong></p>
+      <p>
+        ${shippingAddress.full_name}<br/>
+        ${shippingAddress.address_line1}<br/>
+        ${shippingAddress.address_line2 ? shippingAddress.address_line2 + '<br/>' : ''}
+        ${shippingAddress.postal_code} ${shippingAddress.city}<br/>
+        Phone: ${shippingAddress.phone}
+      </p>
+    `;
 
     const html = `
       <div style="font-family: system-ui, Segoe UI, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
           <h1 style="color: #059669; margin: 0;">vtoraraka</h1>
-          <p style="color: #6b7280; margin: 5px 0 0 0;">${isMacedonian ? 'Кружна мода за одржливост' : 'Circular fashion for sustainability'}</p>
+          <p style="color: #6b7280; margin: 5px 0 0 0;">Circular fashion for sustainability</p>
         </div>
         
         <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
           <h2 style="color: #111827; margin: 0 0 15px 0;">
-            ${isMacedonian ? 'Ви благодариме за вашата нарачка!' : 'Thank you for your order!'}
+            Thank you for your order!
           </h2>
           <p style="color: #374151; margin: 0 0 10px 0;">
-            ${isMacedonian 
-              ? `Здраво ${buyerName},` 
-              : `Hello ${buyerName},`
-            }
+            Hello ${buyerName},
           </p>
           <p style="color: #374151; margin: 0;">
-            ${isMacedonian 
-              ? 'Вашата нарачка е успешно прифатена и ќе биде обработена наскоро.'
-              : 'Your order has been successfully received and will be processed shortly.'
-            }
+            Your order has been successfully received and will be processed shortly.
           </p>
         </div>
 
         <div style="margin-bottom: 20px;">
           <h3 style="color: #111827; margin: 0 0 15px 0;">
-            ${isMacedonian ? 'Детали за нарачката' : 'Order Details'}
+            Order Details
           </h3>
-          <p style="margin: 0 0 10px 0;"><strong>${isMacedonian ? 'Нарачка #' : 'Order #'}: ${orderId}</strong></p>
+          <p style="margin: 0 0 10px 0;"><strong>Order #: ${orderId}</strong></p>
           <p style="margin: 0 0 15px 0;">${itemsList}</p>
           <div style="border-top: 1px solid #e5e7eb; padding-top: 10px;">
             <p style="margin: 0; font-size: 18px; font-weight: bold; color: #111827;">
-              ${isMacedonian ? 'Вкупно: ' : 'Total: '}${totalAmount.toLocaleString()} MKD
+              Total: ${totalAmount.toLocaleString()} MKD
             </p>
           </div>
         </div>
@@ -113,33 +96,21 @@ export async function POST(req: NextRequest) {
 
         <div style="background: #ecfdf5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
           <h4 style="color: #059669; margin: 0 0 10px 0;">
-            ${isMacedonian ? 'Следни чекори' : 'Next Steps'}
+            Next Steps
           </h4>
           <ul style="color: #374151; margin: 0; padding-left: 20px;">
-            <li>${isMacedonian 
-              ? 'Продавачот ќе ве контактира за детали за испораката'
-              : 'The seller will contact you with shipping details'
-            }</li>
-            <li>${isMacedonian 
-              ? 'Плаќањето се врши при преземање на стоката'
-              : 'Payment is made upon delivery'
-            }</li>
-            <li>${isMacedonian 
-              ? 'За прашања, контактирајте го продавачот директно'
-              : 'For questions, contact the seller directly'
-            }</li>
+            <li>The seller will contact you with shipping details</li>
+            <li>Payment is made upon delivery</li>
+            <li>For questions, contact the seller directly</li>
           </ul>
         </div>
 
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
           <p style="color: #6b7280; font-size: 14px; margin: 0;">
-            ${isMacedonian 
-              ? 'За дополнителни прашања, посетете го нашиот веб-сајт или не контактирајте.'
-              : 'For additional questions, visit our website or contact us.'
-            }
+            For additional questions, visit our website or contact us.
           </p>
           <p style="color: #6b7280; font-size: 12px; margin: 10px 0 0 0;">
-            © 2024 vtoraraka. ${isMacedonian ? 'Сите права се задржани.' : 'All rights reserved.'}
+            © 2024 vtoraraka. All rights reserved.
           </p>
         </div>
       </div>

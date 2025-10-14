@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { GlobalProvider } from "@/providers/global-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -7,16 +6,13 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import LanguageProvider from "@/contexts/LanguageContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
-import { NotificationsProvider } from "@/contexts/NotificationsContext";
+import { CategoryProvider } from "@/contexts/CategoryContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageTransitionWrapper from "@/components/PageTransitionWrapper";
+import GlobalErrorHandler from "@/components/GlobalErrorHandler";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-});
 
 export const metadata: Metadata = {
   title: "vtoraraka - Second-hand. First rate. | Buy & Sell Pre-Loved Fashion",
@@ -30,32 +26,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="mk">
       <head>
         <link rel="icon" href="/logo192.png" type="image/png" />
         <meta name="theme-color" content="#000000" />
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${inter.variable} antialiased`}>
+      <body className="antialiased bg-white">
+        <GlobalErrorHandler />
         <ErrorBoundary>
-          <AuthProvider>
-            <CartProvider>
-              <NotificationProvider>
-                <NotificationsProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <CartProvider>
+                <NotificationProvider>
                   <LanguageProvider>
-                    <GlobalProvider>
-                      <ConditionalNavbar />
-                      <PageTransitionWrapper>
-                        {children}
-                      </PageTransitionWrapper>
-                      <Toaster />
-                    </GlobalProvider>
+                    <CategoryProvider>
+                      <GlobalProvider>
+                        <ConditionalNavbar />
+                        <PageTransitionWrapper>
+                          {children}
+                        </PageTransitionWrapper>
+                        <Toaster />
+                      </GlobalProvider>
+                    </CategoryProvider>
                   </LanguageProvider>
-                </NotificationsProvider>
-              </NotificationProvider>
-            </CartProvider>
-          </AuthProvider>
+                </NotificationProvider>
+              </CartProvider>
+            </AuthProvider>
+          </ThemeProvider>
         </ErrorBoundary>
       </body>
     </html>

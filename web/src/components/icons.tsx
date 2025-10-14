@@ -1,15 +1,19 @@
+import Link from 'next/link';
+
 type LogoProps = {
   className?: string;
   alt?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showText?: boolean;
+  clickable?: boolean;
 };
 
 export function VtorarakaLogo({ 
   className = "", 
   alt = "vtoraraka", 
   size = 'md',
-  showText = true 
+  showText = true,
+  clickable = true
 }: LogoProps) {
   const sizeClasses = {
     sm: 'w-6 h-6',
@@ -32,9 +36,9 @@ export function VtorarakaLogo({
     xl: 'text-xl sm:text-2xl'
   };
 
-  return (
+  const logoContent = (
     <div className={`flex items-center space-x-2 sm:space-x-3 ${className}`}>
-      <div className={`${sizeClasses[size]} bg-gradient-to-br from-gray-900 to-gray-700 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm`}>
+      <div className={`${sizeClasses[size]} bg-gradient-to-br from-green-500 to-green-700 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm`}>
         <span className={`text-white font-bold ${iconSizeClasses[size]}`}>V</span>
       </div>
       {showText && (
@@ -44,6 +48,16 @@ export function VtorarakaLogo({
       )}
     </div>
   );
+
+  if (clickable) {
+    return (
+      <Link href="/" className="hover:scale-105 transition-all duration-300 group" onClick={() => console.log('Logo clicked, navigating to home')}>
+        {logoContent}
+      </Link>
+    );
+  }
+
+  return logoContent;
 }
 
 export function GoogleIcon() {

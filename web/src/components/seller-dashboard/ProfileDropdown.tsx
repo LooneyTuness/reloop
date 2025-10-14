@@ -45,7 +45,7 @@ export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
       {/* User Info Header */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
+          <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg">
             <User className="text-white" size={20} />
           </div>
           <div className="flex-1 min-w-0">

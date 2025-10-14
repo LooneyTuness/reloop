@@ -20,6 +20,15 @@ interface DashboardOrder extends Order {
   amount?: string;
   date?: string;
   order_items?: OrderItem[];
+  // Address fields
+  full_name?: string;
+  email?: string;
+  phone?: string;
+  address_line1?: string;
+  address_line2?: string;
+  city?: string;
+  postal_code?: string;
+  notes?: string;
 }
 
 interface DashboardProduct extends Omit<Item, 'price'> {
@@ -143,16 +152,26 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         avgOrderValue: 0
       };
 
+      console.log('🔍 DashboardContext - Items result:', items);
+      console.log('🔍 DashboardContext - Orders result:', orders);
+      console.log('🔍 DashboardContext - Stats result:', stats);
+
       // Log any rejected promises
       if (sellerItems.status === 'rejected') {
-        console.error('Failed to fetch items:', sellerItems.reason);
+        console.error('❌ Failed to fetch items:', sellerItems.reason);
       }
       if (sellerOrders.status === 'rejected') {
-        console.error('Failed to fetch orders:', sellerOrders.reason);
+        console.error('❌ Failed to fetch orders:', sellerOrders.reason);
       }
       if (sellerStats.status === 'rejected') {
-        console.error('Failed to fetch stats:', sellerStats.reason);
+        console.error('❌ Failed to fetch stats:', sellerStats.reason);
       }
+
+      // Log the actual status of each promise
+      console.log('🔍 Promise statuses:');
+      console.log('🔍 Items status:', sellerItems.status);
+      console.log('🔍 Orders status:', sellerOrders.status);
+      console.log('🔍 Stats status:', sellerStats.status);
 
       // Transform items to dashboard products
       const dashboardProducts: DashboardProduct[] = items.map(item => {
@@ -185,21 +204,71 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       });
 
       // Transform orders to dashboard orders
-      const dashboardOrders: DashboardOrder[] = orders.map(order => {
+      console.log('🔄 Transforming orders to dashboard orders:', orders.length);
+      console.log('🔄 User ID for filtering:', user.id);
+      
+      const dashboardOrders: DashboardOrder[] = orders.map((order, index) => {
+        console.log(`🔄 Processing order ${index + 1}:`, order.id);
+        console.log(`🔄 Order items:`, order.order_items);
         
-        return {
+        // Get ALL items from this seller for display
+        const sellerOrderItems = order.order_items?.filter((item: any) => {
+          console.log(`🔄 Checking item:`, item);
+          console.log(`🔄 Item user_id:`, item.items?.user_id);
+          console.log(`🔄 Current user ID:`, user.id);
+          console.log(`🔄 Match:`, item.items?.user_id === user.id);
+          return item.items?.user_id === user.id;
+        }) || [];
+        
+        console.log(`🔄 Seller order items found:`, sellerOrderItems.length, sellerOrderItems);
+        
+        // Create a summary for the main display
+        let productName = 'Unknown Product';
+        let productImage = '/api/placeholder/60/60';
+        let itemCount = 0;
+        
+        if (sellerOrderItems.length > 0) {
+          if (sellerOrderItems.length === 1) {
+            // Single item - show the item name
+            productName = sellerOrderItems[0]?.items?.title || 'Unknown Product';
+            productImage = sellerOrderItems[0]?.items?.photos ? 
+              (Array.isArray(sellerOrderItems[0].items.photos) ? 
+                sellerOrderItems[0].items.photos[0] : 
+                sellerOrderItems[0].items.photos) : 
+              '/api/placeholder/60/60';
+          } else {
+            // Multiple items - show count and first item
+            productName = `${sellerOrderItems.length} items (${sellerOrderItems[0]?.items?.title || 'Unknown'}, +${sellerOrderItems.length - 1} more)`;
+            productImage = sellerOrderItems[0]?.items?.photos ? 
+              (Array.isArray(sellerOrderItems[0].items.photos) ? 
+                sellerOrderItems[0].items.photos[0] : 
+                sellerOrderItems[0].items.photos) : 
+              '/api/placeholder/60/60';
+          }
+          itemCount = sellerOrderItems.length;
+        }
+        
+        const transformedOrder = {
           ...order,
           customer: order.full_name || 'Unknown Customer',
           customer_name: order.full_name || 'Unknown Customer',
           customer_email: order.email || '',
-          product: 'Order Items', // Simplified for now
-          product_name: 'Order Items',
-          product_image: '/api/placeholder/60/60',
+          product: productName,
+          product_name: productName,
+          product_image: productImage,
           amount: `${order.total_amount?.toFixed(2) || '0.00'} MKD`,
           date: new Date(order.created_at || '').toLocaleDateString(),
-          status: (order.status as 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled') || 'pending'
+          status: (order.status as 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled') || 'pending',
+          // Add seller-specific order items for detailed view
+          seller_order_items: sellerOrderItems,
+          item_count: itemCount
         };
+        
+        console.log(`🔄 Transformed order:`, transformedOrder);
+        return transformedOrder;
       });
+      
+      console.log('✅ Final dashboard orders:', dashboardOrders.length);
 
       // Transform stats
       const dashboardStats: DashboardStats = {
@@ -397,6 +466,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         user_email: user.email,
         description: productData.description || null,
         category: productData.category || null,
+        category_id: productData.category_id || null,
         condition: productData.condition || 'excellent',
         size: productData.size || null,
         brand: productData.brand || null,

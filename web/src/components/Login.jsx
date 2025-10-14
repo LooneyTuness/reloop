@@ -122,7 +122,8 @@ export default function Login() {
                 className={`p-4 text-sm font-light ${
                   message.includes("Welcome") ||
                   message.includes("successfully") ||
-                  message.includes("Добредојде")
+                  message.includes("Добредојде") ||
+                  message.includes(t("welcomeBack"))
                     ? "bg-gray-50 text-black border border-gray-200"
                     : "bg-red-50 text-red-700 border border-red-200"
                 }`}

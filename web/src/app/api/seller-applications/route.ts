@@ -121,56 +121,13 @@ export async function POST(req: NextRequest) {
     // Send confirmation email to applicant
     const isMacedonian = language === "mk";
     
-    const subject = isMacedonian 
-      ? "Потврда за апликација за продавач - vtoraraka"
-      : "Seller Application Confirmation - vtoraraka";
+    const subject = "Seller Application Confirmation - vtoraraka";
 
-    const emailContent = isMacedonian ? `
+    const emailContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
           <h1 style="color: #059669; font-size: 28px; margin-bottom: 10px;">vtoraraka.mk</h1>
-          <p style="color: #6b7280; font-size: 16px;">Втора рака. Прв избор.</p>
-        </div>
-        
-        <div style="background: #f8fafc; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
-          <h2 style="color: #1f2937; font-size: 24px; margin-bottom: 20px;">Благодариме за апликацијата!</h2>
-          
-          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-            Здраво ${fullName},
-          </p>
-          
-          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-            Добивме ја вашата апликација за да станете продавач на vtoraraka.mk. Нашиот тим ќе ја прегледа вашата апликација и ќе ве контактира ако има соодветност.
-          </p>
-          
-          <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #059669;">
-            <h3 style="color: #1f2937; font-size: 18px; margin-bottom: 15px;">Детали за апликацијата:</h3>
-            <p style="color: #374151; font-size: 14px; margin-bottom: 8px;"><strong>Име:</strong> ${fullName}</p>
-            <p style="color: #374151; font-size: 14px; margin-bottom: 8px;"><strong>Е-пошта:</strong> ${email}</p>
-            ${storeName ? `<p style="color: #374151; font-size: 14px; margin-bottom: 8px;"><strong>Име на продавница:</strong> ${storeName}</p>` : ''}
-            ${websiteSocial ? `<p style="color: #374151; font-size: 14px; margin-bottom: 8px;"><strong>Веб-сајт/Социјални мрежи:</strong> ${websiteSocial}</p>` : ''}
-            <p style="color: #374151; font-size: 14px; margin-bottom: 8px;"><strong>Опис на производи:</strong> ${productDescription}</p>
-          </div>
-          
-          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-top: 20px;">
-            Ќе ве контактираме наскоро со дополнителни информации. Ако не слушнете од нас во рок од 7 дена, слободно контактирајте не на <a href="mailto:info@vtoraraka.mk" style="color: #059669;">info@vtoraraka.mk</a>.
-          </p>
-        </div>
-        
-        <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-          <p style="color: #6b7280; font-size: 14px;">
-            Следете не на <a href="https://www.instagram.com/relovedmk/" style="color: #059669;">Instagram</a> за најнови парчиња!
-          </p>
-          <p style="color: #9ca3af; font-size: 12px; margin-top: 10px;">
-            © 2024 vtoraraka.mk. Сите права се задржани.
-          </p>
-        </div>
-      </div>
-    ` : `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #059669; font-size: 28px; margin-bottom: 10px;">vtoraraka.mk</h1>
-          <p style="color: #6b7280; font-size: 16px;">Second-hand. First rate.</p>
+          <p style="color: #6b7280; font-size: 16px;">Second-hand. First choice.</p>
         </div>
         
         <div style="background: #f8fafc; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
@@ -226,28 +183,9 @@ export async function POST(req: NextRequest) {
       // TODO: Implement proper admin management system
       const adminEmails = process.env.ADMIN_EMAIL ? [process.env.ADMIN_EMAIL] : [];
         
-        const adminSubject = isMacedonian 
-          ? "Нова апликација за продавач - vtoraraka"
-          : "New Seller Application - vtoraraka";
+        const adminSubject = "New Seller Application - vtoraraka";
 
-        const adminContent = isMacedonian ? `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #1f2937; font-size: 24px; margin-bottom: 20px;">Нова апликација за продавач</h2>
-            
-            <div style="background: #f8fafc; padding: 20px; border-radius: 8px;">
-              <p style="color: #374151; font-size: 16px; margin-bottom: 15px;"><strong>Име:</strong> ${fullName}</p>
-              <p style="color: #374151; font-size: 16px; margin-bottom: 15px;"><strong>Е-пошта:</strong> ${email}</p>
-              ${storeName ? `<p style="color: #374151; font-size: 16px; margin-bottom: 15px;"><strong>Име на продавница:</strong> ${storeName}</p>` : ''}
-              ${websiteSocial ? `<p style="color: #374151; font-size: 16px; margin-bottom: 15px;"><strong>Веб-сајт/Социјални мрежи:</strong> ${websiteSocial}</p>` : ''}
-              <p style="color: #374151; font-size: 16px; margin-bottom: 15px;"><strong>Опис на производи:</strong> ${productDescription}</p>
-              <p style="color: #374151; font-size: 16px; margin-bottom: 15px;"><strong>Датум на апликација:</strong> ${new Date().toLocaleDateString('mk-MK')}</p>
-            </div>
-            
-            <p style="color: #374151; font-size: 14px; margin-top: 20px;">
-              Можете да ја прегледате и одобрите/одбиете апликацијата во админ панелот.
-            </p>
-          </div>
-        ` : `
+        const adminContent = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h2 style="color: #1f2937; font-size: 24px; margin-bottom: 20px;">New Seller Application</h2>
             
@@ -281,7 +219,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       applicationId: application.id,
-      message: isMacedonian ? "Апликацијата е успешно поднесена!" : "Application submitted successfully!"
+      message: "Application submitted successfully!"
     });
 
   } catch (error) {

@@ -4,39 +4,50 @@ import React, { useState, useEffect } from 'react';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { ProductsZeroState } from '@/components/seller-dashboard/ZeroStates';
+import PlaceholderImage from '@/components/PlaceholderImage';
 import { Search, Filter, Plus, Edit, Trash2, Eye, MoreVertical, Package } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 function ListingsContent() {
   const { products, isLoading, error, updateProduct, deleteProduct, searchProducts } = useDashboard();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [filteredProducts, setFilteredProducts] = useState(products);
 
-  // Show zero state if no products
-  if (!isLoading && products.length === 0) {
-    return (
-      <SellerDashboardLayout>
-        <div className="px-6 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Product Listings
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Manage your product inventory and listings
-            </p>
-          </div>
-          <ProductsZeroState
-            onAddProduct={() => router.push('/seller-dashboard/add-product')}
-            onViewGuide={() => router.push('/seller-dashboard/guide')}
-          />
-        </div>
-      </SellerDashboardLayout>
-    );
-  }
+  // Handle browser extension errors
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      // Suppress browser extension communication errors
+      if (event.message?.includes('listener indicated an asynchronous response') ||
+          event.message?.includes('message channel closed')) {
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+      }
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      // Suppress browser extension promise rejection errors
+      if (event.reason?.message?.includes('listener indicated an asynchronous response') ||
+          event.reason?.message?.includes('message channel closed')) {
+        event.preventDefault();
+        return false;
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
 
   useEffect(() => {
     const search = searchParams.get('search');
@@ -63,9 +74,9 @@ function ListingsContent() {
         case 'oldest':
           return new Date(a.created_at || '').getTime() - new Date(b.created_at || '').getTime();
         case 'price-high':
-          return b.price - a.price;
+          return parseFloat(b.price || '0') - parseFloat(a.price || '0');
         case 'price-low':
-          return a.price - b.price;
+          return parseFloat(a.price || '0') - parseFloat(b.price || '0');
         case 'views':
           return (b.views || 0) - (a.views || 0);
         default:
@@ -115,16 +126,33 @@ function ListingsContent() {
 
   if (isLoading) {
     return (
-      <SellerDashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Show zero state if no products
+  if (!isLoading && products.length === 0) {
+    return (
+      <div className="px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Product Listings
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Manage your product inventory and listings
+          </p>
         </div>
-      </SellerDashboardLayout>
+        <ProductsZeroState
+          onAddProduct={() => router.push('/seller-dashboard/add-product')}
+          onViewGuide={() => router.push('/seller-dashboard/guide')}
+        />
+      </div>
     );
   }
 
   return (
-    <SellerDashboardLayout>
       <div className="px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -136,7 +164,10 @@ function ListingsContent() {
               Manage your product listings and track their performance
             </p>
           </div>
-          <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          <button 
+            onClick={() => router.push('/seller-dashboard/add-product')}
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
             <Plus size={20} className="mr-2" />
             Add Product
           </button>
@@ -191,18 +222,40 @@ function ListingsContent() {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => {
-            const productImage = Array.isArray(product.photos) 
-              ? product.photos[0] 
-              : product.photos || '/api/placeholder/400/400';
+          {console.log('Total filtered products:', filteredProducts.length)}
+          {filteredProducts.map((product, index) => {
+            // Simplified image handling
+            let productImage = '/api/placeholder/400/400'; // Default fallback
+            
+            console.log(`Product ${index + 1}: ${product.title}`);
+            console.log(`Photos data:`, product.photos);
+            console.log(`Photos type:`, typeof product.photos);
+            console.log(`Is array:`, Array.isArray(product.photos));
+            
+            if (product.photos) {
+              if (Array.isArray(product.photos) && product.photos.length > 0) {
+                productImage = product.photos[0];
+                console.log(`Using first photo:`, productImage.substring(0, 50) + '...');
+              } else if (typeof product.photos === 'string' && product.photos.trim() !== '') {
+                productImage = product.photos;
+                console.log(`Using string photo:`, productImage.substring(0, 50) + '...');
+              }
+            }
+            
+            console.log(`Final image for product ${index + 1}:`, productImage.substring(0, 50) + '...');
+            
             
             return (
               <div key={product.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
                 <div className="aspect-square bg-gray-100 dark:bg-gray-700 relative">
-                  <img
+                  <div className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs px-1 py-0.5 rounded z-10">
+                    #{index + 1}
+                  </div>
+                  <PlaceholderImage
                     src={productImage}
                     alt={product.title}
                     className="w-full h-full object-cover"
+                    fallbackText={t("noImage")}
                   />
                   <div className="absolute top-2 right-2">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(product.status || 'active')}`}>
@@ -225,7 +278,7 @@ function ListingsContent() {
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
-                      ${product.price.toFixed(2)}
+                      {product.price || '0.00'} MKD
                     </span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">
                       {product.views || 0} views
@@ -235,9 +288,9 @@ function ListingsContent() {
                   <div className="flex items-center justify-between">
                     <div className="flex gap-1">
                       <button 
-                        onClick={() => handleStatusUpdate(product.id, product.status === 'active' ? 'inactive' : 'active')}
+                        onClick={() => router.push(`/seller-dashboard/edit-product/${product.id}`)}
                         className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                        title={product.status === 'active' ? 'Deactivate' : 'Activate'}
+                        title={t("editProduct")}
                       >
                         <Edit size={16} />
                       </button>
@@ -281,7 +334,10 @@ function ListingsContent() {
               }
             </p>
             {!searchQuery && statusFilter === 'all' && (
-              <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mx-auto">
+              <button 
+                onClick={() => router.push('/seller-dashboard/add-product')}
+                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mx-auto"
+              >
                 <Plus size={20} className="mr-2" />
                 Add Your First Product
               </button>
@@ -289,14 +345,15 @@ function ListingsContent() {
           </div>
         )}
       </div>
-    </SellerDashboardLayout>
   );
 }
 
 export default function ListingsPage() {
   return (
     <DashboardProvider>
-      <ListingsContent />
+      <SellerDashboardLayout>
+        <ListingsContent />
+      </SellerDashboardLayout>
     </DashboardProvider>
   );
 }

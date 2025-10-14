@@ -44,11 +44,48 @@ function PayoutsContent() {
           </p>
         </div>
 
-        {/* Payouts content would go here */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <p className="text-gray-600 dark:text-gray-400">
-            Payouts functionality coming soon...
-          </p>
+        {/* Coming Soon Content */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
+          <div className="max-w-md mx-auto">
+            <div className="h-20 w-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              Payouts Coming Soon
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+              We're working hard to bring you a comprehensive payout management system. 
+              You'll be able to track your earnings, manage payment methods, and request payouts.
+            </p>
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
+              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                What's Coming:
+              </h3>
+              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1 text-left">
+                <li>• Real-time earnings tracking</li>
+                <li>• Multiple payment methods</li>
+                <li>• Automated payout scheduling</li>
+                <li>• Detailed transaction history</li>
+                <li>• Tax reporting tools</li>
+              </ul>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => router.push('/seller-dashboard/analytics')}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                View Analytics
+              </button>
+              <button
+                onClick={() => router.push('/seller-dashboard/listings')}
+                className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+              >
+                Manage Listings
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </SellerDashboardLayout>

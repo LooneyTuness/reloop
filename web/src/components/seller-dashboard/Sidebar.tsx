@@ -4,12 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
-  LayoutDashboard, 
+  BarChart3, 
   Package, 
   Plus, 
   ShoppingBag, 
   CreditCard, 
-  BarChart3, 
   Settings, 
   LogOut,
   Menu,
@@ -19,12 +18,11 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const navigationItems = [
-  { name: 'Dashboard', href: '/seller-dashboard', icon: LayoutDashboard },
+  { name: 'Dashboard', href: '/seller-dashboard', icon: BarChart3 },
   { name: 'My Listings', href: '/seller-dashboard/listings', icon: Package },
   { name: 'Add Product', href: '/seller-dashboard/add-product', icon: Plus },
   { name: 'Orders', href: '/seller-dashboard/orders', icon: ShoppingBag },
   { name: 'Payouts', href: '/seller-dashboard/payouts', icon: CreditCard },
-  { name: 'Analytics', href: '/seller-dashboard/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/seller-dashboard/settings', icon: Settings },
 ];
 
@@ -74,17 +72,23 @@ export default function Sidebar() {
       `}>
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-20 px-6 border-b border-gray-200 dark:border-gray-800">
-            <Link 
-              href="/seller-dashboard"
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200 group"
-            >
-              <div className="h-8 w-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:shadow-lg transition-shadow duration-200">
-                <span className="text-white font-bold text-sm">V</span>
+          <div className="flex items-left justify-left h-20 px-6 border-b border-gray-200 dark:border-gray-800">
+            <Link href="/" className="flex items-center space-x-3 hover:scale-105 transition-all duration-300 group" onClick={() => console.log('Sidebar logo clicked, navigating to home')}>
+              <div className="relative">
+                <div className="h-10 w-10 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                  <span className="text-white font-bold text-lg">V</span>
+                </div>
+                {/* Subtle glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600 rounded-xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity duration-300 -z-10"></div>
               </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
-                Seller Dashboard
-              </h1>
+              <div className="flex flex-col">
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white leading-tight group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-300">
+                  vtoraraka.mk
+                </h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium leading-tight">
+                  Seller Dashboard
+                </p>
+              </div>
             </Link>
           </div>
 

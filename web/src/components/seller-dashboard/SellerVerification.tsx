@@ -29,8 +29,8 @@ export default function SellerVerification({ children }: SellerVerificationProps
     }
     
     if (!user?.id) {
-      console.log('SellerVerification: No user ID after loading complete, redirecting to login');
-      router.push('/login');
+      console.log('SellerVerification: No user ID after loading complete, redirecting to sign-in');
+      router.push('/sign-in');
       return;
     }
 
