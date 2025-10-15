@@ -540,31 +540,8 @@ function OrdersContent() {
                     <td className="px-6 py-4">
                       <div className="space-y-2">
                         {order.seller_order_items?.slice(0, 2).map((item: OrderItem, index: number) => {
-                          const images = item.items?.images ? 
-                            (Array.isArray(item.items.images) ? item.items.images : [item.items.images]) : 
-                            ['/api/placeholder/40/40'];
-                          
                           return (
                           <div key={index} className="flex items-center gap-2">
-                              <div className="relative group">
-                                <EnhancedImage
-                                  src={images[0]}
-                              alt={item.items?.title || 'Product'}
-                                  className="w-8 h-8 rounded object-cover flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
-                                  retryCount={2}
-                                  enableRefresh={true}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    console.log('🖼️ Individual item image clicked:', item.items?.title);
-                                    console.log('🖼️ Images:', images);
-                                    openImageViewer(images, item.items?.title || 'Product', 0);
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded flex items-center justify-center transition-all">
-                                  <ZoomIn className="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </div>
-                              </div>
                             <div className="min-w-0 flex-1">
                               <div className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                 {item.items?.title || 'Unknown Product'}
