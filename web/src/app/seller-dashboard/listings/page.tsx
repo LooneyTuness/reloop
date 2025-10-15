@@ -10,12 +10,14 @@ import { Search, Filter, Plus, Edit, Trash2, Eye, MoreVertical, Package } from '
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
+import { useCategory, CategoryProvider } from '@/contexts/CategoryContext';
 
 function ListingsContent() {
   const { products, isLoading, error, updateProduct, deleteProduct, searchProducts } = useDashboard();
   const searchParams = useSearchParams();
   const router = useRouter();
   const { t } = useDashboardLanguage();
+  const { getCategoryDisplayName } = useCategory();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -268,14 +270,11 @@ function ListingsContent() {
                     {product.title || 'Untitled Product'}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    {product.category_id ? 'Category ID: ' + product.category_id : t('uncategorized')}
+                    {product.category_id ? getCategoryDisplayName(product.category_id) : t('uncategorized')}
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
                       {product.price || '0.00'} MKD
-                    </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {product.views || 0} {t('views')}
                     </span>
                   </div>
                   
@@ -346,9 +345,11 @@ export default function ListingsPage() {
   return (
     <DashboardProvider>
       <DashboardLanguageProvider>
-        <SellerDashboardLayout>
-          <ListingsContent />
-        </SellerDashboardLayout>
+        <CategoryProvider>
+          <SellerDashboardLayout>
+            <ListingsContent />
+          </SellerDashboardLayout>
+        </CategoryProvider>
       </DashboardLanguageProvider>
     </DashboardProvider>
   );
