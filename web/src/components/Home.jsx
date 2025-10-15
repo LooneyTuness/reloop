@@ -179,7 +179,7 @@ export default function Home() {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-gray-900">
-                        ${product.price || "0"}
+                        {product.price || "0"} MKD
                       </span>
                       {product.original_price &&
                         product.original_price > product.price && (

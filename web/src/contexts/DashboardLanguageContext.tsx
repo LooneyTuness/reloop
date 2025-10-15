@@ -295,6 +295,10 @@ const dashboardTranslations = {
     viewDetails: "Види детали",
     updateStatus: "Ажурирај статус",
     downloadInvoice: "Преземи фактура",
+    orderDetails: "Детали за нарачката",
+    orderDate: "Датум на нарачката",
+    customerInformation: "Информации за купувачот",
+    shippingAddress: "Адреса за испорака",
     orderNotes: "Белешки за нарачката",
     productsInThisOrder: "Производи во оваа нарачка",
     unitPrice: "Цена по единица",
@@ -305,6 +309,10 @@ const dashboardTranslations = {
     totalAmount: "Вкупна сума",
     generatedOn: "Генерирано на",
     errorGeneratingPDF: "Грешка при генерирање на PDF. Обидете се повторно.",
+    address: "Адреса",
+    cityPostalCode: "Град и поштенски код",
+    unknownProduct: "Непознат продукт",
+    unknown: "Непознато",
     
     // Payouts page
     manageEarnings: "Управувај со заработката",
@@ -592,6 +600,10 @@ const dashboardTranslations = {
     viewDetails: "View Details",
     updateStatus: "Update Status",
     downloadInvoice: "Download Invoice",
+    orderDetails: "Order Details",
+    orderDate: "Order Date",
+    customerInformation: "Customer Information",
+    shippingAddress: "Shipping Address",
     orderNotes: "Order Notes",
     productsInThisOrder: "Products in this Order",
     unitPrice: "Unit Price",
@@ -602,6 +614,10 @@ const dashboardTranslations = {
     totalAmount: "Total Amount",
     generatedOn: "Generated on",
     errorGeneratingPDF: "Error generating PDF. Please try again.",
+    address: "Address",
+    cityPostalCode: "City & Postal Code",
+    unknownProduct: "Unknown Product",
+    unknown: "Unknown",
     
     // Payouts page
     manageEarnings: "Manage your earnings and payment settings",

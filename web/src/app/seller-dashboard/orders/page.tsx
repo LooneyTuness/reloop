@@ -257,22 +257,22 @@ function OrdersContent() {
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(0, 0, 0);
-      pdf.text(`Total Amount: ${totalAmount.toFixed(2)} MKD`, pageWidth - 80, totalY);
+      pdf.text(`${t('totalAmount')}: ${totalAmount.toFixed(2)} MKD`, pageWidth - 80, totalY);
 
       // Footer
       pdf.setFontSize(8);
       pdf.setFont('helvetica', 'normal');
       pdf.setTextColor(100, 100, 100);
-      pdf.text('Generated on:', margin, pdf.internal.pageSize.getHeight() - 20);
+      pdf.text(`${t('generatedOn')}:`, margin, pdf.internal.pageSize.getHeight() - 20);
       pdf.text(new Date().toLocaleString(), margin + 30, pdf.internal.pageSize.getHeight() - 20);
 
       // Save the PDF
       pdf.save(`order-${order.id}-${new Date().toISOString().split('T')[0]}.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Error generating PDF. Please try again.');
+      alert(t('errorGeneratingPDF'));
     }
-  }, []);
+  }, [t]);
 
   // Keyboard navigation for image viewer
   React.useEffect(() => {
