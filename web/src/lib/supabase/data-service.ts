@@ -174,7 +174,7 @@ export class SupabaseDataService {
       console.log('🔍 Step 2b: Fetching all items...');
       const { data: allItems, error: itemsError } = await (this.supabase as any)
         .from('items')
-        .select('id, title, price, photos, user_id, size, brand, condition, category, old_price, description, is_active, sold_at');
+        .select('id, title, price, photos, user_id, size, brand, condition, category_id, old_price, description, is_active, sold_at');
 
       if (itemsError) {
         console.error('❌ Error fetching items:', itemsError);
@@ -839,7 +839,7 @@ export class SupabaseDataService {
     // Get seller's items
     const { data: sellerItems } = await (this.supabase as any)
       .from('items')
-      .select('id, title, category')
+      .select('id, title, category_id')
       .eq('user_id', sellerId);
 
     const sellerItemIds = (sellerItems as { id: string }[])?.map((item: { id: string }) => item.id) || [];
@@ -876,7 +876,7 @@ export class SupabaseDataService {
 
     orderItems?.forEach((orderItem: { orders: { created_at: string }; item_id: string; quantity: number; price: number }) => {
       const date = new Date(orderItem.orders.created_at).toISOString().split('T')[0];
-      const item = (sellerItems as { id: string; title: string; category?: string }[])?.find((i: { id: string }) => i.id === orderItem.item_id);
+      const item = (sellerItems as { id: string; title: string; category_id?: string }[])?.find((i: { id: string }) => i.id === orderItem.item_id);
       
       if (item) {
         // Sales by date
