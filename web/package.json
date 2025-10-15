@@ -16,7 +16,11 @@
     "preview": "npm run build && npm run start",
     "deploy:check": "npm run type-check && npm run lint",
     "deploy:vercel": "vercel --prod",
-    "deploy:netlify": "npm run build && netlify deploy --prod --dir=.next"
+    "deploy:netlify": "npm run build && netlify deploy --prod --dir=.next",
+    "setup:production": "node setup-production-db.js",
+    "test:production": "node test-production-db.js",
+    "deploy:production": "bash deploy-production.sh",
+    "deploy:production:test": "bash deploy-production.sh --test"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
