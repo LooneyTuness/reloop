@@ -16,44 +16,56 @@ export async function GET(req: NextRequest) {
     
     // Test 2: Check if supabaseAdmin is working
     let adminTest: { success: boolean; error: string | null } = { success: false, error: null };
-    try {
-      const { data: testData, error: testError } = await supabaseAdmin
-        .from("seller_profiles")
-        .select("id")
-        .limit(1);
-      
-      if (testError) {
-        adminTest.error = testError.message;
-        console.log("Admin test error:", testError);
-      } else {
-        adminTest.success = true;
-        console.log("Admin test success");
+    
+    if (!supabaseAdmin) {
+      adminTest.error = "Supabase admin client not initialized";
+      console.log("Admin test error: Supabase admin client not initialized");
+    } else {
+      try {
+        const { data: testData, error: testError } = await supabaseAdmin
+          .from("seller_profiles")
+          .select("id")
+          .limit(1);
+        
+        if (testError) {
+          adminTest.error = testError.message;
+          console.log("Admin test error:", testError);
+        } else {
+          adminTest.success = true;
+          console.log("Admin test success");
+        }
+      } catch (err) {
+        adminTest.error = err instanceof Error ? err.message : "Unknown error";
+        console.log("Admin test exception:", err);
       }
-    } catch (err) {
-      adminTest.error = err instanceof Error ? err.message : "Unknown error";
-      console.log("Admin test exception:", err);
     }
     
     // Test 3: Try to get all sellers
     let sellersTest: { success: boolean; error: string | null; data: any[] | null } = { success: false, error: null, data: null };
-    try {
-      const { data: sellers, error: sellersError } = await supabaseAdmin
-        .from("seller_profiles")
-        .select("*")
-        .eq("role", "seller")
-        .order("created_at", { ascending: false });
-      
-      if (sellersError) {
-        sellersTest.error = sellersError.message;
-        console.log("Sellers test error:", sellersError);
-      } else {
-        sellersTest.success = true;
-        sellersTest.data = sellers;
-        console.log("Sellers test success:", sellers?.length || 0, "sellers");
+    
+    if (!supabaseAdmin) {
+      sellersTest.error = "Supabase admin client not initialized";
+      console.log("Sellers test error: Supabase admin client not initialized");
+    } else {
+      try {
+        const { data: sellers, error: sellersError } = await supabaseAdmin
+          .from("seller_profiles")
+          .select("*")
+          .eq("role", "seller")
+          .order("created_at", { ascending: false });
+        
+        if (sellersError) {
+          sellersTest.error = sellersError.message;
+          console.log("Sellers test error:", sellersError);
+        } else {
+          sellersTest.success = true;
+          sellersTest.data = sellers;
+          console.log("Sellers test success:", sellers?.length || 0, "sellers");
+        }
+      } catch (err) {
+        sellersTest.error = err instanceof Error ? err.message : "Unknown error";
+        console.log("Sellers test exception:", err);
       }
-    } catch (err) {
-      sellersTest.error = err instanceof Error ? err.message : "Unknown error";
-      console.log("Sellers test exception:", err);
     }
     
     // Test 4: Check if we can create a test seller profile

@@ -6,6 +6,13 @@ export async function GET(
   { params }: { params: { userId: string } }
 ) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const { userId } = params;
 
     if (!userId) {

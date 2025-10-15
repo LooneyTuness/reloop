@@ -7,6 +7,13 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const supabase = supabaseAdmin;
     const { id } = params;
 
@@ -46,6 +53,13 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const supabase = supabaseAdmin;
     const { id } = params;
 
@@ -123,6 +137,13 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const supabase = supabaseAdmin;
     const { id } = params;
 

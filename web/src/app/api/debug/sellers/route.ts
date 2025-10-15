@@ -3,6 +3,13 @@ import { supabaseAdmin } from "@/lib/supabase/supabase.admin";
 
 export async function GET(req: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     // Test if seller_profiles table exists
     const { data: tableCheck, error: tableError } = await supabaseAdmin
       .from("seller_profiles")

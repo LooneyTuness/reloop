@@ -56,6 +56,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const supabase = supabaseAdmin;
 
     // Test database connection first

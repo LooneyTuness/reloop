@@ -4,6 +4,13 @@ import { supabaseAdmin } from '@/lib/supabase/supabase.admin';
 // GET /api/seller-items - Get items for a specific seller
 export async function GET(request: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const supabase = supabaseAdmin;
     const { searchParams } = new URL(request.url);
     const sellerId = searchParams.get('sellerId');

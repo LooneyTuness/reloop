@@ -3,6 +3,13 @@ import { supabaseAdmin } from "@/lib/supabase/supabase.admin";
 
 export async function POST(req: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const { userId, email, role = "seller" } = await req.json();
 
     if (!userId || !email) {

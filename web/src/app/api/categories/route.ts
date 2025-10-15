@@ -5,6 +5,13 @@ import { Category, CategoryHierarchy } from '@/types/category';
 // GET /api/categories - Get all categories with hierarchy
 export async function GET(request: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const supabase = supabaseAdmin;
     const { searchParams } = new URL(request.url);
     const level = searchParams.get('level');
@@ -55,6 +62,13 @@ export async function GET(request: NextRequest) {
 // POST /api/categories - Create a new category (admin only)
 export async function POST(request: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const supabase = supabaseAdmin;
 
     const body = await request.json();

@@ -73,7 +73,6 @@ const nextConfig = {
     ];
   },
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: [
       "lucide-react",
       "@radix-ui/react-dialog",

@@ -3,6 +3,13 @@ import { supabaseAdmin } from "@/lib/supabase/supabase.admin";
 
 export async function GET(req: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Database connection not available" },
+        { status: 500 }
+      );
+    }
+
     // First check if the table exists
     const { data: tableCheck, error: tableError } = await supabaseAdmin
       .from("seller_profiles")
@@ -49,6 +56,13 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Database connection not available" },
+        { status: 500 }
+      );
+    }
+
     const { email, fullName, createdBy } = await req.json();
 
     if (!email || !fullName || !createdBy) {

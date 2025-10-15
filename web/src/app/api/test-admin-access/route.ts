@@ -3,6 +3,14 @@ import { supabaseAdmin } from "@/lib/supabase/supabase.admin";
 
 export async function GET(req: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json({
+        status: "error",
+        message: "Admin service not available",
+        error: "Supabase admin client not initialized"
+      });
+    }
+
     // Test if we can access seller_profiles with admin client
     const { data: sellers, error } = await supabaseAdmin
       .from("seller_profiles")
