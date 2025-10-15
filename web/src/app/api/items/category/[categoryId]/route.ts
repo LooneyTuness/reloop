@@ -7,6 +7,13 @@ export async function GET(
   { params }: { params: { categoryId: string } }
 ) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+    
     const supabase = supabaseAdmin;
     const { categoryId } = params;
     const { searchParams } = new URL(request.url);

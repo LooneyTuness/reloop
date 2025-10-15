@@ -4,6 +4,13 @@ import { sendEmail } from "@/lib/email";
 
 export async function GET(req: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     // Get all seller applications (not just pending)
     const { data: applications, error } = await supabaseAdmin
       .from("seller_applications")
@@ -30,6 +37,13 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: "Admin service not available" },
+        { status: 503 }
+      );
+    }
+
     const { applicationId, action, notes, adminUserId } = await req.json();
 
     if (!applicationId || !action || !adminUserId) {
