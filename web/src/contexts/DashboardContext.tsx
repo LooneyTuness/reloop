@@ -231,18 +231,18 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           if (sellerOrderItems.length === 1) {
             // Single item - show the item name
             productName = sellerOrderItems[0]?.items?.title || 'Unknown Product';
-            productImage = sellerOrderItems[0]?.items?.photos ? 
-              (Array.isArray(sellerOrderItems[0].items.photos) ? 
-                sellerOrderItems[0].items.photos[0] : 
-                sellerOrderItems[0].items.photos) : 
+            productImage = sellerOrderItems[0]?.items?.images ? 
+              (Array.isArray(sellerOrderItems[0].items.images) ? 
+                sellerOrderItems[0].items.images[0] : 
+                sellerOrderItems[0].items.images) : 
               '/api/placeholder/60/60';
           } else {
             // Multiple items - show count and first item
             productName = `${sellerOrderItems.length} items (${sellerOrderItems[0]?.items?.title || 'Unknown'}, +${sellerOrderItems.length - 1} more)`;
-            productImage = sellerOrderItems[0]?.items?.photos ? 
-              (Array.isArray(sellerOrderItems[0].items.photos) ? 
-                sellerOrderItems[0].items.photos[0] : 
-                sellerOrderItems[0].items.photos) : 
+            productImage = sellerOrderItems[0]?.items?.images ? 
+              (Array.isArray(sellerOrderItems[0].items.images) ? 
+                sellerOrderItems[0].items.images[0] : 
+                sellerOrderItems[0].items.images) : 
               '/api/placeholder/60/60';
           }
           itemCount = sellerOrderItems.length;
@@ -471,7 +471,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         brand: productData.brand || null,
         quantity: productData.quantity || 1,
         status: productData.status || 'active',
-        photos: productData.photos || ['/api/placeholder/400/400']
+        images: productData.images || ['/api/placeholder/400/400']
       };
       
       // Log the exact data being sent

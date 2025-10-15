@@ -148,7 +148,7 @@ export default function Home() {
                 >
                   <div className="relative aspect-square overflow-hidden">
                     <ProductImage
-                      src={product.photos}
+                      src={product.images}
                       alt={product.name || product.title || "Product"}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       fallbackText={t("noImage")}

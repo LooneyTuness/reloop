@@ -361,7 +361,7 @@ function CatalogContent() {
                         <div className={`${viewMode === 'list' ? 'w-48 h-48' : 'aspect-square'} relative`}>
                           {/* Image */}
                           <ProductImage
-                            src={item.photos}
+                            src={item.images}
                             alt={item.name || item.title || 'Product'}
                             className="object-cover"
                             fallbackText={t("noImage")}

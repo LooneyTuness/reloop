@@ -174,7 +174,7 @@ export class SupabaseDataService {
       console.log('🔍 Step 2b: Fetching all items...');
       const { data: allItems, error: itemsError } = await (this.supabase as any)
         .from('items')
-        .select('id, title, price, photos, user_id, size, brand, condition, category_id, old_price, description, is_active, sold_at');
+        .select('id, title, price, images, user_id, size, brand, condition, category_id, old_price, description, is_active, sold_at');
 
       if (itemsError) {
         console.error('❌ Error fetching items:', itemsError);

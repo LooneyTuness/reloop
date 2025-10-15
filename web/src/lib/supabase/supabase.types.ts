@@ -67,7 +67,7 @@ export type Database = {
           size?: string | null
           brand?: string | null
           category_id?: string | null
-          photos?: string[] | null
+          images?: string[] | null
           seller_id?: string | null
           status?: string
           created_at?: string
@@ -94,7 +94,7 @@ export type Database = {
           size?: string | null
           brand?: string | null
           category_id?: string | null
-          photos?: string[] | null
+          images?: string[] | null
           seller_id?: string | null
           status?: string
           created_at?: string
@@ -121,7 +121,7 @@ export type Database = {
           size?: string | null
           brand?: string | null
           category_id?: string | null
-          photos?: string[] | null
+          images?: string[] | null
           seller_id?: string | null
           status?: string
           created_at?: string

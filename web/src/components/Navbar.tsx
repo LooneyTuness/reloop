@@ -15,7 +15,7 @@ type Suggestion = {
   id: string | number;
   title: string;
   description: string | null;
-  photos: string | string[] | null;
+  images: string | string[] | null;
 };
 
 export default function Navbar() {
@@ -49,7 +49,7 @@ export default function Navbar() {
     const like = `%${term}%`;
     const { data } = await supabase
       .from("items")
-      .select("id,title,description,photos")
+      .select("id,title,description,images")
       .eq("is_active", true)
       .or(`title.ilike.${like},description.ilike.${like}`)
       .order("created_at", { ascending: false })
@@ -145,7 +145,7 @@ export default function Navbar() {
                 {showSuggestions && suggestions.length > 0 && (
                   <div className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden">
                     {suggestions.map((s) => {
-                      const img = Array.isArray(s.photos) ? s.photos[0] : s.photos;
+                      const img = Array.isArray(s.images) ? s.images[0] : s.images;
                       return (
                         <Link
                           key={s.id}

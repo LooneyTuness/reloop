@@ -32,7 +32,7 @@ interface OrderItem {
     brand?: string | null;
     category?: string;
     category_id?: string | null;
-    photos?: string[] | null;
+    images?: string[] | null;
     seller_id?: string | null;
     status?: string;
     created_at?: string;
@@ -487,10 +487,10 @@ function OrdersContent() {
                               // Get images from the first seller order item
                               const firstItem = order.seller_order_items?.[0];
                               console.log('🖼️ First item:', firstItem);
-                              if (firstItem?.items?.photos) {
-                                const images = Array.isArray(firstItem.items.photos) ? 
-                                  firstItem.items.photos : 
-                                  [firstItem.items.photos];
+                              if (firstItem?.items?.images) {
+                                const images = Array.isArray(firstItem.items.images) ? 
+                                  firstItem.items.images : 
+                                  [firstItem.items.images];
                                 console.log('🖼️ Images found:', images);
                                 openImageViewer(images, firstItem.items.title || 'Product', 0);
                               } else {
@@ -537,8 +537,8 @@ function OrdersContent() {
                     <td className="px-6 py-4">
                       <div className="space-y-2">
                         {order.seller_order_items?.slice(0, 2).map((item: OrderItem, index: number) => {
-                          const images = item.items?.photos ? 
-                            (Array.isArray(item.items.photos) ? item.items.photos : [item.items.photos]) : 
+                          const images = item.items?.images ? 
+                            (Array.isArray(item.items.images) ? item.items.images : [item.items.images]) : 
                             ['/api/placeholder/40/40'];
                           
                           return (
@@ -1004,8 +1004,8 @@ function OrdersContent() {
                     </h3>
                     <div className="space-y-4">
                       {(selectedOrder.seller_order_items || selectedOrder.order_items || []).map((orderItem: OrderItem, index: number) => {
-                        const images = orderItem.items?.photos ? 
-                          (Array.isArray(orderItem.items.photos) ? orderItem.items.photos : [orderItem.items.photos]) : 
+                        const images = orderItem.items?.images ? 
+                          (Array.isArray(orderItem.items.images) ? orderItem.items.images : [orderItem.items.images]) : 
                           ['/api/placeholder/80/80'];
                         
                         return (

@@ -56,7 +56,7 @@ export default function Products({
         id: item.id,
         name: item.title,
         price: item.price,
-        image_url: item.photos,
+        image_url: item.images,
         quantity: 1,
       });
       toast.success(t("addedToCart"));
@@ -419,7 +419,7 @@ export default function Products({
 
                   {/* Actual Image */}
                   <OptimizedProductImage
-                    src={item.photos}
+                    src={item.images}
                     alt={item.title}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

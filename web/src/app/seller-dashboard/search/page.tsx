@@ -44,7 +44,7 @@ function SearchContent() {
           description: product.description || 'No description available',
           price: product.price,
           status: product.status,
-          image: product.photos,
+          image: product.images,
           url: `/seller-dashboard/listings`
         }));
 

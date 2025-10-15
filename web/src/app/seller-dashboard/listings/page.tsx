@@ -227,11 +227,11 @@ function ListingsContent() {
             let productImage = '/api/placeholder/400/400'; // Default fallback
             
             
-            if (product.photos) {
-              if (Array.isArray(product.photos) && product.photos.length > 0) {
-                productImage = product.photos[0];
-              } else if (typeof product.photos === 'string' && (product.photos as string).trim() !== '') {
-                productImage = product.photos;
+            if (product.images) {
+              if (Array.isArray(product.images) && product.images.length > 0) {
+                productImage = product.images[0];
+              } else if (typeof product.images === 'string' && (product.images as string).trim() !== '') {
+                productImage = product.images;
               }
             }
             

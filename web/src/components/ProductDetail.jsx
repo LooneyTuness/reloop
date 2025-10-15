@@ -159,7 +159,7 @@ export default function ProductDetail() {
         id: product.id,
         name: product.name || product.title,
         price: product.price,
-        image_url: product.photos,
+        image_url: product.images,
         quantity: 1,
       });
       toast.success(t("addedToCart"));
@@ -193,21 +193,21 @@ export default function ProductDetail() {
             <div className="relative bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden aspect-[4/5]">
               <img
                 src={
-                  (Array.isArray(product.photos)
-                    ? product.photos[currentIndex]
-                    : product.photos) || "/placeholder.svg"
+                  (Array.isArray(product.images)
+                    ? product.images[currentIndex]
+                    : product.images) || "/placeholder.svg"
                 }
                 alt={product.name}
                 className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
               />
 
               {/* Navigation arrows */}
-              {Array.isArray(product.photos) && product.photos.length > 1 && (
+              {Array.isArray(product.images) && product.images.length > 1 && (
                 <>
                   <button
                     onClick={() => {
-                      const total = Array.isArray(product.photos)
-                        ? product.photos.length
+                      const total = Array.isArray(product.images)
+                        ? product.images.length
                         : 1;
                       setCurrentIndex((i) => (i === 0 ? total - 1 : i - 1));
                     }}
@@ -217,8 +217,8 @@ export default function ProductDetail() {
                   </button>
                   <button
                     onClick={() => {
-                      const total = Array.isArray(product.photos)
-                        ? product.photos.length
+                      const total = Array.isArray(product.images)
+                        ? product.images.length
                         : 1;
                       setCurrentIndex((i) => (i === total - 1 ? 0 : i + 1));
                     }}
@@ -251,9 +251,9 @@ export default function ProductDetail() {
             </div>
 
             {/* Thumbnail gallery */}
-            {Array.isArray(product.photos) && product.photos.length > 1 && (
+            {Array.isArray(product.images) && product.images.length > 1 && (
               <div className="grid grid-cols-5 gap-2">
-                {product.photos.map((url, idx) => (
+                {product.images.map((url, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}

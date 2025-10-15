@@ -15,7 +15,7 @@ interface CatalogItem {
   id: string;
   name?: string;
   title?: string;
-  photos?: string[] | string;
+  images?: string[] | string;
   price: number;
   condition?: string;
   brand?: string;
@@ -304,7 +304,7 @@ function CategoryPageContent() {
                         <div className="relative overflow-hidden rounded-t-3xl bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-sm">
                           <div className={`${viewMode === 'list' ? 'w-48 h-48' : 'aspect-square'} relative`}>
                             <ProductImage
-                              src={item.photos}
+                              src={item.images}
                               alt={item.name || item.title || 'Product'}
                               className="object-cover"
                               fallbackText={t("noImage")}
