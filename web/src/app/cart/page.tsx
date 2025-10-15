@@ -36,12 +36,6 @@ export default function CartPage() {
   const handlePlaceOrder = async () => {
     if (submitting) return;
     if (cart.length === 0) return;
-    
-    // Check if user is authenticated
-    if (!user) {
-      alert("Please sign in to place an order");
-      return;
-    }
 
     try {
       setSubmitting(true);
@@ -69,13 +63,13 @@ export default function CartPage() {
         checkout: checkout
       });
       
-      // Double-check user authentication
+      // Get current user (if authenticated)
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       console.log("Current user from auth:", currentUser);
       
-      if (!currentUser) {
-        throw new Error("User not authenticated");
-      }
+      // For guest orders, we'll use null for user_id and buyer_id
+      const userId = currentUser?.id || null;
+      const buyerId = currentUser?.id || null;
       
       // 1) Create order
       const { data: orderData, error: orderError } = await (
@@ -112,8 +106,8 @@ export default function CartPage() {
         .from("orders")
         .insert([
           {
-            user_id: currentUser.id,
-            buyer_id: currentUser.id,
+            user_id: userId,
+            buyer_id: buyerId,
             seller_id: sellerId,
             total_amount: total,
             payment_method: "cash_on_delivery",
