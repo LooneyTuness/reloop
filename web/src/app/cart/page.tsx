@@ -39,6 +39,21 @@ export default function CartPage() {
 
     try {
       setSubmitting(true);
+      
+      // First, get the seller information for the items in the cart
+      const itemIds = cart.map(item => item.id);
+      const { data: itemsData, error: itemsError } = await supabase
+        .from('items')
+        .select('id, user_id')
+        .in('id', itemIds);
+      
+      if (itemsError) throw itemsError;
+      if (!itemsData || itemsData.length === 0) throw new Error("Could not find item information");
+      
+      // Get the seller_id from the first item (assuming all items are from the same seller for simplicity)
+      const sellerId = itemsData[0]?.user_id;
+      if (!sellerId) throw new Error("Could not determine seller");
+      
       // 1) Create order
       const { data: orderData, error: orderError } = await (
         supabase as unknown as {
@@ -46,6 +61,8 @@ export default function CartPage() {
             insert: (
               rows: Array<{
                 user_id?: string | null;
+                buyer_id?: string | null;
+                seller_id?: string | null;
                 total_amount: number;
                 payment_method: string;
                 status: string;
@@ -73,6 +90,8 @@ export default function CartPage() {
         .insert([
           {
             user_id: user ? user.id : null,
+            buyer_id: user ? user.id : null,
+            seller_id: sellerId,
             total_amount: total,
             payment_method: "cash_on_delivery",
             status: "pending",
