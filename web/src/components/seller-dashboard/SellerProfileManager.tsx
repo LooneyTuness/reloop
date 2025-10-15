@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabaseDataService } from '@/lib/supabase/data-service';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
-import { User, Mail, Phone, MapPin, Globe, Save, Upload, Camera } from 'lucide-react';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import { User, Mail, Phone, MapPin, Globe, Save, Camera } from 'lucide-react';
+import Image from 'next/image';
 import ImageCropModal from './ImageCropModal';
 
 interface SellerProfile {
@@ -30,6 +32,7 @@ interface SellerProfile {
 export default function SellerProfileManager() {
   const { user } = useAuth();
   const { updateAvatar } = useProfile();
+  const { t } = useDashboardLanguage();
   const [profile, setProfile] = useState<SellerProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -51,31 +54,26 @@ export default function SellerProfileManager() {
     bank_account: ''
   });
 
-  useEffect(() => {
-    if (user?.id) {
-      loadProfile();
-    }
-  }, [user?.id]);
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     if (!user?.id) return;
     
     setIsLoading(true);
     try {
       const profileData = await supabaseDataService.getSellerProfile(user.id);
       if (profileData) {
-        setProfile(profileData);
+        const typedProfileData = profileData as SellerProfile;
+        setProfile(typedProfileData);
         setFormData({
-          full_name: profileData.full_name || '',
-          email: profileData.email || user.email || '',
-          phone: profileData.phone || '',
-          bio: profileData.bio || '',
-          location: profileData.location || '',
-          website: profileData.website || '',
-          business_name: profileData.business_name || '',
-          business_type: profileData.business_type || '',
-          tax_id: profileData.tax_id || '',
-          bank_account: profileData.bank_account || ''
+          full_name: typedProfileData.full_name || '',
+          email: typedProfileData.email || user.email || '',
+          phone: typedProfileData.phone || '',
+          bio: typedProfileData.bio || '',
+          location: typedProfileData.location || '',
+          website: typedProfileData.website || '',
+          business_name: typedProfileData.business_name || '',
+          business_type: typedProfileData.business_type || '',
+          tax_id: typedProfileData.tax_id || '',
+          bank_account: typedProfileData.bank_account || ''
         });
       }
     } catch (error) {
@@ -84,7 +82,13 @@ export default function SellerProfileManager() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user?.id, user?.email]);
+
+  useEffect(() => {
+    if (user?.id) {
+      loadProfile();
+    }
+  }, [user?.id, loadProfile]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -101,7 +105,7 @@ export default function SellerProfileManager() {
 
     try {
       const updatedProfile = await supabaseDataService.updateSellerProfile(user.id, formData);
-      setProfile(updatedProfile);
+      setProfile(updatedProfile as SellerProfile);
       setSuccess('Profile updated successfully!');
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -171,10 +175,10 @@ export default function SellerProfileManager() {
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Seller Profile
+          {t('sellerProfile')}
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Manage your seller profile and business information
+          {t('manageSellerProfile')}
         </p>
       </div>
 
@@ -196,15 +200,17 @@ export default function SellerProfileManager() {
         <div className="lg:col-span-1">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Profile Picture
+              {t('profilePicture')}
             </h2>
             <div className="text-center">
               <div className="relative inline-block">
                 <div className="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mx-auto mb-4">
                   {profile?.avatar_url ? (
-                    <img
+                    <Image
                       src={profile.avatar_url}
                       alt="Profile"
+                      width={128}
+                      height={128}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -224,7 +230,7 @@ export default function SellerProfileManager() {
                 </label>
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Click the camera icon to upload a new picture
+                {t('clickCameraIcon')}
               </p>
             </div>
           </div>
@@ -236,12 +242,12 @@ export default function SellerProfileManager() {
             {/* Personal Information */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Personal Information
+                {t('personalInformation')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Full Name
+                    {t('fullName')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -251,13 +257,13 @@ export default function SellerProfileManager() {
                       value={formData.full_name}
                       onChange={handleInputChange}
                       className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter your full name"
+                      placeholder={t('enterFullName')}
                     />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Email
+                    {t('email')}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -267,13 +273,13 @@ export default function SellerProfileManager() {
                       value={formData.email}
                       onChange={handleInputChange}
                       className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter your email"
+                      placeholder={t('enterEmail')}
                     />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Phone
+                    {t('phone')}
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -283,13 +289,13 @@ export default function SellerProfileManager() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter your phone number"
+                      placeholder={t('enterPhoneNumber')}
                     />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Location
+                    {t('location')}
                   </label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -299,14 +305,14 @@ export default function SellerProfileManager() {
                       value={formData.location}
                       onChange={handleInputChange}
                       className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter your location"
+                      placeholder={t('enterLocation')}
                     />
                   </div>
                 </div>
               </div>
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Bio
+                  {t('bio')}
                 </label>
                 <textarea
                   name="bio"
@@ -314,12 +320,12 @@ export default function SellerProfileManager() {
                   onChange={handleInputChange}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Tell customers about yourself..."
+                  placeholder={t('tellCustomersAboutYourself')}
                 />
               </div>
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Website
+                  {t('website')}
                 </label>
                 <div className="relative">
                   <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -338,12 +344,12 @@ export default function SellerProfileManager() {
             {/* Business Information */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Business Information
+                {t('businessInformation')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Business Name
+                    {t('businessName')}
                   </label>
                   <input
                     type="text"
@@ -351,12 +357,12 @@ export default function SellerProfileManager() {
                     value={formData.business_name}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter business name"
+                    placeholder={t('enterBusinessName')}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Business Type
+                    {t('businessType')}
                   </label>
                   <select
                     name="business_type"
@@ -364,17 +370,17 @@ export default function SellerProfileManager() {
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="">Select business type</option>
-                    <option value="individual">Individual Seller</option>
-                    <option value="small_business">Small Business</option>
-                    <option value="retailer">Retailer</option>
-                    <option value="wholesaler">Wholesaler</option>
-                    <option value="other">Other</option>
+                    <option value="">{t('selectBusinessType')}</option>
+                    <option value="individual">{t('individualSeller')}</option>
+                    <option value="small_business">{t('smallBusiness')}</option>
+                    <option value="retailer">{t('retailer')}</option>
+                    <option value="wholesaler">{t('wholesaler')}</option>
+                    <option value="other">{t('other')}</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Tax ID (Optional)
+                    {t('taxId')}
                   </label>
                   <input
                     type="text"
@@ -382,12 +388,12 @@ export default function SellerProfileManager() {
                     value={formData.tax_id}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter tax ID"
+                    placeholder={t('enterTaxId')}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Bank Account (Optional)
+                    {t('bankAccount')}
                   </label>
                   <input
                     type="text"
@@ -395,7 +401,7 @@ export default function SellerProfileManager() {
                     value={formData.bank_account}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter bank account info"
+                    placeholder={t('enterBankAccountInfo')}
                   />
                 </div>
               </div>
@@ -411,12 +417,12 @@ export default function SellerProfileManager() {
                 {isSaving ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Saving...
+{t('saving')}
                   </>
                 ) : (
                   <>
                     <Save size={16} className="mr-2" />
-                    Save Profile
+                    {t('saveProfile')}
                   </>
                 )}
               </button>

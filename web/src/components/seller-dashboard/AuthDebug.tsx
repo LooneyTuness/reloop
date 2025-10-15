@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import type { Session, User } from '@supabase/supabase-js';
 
 export default function AuthDebug() {
   const [debugInfo, setDebugInfo] = useState({
     supabaseConnected: false,
-    session: null,
-    user: null,
-    error: null
+    session: null as Session | null,
+    user: null as User | null,
+    error: null as string | null
   });
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function AuthDebug() {
         console.error('AuthDebug: Error checking auth:', err);
         setDebugInfo(prev => ({
           ...prev,
-          error: err.message,
+          error: err instanceof Error ? err.message : String(err),
           supabaseConnected: false
         }));
       }

@@ -50,7 +50,6 @@ export default function CategoryFilterDemo() {
         onFilterChange={handleFilterChange}
         currentFilter={filter}
         showBrandFilter={true}
-        availableBrands={availableBrands}
         className="max-w-md"
       />
     </div>

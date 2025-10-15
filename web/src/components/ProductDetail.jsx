@@ -43,21 +43,51 @@ export default function ProductDetail() {
       if (!id) return;
       setLoading(true);
 
-      const { data, error } = await supabase
-        .from("items")
-        .select("*")
-        .eq("id", id)
-        .eq("is_active", true)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from("items")
+          .select("*")
+          .eq("id", id)
+          .eq("is_active", true)
+          .single();
 
-      if (error) {
-        console.error(t("errorLoadingProduct"), error.message);
-      } else {
-        setProduct(data);
+        if (error) {
+          console.error(t("errorLoadingProduct"), error.message);
+          setProduct(null);
+          return;
+        }
+
+        // Get seller profile for the product
+        let sellerProfile = null;
+        if (data.user_id) {
+          const { data: profile, error: profileError } = await supabase
+            .from("seller_profiles")
+            .select("user_id, business_name, full_name")
+            .eq("user_id", data.user_id)
+            .single();
+
+          if (!profileError && profile) {
+            sellerProfile = {
+              business_name: profile.business_name || null,
+              full_name: profile.full_name || null,
+            };
+          }
+        }
+
+        // Merge seller profile data with product
+        const productWithSellerInfo = {
+          ...data,
+          seller_profiles: sellerProfile,
+        };
+
+        setProduct(productWithSellerInfo);
         setCurrentIndex(0);
+      } catch (err) {
+        console.error("Error loading product:", err);
+        setProduct(null);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     fetchProduct();
@@ -107,14 +137,14 @@ export default function ProductDetail() {
               {t("productNotFound")}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              The product you're looking for doesn't exist or has been removed.
+              {t("productNotFoundDesc")}
             </p>
             <Link
               href="/catalog"
               className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
-              Browse Products
+              {t("browseProducts")}
             </Link>
           </div>
         </div>
@@ -153,7 +183,7 @@ export default function ProductDetail() {
             className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
+            {t("back")}
           </button>
         </div>
 
@@ -295,7 +325,10 @@ export default function ProductDetail() {
                 {t("seller")}:
               </p>
               <p className="text-gray-900 dark:text-white font-semibold">
-                {product.seller || t("anonymousSeller")}
+                {product.seller_profiles?.business_name ||
+                  product.seller_profiles?.full_name ||
+                  product.seller ||
+                  t("anonymousSeller")}
               </p>
             </div>
 
@@ -323,7 +356,7 @@ export default function ProductDetail() {
             {/* Features */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Why choose this item?
+                {t("whyChooseThisItem")}
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -339,7 +372,7 @@ export default function ProductDetail() {
                     <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </div>
                   <span className="text-sm text-gray-600 dark:text-gray-400">
-                    Verified quality and authenticity
+                    {t("verifiedQuality")}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -347,7 +380,7 @@ export default function ProductDetail() {
                     <Truck className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                   </div>
                   <span className="text-sm text-gray-600 dark:text-gray-400">
-                    Fast and secure delivery
+                    {t("fastSecureDelivery")}
                   </span>
                 </div>
               </div>

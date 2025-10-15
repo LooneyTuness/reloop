@@ -7,7 +7,9 @@ import LanguageProvider from "@/contexts/LanguageContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { CategoryProvider } from "@/contexts/CategoryContext";
+import { DropdownStateProvider } from "@/contexts/DropdownStateContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { QueryProvider } from "@/providers/QueryProvider";
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageTransitionWrapper from "@/components/PageTransitionWrapper";
@@ -15,9 +17,9 @@ import GlobalErrorHandler from "@/components/GlobalErrorHandler";
 
 
 export const metadata: Metadata = {
-  title: "vtoraraka - Second-hand. First rate. | Buy & Sell Pre-Loved Fashion",
+  title: "vtoraraka.mk - Облека од втора рака | Купувај и продавај со стил",
   description:
-    "vtoraraka: Second-hand. First rate. Buy and sell pre-loved clothing with style. Sustainable fashion that's NEW? NOT REALLY but STILL GOT IT.",
+    "Купувај и продавај облека од втора рака онлајн. Заштеди пари, најди уникатни парчиња и придонеси за одржлива мода – сè на едно место.",
 };
 
 export default function RootLayout({
@@ -36,25 +38,29 @@ export default function RootLayout({
       <body className="antialiased bg-white">
         <GlobalErrorHandler />
         <ErrorBoundary>
-          <ThemeProvider>
-            <AuthProvider>
-              <CartProvider>
-                <NotificationProvider>
-                  <LanguageProvider>
-                    <CategoryProvider>
-                      <GlobalProvider>
-                        <ConditionalNavbar />
-                        <PageTransitionWrapper>
-                          {children}
-                        </PageTransitionWrapper>
-                        <Toaster />
-                      </GlobalProvider>
-                    </CategoryProvider>
-                  </LanguageProvider>
-                </NotificationProvider>
-              </CartProvider>
-            </AuthProvider>
-          </ThemeProvider>
+          <QueryProvider>
+            <ThemeProvider>
+              <AuthProvider>
+                <CartProvider>
+                  <NotificationProvider>
+                    <LanguageProvider>
+                      <CategoryProvider>
+                        <DropdownStateProvider>
+                          <GlobalProvider>
+                            <ConditionalNavbar />
+                            <PageTransitionWrapper>
+                              {children}
+                            </PageTransitionWrapper>
+                            <Toaster />
+                          </GlobalProvider>
+                        </DropdownStateProvider>
+                      </CategoryProvider>
+                    </LanguageProvider>
+                  </NotificationProvider>
+                </CartProvider>
+              </AuthProvider>
+            </ThemeProvider>
+          </QueryProvider>
         </ErrorBoundary>
       </body>
     </html>

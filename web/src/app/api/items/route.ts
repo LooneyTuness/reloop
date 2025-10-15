@@ -53,27 +53,59 @@ export async function GET(request: NextRequest) {
       query = query.eq('condition', condition);
     }
     if (brand) {
-      query = query.ilike('brand', `%${brand}%`);
+      console.log('Applying brand filter:', brand);
+      // Handle special case for "Other" brand variations
+      if (brand === 'Other (Друго)' || brand === 'Other') {
+        query = query.or('brand.ilike.%Other%,brand.ilike.%Друго%,brand.is.null');
+      } else {
+        query = query.ilike('brand', `%${brand}%`);
+      }
     }
     if (search) {
       query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,brand.ilike.%${search}%`);
     }
 
-    // Apply category filters
-    if (mainCategory) {
-      console.log('Applying mainCategory filter:', mainCategory);
-      query = query.eq('main_category_id', mainCategory);
-    }
-    if (subcategory) {
-      console.log('Applying subcategory filter:', subcategory);
-      query = query.eq('subcategory_id', subcategory);
-    }
+    // Apply category filters - prioritize more specific filters
+    let categoryIds: string[] = [];
+    
     if (type) {
       console.log('Applying type filter:', type);
-      query = query.eq('type_id', type);
+      // For type, only include that specific type
+      categoryIds = [type];
+    } else if (subcategory) {
+      console.log('Applying subcategory filter:', subcategory);
+      // For subcategory, include the subcategory and its types
+      const { data: types } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('parent_id', subcategory);
+      
+      categoryIds = [
+        subcategory,
+        ...(types?.map(t => t.id) || [])
+      ];
+    } else if (mainCategory) {
+      console.log('Applying mainCategory filter:', mainCategory);
+      // For main category, we need to get all subcategories and types under it
+      const { data: subcategories } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('parent_id', mainCategory);
+      
+      const { data: types } = await supabase
+        .from('categories')
+        .select('id')
+        .in('parent_id', subcategories?.map(s => s.id) || []);
+      
+      categoryIds = [
+        mainCategory,
+        ...(subcategories?.map(s => s.id) || []),
+        ...(types?.map(t => t.id) || [])
+      ];
     }
-    if (brand) {
-      console.log('Applying brand filter:', brand);
+    
+    if (categoryIds.length > 0) {
+      query = query.in('category_id', categoryIds);
     }
 
     const { data: items, error: itemsError } = await query;
@@ -84,6 +116,27 @@ export async function GET(request: NextRequest) {
         { error: 'Failed to fetch items' },
         { status: 500 }
       );
+    }
+
+    // Debug: Log brand information
+    if (brand) {
+      console.log('=== BRAND FILTERING DEBUG ===');
+      console.log('Filtering by brand:', brand);
+      console.log('Total items found:', items?.length || 0);
+      if (items && items.length > 0) {
+        console.log('Sample brands in results:', items.slice(0, 5).map(item => item.brand));
+      }
+      console.log('=============================');
+    } else {
+      // Debug: Log available brands when no filter is applied
+      console.log('=== AVAILABLE BRANDS DEBUG ===');
+      console.log('No brand filter applied');
+      console.log('Total items found:', items?.length || 0);
+      if (items && items.length > 0) {
+        const uniqueBrands = [...new Set(items.map(item => item.brand).filter(Boolean))];
+        console.log('Unique brands in results:', uniqueBrands.slice(0, 10));
+      }
+      console.log('===============================');
     }
 
     // Fetch seller profiles for the items
@@ -143,21 +196,56 @@ export async function GET(request: NextRequest) {
       countQuery = countQuery.eq('condition', condition);
     }
     if (brand) {
-      countQuery = countQuery.ilike('brand', `%${brand}%`);
+      console.log('Applying brand filter to count query:', brand);
+      // Handle special case for "Other" brand variations
+      if (brand === 'Other (Друго)' || brand === 'Other') {
+        countQuery = countQuery.or('brand.ilike.%Other%,brand.ilike.%Друго%,brand.is.null');
+      } else {
+        countQuery = countQuery.ilike('brand', `%${brand}%`);
+      }
     }
     if (search) {
       countQuery = countQuery.or(`name.ilike.%${search}%,description.ilike.%${search}%,brand.ilike.%${search}%`);
     }
 
-    // Apply same category filters to count query
-    if (mainCategory) {
-      countQuery = countQuery.eq('main_category_id', mainCategory);
-    }
-    if (subcategory) {
-      countQuery = countQuery.eq('subcategory_id', subcategory);
-    }
+    // Apply same category filters to count query - prioritize more specific filters
+    let countCategoryIds: string[] = [];
+    
     if (type) {
-      countQuery = countQuery.eq('type_id', type);
+      // For type, only include that specific type
+      countCategoryIds = [type];
+    } else if (subcategory) {
+      // For subcategory, include the subcategory and its types
+      const { data: types } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('parent_id', subcategory);
+      
+      countCategoryIds = [
+        subcategory,
+        ...(types?.map(t => t.id) || [])
+      ];
+    } else if (mainCategory) {
+      // For main category, we need to get all subcategories and types under it
+      const { data: subcategories } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('parent_id', mainCategory);
+      
+      const { data: types } = await supabase
+        .from('categories')
+        .select('id')
+        .in('parent_id', subcategories?.map(s => s.id) || []);
+      
+      countCategoryIds = [
+        mainCategory,
+        ...(subcategories?.map(s => s.id) || []),
+        ...(types?.map(t => t.id) || [])
+      ];
+    }
+    
+    if (countCategoryIds.length > 0) {
+      countQuery = countQuery.in('category_id', countCategoryIds);
     }
 
     const { count: totalCount, error: countError } = await countQuery;

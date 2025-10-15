@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDashboardLanguage } from "@/contexts/DashboardLanguageContext";
 
 export default function SellerProfileTest() {
   const { user, loading: authLoading } = useAuth();
+  const { t } = useDashboardLanguage();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

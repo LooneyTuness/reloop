@@ -1,6 +1,7 @@
 import React from 'react';
-import { Clock, Package, User, DollarSign, ShoppingBag, MoreVertical } from 'lucide-react';
+import { Clock, Package, DollarSign, ShoppingBag, MoreVertical } from 'lucide-react';
 import { useDashboard } from '@/contexts/DashboardContext';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { OrdersZeroState } from './ZeroStates';
 
 interface Order {
@@ -15,6 +16,7 @@ interface Order {
 
 export default function RecentOrders() {
   const { orders, isLoading, updateOrderStatus } = useDashboard();
+  const { t } = useDashboardLanguage();
 
   // Show zero state if no orders
   if (!isLoading && orders.length === 0) {
@@ -26,10 +28,10 @@ export default function RecentOrders() {
           </div>
           <div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Recent Orders
+              {t('recentOrders')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Latest customer orders and their status
+              {t('latestCustomerOrders')}
             </p>
           </div>
         </div>
@@ -110,16 +112,16 @@ export default function RecentOrders() {
           </div>
           <div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-              Recent Orders
+              {t('recentOrders')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Latest customer orders and their status
+              {t('latestCustomerOrders')}
             </p>
           </div>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-gray-900 dark:text-white">{orders.length}</div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Total Orders</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">{t('totalOrders')}</div>
         </div>
       </div>
 
@@ -144,8 +146,8 @@ export default function RecentOrders() {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 ${getStatusColor(order.status)}`}>
-                  {getStatusIcon(order.status)}
+                <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 ${getStatusColor(order.status as Order['status'])}`}>
+                  {getStatusIcon(order.status as Order['status'])}
                   <span className="capitalize">{order.status}</span>
                 </span>
                 <div className="relative group">
@@ -158,7 +160,7 @@ export default function RecentOrders() {
                         onClick={() => handleStatusUpdate(order.id, 'processing')}
                         className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        Mark as Processing
+{t('markAsProcessing')}
                       </button>
                     )}
                     {order.status === 'processing' && (
@@ -166,7 +168,7 @@ export default function RecentOrders() {
                         onClick={() => handleStatusUpdate(order.id, 'shipped')}
                         className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        Mark as Shipped
+{t('markAsShipped')}
                       </button>
                     )}
                     {order.status === 'shipped' && (
@@ -174,7 +176,7 @@ export default function RecentOrders() {
                         onClick={() => handleStatusUpdate(order.id, 'delivered')}
                         className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        Mark as Delivered
+{t('markAsDelivered')}
                       </button>
                     )}
                   </div>
@@ -207,7 +209,7 @@ export default function RecentOrders() {
       {orders.length > 5 && (
         <div className="mt-4 text-center">
           <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
-            View all orders ({orders.length})
+{t('viewAllOrders')} ({orders.length})
           </button>
         </div>
       )}

@@ -95,7 +95,12 @@ export async function GET(
       query = query.eq('condition', condition);
     }
     if (brand) {
-      query = query.ilike('brand', `%${brand}%`);
+      // Handle special case for "Other" brand variations
+      if (brand === 'Other (Друго)' || brand === 'Other') {
+        query = query.or('brand.ilike.%Other%,brand.ilike.%Друго%,brand.is.null');
+      } else {
+        query = query.ilike('brand', `%${brand}%`);
+      }
     }
 
     const { data: items, error: itemsError, count } = await query;
@@ -156,7 +161,12 @@ export async function GET(
       countQuery = countQuery.eq('condition', condition);
     }
     if (brand) {
-      countQuery = countQuery.ilike('brand', `%${brand}%`);
+      // Handle special case for "Other" brand variations
+      if (brand === 'Other (Друго)' || brand === 'Other') {
+        countQuery = countQuery.or('brand.ilike.%Other%,brand.ilike.%Друго%,brand.is.null');
+      } else {
+        countQuery = countQuery.ilike('brand', `%${brand}%`);
+      }
     }
 
     const { count: totalCount } = await countQuery;

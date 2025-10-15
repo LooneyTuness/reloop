@@ -58,7 +58,8 @@ export default function SellerVerification({ children }: SellerVerificationProps
         return;
       }
 
-      if (!sellerProfile.is_approved) {
+      const typedSellerProfile = sellerProfile as { is_approved: boolean };
+      if (!typedSellerProfile.is_approved) {
         console.log('SellerVerification: Seller profile not approved');
         setError('Your seller application is pending approval. Please wait for admin approval.');
         setIsVerifying(false);
@@ -76,12 +77,12 @@ export default function SellerVerification({ children }: SellerVerificationProps
       setError('Error verifying seller status. Please try again.');
       setIsVerifying(false);
     }
-  }, [user?.id, router, loading]);
+  }, [user?.id, router, loading, isSeller]);
 
   useEffect(() => {
     console.log('SellerVerification: useEffect triggered, user:', user?.id, 'loading:', loading);
     verifySeller();
-  }, [verifySeller, loading]);
+  }, [verifySeller, loading, user?.id]);
 
   // Debug state changes
   useEffect(() => {

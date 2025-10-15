@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShimmerPlaceholder, ShimmerCard, ShimmerTable, ShimmerMetricCard } from '@/components/ui/ShimmerPlaceholder';
+import ShimmerPlaceholder, { ShimmerCard, ShimmerTable, ShimmerMetricCard } from '@/components/ui/ShimmerPlaceholder';
 
 // Example 1: Simple data loading with shimmer
 export function SimpleDataLoader() {

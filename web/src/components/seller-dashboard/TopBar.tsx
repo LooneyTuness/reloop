@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, Sun, Moon, User, X } from 'lucide-react';
+import { Search, Bell, User, X, Package, ShoppingBag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNotifications } from '@/contexts/NotificationContext';
 import { useProfile } from '@/contexts/ProfileContext';
@@ -13,7 +14,7 @@ import ProfileDropdown from './ProfileDropdown';
 
 export default function TopBar() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { } = useAuth();
   const { notifications, unreadCount, markAsRead, dismissAllNotifications } = useNotifications();
   const { avatarUrl } = useProfile();
   const { searchQuery, setSearchQuery, performSearch, clearSearch, isSearching } = useSearch();
@@ -56,7 +57,7 @@ export default function TopBar() {
     }
   };
 
-  const handleSearchResultClick = (result: any) => {
+  const handleSearchResultClick = (result: { url: string }) => {
     router.push(result.url);
     setShowSearchResults(false);
     setSearchQuery('');
@@ -108,7 +109,7 @@ export default function TopBar() {
               ) : (
                 <div className="p-2">
                   <div className="text-xs text-gray-500 dark:text-gray-400 px-3 py-2 border-b border-gray-100 dark:border-gray-700">
-                    Search results for "{searchQuery}"
+                    Search results for &quot;{searchQuery}&quot;
                   </div>
                   <div className="space-y-1">
                     <button
@@ -144,9 +145,9 @@ export default function TopBar() {
             className="p-2 sm:p-3 rounded-lg sm:rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:scale-105 flex-shrink-0"
           >
             {isDarkMode ? (
-              <Sun className="text-gray-600 dark:text-gray-400" size={18} />
+              <Package className="text-gray-600 dark:text-gray-400" size={18} />
             ) : (
-              <Moon className="text-gray-600 dark:text-gray-400" size={18} />
+              <ShoppingBag className="text-gray-600 dark:text-gray-400" size={18} />
             )}
           </button>
 
@@ -175,9 +176,11 @@ export default function TopBar() {
               title="Click to open profile menu"
             >
               {avatarUrl ? (
-                <img
+                <Image
                   src={avatarUrl}
                   alt="Profile"
+                  width={40}
+                  height={40}
                   className="w-full h-full object-cover"
                 />
               ) : (

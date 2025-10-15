@@ -6,9 +6,6 @@ type ItemInsert = Database['public']['Tables']['items']['Insert'];
 type ItemUpdate = Database['public']['Tables']['items']['Update'];
 
 type Order = Database['public']['Tables']['orders']['Row'];
-type OrderInsert = Database['public']['Tables']['orders']['Insert'];
-type OrderUpdate = Database['public']['Tables']['orders']['Update'];
-
 type OrderItem = Database['public']['Tables']['order_items']['Row'];
 
 export class SupabaseDataService {
@@ -16,22 +13,29 @@ export class SupabaseDataService {
 
   // Items/Products Management
   async getSellerItems(sellerId: string): Promise<Item[]> {
-    const { data, error } = await this.supabase
-      .from('items')
-      .select('*')
-      .eq('user_id', sellerId)
-      .order('created_at', { ascending: false });
+    console.log('🔍 getSellerItems called with sellerId:', sellerId);
+    
+    try {
+      // Use API endpoint instead of direct Supabase query to avoid RLS issues
+      const response = await fetch(`/api/seller-items?sellerId=${encodeURIComponent(sellerId)}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('API error fetching seller items:', errorData);
+        return [];
+      }
 
-    if (error) {
-      console.error('Error fetching seller items:', error);
-      throw error;
+      const data = await response.json();
+      console.log('✅ getSellerItems success:', data.items?.length || 0, 'items found');
+      return data.items || [];
+    } catch (err) {
+      console.error('Exception in getSellerItems:', err);
+      return [];
     }
-
-    return data || [];
   }
 
   async getItemById(itemId: string): Promise<Item | null> {
-    const { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .from('items')
       .select('*')
       .eq('id', itemId)
@@ -49,9 +53,9 @@ export class SupabaseDataService {
     console.log('SupabaseDataService.createItem called with:', item);
     console.log('Item type check - user_id type:', typeof item.user_id, 'value:', item.user_id);
     
-    const { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .from('items')
-      .insert(item as any)
+      .insert(item)
       .select()
       .single();
 
@@ -71,9 +75,9 @@ export class SupabaseDataService {
   }
 
   async updateItem(itemId: string, updates: ItemUpdate): Promise<Item> {
-    const { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .from('items')
-      .update({ ...updates, updated_at: new Date().toISOString() } as any)
+      .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', itemId)
       .select()
       .single();
@@ -87,7 +91,7 @@ export class SupabaseDataService {
   }
 
   async deleteItem(itemId: string): Promise<void> {
-    const { error } = await this.supabase
+    const { error } = await (this.supabase as any)
       .from('items')
       .delete()
       .eq('id', itemId);
@@ -99,12 +103,12 @@ export class SupabaseDataService {
   }
 
   async updateItemStatus(itemId: string, status: string): Promise<Item> {
-    return this.updateItem(itemId, { status } as any);
+    return this.updateItem(itemId, { status } as ItemUpdate);
   }
 
   async updateItemStatuses(itemIds: string[], status: string): Promise<void> {
     try {
-      const { error } = await this.supabase
+      const { error } = await (this.supabase as any)
         .from('items')
         .update({ 
           status,
@@ -123,13 +127,13 @@ export class SupabaseDataService {
   }
 
   // Orders Management
-  async getSellerOrders(sellerId: string): Promise<any[]> {
+  async getSellerOrders(sellerId: string): Promise<Order[]> {
     console.log('🔍 getSellerOrders called with sellerId:', sellerId);
     
     try {
       // Simple approach: Get all orders first
       console.log('🔍 Step 1: Fetching all orders...');
-      const { data: allOrders, error: allOrdersError } = await this.supabase
+      const { data: allOrders, error: allOrdersError } = await (this.supabase as any)
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
@@ -149,7 +153,7 @@ export class SupabaseDataService {
 
       // Get all order items (without join since relationship doesn't exist)
       console.log('🔍 Step 2: Fetching all order items...');
-      const { data: allOrderItems, error: orderItemsError } = await this.supabase
+      const { data: allOrderItems, error: orderItemsError } = await (this.supabase as any)
         .from('order_items')
         .select('*');
 
@@ -168,7 +172,7 @@ export class SupabaseDataService {
 
       // Get all items separately
       console.log('🔍 Step 2b: Fetching all items...');
-      const { data: allItems, error: itemsError } = await this.supabase
+      const { data: allItems, error: itemsError } = await (this.supabase as any)
         .from('items')
         .select('id, title, price, photos, user_id, size, brand, condition, category, old_price, description, is_active, sold_at');
 
@@ -181,9 +185,9 @@ export class SupabaseDataService {
       console.log('📦 Sample item:', allItems?.[0]);
 
       // Create a map of items for quick lookup
-      const itemsMap = new Map();
+      const itemsMap = new Map<string, Item>();
       if (allItems) {
-        allItems.forEach(item => {
+        allItems.forEach((item: Item) => {
           if (item && item.id) {
             itemsMap.set(item.id, item);
           }
@@ -193,7 +197,7 @@ export class SupabaseDataService {
 
       // Find order items that belong to this seller
       console.log('🔍 Step 3: Filtering order items for seller...');
-      const sellerOrderItems = (allOrderItems || []).filter(orderItem => {
+      const sellerOrderItems = (allOrderItems || []).filter((orderItem: OrderItem) => {
         if (!orderItem || !orderItem.item_id) return false;
         const item = itemsMap.get(orderItem.item_id);
         const isSellerItem = item?.user_id === sellerId;
@@ -205,7 +209,7 @@ export class SupabaseDataService {
 
       if (sellerOrderItems.length === 0) {
         console.log('❌ No order items found for this seller');
-        console.log('🔍 Debug: All order items with their item details:', (allOrderItems || []).map(item => ({
+        console.log('🔍 Debug: All order items with their item details:', (allOrderItems || []).map((item: OrderItem) => ({
           orderItemId: item?.id,
           itemId: item?.item_id,
           itemUserId: itemsMap.get(item?.item_id)?.user_id
@@ -215,7 +219,7 @@ export class SupabaseDataService {
 
       // Get unique order IDs that contain items from this seller
       console.log('🔍 Step 4: Getting unique order IDs...');
-      const sellerOrderIds = [...new Set(sellerOrderItems.map(item => item.order_id).filter(Boolean))];
+      const sellerOrderIds = [...new Set(sellerOrderItems.map((item: OrderItem) => item.order_id).filter(Boolean))];
       console.log('📦 Seller order IDs:', sellerOrderIds);
 
       if (sellerOrderIds.length === 0) {
@@ -225,7 +229,7 @@ export class SupabaseDataService {
 
       // Get the actual orders
       console.log('🔍 Step 5: Fetching seller orders...');
-      const { data: sellerOrders, error: sellerOrdersError } = await this.supabase
+      const { data: sellerOrders, error: sellerOrdersError } = await (this.supabase as any)
         .from('orders')
         .select('*')
         .in('id', sellerOrderIds)
@@ -241,10 +245,10 @@ export class SupabaseDataService {
 
       // Attach order items to each order with item details
       console.log('🔍 Step 6: Attaching order items to orders...');
-      const ordersWithItems = (sellerOrders || []).map(order => {
+      const ordersWithItems = (sellerOrders || []).map((order: Order) => {
         const orderItems = (allOrderItems || [])
-          .filter(orderItem => orderItem?.order_id === order?.id)
-          .map(orderItem => ({
+          .filter((orderItem: OrderItem) => orderItem?.order_id === order?.id)
+          .map((orderItem: OrderItem) => ({
             ...orderItem,
             items: orderItem?.item_id ? itemsMap.get(orderItem.item_id) || null : null
           }));
@@ -267,7 +271,7 @@ export class SupabaseDataService {
   }
 
   async getOrderById(orderId: string): Promise<Order | null> {
-    const { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .from('orders')
       .select(`
         *,
@@ -294,7 +298,7 @@ export class SupabaseDataService {
   }
 
   async updateOrderStatus(orderId: string, status: string): Promise<Order> {
-    const { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .from('orders')
       .update({ 
         status, 
@@ -312,11 +316,11 @@ export class SupabaseDataService {
     return data;
   }
 
-  async getOrderItems(orderId: string): Promise<any[]> {
+  async getOrderItems(orderId: string): Promise<{ item_id: string; id: string; user_id: string | null }[]> {
     console.log('🔍 getOrderItems called with orderId:', orderId, 'type:', typeof orderId);
     
     // First, let's try a simple query without joins to see if the table exists and has data
-    let { data: simpleData, error: simpleError } = await this.supabase
+    const { data: simpleData, error: simpleError } = await (this.supabase as any)
       .from('order_items')
       .select('*')
       .eq('order_id', orderId);
@@ -334,7 +338,7 @@ export class SupabaseDataService {
     }
 
     // Now try the join query
-    let { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .from('order_items')
       .select(`
         item_id,
@@ -351,7 +355,7 @@ export class SupabaseDataService {
     if (error) {
       console.error('Error with join query:', error);
       // Fallback to simple data if join fails
-      const transformedData = simpleData.map(item => ({
+      const transformedData = simpleData.map((item: OrderItem) => ({
         item_id: item.item_id,
         id: item.item_id, // Use item_id as the id since we can't get the joined data
         user_id: null
@@ -361,10 +365,10 @@ export class SupabaseDataService {
     }
 
     // Transform the data to ensure we have the correct structure
-    const transformedData = (data || []).map(item => ({
+    const transformedData = (data || []).map((item: { item_id: string; items?: { id: string; user_id: string } }) => ({
       item_id: item.item_id,
       id: item.items?.id || item.item_id,
-      user_id: item.items?.user_id
+      user_id: item.items?.user_id || null
     }));
 
     console.log('🔍 getOrderItems - Final transformed data:', transformedData);
@@ -381,7 +385,7 @@ export class SupabaseDataService {
     }
     
     // First, let's check what the current status is for these items
-    const { data: currentItems, error: fetchError } = await this.supabase
+    const { data: currentItems, error: fetchError } = await (this.supabase as any)
       .from('items')
       .select('id, status')
       .in('id', itemIds);
@@ -397,7 +401,7 @@ export class SupabaseDataService {
       console.log(`🔧 Updating item ${itemId} to status ${status}`);
       
       // Try to update with just the status first
-      const { error } = await this.supabase
+      const { error } = await (this.supabase as any)
         .from('items')
         .update({ 
           status
@@ -410,7 +414,7 @@ export class SupabaseDataService {
         
         // Try with a known good status to test the constraint
         console.log(`🧪 Trying with 'active' status for item ${itemId}`);
-        const { error: testError } = await this.supabase
+        const { error: testError } = await (this.supabase as any)
           .from('items')
           .update({ 
             status: 'active'
@@ -430,7 +434,7 @@ export class SupabaseDataService {
 
   // Get product view count
   async getProductViewCount(productId: string): Promise<number> {
-    const { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .rpc('get_product_view_count', { product_uuid: productId });
 
     if (error) {
@@ -447,7 +451,7 @@ export class SupabaseDataService {
     uniqueProductsViewed: number;
     viewsLast30Days: number;
   }> {
-    const { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .rpc('get_seller_view_stats', { seller_uuid: sellerId });
 
     if (error) {
@@ -460,9 +464,9 @@ export class SupabaseDataService {
     }
 
     return {
-      totalViews: data?.[0]?.total_views || 0,
-      uniqueProductsViewed: data?.[0]?.unique_products_viewed || 0,
-      viewsLast30Days: data?.[0]?.views_last_30_days || 0
+      totalViews: (data as { total_views: number; unique_products_viewed: number; views_last_30_days: number }[])?.[0]?.total_views || 0,
+      uniqueProductsViewed: (data as { total_views: number; unique_products_viewed: number; views_last_30_days: number }[])?.[0]?.unique_products_viewed || 0,
+      viewsLast30Days: (data as { total_views: number; unique_products_viewed: number; views_last_30_days: number }[])?.[0]?.views_last_30_days || 0
     };
   }
 
@@ -502,15 +506,46 @@ export class SupabaseDataService {
     try {
       // First try to get data from daily_analytics table
       return await this.getAnalyticsFromDailyTable(sellerId, timeRange);
-    } catch (error) {
+    } catch {
       console.log('Daily analytics table not available, using fallback method');
       // Fallback to real-time calculation
-      return await this.getAnalyticsFallback(sellerId, timeRange);
+      return await this.getAnalyticsFallback(sellerId);
     }
   }
 
   // Get analytics from daily_analytics table
-  private async getAnalyticsFromDailyTable(sellerId: string, timeRange: '7d' | '30d' | '90d'): Promise<any> {
+  private async getAnalyticsFromDailyTable(sellerId: string, timeRange: '7d' | '30d' | '90d'): Promise<{
+    current: {
+      totalViews: number;
+      totalOrders: number;
+      totalRevenue: number;
+      totalListings: number;
+      activeListings: number;
+      soldItems: number;
+      conversionRate: number;
+      avgOrderValue: number;
+    };
+    previous: {
+      totalViews: number;
+      totalOrders: number;
+      totalRevenue: number;
+      totalListings: number;
+      activeListings: number;
+      soldItems: number;
+      conversionRate: number;
+      avgOrderValue: number;
+    };
+    changes: {
+      totalViews: number;
+      totalOrders: number;
+      totalRevenue: number;
+      totalListings: number;
+      activeListings: number;
+      soldItems: number;
+      conversionRate: number;
+      avgOrderValue: number;
+    };
+  }> {
     const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
     const currentEnd = new Date();
     const currentStart = new Date(currentEnd.getTime() - days * 24 * 60 * 60 * 1000);
@@ -518,7 +553,7 @@ export class SupabaseDataService {
     const previousStart = new Date(previousEnd.getTime() - days * 24 * 60 * 60 * 1000);
 
     // Get current period data
-    const { data: currentData } = await this.supabase
+    const { data: currentData } = await (this.supabase as any)
       .from('daily_analytics')
       .select('*')
       .eq('seller_id', sellerId) // seller_id is now TEXT, so no casting needed
@@ -526,7 +561,7 @@ export class SupabaseDataService {
       .lte('date', currentEnd.toISOString().split('T')[0]);
 
     // Get previous period data
-    const { data: previousData } = await this.supabase
+    const { data: previousData } = await (this.supabase as any)
       .from('daily_analytics')
       .select('*')
       .eq('seller_id', sellerId) // seller_id is now TEXT, so no casting needed
@@ -534,7 +569,7 @@ export class SupabaseDataService {
       .lte('date', previousEnd.toISOString().split('T')[0]);
 
     // Aggregate current period data
-    const current = currentData?.reduce((acc, day) => ({
+    const current = currentData?.reduce((acc: { totalViews: number; totalOrders: number; totalRevenue: number; totalListings: number; activeListings: number; soldItems: number; conversionRate: number; avgOrderValue: number }, day: { total_views?: number; total_orders?: number; total_revenue?: number; total_listings?: number; active_listings?: number; sold_items?: number }) => ({
       totalViews: acc.totalViews + (day.total_views || 0),
       totalOrders: acc.totalOrders + (day.total_orders || 0),
       totalRevenue: acc.totalRevenue + (day.total_revenue || 0),
@@ -568,7 +603,7 @@ export class SupabaseDataService {
     current.avgOrderValue = current.totalOrders > 0 ? current.totalRevenue / current.totalOrders : 0;
 
     // Aggregate previous period data
-    const previous = previousData?.reduce((acc, day) => ({
+    const previous = previousData?.reduce((acc: { totalViews: number; totalOrders: number; totalRevenue: number; totalListings: number; activeListings: number; soldItems: number; conversionRate: number; avgOrderValue: number }, day: { total_views?: number; total_orders?: number; total_revenue?: number; total_listings?: number; active_listings?: number; sold_items?: number }) => ({
       totalViews: acc.totalViews + (day.total_views || 0),
       totalOrders: acc.totalOrders + (day.total_orders || 0),
       totalRevenue: acc.totalRevenue + (day.total_revenue || 0),
@@ -622,13 +657,38 @@ export class SupabaseDataService {
   }
 
   // Fallback method that calculates analytics in real-time
-  private async getAnalyticsFallback(sellerId: string, timeRange: '7d' | '30d' | '90d'): Promise<any> {
-    const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
-    const currentEnd = new Date();
-    const currentStart = new Date(currentEnd.getTime() - days * 24 * 60 * 60 * 1000);
-    const previousEnd = new Date(currentStart.getTime() - 1);
-    const previousStart = new Date(previousEnd.getTime() - days * 24 * 60 * 60 * 1000);
-
+  private async getAnalyticsFallback(sellerId: string): Promise<{
+    current: {
+      totalViews: number;
+      totalOrders: number;
+      totalRevenue: number;
+      totalListings: number;
+      activeListings: number;
+      soldItems: number;
+      conversionRate: number;
+      avgOrderValue: number;
+    };
+    previous: {
+      totalViews: number;
+      totalOrders: number;
+      totalRevenue: number;
+      totalListings: number;
+      activeListings: number;
+      soldItems: number;
+      conversionRate: number;
+      avgOrderValue: number;
+    };
+    changes: {
+      totalViews: number;
+      totalOrders: number;
+      totalRevenue: number;
+      totalListings: number;
+      activeListings: number;
+      soldItems: number;
+      conversionRate: number;
+      avgOrderValue: number;
+    };
+  }> {
     // Get current period data
     const currentStats = await this.getSellerStats(sellerId);
     const viewStats = await this.getSellerViewStats(sellerId);
@@ -642,7 +702,7 @@ export class SupabaseDataService {
       totalListings: currentStats.totalItems,
       activeListings: currentStats.activeItems,
       soldItems: currentStats.soldItems,
-      conversionRate: currentStats.conversionRate,
+      conversionRate: 0, // Will be calculated below
       avgOrderValue: currentStats.avgOrderValue
     };
 
@@ -690,32 +750,32 @@ export class SupabaseDataService {
     viewsLast30Days: number;
   }> {
     // Get total items
-    const { count: totalItems } = await this.supabase
+    const { count: totalItems } = await (this.supabase as any)
       .from('items')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', sellerId);
 
     // Get active items
-    const { count: activeItems } = await this.supabase
+    const { count: activeItems } = await (this.supabase as any)
       .from('items')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', sellerId)
       .eq('status', 'active');
 
     // Get sold items
-    const { count: soldItems } = await this.supabase
+    const { count: soldItems } = await (this.supabase as any)
       .from('items')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', sellerId)
       .eq('status', 'sold');
 
     // Get seller's items to find orders containing them
-    const { data: sellerItems } = await this.supabase
+    const { data: sellerItems } = await (this.supabase as any)
       .from('items')
       .select('id')
       .eq('user_id', sellerId);
 
-    const sellerItemIds = sellerItems?.map(item => item.id) || [];
+    const sellerItemIds = sellerItems?.map((item: Item) => item.id) || [];
 
     // Get orders that contain seller's items
     let totalRevenue = 0;
@@ -724,7 +784,7 @@ export class SupabaseDataService {
 
     if (sellerItemIds.length > 0) {
       // Get order items for seller's products
-      const { data: orderItems } = await this.supabase
+      const { data: orderItems } = await (this.supabase as any)
         .from('order_items')
         .select(`
           order_id,
@@ -737,16 +797,16 @@ export class SupabaseDataService {
           )
         `)
         .in('item_id', sellerItemIds)
-        .gte('orders.created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()) as any;
+        .gte('orders.created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
 
       if (orderItems) {
         // Calculate revenue from seller's items
-        totalRevenue = orderItems.reduce((sum, orderItem) => {
+        totalRevenue = orderItems.reduce((sum: number, orderItem: { quantity: number; price: number }) => {
           return sum + (orderItem.quantity * orderItem.price);
         }, 0);
 
         // Get unique orders
-        const uniqueOrders = new Set(orderItems.map(item => item.order_id));
+        const uniqueOrders = new Set(orderItems.map((item: { order_id: string }) => item.order_id));
         totalOrders = uniqueOrders.size;
         avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
       }
@@ -777,12 +837,12 @@ export class SupabaseDataService {
     startDate.setDate(startDate.getDate() - days);
 
     // Get seller's items
-    const { data: sellerItems } = await this.supabase
+    const { data: sellerItems } = await (this.supabase as any)
       .from('items')
       .select('id, title, category')
       .eq('user_id', sellerId);
 
-    const sellerItemIds = sellerItems?.map(item => item.id) || [];
+    const sellerItemIds = (sellerItems as { id: string }[])?.map((item: { id: string }) => item.id) || [];
 
     if (sellerItemIds.length === 0) {
       return {
@@ -793,7 +853,7 @@ export class SupabaseDataService {
     }
 
     // Get order items for seller's products
-    const { data: orderItems } = await this.supabase
+    const { data: orderItems } = await (this.supabase as any)
       .from('order_items')
       .select(`
         order_id,
@@ -807,16 +867,16 @@ export class SupabaseDataService {
       `)
       .in('item_id', sellerItemIds)
       .gte('orders.created_at', startDate.toISOString())
-      .order('orders.created_at', { ascending: true }) as any;
+      .order('orders.created_at', { ascending: true });
 
     // Process sales data by date
     const salesByDate: { [key: string]: { sales: number; revenue: number } } = {};
     const productSales: { [key: string]: { title: string; sales: number; revenue: number } } = {};
     const categoryData: { [key: string]: { count: number; revenue: number } } = {};
 
-    orderItems?.forEach(orderItem => {
+    orderItems?.forEach((orderItem: { orders: { created_at: string }; item_id: string; quantity: number; price: number }) => {
       const date = new Date(orderItem.orders.created_at).toISOString().split('T')[0];
-      const item = sellerItems?.find(i => i.id === orderItem.item_id);
+      const item = (sellerItems as { id: string; title: string; category?: string }[])?.find((i: { id: string }) => i.id === orderItem.item_id);
       
       if (item) {
         // Sales by date
@@ -866,8 +926,8 @@ export class SupabaseDataService {
   }
 
   // Seller Profile Management
-  async getSellerProfile(sellerId: string): Promise<any> {
-    const { data, error } = await this.supabase
+  async getSellerProfile(sellerId: string): Promise<unknown> {
+    const { data, error } = await (this.supabase as any)
       .from('seller_profiles')
       .select('*')
       .eq('user_id', sellerId)
@@ -881,9 +941,9 @@ export class SupabaseDataService {
     return data;
   }
 
-  async updateSellerProfile(sellerId: string, profileData: any): Promise<any> {
+  async updateSellerProfile(sellerId: string, profileData: unknown): Promise<unknown> {
     // Check if profile exists first
-    const { data: existingProfile } = await this.supabase
+    const { data: existingProfile } = await (this.supabase as any)
       .from('seller_profiles')
       .select('*')
       .eq('user_id', sellerId)
@@ -891,12 +951,12 @@ export class SupabaseDataService {
 
     if (existingProfile) {
       // Profile exists, do an UPDATE
-      const { data, error } = await this.supabase
+      const { data, error } = await (this.supabase as any)
         .from('seller_profiles')
         .update({
-          ...profileData,
+          ...(profileData as Record<string, unknown>),
           updated_at: new Date().toISOString()
-        } as any)
+        })
         .eq('user_id', sellerId)
         .select()
         .single();
@@ -909,20 +969,20 @@ export class SupabaseDataService {
       return data;
     } else {
       // Profile doesn't exist, do an INSERT with required fields
-      const { data: userData } = await this.supabase.auth.getUser();
+      const { data: userData } = await (this.supabase as any).auth.getUser();
       const userEmail = userData?.user?.email;
       
-      const { data, error } = await this.supabase
+      const { data, error } = await (this.supabase as any)
         .from('seller_profiles')
         .insert({
           user_id: sellerId,
           email: userEmail,
           role: 'seller',
           is_approved: true,
-          ...profileData,
+          ...(profileData as Record<string, unknown>),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
-        } as any)
+        })
         .select()
         .single();
 
@@ -937,7 +997,7 @@ export class SupabaseDataService {
 
   // Search functionality
   async searchItems(sellerId: string, query: string): Promise<Item[]> {
-    const { data, error } = await this.supabase
+    const { data, error } = await (this.supabase as any)
       .from('items')
       .select('*')
       .eq('user_id', sellerId)

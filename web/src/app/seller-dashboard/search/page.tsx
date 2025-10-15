@@ -34,7 +34,7 @@ function SearchContent() {
       // Search in products
       const productResults = products
         .filter(product => 
-          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
           product.description?.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .map(product => ({
@@ -44,7 +44,7 @@ function SearchContent() {
           description: product.description || 'No description available',
           price: product.price,
           status: product.status,
-          image: product.image,
+          image: product.photos,
           url: `/seller-dashboard/listings`
         }));
 

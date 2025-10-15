@@ -1,14 +1,34 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { CategoryProvider, useCategory } from '@/contexts/CategoryContext';
+import { CatalogStateProvider, useCatalogState } from '@/contexts/CatalogStateContext';
 import CategoryNavigation from '@/components/category/CategoryNavigation';
 import CategoryFilter from '@/components/category/CategoryFilter';
 import CategoryBreadcrumbs from '@/components/category/CategoryBreadcrumbs';
-import { CategoryHierarchy, CategoryFilter as CategoryFilterType } from '@/types/category';
+import { CategoryFilter as CategoryFilterType } from '@/types/category';
 import { CategoryService } from '@/lib/services/categoryService';
+
+interface CatalogItem {
+  id: string;
+  name?: string;
+  title?: string;
+  photos?: string[] | string;
+  price: number;
+  condition?: string;
+  brand?: string;
+  size?: string;
+  description?: string;
+  seller_name?: string;
+  seller?: string;
+  seller_profiles?: {
+    business_name?: string;
+    full_name?: string;
+  };
+  old_price?: number;
+}
 import { ChevronLeft, ChevronRight, Grid, Layout } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ProductImage from '@/components/ProductImage';
@@ -17,51 +37,27 @@ function CategoryPageContent() {
   const params = useParams();
   const { categories, getCategoryBySlug, buildCategoryPath } = useCategory();
   const { t, translateCategory } = useLanguage();
-  
-  const [items, setItems] = useState<Array<{
-    id: string;
-    name?: string;
-    title?: string;
-    photos?: string[] | string;
-    price: number;
-    condition?: string;
-    brand?: string;
-    size?: string;
-    description?: string;
-    seller_name?: string;
-    seller?: string;
-    seller_profiles?: {
-      business_name?: string;
-      full_name?: string;
-    } | null;
-    old_price?: number;
-  }>>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 20,
-    total: 0,
-    totalPages: 0,
-    hasNext: false,
-    hasPrev: false,
-  });
-  const [filters, setFilters] = useState<CategoryFilterType>(() => {
-    // Try to restore filters from localStorage on initial load
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('catalog-filters');
-        return saved ? JSON.parse(saved) : {};
-      } catch {
-        return {};
-      }
-    }
-    return {};
-  });
-  const [sortBy, setSortBy] = useState('created_at');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [selectedCategory, setSelectedCategory] = useState<CategoryHierarchy | null>(null);
+  const {
+    items,
+    loading,
+    error,
+    pagination,
+    filters,
+    sortBy,
+    sortOrder,
+    viewMode,
+    selectedCategory,
+    setItems,
+    setLoading,
+    setError,
+    setPagination,
+    setFilters,
+    setSortBy,
+    setSortOrder,
+    setViewMode,
+    setSelectedCategory,
+    updatePagination
+  } = useCatalogState();
 
   const categorySlug = params.slug as string;
 
@@ -69,7 +65,7 @@ function CategoryPageContent() {
     if (categorySlug && categories.length > 0) {
       const category = getCategoryBySlug(categorySlug);
       if (category) {
-        setSelectedCategory(category);
+        setSelectedCategory(category.id);
         setFilters({
           mainCategory: category.level === 0 ? category.id : undefined,
           subcategory: category.level === 1 ? category.id : undefined,
@@ -80,7 +76,7 @@ function CategoryPageContent() {
         setLoading(false);
       }
     }
-  }, [categorySlug, categories, getCategoryBySlug]);
+  }, [categorySlug, categories, getCategoryBySlug, setSelectedCategory, setFilters, setError, setLoading]);
 
   const fetchItems = useCallback(async () => {
     if (!selectedCategory) return;
@@ -89,7 +85,7 @@ function CategoryPageContent() {
       setLoading(true);
       setError(null);
 
-      const response = await CategoryService.getItemsByCategory(selectedCategory.id, {
+      const response = await CategoryService.getItemsByCategory(selectedCategory, {
         page: pagination.page,
         limit: pagination.limit,
         sortBy,
@@ -97,15 +93,22 @@ function CategoryPageContent() {
         brand: filters.brand,
       });
 
-      setItems(response.items);
-      setPagination(response.pagination);
+      setItems(response.items as CatalogItem[]);
+      setPagination({
+        page: response.pagination.page,
+        limit: response.pagination.limit,
+        total: response.pagination.total,
+        totalPages: response.pagination.totalPages,
+        hasNext: response.pagination.hasNext,
+        hasPrev: response.pagination.hasPrev,
+      });
     } catch (err) {
       console.error('Error fetching items:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch items');
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory, pagination.page, pagination.limit, sortBy, sortOrder, filters]);
+  }, [selectedCategory, pagination.page, pagination.limit, sortBy, sortOrder, filters, setLoading, setError, setItems, setPagination]);
 
   // Fetch items when category changes
   useEffect(() => {
@@ -117,22 +120,11 @@ function CategoryPageContent() {
   const handleFilterChange = (newFilters: CategoryFilterType) => {
     console.log('Filter changed in [slug] page:', newFilters);
     setFilters(newFilters);
-    setPagination(prev => ({ ...prev, page: 1 }));
+    updatePagination({ page: 1 });
   };
 
-  // Save filters to localStorage whenever they change
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('catalog-filters', JSON.stringify(filters));
-      } catch (error) {
-        console.warn('Failed to save filters to localStorage:', error);
-      }
-    }
-  }, [filters]);
-
   const handlePageChange = (newPage: number) => {
-    setPagination(prev => ({ ...prev, page: newPage }));
+    updatePagination({ page: newPage });
   };
 
   // const handleSortChange = (newSortBy: string) => {
@@ -140,7 +132,7 @@ function CategoryPageContent() {
   //   setPagination(prev => ({ ...prev, page: 1 }));
   // };
 
-  const breadcrumbs = selectedCategory ? buildCategoryPath(selectedCategory.id) : [];
+  const breadcrumbs = selectedCategory ? buildCategoryPath(selectedCategory) : [];
 
   if (error) {
     return (
@@ -165,25 +157,27 @@ function CategoryPageContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      {/* Breadcrumbs positioned below navbar */}
-      {breadcrumbs.length > 0 && (
-        <div className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
-            <CategoryBreadcrumbs breadcrumbs={breadcrumbs} />
-          </div>
-        </div>
-      )}
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-6 sm:pb-8">
+        {/* Breadcrumbs in main content area */}
+        {breadcrumbs.length > 0 && (
+          <div className="mb-6">
+            <CategoryBreadcrumbs 
+              breadcrumbs={breadcrumbs} 
+              variant="default"
+            />
+          </div>
+        )}
+        
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {selectedCategory ? translateCategory(selectedCategory.name) : 'Loading...'}
+            {selectedCategory ? translateCategory(getCategoryBySlug(categorySlug)?.name || '') : 'Loading...'}
           </h1>
 
-          {selectedCategory?.description && (
+          {getCategoryBySlug(categorySlug)?.description && (
             <p className="mt-4 text-gray-600">
-              {translateCategory(selectedCategory.description)}
+              {translateCategory(getCategoryBySlug(categorySlug)?.description || '')}
             </p>
           )}
         </div>
@@ -198,7 +192,7 @@ function CategoryPageContent() {
               <CategoryNavigation
                 onCategorySelect={(category) => {
                   if (category) {
-                    setSelectedCategory(category);
+                    setSelectedCategory(category.id);
                     setFilters({
                       mainCategory: category.level === 0 ? category.id : undefined,
                       subcategory: category.level === 1 ? category.id : undefined,
@@ -221,6 +215,9 @@ function CategoryPageContent() {
                 onFilterChange={handleFilterChange}
                 currentFilter={filters}
                 showApplyButton={true}
+                selectedCategory={selectedCategory}
+                selectedSubcategory={filters.subcategory}
+                selectedType={filters.type}
               />
             </div>
           </div>
@@ -230,7 +227,7 @@ function CategoryPageContent() {
             {/* Controls */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600text-gray-400">
+                <span className="text-sm text-gray-600">
                   {pagination.total} products found
                 </span>
               </div>
@@ -264,7 +261,7 @@ function CategoryPageContent() {
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 ${viewMode === 'list' ? 'bg-blue-50bg-blue-900 text-blue-600text-blue-400' : 'text-gray-500text-gray-400'}`}
+                    className={`p-2 ${viewMode === 'list' ? 'bg-blue-50 text-blue-600' : 'text-gray-500'}`}
                   >
                     <Layout size={16} />
                   </button>
@@ -285,7 +282,7 @@ function CategoryPageContent() {
               </div>
             ) : items.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-500text-gray-400 mb-4">
+                <p className="text-gray-500 mb-4">
                   No products found in this category.
                 </p>
               </div>
@@ -426,7 +423,7 @@ function CategoryPageContent() {
                     <button
                       onClick={() => handlePageChange(pagination.page - 1)}
                       disabled={!pagination.hasPrev}
-                      className="px-3 py-2 border border-gray-200border-gray-700 rounded-md bg-whitebg-gray-800 text-gray-700text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50hover:bg-gray-700"
+                      className="px-3 py-2 border border-gray-200 rounded-md bg-white text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
                       <ChevronLeft size={16} />
                     </button>
@@ -448,7 +445,7 @@ function CategoryPageContent() {
                     <button
                       onClick={() => handlePageChange(pagination.page + 1)}
                       disabled={!pagination.hasNext}
-                      className="px-3 py-2 border border-gray-200border-gray-700 rounded-md bg-whitebg-gray-800 text-gray-700text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50hover:bg-gray-700"
+                      className="px-3 py-2 border border-gray-200 rounded-md bg-white text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
                       <ChevronRight size={16} />
                     </button>
@@ -466,7 +463,9 @@ function CategoryPageContent() {
 export default function CategoryPage() {
   return (
     <CategoryProvider>
-      <CategoryPageContent />
+      <CatalogStateProvider>
+        <CategoryPageContent />
+      </CatalogStateProvider>
     </CategoryProvider>
   );
 }

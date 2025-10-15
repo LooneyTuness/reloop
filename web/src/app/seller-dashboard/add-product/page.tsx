@@ -9,12 +9,15 @@ import { CategoryProvider, useCategory } from '@/contexts/CategoryContext';
 import CategorySelector from '@/components/category/CategorySelector';
 import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { CategoryHierarchy } from '@/types/category';
+import { CategoryHierarchy, CategoryWithChildren } from '@/types/category';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 
 function AddProductContent() {
   const router = useRouter();
   const { addNewProduct } = useDashboard();
   const { getCategoryById } = useCategory();
+  const { t } = useDashboardLanguage();
   const [isLoading, setIsLoading] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -31,7 +34,7 @@ function AddProductContent() {
   });
   
   const [images, setImages] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryHierarchy | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryWithChildren | null>(null);
   
   // Debug: Log when images change
   React.useEffect(() => {
@@ -46,7 +49,7 @@ function AddProductContent() {
     }));
   };
 
-  const handleCategorySelect = (category: CategoryHierarchy | null) => {
+  const handleCategorySelect = (category: CategoryWithChildren | null) => {
     setSelectedCategory(category);
     setFormData(prev => ({
       ...prev,
@@ -60,13 +63,13 @@ function AddProductContent() {
     
     // Validate that at least one image is uploaded
     if (images.length === 0) {
-      toast.error('Please upload at least one image for your product');
+      toast.error(t('pleaseUploadAtLeastOneImage'));
       return;
     }
     
     // Validate that brand is provided
     if (!formData.brand || formData.brand.trim() === '') {
-      toast.error('Please provide a brand for your product');
+      toast.error(t('pleaseProvideBrand'));
       return;
     }
     
@@ -88,11 +91,11 @@ function AddProductContent() {
       };
 
       await addNewProduct(productData);
-      toast.success('Product created successfully!');
+      toast.success(t('productCreatedSuccessfully'));
       router.push('/seller-dashboard/listings');
     } catch (error) {
       console.error('Error creating product:', error);
-      toast.error('Failed to create product. Please try again.');
+      toast.error(t('failedToCreateProduct'));
     } finally {
       setIsLoading(false);
     }
@@ -106,14 +109,14 @@ function AddProductContent() {
             className="mr-4 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"
           >
             <ArrowLeft size={20} className="mr-2" />
-            Back
+            {t('back')}
           </button>
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Add New Product
+              {t('addNewProduct')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Create a new product listing
+              {t('createNewProductListing')}
             </p>
           </div>
         </div>
@@ -133,7 +136,7 @@ function AddProductContent() {
             <div className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Product Name *
+                  {t('productName')} *
                 </label>
                 <input
                   id="name"
@@ -141,7 +144,7 @@ function AddProductContent() {
                   type="text"
                   value={formData.name}
                   onChange={handleInputChange}
-                  placeholder="Enter product name"
+                  placeholder={t('enterProductName')}
                   required
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -149,14 +152,14 @@ function AddProductContent() {
 
               <div>
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Description
+                  {t('description')}
                 </label>
                 <textarea
                   id="description"
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  placeholder="Describe your product"
+                  placeholder={t('describeYourProduct')}
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -165,7 +168,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Price (MKD) *
+                    {t('priceMKD')} *
                   </label>
                   <input
                     id="price"
@@ -184,7 +187,7 @@ function AddProductContent() {
                   <CategorySelector
                     onCategorySelect={handleCategorySelect}
                     selectedCategory={selectedCategory}
-                    placeholder="Select a category for your product"
+                    placeholder={t('selectCategory')}
                     required={true}
                     className="w-full"
                   />
@@ -194,7 +197,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="condition" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Condition
+                    {t('condition')}
                   </label>
                   <select
                     id="condition"
@@ -203,16 +206,16 @@ function AddProductContent() {
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="excellent">Excellent</option>
-                    <option value="good">Good</option>
-                    <option value="fair">Fair</option>
-                    <option value="poor">Poor</option>
+                    <option value="excellent">{t('excellent')}</option>
+                    <option value="good">{t('good')}</option>
+                    <option value="fair">{t('fair')}</option>
+                    <option value="poor">{t('poor')}</option>
                   </select>
                 </div>
 
                 <div>
                   <label htmlFor="size" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Size
+                    {t('size')}
                   </label>
                   <input
                     id="size"
@@ -220,7 +223,7 @@ function AddProductContent() {
                     type="text"
                     value={formData.size}
                     onChange={handleInputChange}
-                    placeholder="e.g., M, L, XL, 42"
+                    placeholder={t('sizePlaceholder')}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -229,7 +232,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="brand" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Brand *
+                    {t('brand')} *
                   </label>
                   <input
                     id="brand"
@@ -237,7 +240,7 @@ function AddProductContent() {
                     type="text"
                     value={formData.brand}
                     onChange={handleInputChange}
-                    placeholder="e.g., Nike, Apple, Samsung, Other (Друго)"
+                    placeholder={t('brandPlaceholder')}
                     required
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -245,7 +248,7 @@ function AddProductContent() {
 
                 <div>
                   <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Quantity
+                    {t('quantity')}
                   </label>
                   <input
                     id="quantity"
@@ -262,7 +265,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Status
+                    {t('status')}
                   </label>
                   <select
                     id="status"
@@ -271,9 +274,9 @@ function AddProductContent() {
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="active">Active</option>
-                    <option value="draft">Draft</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="active">{t('active')}</option>
+                    <option value="draft">{t('draft')}</option>
+                    <option value="inactive">{t('inactive')}</option>
                   </select>
                 </div>
               </div>
@@ -286,7 +289,7 @@ function AddProductContent() {
               onClick={() => router.back()}
               className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -296,12 +299,12 @@ function AddProductContent() {
               {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Creating...
+                  {t('creating')}
                 </>
               ) : (
                 <>
                   <Save size={20} className="mr-2" />
-                  Create Product
+                  {t('createProduct')}
                 </>
               )}
             </button>
@@ -315,9 +318,11 @@ export default function AddProductPage() {
   return (
     <DashboardProvider>
       <CategoryProvider>
-        <SellerDashboardLayout>
-          <AddProductContent />
-        </SellerDashboardLayout>
+        <DashboardLanguageProvider>
+          <SellerDashboardLayout>
+            <AddProductContent />
+          </SellerDashboardLayout>
+        </DashboardLanguageProvider>
       </CategoryProvider>
     </DashboardProvider>
   );

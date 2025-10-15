@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import SummaryCards from '@/components/seller-dashboard/SummaryCards';
@@ -9,30 +9,71 @@ import ProductLifecycle from '@/components/seller-dashboard/ProductLifecycle';
 import DashboardZeroState from '@/components/seller-dashboard/DashboardZeroState';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 
 function DashboardContent() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { products, isLoading, error } = useDashboard();
+  const { t } = useDashboardLanguage();
+  const [sellerProfile, setSellerProfile] = useState<any>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  // Load seller profile data
+  useEffect(() => {
+    const loadSellerProfile = async () => {
+      if (!user?.id) {
+        setProfileLoading(false);
+        return;
+      }
+
+      try {
+        setProfileLoading(true);
+        const response = await fetch(`/api/seller-profile/${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Seller profile data:', data.profile);
+          setSellerProfile(data.profile);
+        } else {
+          console.log('Failed to fetch seller profile:', response.status);
+        }
+      } catch (error) {
+        console.error('Error loading seller profile:', error);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    loadSellerProfile();
+  }, [user?.id]);
 
   // Personalized greeting based on time of day
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return t('goodMorning');
+    if (hour < 17) return t('goodAfternoon');
+    return t('goodEvening');
   };
 
-  // Get user's first name from email
+  // Get user's name from profile or fallback to email
   const getUserName = () => {
-    if (!user?.email) return '';
-    return user.email.split('@')[0].charAt(0).toUpperCase() + user.email.split('@')[0].slice(1);
+    if (sellerProfile?.full_name) {
+      return sellerProfile.full_name.split(' ')[0]; // Get first name
+    }
+    if (sellerProfile?.business_name) {
+      return sellerProfile.business_name;
+    }
+    if (user?.email) {
+      return user.email.split('@')[0].charAt(0).toUpperCase() + user.email.split('@')[0].slice(1);
+    }
+    return '';
   };
 
 
 
   // Show loading state while authentication is being checked
-  if (loading) {
+  if (loading || profileLoading) {
     return (
       <div className="px-6 py-8">
         <div className="flex items-center justify-center h-64">
@@ -108,14 +149,14 @@ function DashboardContent() {
                     </div>
                   </div>
                   <p className="text-blue-100 text-lg sm:text-xl font-medium leading-relaxed">
-                    Welcome to your seller dashboard! Here&apos;s how to get started
+                    {t('welcomeBack')}! {t('followTheseSteps')}
                   </p>
                 </div>
               </div>
               
               <div className="flex flex-col items-center xl:items-end text-center xl:text-right bg-white/10 backdrop-blur-sm rounded-2xl p-5 sm:p-6 space-y-3">
-                <div className="text-2xl sm:text-3xl font-bold">Getting Started</div>
-                <div className="text-blue-100 text-lg sm:text-xl">Follow the steps below</div>
+                <div className="text-2xl sm:text-3xl font-bold">{t('quickActions')}</div>
+                <div className="text-blue-100 text-lg sm:text-xl">{t('followTheseSteps')}</div>
                 <div className="text-sm text-blue-200 bg-white/10 rounded-full px-3 py-1.5">
                   Step-by-step guide
                 </div>
@@ -127,19 +168,19 @@ function DashboardContent() {
                 <div className="h-6 w-6 bg-green-400/20 rounded-full flex items-center justify-center">
                   <span className="text-green-300 font-bold text-sm">1</span>
                 </div>
-                <span className="font-semibold text-sm sm:text-base">Add Products</span>
+                <span className="font-semibold text-sm sm:text-base">{t('addNewProduct')}</span>
               </div>
               <div className="flex items-center space-x-3 bg-white/25 backdrop-blur-md rounded-full px-5 py-3 shadow-lg">
                 <div className="h-6 w-6 bg-yellow-400/20 rounded-full flex items-center justify-center">
                   <span className="text-yellow-300 font-bold text-sm">2</span>
                 </div>
-                <span className="font-semibold text-sm sm:text-base">Manage Orders</span>
+                <span className="font-semibold text-sm sm:text-base">{t('manageOrders')}</span>
               </div>
               <div className="flex items-center space-x-3 bg-white/25 backdrop-blur-md rounded-full px-5 py-3 shadow-lg">
                 <div className="h-6 w-6 bg-emerald-400/20 rounded-full flex items-center justify-center">
                   <span className="text-emerald-300 font-bold text-sm">3</span>
                 </div>
-                <span className="font-semibold text-sm sm:text-base">Track Performance</span>
+                <span className="font-semibold text-sm sm:text-base">{t('trackProductsThroughSalesFunnel')}</span>
               </div>
             </div>
           </div>
@@ -158,7 +199,7 @@ function DashboardContent() {
             <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            Add New Product
+{t('addNewProduct')}
           </button>
           <button
             onClick={() => router.push('/seller-dashboard/orders')}
@@ -167,7 +208,7 @@ function DashboardContent() {
             <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            View Orders
+            {t('viewAllOrders')}
           </button>
           <button
             onClick={() => router.push('/seller-dashboard/listings')}
@@ -176,7 +217,7 @@ function DashboardContent() {
             <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
-            Manage Listings
+            {t('viewAllListings')}
           </button>
         </div>
       </div>
@@ -196,10 +237,10 @@ function DashboardContent() {
       <div>
         <div className="mb-4 sm:mb-6">
           <h2 className="text-lg sm:text-xl font-semibold font-rounded text-gray-900 dark:text-white mb-2">
-            How to Use Your Dashboard
+            {t('howToUseDashboard')}
           </h2>
           <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-            Follow these steps to effectively manage your online store
+            {t('followTheseSteps')}
           </p>
         </div>
         
@@ -211,18 +252,18 @@ function DashboardContent() {
                 <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">1</span>
               </div>
               <h3 className="text-lg font-semibold font-rounded text-gray-900 dark:text-white">
-                Add Your Products
+                {t('step1AddProducts')}
               </h3>
             </div>
             <div className="space-y-3">
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                <p className="mb-2">Start by adding products to your store:</p>
+                <p className="mb-2">{t('uploadImagesSetPrices')}</p>
                 <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>Click &quot;Add New Product&quot; above</li>
-                  <li>Upload multiple high-quality images</li>
-                  <li>Write detailed descriptions</li>
-                  <li>Set competitive prices</li>
-                  <li>Choose appropriate categories</li>
+                  <li>{t('addNewProduct')}</li>
+                  <li>{t('uploadMultipleHighQuality')}</li>
+                  <li>{t('writeDetailedHonest')}</li>
+                  <li>{t('setCompetitivePrices')}</li>
+                  <li>{t('chooseAppropriateCategories')}</li>
                 </ul>
               </div>
               <button 
@@ -233,7 +274,7 @@ function DashboardContent() {
                   <svg className="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Add Your First Product
+{t('addNewProduct')}
                 </div>
               </button>
             </div>
@@ -246,18 +287,18 @@ function DashboardContent() {
                 <span className="text-green-600 dark:text-green-400 font-bold text-lg">2</span>
               </div>
               <h3 className="text-lg font-semibold font-rounded text-gray-900 dark:text-white">
-                Handle Orders
+                {t('step3TrackOrders')}
               </h3>
             </div>
             <div className="space-y-3">
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                <p className="mb-2">When customers buy your products:</p>
+                <p className="mb-2">{t('trackCustomerPurchases')}</p>
                 <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>Check the Orders page regularly</li>
-                  <li>Update order status (Processing → Shipped → Delivered)</li>
-                  <li>Communicate with customers</li>
-                  <li>Track shipping and delivery</li>
-                  <li>Handle returns if needed</li>
+                  <li>{t('checkOrdersPageRegularly')}</li>
+                  <li>{t('updateOrderStatus')}</li>
+                  <li>{t('communicateWithCustomers')}</li>
+                  <li>{t('trackShippingAndDelivery')}</li>
+                  <li>{t('handleReturnsIfNeeded')}</li>
                 </ul>
               </div>
               <button 
@@ -268,7 +309,7 @@ function DashboardContent() {
                   <svg className="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
-                  View Orders
+{t('viewAllOrders')}
                 </div>
               </button>
             </div>
@@ -281,18 +322,18 @@ function DashboardContent() {
                 <span className="text-purple-600 dark:text-purple-400 font-bold text-lg">3</span>
               </div>
               <h3 className="text-lg font-semibold font-rounded text-gray-900 dark:text-white">
-                Monitor Performance
+                {t('step4UpdateSettings')}
               </h3>
             </div>
             <div className="space-y-3">
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                <p className="mb-2">Keep track of your business:</p>
+                <p className="mb-2">{t('updateProfileBusiness')}</p>
                 <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>View sales statistics above</li>
-                  <li>Check product performance</li>
-                  <li>Monitor customer feedback</li>
-                  <li>Update product listings</li>
-                  <li>Adjust pricing strategies</li>
+                  <li>{t('viewSalesStatistics')}</li>
+                  <li>{t('checkProductPerformance')}</li>
+                  <li>{t('monitorCustomerFeedback')}</li>
+                  <li>{t('updateProductListings')}</li>
+                  <li>{t('adjustPricingStrategies')}</li>
                 </ul>
               </div>
               <button 
@@ -303,7 +344,7 @@ function DashboardContent() {
                   <svg className="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
-                  Manage Listings
+{t('viewAllListings')}
                 </div>
               </button>
             </div>
@@ -358,9 +399,11 @@ function DashboardContent() {
 export default function SellerDashboard() {
   return (
     <DashboardProvider>
-      <SellerDashboardLayout>
-        <DashboardContent />
-      </SellerDashboardLayout>
+      <DashboardLanguageProvider>
+        <SellerDashboardLayout>
+          <DashboardContent />
+        </SellerDashboardLayout>
+      </DashboardLanguageProvider>
     </DashboardProvider>
   );
 }

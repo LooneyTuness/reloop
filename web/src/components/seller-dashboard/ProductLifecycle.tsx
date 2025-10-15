@@ -1,6 +1,7 @@
 import React from 'react';
 import { Package, Eye, ShoppingCart, CheckCircle, Truck, Home } from 'lucide-react';
 import { useDashboard } from '@/contexts/DashboardContext';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import ShimmerPlaceholder, { ShimmerCard } from '@/components/ui/ShimmerPlaceholder';
 
 interface Product {
@@ -14,6 +15,7 @@ interface Product {
 
 export default function ProductLifecycle() {
   const { products, isLoading } = useDashboard();
+  const { t } = useDashboardLanguage();
   
   // Debug logging
   console.log('🔄 ProductLifecycle: Received products:', products);
@@ -24,12 +26,12 @@ export default function ProductLifecycle() {
   console.log('🔑 ProductLifecycle render key:', renderKey);
 
   const lifecycleStages = [
-    { key: 'listed', label: 'Listed', icon: Home, color: 'bg-gray-500', activeColor: 'bg-gray-600', textColor: 'text-gray-600' },
-    { key: 'viewed', label: 'Viewed', icon: Eye, color: 'bg-blue-500', activeColor: 'bg-blue-600', textColor: 'text-blue-600' },
-    { key: 'in_cart', label: 'In Cart', icon: ShoppingCart, color: 'bg-yellow-500', activeColor: 'bg-yellow-600', textColor: 'text-yellow-600' },
-    { key: 'sold', label: 'Sold', icon: CheckCircle, color: 'bg-green-500', activeColor: 'bg-green-600', textColor: 'text-green-600' },
-    { key: 'shipped', label: 'Shipped', icon: Truck, color: 'bg-orange-500', activeColor: 'bg-orange-600', textColor: 'text-orange-600' },
-    { key: 'delivered', label: 'Delivered', icon: CheckCircle, color: 'bg-emerald-500', activeColor: 'bg-emerald-600', textColor: 'text-emerald-600' }
+    { key: 'listed', label: t('listed'), icon: Home, color: 'bg-gray-500', activeColor: 'bg-gray-600', textColor: 'text-gray-600' },
+    { key: 'viewed', label: t('viewed'), icon: Eye, color: 'bg-blue-500', activeColor: 'bg-blue-600', textColor: 'text-blue-600' },
+    { key: 'in_cart', label: t('inCart'), icon: ShoppingCart, color: 'bg-yellow-500', activeColor: 'bg-yellow-600', textColor: 'text-yellow-600' },
+    { key: 'sold', label: t('sold'), icon: CheckCircle, color: 'bg-green-500', activeColor: 'bg-green-600', textColor: 'text-green-600' },
+    { key: 'shipped', label: t('shipped'), icon: Truck, color: 'bg-orange-500', activeColor: 'bg-orange-600', textColor: 'text-orange-600' },
+    { key: 'delivered', label: t('delivered'), icon: CheckCircle, color: 'bg-emerald-500', activeColor: 'bg-emerald-600', textColor: 'text-emerald-600' }
   ];
 
   const getStageIndex = (status: Product['status'] | undefined) => {
@@ -63,23 +65,23 @@ export default function ProductLifecycle() {
             </div>
             <div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                Product Lifecycle
+                {t('productLifecycle')}
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Track your products through the sales funnel
+                {t('trackProductsThroughSalesFunnel')}
               </p>
             </div>
           </div>
           <div className="text-right">
             <ShimmerPlaceholder className="h-8 w-12" />
-            <div className="text-sm text-gray-500 dark:text-gray-400">Total Products</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">{t('totalProducts')}</div>
           </div>
         </div>
 
         {/* Shimmer for sales funnel */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Sales Funnel</h4>
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{t('salesFunnel')}</h4>
             <ShimmerPlaceholder className="h-4 w-24" />
           </div>
           
@@ -115,25 +117,25 @@ export default function ProductLifecycle() {
           </div>
           <div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-              Product Lifecycle
+              {t('productLifecycle')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Track your products through the sales funnel
+              {t('trackProductsThroughSalesFunnel')}
             </p>
           </div>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-gray-900 dark:text-white">{products.length}</div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Total Products</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">{t('totalProducts')}</div>
         </div>
       </div>
 
       {/* Enhanced Sales Funnel */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
-          <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Sales Funnel</h4>
+          <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{t('salesFunnel')}</h4>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {products.filter(p => p.status === 'sold' || p.status === 'shipped' || p.status === 'delivered').length} products sold
+            {products.filter(p => p.status === 'sold' || p.status === 'shipped' || p.status === 'delivered').length} {t('productsSold')}
           </div>
         </div>
         
@@ -233,7 +235,7 @@ export default function ProductLifecycle() {
               {/* Progress Bar */}
               <div className="mb-2">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">Progress</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{t('progress')}</span>
                   <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                     {Math.round(progressPercentage)}%
                   </span>
@@ -308,7 +310,7 @@ export default function ProductLifecycle() {
       {products.length > 4 && (
         <div className="mt-4 text-center">
           <button className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 text-sm font-medium">
-            View all products ({products.length})
+{t('viewAllProducts')} ({products.length})
           </button>
         </div>
       )}

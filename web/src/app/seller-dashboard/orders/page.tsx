@@ -7,6 +7,8 @@ import { OrdersZeroState } from '@/components/seller-dashboard/ZeroStates';
 import { Search, Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, Download, MoreVertical, CreditCard, Info, Mail, Phone, MapPin } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 
 interface OrderItem {
   id: string;
@@ -83,6 +85,7 @@ interface ExtendedOrder {
 function OrdersContent() {
   const { orders, updateOrderStatus, isLoading, error } = useDashboard();
   const router = useRouter();
+  const { t } = useDashboardLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<ExtendedOrder | null>(null);
@@ -299,10 +302,10 @@ function OrdersContent() {
         <div className="px-6 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Orders
+              {t('orders')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Manage customer orders and track fulfillment
+              {t('manageCustomerOrders')}
             </p>
           </div>
           <OrdersZeroState
@@ -389,10 +392,10 @@ function OrdersContent() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Orders
+            {t('orders')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Manage and track your customer orders • {orders.length} orders • {(orders as ExtendedOrder[]).reduce((sum, order) => sum + (order.item_count || 0), 0)} items sold
+            {t('manageAndTrackOrders')} • {orders.length} {t('ordersCount')} • {(orders as ExtendedOrder[]).reduce((sum, order) => sum + (order.item_count || 0), 0)} {t('itemsSold')}
           </p>
         </div>
 
@@ -403,7 +406,7 @@ function OrdersContent() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Search orders..."
+                placeholder={t('searchOrders')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -416,12 +419,12 @@ function OrdersContent() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="processing">Processing</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="all">{t('allOrders')}</option>
+              <option value="pending">{t('pending')}</option>
+              <option value="processing">{t('processing')}</option>
+              <option value="shipped">{t('shipped')}</option>
+              <option value="delivered">{t('delivered')}</option>
+              <option value="cancelled">{t('cancelled')}</option>
             </select>
           </div>
         </div>
@@ -440,25 +443,25 @@ function OrdersContent() {
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Order
+                    {t('orderId')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Customer
+                    {t('customer')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Ordered Items
+                      {t('product')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Amount
+                    {t('total')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Status
+                    {t('status')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Date
+                    {t('date')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Actions
+                    {t('actions')}
                   </th>
                 </tr>
               </thead>
@@ -611,28 +614,6 @@ function OrdersContent() {
                             >
                               <Download className="w-4 h-4" />
                               Download PDF
-                            </button>
-                            <button
-                              onClick={() => {
-                                const orderData = {
-                                  id: order.id,
-                                  customer: order.customer_name,
-                                  total: order.total_amount,
-                                  status: order.status,
-                                  date: order.created_at
-                                };
-                                const dataStr = JSON.stringify(orderData, null, 2);
-                                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                                const url = URL.createObjectURL(dataBlob);
-                                const link = document.createElement('a');
-                                link.href = url;
-                                link.download = `order-${order.id}.json`;
-                                link.click();
-                              }}
-                              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            >
-                              <Download size={14} />
-                              Export
                             </button>
                           </div>
                         </div>
@@ -1325,7 +1306,9 @@ function OrdersContent() {
 export default function OrdersPage() {
   return (
     <DashboardProvider>
-      <OrdersContent />
+      <DashboardLanguageProvider>
+        <OrdersContent />
+      </DashboardLanguageProvider>
     </DashboardProvider>
   );
 }

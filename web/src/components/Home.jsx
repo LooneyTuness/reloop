@@ -54,20 +54,33 @@ export default function Home() {
     const fetchFeaturedProducts = async () => {
       try {
         setLoading(true);
-        const { data, error } = await supabase
-          .from("items")
-          .select("*")
-          .or(
-            "and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)"
-          )
-          .is("deleted_at", null)
-          .order("created_at", { ascending: false })
-          .limit(4);
+        console.log("🔍 Fetching featured products from API...");
 
-        if (error) throw error;
-        setFeaturedProducts(data || []);
+        // Use API endpoint instead of direct Supabase query to avoid RLS issues
+        const response = await fetch("/api/featured-products?limit=4");
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("API error loading featured products:", errorData);
+          setFeaturedProducts([]);
+          return;
+        }
+
+        const data = await response.json();
+        console.log(
+          "✅ Featured products loaded:",
+          data.items?.length || 0,
+          "items"
+        );
+
+        if (data.items && data.items.length > 0) {
+          console.log("First featured product:", data.items[0]);
+        }
+
+        setFeaturedProducts(data.items || []);
       } catch (err) {
         console.error("Error loading featured products:", err);
+        setFeaturedProducts([]);
       } finally {
         setLoading(false);
       }
@@ -187,7 +200,7 @@ export default function Home() {
                         {product.seller_profiles?.business_name ||
                           product.seller_profiles?.full_name ||
                           product.seller ||
-                          t("anonymousSeller")}
+                          "Store Name"}
                       </p>
                     </div>
                   </div>

@@ -7,13 +7,14 @@ import { ProductsZeroState } from '@/components/seller-dashboard/ZeroStates';
 import PlaceholderImage from '@/components/PlaceholderImage';
 import { Search, Filter, Plus, Edit, Trash2, Eye, MoreVertical, Package } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 
 function ListingsContent() {
   const { products, isLoading, error, updateProduct, deleteProduct, searchProducts } = useDashboard();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t } = useDashboardLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -59,7 +60,7 @@ function ListingsContent() {
   useEffect(() => {
     // Filter products based on search query and status filter
     let filtered = products.filter(product => {
-      const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      const matchesSearch = (product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
                            (product.category && product.category.toLowerCase().includes(searchQuery.toLowerCase())) ||
                            (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
@@ -105,7 +106,7 @@ function ListingsContent() {
   };
 
   const handleDeleteProduct = async (productId: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm(t('confirmDeleteProduct'))) {
       try {
         await deleteProduct(productId);
       } catch (error) {
@@ -138,10 +139,10 @@ function ListingsContent() {
       <div className="px-6 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Product Listings
+            {t('productListings')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Manage your product inventory and listings
+            {t('manageProductInventory')}
           </p>
         </div>
         <ProductsZeroState
@@ -158,10 +159,10 @@ function ListingsContent() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              My Listings
+              {t('myListings')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Manage your product listings and track their performance
+              {t('manageProductInventory')}
             </p>
           </div>
           <button 
@@ -169,7 +170,7 @@ function ListingsContent() {
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus size={20} className="mr-2" />
-            Add Product
+            {t('addProduct')}
           </button>
         </div>
 
@@ -180,7 +181,7 @@ function ListingsContent() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t('searchProducts')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -193,22 +194,22 @@ function ListingsContent() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
-              <option value="sold">Sold</option>
-              <option value="draft">Draft</option>
+              <option value="all">{t('allStatus')}</option>
+              <option value="active">{t('active')}</option>
+              <option value="pending">{t('pending')}</option>
+              <option value="sold">{t('sold')}</option>
+              <option value="draft">{t('draft')}</option>
             </select>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="views">Most Viewed</option>
+              <option value="newest">{t('newestFirst')}</option>
+              <option value="oldest">{t('oldestFirst')}</option>
+              <option value="price-high">{t('priceHighToLow')}</option>
+              <option value="price-low">{t('priceLowToHigh')}</option>
+              <option value="views">{t('mostViewed')}</option>
             </select>
           </div>
         </div>
@@ -222,27 +223,19 @@ function ListingsContent() {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {console.log('Total filtered products:', filteredProducts.length)}
           {filteredProducts.map((product, index) => {
             // Simplified image handling
             let productImage = '/api/placeholder/400/400'; // Default fallback
             
-            console.log(`Product ${index + 1}: ${product.title}`);
-            console.log(`Photos data:`, product.photos);
-            console.log(`Photos type:`, typeof product.photos);
-            console.log(`Is array:`, Array.isArray(product.photos));
             
             if (product.photos) {
               if (Array.isArray(product.photos) && product.photos.length > 0) {
                 productImage = product.photos[0];
-                console.log(`Using first photo:`, productImage.substring(0, 50) + '...');
-              } else if (typeof product.photos === 'string' && product.photos.trim() !== '') {
+              } else if (typeof product.photos === 'string' && (product.photos as string).trim() !== '') {
                 productImage = product.photos;
-                console.log(`Using string photo:`, productImage.substring(0, 50) + '...');
               }
             }
             
-            console.log(`Final image for product ${index + 1}:`, productImage.substring(0, 50) + '...');
             
             
             return (
@@ -253,7 +246,7 @@ function ListingsContent() {
                   </div>
                   <PlaceholderImage
                     src={productImage}
-                    alt={product.title}
+                    alt={product.title || 'Product'}
                     className="w-full h-full object-cover"
                     fallbackText={t("noImage")}
                   />
@@ -271,17 +264,17 @@ function ListingsContent() {
                 
                 <div className="p-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-1 truncate">
-                    {product.title}
+                    {product.title || 'Untitled Product'}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    {product.category || 'Uncategorized'}
+                    {product.category || t('uncategorized')}
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
                       {product.price || '0.00'} MKD
                     </span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {product.views || 0} views
+                      {product.views || 0} {t('views')}
                     </span>
                   </div>
                   
@@ -297,7 +290,7 @@ function ListingsContent() {
                       <button 
                         onClick={() => handleDeleteProduct(product.id)}
                         className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                        title="Delete"
+                        title={t('delete')}
                       >
                         <Trash2 size={16} />
                       </button>
@@ -307,10 +300,10 @@ function ListingsContent() {
                       onChange={(e) => handleStatusUpdate(product.id, e.target.value)}
                       className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     >
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                      <option value="sold">Sold</option>
-                      <option value="draft">Draft</option>
+                      <option value="active">{t('active')}</option>
+                      <option value="inactive">{t('inactive')}</option>
+                      <option value="sold">{t('sold')}</option>
+                      <option value="draft">{t('draft')}</option>
                     </select>
                   </div>
                 </div>
@@ -325,12 +318,12 @@ function ListingsContent() {
               <Package size={48} className="mx-auto" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No products found
+              {t('noProductsFound')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               {searchQuery || statusFilter !== 'all' 
-                ? 'Try adjusting your search or filter criteria'
-                : 'Get started by adding your first product listing'
+                ? t('tryAdjustingSearch')
+                : t('getStartedByAdding')
               }
             </p>
             {!searchQuery && statusFilter === 'all' && (
@@ -339,7 +332,7 @@ function ListingsContent() {
                 className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mx-auto"
               >
                 <Plus size={20} className="mr-2" />
-                Add Your First Product
+                {t('addYourFirstProduct')}
               </button>
             )}
           </div>
@@ -351,9 +344,11 @@ function ListingsContent() {
 export default function ListingsPage() {
   return (
     <DashboardProvider>
-      <SellerDashboardLayout>
-        <ListingsContent />
-      </SellerDashboardLayout>
+      <DashboardLanguageProvider>
+        <SellerDashboardLayout>
+          <ListingsContent />
+        </SellerDashboardLayout>
+      </DashboardLanguageProvider>
     </DashboardProvider>
   );
 }

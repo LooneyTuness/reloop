@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useCategory } from '@/contexts/CategoryContext';
-import { CategoryHierarchy } from '@/types/category';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import { CategoryHierarchy, CategoryWithChildren } from '@/types/category';
 import { ChevronDown, X } from 'lucide-react';
 
 interface CategorySelectorProps {
-  onCategorySelect: (category: CategoryHierarchy | null) => void;
-  selectedCategory?: CategoryHierarchy | null;
+  onCategorySelect: (category: CategoryWithChildren | null) => void;
+  selectedCategory?: CategoryWithChildren | null;
   className?: string;
   placeholder?: string;
   required?: boolean;
@@ -21,12 +22,13 @@ export default function CategorySelector({
   required = false,
 }: CategorySelectorProps) {
   const { categoryTree, loading } = useCategory();
+  const { t, translateCategory } = useDashboardLanguage();
   const [isMainCategoryOpen, setIsMainCategoryOpen] = useState(false);
   const [isSubcategoryOpen, setIsSubcategoryOpen] = useState(false);
   const [isTypeOpen, setIsTypeOpen] = useState(false);
-  const [selectedMainCategory, setSelectedMainCategory] = useState<CategoryHierarchy | null>(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<CategoryHierarchy | null>(null);
-  const [selectedType, setSelectedType] = useState<CategoryHierarchy | null>(null);
+  const [selectedMainCategory, setSelectedMainCategory] = useState<CategoryWithChildren | null>(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<CategoryWithChildren | null>(null);
+  const [selectedType, setSelectedType] = useState<CategoryWithChildren | null>(null);
 
   // Initialize selections based on selectedCategory
   useEffect(() => {
@@ -79,7 +81,7 @@ export default function CategorySelector({
     return categoryTree.types[selectedSubcategory.id] || [];
   };
 
-  const handleMainCategorySelect = (category: CategoryHierarchy) => {
+  const handleMainCategorySelect = (category: CategoryWithChildren) => {
     setSelectedMainCategory(category);
     setSelectedSubcategory(null);
     setSelectedType(null);
@@ -87,14 +89,14 @@ export default function CategorySelector({
     onCategorySelect(category);
   };
 
-  const handleSubcategorySelect = (category: CategoryHierarchy) => {
+  const handleSubcategorySelect = (category: CategoryWithChildren) => {
     setSelectedSubcategory(category);
     setSelectedType(null);
     setIsSubcategoryOpen(false);
     onCategorySelect(category);
   };
 
-  const handleTypeSelect = (category: CategoryHierarchy) => {
+  const handleTypeSelect = (category: CategoryWithChildren) => {
     setSelectedType(category);
     setIsTypeOpen(false);
     onCategorySelect(category);
@@ -130,22 +132,22 @@ export default function CategorySelector({
     <div className={`space-y-2 ${className}`}>
       {/* Main Category */}
       <div className="relative">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Main Category {required && <span className="text-red-500">*</span>}
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          {t('mainCategory')} {required && <span className="text-red-500">*</span>}
         </label>
         <button
           type="button"
           onClick={() => setIsMainCategoryOpen(!isMainCategoryOpen)}
-          className="w-full flex items-center justify-between px-3 py-2 border border-gray-200 rounded-md bg-white text-left text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full flex items-center justify-between px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-left text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <span className={selectedMainCategory ? 'text-gray-900' : 'text-gray-500'}>
-            {selectedMainCategory?.name || 'Select main category'}
+          <span className={selectedMainCategory ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>
+            {selectedMainCategory?.name || t('selectMainCategory')}
           </span>
           <ChevronDown size={16} className={`transition-transform ${isMainCategoryOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {isMainCategoryOpen && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
             <div className="py-2 max-h-60 overflow-y-auto">
               {categoryTree.mainCategories.map(category => (
                 <button
@@ -155,7 +157,7 @@ export default function CategorySelector({
                   className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
                     selectedMainCategory?.id === category.id
                       ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
-                      : 'text-gray-700'
+                      : 'text-gray-700 dark:text-gray-300'
                   }`}
                 >
                   {category.name}
@@ -169,29 +171,29 @@ export default function CategorySelector({
       {/* Subcategory */}
       {selectedMainCategory && getAvailableSubcategories().length > 0 && (
         <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Subcategory
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            {t('subcategory')}
           </label>
           <button
             type="button"
             onClick={() => setIsSubcategoryOpen(!isSubcategoryOpen)}
-            className="w-full flex items-center justify-between px-3 py-2 border border-gray-200 rounded-md bg-white text-left text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full flex items-center justify-between px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-left text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <span className={selectedSubcategory ? 'text-gray-900' : 'text-gray-500'}>
-              {selectedSubcategory?.name || 'Select subcategory (optional)'}
+            <span className={selectedSubcategory ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>
+              {selectedSubcategory?.name || t('selectSubcategory')}
             </span>
             <ChevronDown size={16} className={`transition-transform ${isSubcategoryOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {isSubcategoryOpen && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
               <div className="py-2 max-h-60 overflow-y-auto">
                 <button
                   type="button"
                   onClick={() => handleSubcategorySelect(null as any)}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="w-full text-left px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
-                  None
+                  {t('none')}
                 </button>
                 {getAvailableSubcategories().map(category => (
                   <button
@@ -201,7 +203,7 @@ export default function CategorySelector({
                     className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
                       selectedSubcategory?.id === category.id
                         ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
-                        : 'text-gray-700'
+                        : 'text-gray-700 dark:text-gray-300'
                     }`}
                   >
                     {category.name}
@@ -216,29 +218,29 @@ export default function CategorySelector({
       {/* Type */}
       {selectedSubcategory && getAvailableTypes().length > 0 && (
         <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Type
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            {t('type')}
           </label>
           <button
             type="button"
             onClick={() => setIsTypeOpen(!isTypeOpen)}
-            className="w-full flex items-center justify-between px-3 py-2 border border-gray-200 rounded-md bg-white text-left text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full flex items-center justify-between px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-left text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <span className={selectedType ? 'text-gray-900' : 'text-gray-500'}>
-              {selectedType?.name || 'Select type (optional)'}
+            <span className={selectedType ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>
+              {selectedType?.name || t('selectType')}
             </span>
             <ChevronDown size={16} className={`transition-transform ${isTypeOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {isTypeOpen && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
               <div className="py-2 max-h-60 overflow-y-auto">
                 <button
                   type="button"
                   onClick={() => handleTypeSelect(null as any)}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="w-full text-left px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
-                  None
+                  {t('none')}
                 </button>
                 {getAvailableTypes().map(category => (
                   <button
@@ -248,10 +250,10 @@ export default function CategorySelector({
                     className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
                       selectedType?.id === category.id
                         ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
-                        : 'text-gray-700'
+                        : 'text-gray-700 dark:text-gray-300'
                     }`}
                   >
-                    {category.name}
+                    {translateCategory(category.name)}
                   </button>
                 ))}
               </div>
@@ -262,10 +264,10 @@ export default function CategorySelector({
 
       {/* Selected Category Display */}
       {selectedMainCategory && (
-        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-md">
           <div className="text-sm">
-            <span className="font-medium text-gray-900">Selected:</span>
-            <span className="ml-2 text-gray-700">{getDisplayText()}</span>
+            <span className="font-medium text-gray-900 dark:text-white">{t('selected')}:</span>
+            <span className="ml-2 text-gray-700 dark:text-gray-300">{getDisplayText()}</span>
           </div>
           <button
             type="button"

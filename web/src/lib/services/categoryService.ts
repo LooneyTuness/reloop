@@ -1,11 +1,11 @@
-import { Category, CategoryHierarchy, CategoryFilter } from '@/types/category';
+import { Category, CategoryHierarchy } from '@/types/category';
 
 export interface CategoryApiResponse {
   categories: CategoryHierarchy[];
 }
 
 export interface ItemsByCategoryResponse {
-  items: any[];
+  items: unknown[];
   pagination: {
     page: number;
     limit: number;
@@ -165,12 +165,12 @@ export class CategoryService {
   static async getCategoryPath(categoryId: string): Promise<CategoryHierarchy[]> {
     const categories = await this.getCategories();
     const path: CategoryHierarchy[] = [];
-    let current = categories.find(c => c.id === categoryId);
+    let current: CategoryHierarchy | undefined = categories.find(c => c.id === categoryId);
 
     while (current) {
       path.unshift(current);
       if (current.parent_id) {
-        current = categories.find(c => c.id === current.parent_id);
+        current = categories.find(c => c.id === current!.parent_id);
       } else {
         current = undefined;
       }

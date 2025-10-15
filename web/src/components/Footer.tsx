@@ -8,13 +8,13 @@ export default function Footer() {
 
   return (
     <footer className="bg-gradient-to-br from-gray-50 to-green-50/30 border-t border-green-100">
-      <div className="max-w-7xl mx-auto px-6 py-20">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             {/* Trust Badges */}
-            <div className="mb-8">
+            <div className="mb-6">
               <div className="flex flex-wrap gap-4 items-center">
                 <div className="bg-white rounded-2xl p-4 shadow-2xl">
                   <img 
@@ -56,10 +56,10 @@ export default function Footer() {
           </div>
 </div>
         {/* Contact Information */}
-        <div className="border-t border-blue-200 pt-12 mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="border-t border-blue-200 pt-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Email */}
-            <div className="flex items-center space-x-4 bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center space-x-4 bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <Mail className="w-6 h-6 text-white" />
               </div>
@@ -72,7 +72,7 @@ export default function Footer() {
             </div>
 
             {/* Phone */}
-            <div className="flex items-center space-x-4 bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center space-x-4 bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <Phone className="w-6 h-6 text-white" />
               </div>
@@ -85,7 +85,7 @@ export default function Footer() {
             </div>
 
             {/* Location */}
-            <div className="flex items-center space-x-4 bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center space-x-4 bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <MapPin className="w-6 h-6 text-white" />
               </div>
@@ -102,7 +102,7 @@ export default function Footer() {
         </div>
 
         {/* Social Media & Bottom Bar */}
-        <div className="border-t border-green-200 pt-12">
+        <div className="border-t border-green-200 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
             {/* Social Media */}
             <div className="flex items-center space-x-6">

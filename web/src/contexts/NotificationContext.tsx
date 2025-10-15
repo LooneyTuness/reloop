@@ -75,7 +75,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   const markAsRead = async (id: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("notifications")
         .update({ is_read: true })
         .eq("id", id);
@@ -99,7 +99,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   const dismissNotification = async (id: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("notifications")
         .update({ is_dismissed: true })
         .eq("id", id);
@@ -121,7 +121,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     if (!user) return;
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("notifications")
         .update({ is_dismissed: true })
         .eq("user_id", user.id)

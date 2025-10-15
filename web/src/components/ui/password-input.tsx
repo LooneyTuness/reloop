@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -30,9 +30,9 @@ const PasswordInput = React.forwardRef<
         tabIndex={-1}
       >
         {showPassword ? (
-          <EyeOffIcon className="h-4 w-4" aria-hidden="true" />
+          <EyeOff className="h-4 w-4" aria-hidden="true" />
         ) : (
-          <EyeIcon className="h-4 w-4" aria-hidden="true" />
+          <Eye className="h-4 w-4" aria-hidden="true" />
         )}
         <span className="sr-only">
           {showPassword ? "Hide password" : "Show password"}

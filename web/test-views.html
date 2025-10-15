@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Product Views</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Product Views Testing Tool</h1>
+    
+    <div class="test-section">
+        <h2>1. Test API Endpoint</h2>
+        <p>Test the view tracking API endpoint directly:</p>
+        <input type="text" id="productId" placeholder="Enter product ID" value="dfe6f4d1-9171-4d3f-ac8c-7bd2b453be90" style="width: 300px; padding: 8px;">
+        <br><br>
+        <button onclick="testTrackView()">Track View (POST)</button>
+        <button onclick="testGetViewCount()">Get View Count (GET)</button>
+        <div id="apiResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test Multiple Views</h2>
+        <p>Simulate multiple views to test counting:</p>
+        <button onclick="testMultipleViews()">Track 5 Views</button>
+        <div id="multipleViewsResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test View Count Updates</h2>
+        <p>Check if view counts are updating correctly:</p>
+        <button onclick="checkViewCounts()">Check All View Counts</button>
+        <div id="viewCountsResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        async function testTrackView() {
+            const productId = document.getElementById('productId').value;
+            const resultDiv = document.getElementById('apiResult');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/products/${productId}/view`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: `test_session_${Date.now()}`,
+                        referrer: window.location.href,
+                    }),
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">✅ View tracked successfully! View count: ${data.viewCount}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Network error: ${error.message}</div>`;
+            }
+        }
+
+        async function testGetViewCount() {
+            const productId = document.getElementById('productId').value;
+            const resultDiv = document.getElementById('apiResult');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/products/${productId}/view`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">✅ Current view count: ${data.viewCount}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Network error: ${error.message}</div>`;
+            }
+        }
+
+        async function testMultipleViews() {
+            const productId = document.getElementById('productId').value;
+            const resultDiv = document.getElementById('multipleViewsResult');
+            
+            resultDiv.innerHTML = 'Tracking multiple views...';
+            
+            try {
+                let successCount = 0;
+                let errorCount = 0;
+                
+                for (let i = 0; i < 5; i++) {
+                    const response = await fetch(`${API_BASE}/api/products/${productId}/view`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            sessionId: `test_session_${Date.now()}_${i}`,
+                            referrer: window.location.href,
+                        }),
+                    });
+                    
+                    if (response.ok) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                    }
+                    
+                    // Small delay between requests
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                
+                resultDiv.innerHTML = `<div class="success">✅ Tracked ${successCount} views successfully, ${errorCount} errors</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function checkViewCounts() {
+            const resultDiv = document.getElementById('viewCountsResult');
+            resultDiv.innerHTML = 'Checking view counts...';
+            
+            try {
+                // Test with a few different product IDs
+                const testProductIds = [
+                    'dfe6f4d1-9171-4d3f-ac8c-7bd2b453be90',
+                    '632ef65e-a15c-4ea0-a7ff-fc0a43b2fb15',
+                    '69aa853a-2b99-446b-a8bc-ccf805a040f9'
+                ];
+                
+                let results = [];
+                
+                for (const productId of testProductIds) {
+                    try {
+                        const response = await fetch(`${API_BASE}/api/products/${productId}/view`);
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            results.push(`Product ${productId}: ${data.viewCount} views`);
+                        } else {
+                            results.push(`Product ${productId}: Error - ${data.error}`);
+                        }
+                    } catch (error) {
+                        results.push(`Product ${productId}: Network error`);
+                    }
+                }
+                
+                resultDiv.innerHTML = `<div class="success">View Counts:<br>${results.join('<br>')}</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
+

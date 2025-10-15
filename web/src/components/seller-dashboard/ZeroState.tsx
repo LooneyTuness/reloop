@@ -1,8 +1,8 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import { LucideProps } from 'lucide-react';
 
 interface ZeroStateProps {
-  icon: LucideIcon;
+  icon: React.ComponentType<LucideProps>;
   title: string;
   description: string;
   actionLabel: string;

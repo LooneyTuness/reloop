@@ -145,6 +145,15 @@ const translations = {
     selectBrand: "Избери бренд",
     clearFilters: "Исчисти филтри",
 
+    // Product Detail Page
+    back: "Назад",
+    browseProducts: "Прелистај производи",
+    productNotFound: "Продуктот не е пронајден",
+    productNotFoundDesc: "Продуктот кој го барате не постои или е отстранет.",
+    whyChooseThisItem: "Зошто да го изберете овој предмет?",
+    verifiedQuality: "Проверен квалитет и автентичност",
+    fastSecureDelivery: "Брза и безбедна достава",
+
     // Navigation
     menu: "Мени",
     browseItems: "Прелистај парчиња",
@@ -255,6 +264,21 @@ const translations = {
     kidsclothing: "Облека за деца",
     womensshoes: "Обувки за жени",
     mensshoes: "Обувки за мажи",
+    kidsshoes: "Обувки за деца",
+
+    // Shoe types - Women's
+    heels: "Петици",
+    flats: "Равни обувки",
+    sneakers: "Патики",
+    boots: "Чизми",
+    sandals: "Сандали",
+
+    // Shoe types - Men's
+    dressshoes: "Формални обувки",
+    loafers: "Лофери",
+
+    // Shoe types - General
+    shoes: "Обувки",
     kidsShoes: "Обувки за деца",
     womensbags: "Торби за жени",
     mensbags: "Торби за мажи",
@@ -801,6 +825,16 @@ const translations = {
     selectBrand: "Select Brand",
     clearFilters: "Clear Filters",
 
+    // Product Detail Page
+    back: "Back",
+    browseProducts: "Browse Products",
+    productNotFound: "Product Not Found",
+    productNotFoundDesc:
+      "The product you're looking for doesn't exist or has been removed.",
+    whyChooseThisItem: "Why choose this item?",
+    verifiedQuality: "Verified quality and authenticity",
+    fastSecureDelivery: "Fast and secure delivery",
+
     // Navigation
     menu: "Menu",
     browseItems: "Browse Items",
@@ -912,6 +946,20 @@ const translations = {
     womensshoes: "Women's Shoes",
     mensshoes: "Men's Shoes",
     kidsShoes: "Kids' Shoes",
+
+    // Shoe types - Women's
+    heels: "Heels",
+    flats: "Flats",
+    sneakers: "Sneakers",
+    boots: "Boots",
+    sandals: "Sandals",
+
+    // Shoe types - Men's
+    dressshoes: "Dress Shoes",
+    loafers: "Loafers",
+
+    // Shoe types - General
+    shoes: "Shoes",
     womensbags: "Women's Bags",
     mensbags: "Men's Bags",
     womensjewelry: "Women's Jewelry",

@@ -117,10 +117,12 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
 
   const buildCategoryPath = (categoryId: string): CategoryBreadcrumb[] => {
     const category = getCategoryById(categoryId);
-    if (!category) return [];
+    if (!category) {
+      return [];
+    }
 
     const path: CategoryBreadcrumb[] = [];
-    let current = category;
+    let current: CategoryHierarchy | undefined = category;
 
     // Build path from bottom to top
     while (current) {

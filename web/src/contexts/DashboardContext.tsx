@@ -142,7 +142,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
       // Handle individual results
       const items = sellerItems.status === 'fulfilled' ? sellerItems.value : [];
-      const orders = sellerOrders.status === 'fulfilled' ? sellerOrders.value : [];
+      const orders = sellerOrders.status === 'fulfilled' ? (sellerOrders.value as any[]) : [];
       const stats = sellerStats.status === 'fulfilled' ? sellerStats.value : {
         totalItems: 0,
         activeItems: 0,

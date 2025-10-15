@@ -98,7 +98,41 @@ export default function Products({
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setItems(data || []);
+
+      const items = data || [];
+
+      // Get seller profiles for the items
+      const userIds = [
+        ...new Set(items.map((item) => item.user_id).filter(Boolean)),
+      ];
+      let sellerProfiles = {};
+
+      if (userIds.length > 0) {
+        const { data: profiles, error: profilesError } = await supabase
+          .from("seller_profiles")
+          .select("user_id, business_name, full_name")
+          .in("user_id", userIds);
+
+        if (!profilesError && profiles) {
+          sellerProfiles = profiles.reduce((acc, profile) => {
+            acc[profile.user_id] = {
+              business_name: profile.business_name || null,
+              full_name: profile.full_name || null,
+            };
+            return acc;
+          }, {});
+        }
+      }
+
+      // Merge seller profile data with items
+      const itemsWithSellerInfo = items.map((item) => ({
+        ...item,
+        seller_profiles: item.user_id
+          ? sellerProfiles[item.user_id] || null
+          : null,
+      }));
+
+      setItems(itemsWithSellerInfo);
     } catch (err) {
       console.error("Error loading items:", err);
       setError("Error loading items: " + err.message);
@@ -546,14 +580,28 @@ export default function Products({
                     compact ? "pt-1 sm:pt-2" : "pt-2 sm:pt-3"
                   }`}
                 >
-                  <span
-                    className={`font-black text-gray-900 tracking-tight ${
-                      compact ? "text-base sm:text-lg" : "text-lg sm:text-xl"
-                    }`}
-                    style={{ fontFamily: "var(--font-poppins)" }}
-                  >
-                    {item.price} MKD
-                  </span>
+                  <div className="flex flex-col">
+                    <span
+                      className={`font-black text-gray-900 tracking-tight ${
+                        compact ? "text-base sm:text-lg" : "text-lg sm:text-xl"
+                      }`}
+                      style={{ fontFamily: "var(--font-poppins)" }}
+                    >
+                      {item.price} MKD
+                    </span>
+                    {/* Seller Information */}
+                    <p
+                      className={`text-gray-500 ${
+                        compact ? "text-xs" : "text-xs sm:text-sm"
+                      }`}
+                    >
+                      {t("seller")}:{" "}
+                      {item.seller_profiles?.business_name ||
+                        item.seller_profiles?.full_name ||
+                        item.seller ||
+                        "Store Name"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </Link>

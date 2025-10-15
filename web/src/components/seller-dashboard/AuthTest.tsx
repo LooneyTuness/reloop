@@ -32,7 +32,7 @@ export default function AuthTest() {
       
     } catch (err) {
       console.error('Auth test error:', err);
-      setTestResult(`Test failed: ${err.message}`);
+      setTestResult(`Test failed: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
@@ -64,7 +64,7 @@ export default function AuthTest() {
       
     } catch (err) {
       console.error('Magic link error:', err);
-      setTestResult(`Magic link failed: ${err.message}`);
+      setTestResult(`Magic link failed: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 

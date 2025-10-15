@@ -5,10 +5,13 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { EarningsZeroState } from '@/components/seller-dashboard/ZeroStates';
 import { useRouter } from 'next/navigation';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 
 function PayoutsContent() {
   const { stats, isLoading } = useDashboard();
   const router = useRouter();
+  const { t } = useDashboardLanguage();
 
   // Show zero state if no earnings data
   if (!isLoading && stats.totalEarnings === 0) {
@@ -17,10 +20,10 @@ function PayoutsContent() {
         <div className="px-6 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Payouts
+              {t('payouts')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Manage your earnings and payment settings
+              {t('manageEarnings')}
             </p>
           </div>
           <EarningsZeroState
@@ -37,10 +40,10 @@ function PayoutsContent() {
       <div className="px-6 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Payouts
+            {t('payouts')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Manage your earnings and payment settings
+            {t('manageEarnings')}
           </p>
         </div>
 
@@ -53,22 +56,22 @@ function PayoutsContent() {
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Payouts Coming Soon
+              {t('payoutsComingSoon')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-              We're working hard to bring you a comprehensive payout management system. 
-              You'll be able to track your earnings, manage payment methods, and request payouts.
+              {t('workingOnPayoutSystem')} 
+              {t('trackEarningsManagePayments')}
             </p>
             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
               <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-                What's Coming:
+                {t('whatsComing')}
               </h3>
               <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1 text-left">
-                <li>• Real-time earnings tracking</li>
-                <li>• Multiple payment methods</li>
-                <li>• Automated payout scheduling</li>
-                <li>• Detailed transaction history</li>
-                <li>• Tax reporting tools</li>
+                <li>• {t('realTimeEarningsTracking')}</li>
+                <li>• {t('multiplePaymentMethods')}</li>
+                <li>• {t('automatedPayoutScheduling')}</li>
+                <li>• {t('detailedTransactionHistory')}</li>
+                <li>• {t('taxReportingTools')}</li>
               </ul>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -76,13 +79,13 @@ function PayoutsContent() {
                 onClick={() => router.push('/seller-dashboard/analytics')}
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
-                View Analytics
+                {t('viewAnalytics')}
               </button>
               <button
                 onClick={() => router.push('/seller-dashboard/listings')}
                 className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
               >
-                Manage Listings
+                {t('manageListings')}
               </button>
             </div>
           </div>
@@ -95,7 +98,9 @@ function PayoutsContent() {
 export default function PayoutsPage() {
   return (
     <DashboardProvider>
-      <PayoutsContent />
+      <DashboardLanguageProvider>
+        <PayoutsContent />
+      </DashboardLanguageProvider>
     </DashboardProvider>
   );
 }

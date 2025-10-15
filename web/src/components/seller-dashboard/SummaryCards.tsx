@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Package, TrendingUp, DollarSign, Eye } from 'lucide-react';
 import SummaryCard from './SummaryCard';
 import { useDashboard } from '@/contexts/DashboardContext';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function SummaryCards() {
   const { stats, isLoading } = useDashboard();
+  const { t } = useDashboardLanguage();
+  const { user } = useAuth();
   const [accurateAnalytics, setAccurateAnalytics] = useState<any>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
@@ -18,7 +22,7 @@ export default function SummaryCards() {
         const { SupabaseDataService } = await import('@/lib/supabase/data-service');
         const dataService = new SupabaseDataService();
         
-        const userId = stats?.userId || '9a2b8c5f-3517-4f3a-9b03-cb43e1a95a98';
+        const userId = user?.id || '9a2b8c5f-3517-4f3a-9b03-cb43e1a95a98';
         const analytics = await dataService.getAccurateAnalytics(userId, '30d');
         setAccurateAnalytics(analytics);
       } catch (error) {
@@ -45,75 +49,75 @@ export default function SummaryCards() {
   // Use accurate analytics if available, otherwise fall back to estimates
   const cards = accurateAnalytics ? [
     {
-      title: 'Total Listings',
+      title: t('totalListings'),
       value: accurateAnalytics.current.totalListings.toString(),
       change: accurateAnalytics.changes.totalListings > 0 ? 
-        `+${accurateAnalytics.changes.totalListings.toFixed(1)}% from last period` : 
+        `+${accurateAnalytics.changes.totalListings.toFixed(1)}% ${t('fromLastPeriod')}` : 
         accurateAnalytics.changes.totalListings < 0 ?
-        `${accurateAnalytics.changes.totalListings.toFixed(1)}% from last period` :
-        'No change',
+        `${accurateAnalytics.changes.totalListings.toFixed(1)}% ${t('fromLastPeriod')}` :
+        t('noChange'),
       changeType: accurateAnalytics.changes.totalListings > 0 ? 'positive' as const : 
                  accurateAnalytics.changes.totalListings < 0 ? 'negative' as const : 'neutral' as const,
       icon: <Package className="h-8 w-8 text-blue-500" />
     },
     {
-      title: 'Items Sold (This Month)',
+      title: t('itemsSoldThisMonth'),
       value: accurateAnalytics.current.soldItems.toString(),
       change: accurateAnalytics.changes.soldItems > 0 ? 
-        `+${accurateAnalytics.changes.soldItems.toFixed(1)}% from last period` : 
+        `+${accurateAnalytics.changes.soldItems.toFixed(1)}% ${t('fromLastPeriod')}` : 
         accurateAnalytics.changes.soldItems < 0 ?
-        `${accurateAnalytics.changes.soldItems.toFixed(1)}% from last period` :
-        'No change',
+        `${accurateAnalytics.changes.soldItems.toFixed(1)}% ${t('fromLastPeriod')}` :
+        t('noChange'),
       changeType: accurateAnalytics.changes.soldItems > 0 ? 'positive' as const : 
                  accurateAnalytics.changes.soldItems < 0 ? 'negative' as const : 'neutral' as const,
       icon: <TrendingUp className="h-8 w-8 text-green-500" />
     },
     {
-      title: 'Total Earnings',
-      value: `${accurateAnalytics.current.totalRevenue.toFixed(2)} MKD`,
+      title: t('totalEarnings'),
+      value: `${accurateAnalytics.current.totalRevenue.toFixed(2)} ${t('currency')}`,
       change: accurateAnalytics.changes.totalRevenue > 0 ? 
-        `+${accurateAnalytics.changes.totalRevenue.toFixed(1)}% from last period` : 
+        `+${accurateAnalytics.changes.totalRevenue.toFixed(1)}% ${t('fromLastPeriod')}` : 
         accurateAnalytics.changes.totalRevenue < 0 ?
-        `${accurateAnalytics.changes.totalRevenue.toFixed(1)}% from last period` :
-        'No change',
+        `${accurateAnalytics.changes.totalRevenue.toFixed(1)}% ${t('fromLastPeriod')}` :
+        t('noChange'),
       changeType: accurateAnalytics.changes.totalRevenue > 0 ? 'positive' as const : 
                  accurateAnalytics.changes.totalRevenue < 0 ? 'negative' as const : 'neutral' as const,
       icon: <DollarSign className="h-8 w-8 text-emerald-500" />
     },
     {
-      title: 'Total Orders',
+      title: t('totalOrders'),
       value: accurateAnalytics.current.totalOrders.toString(),
-      change: `${accurateAnalytics.current.conversionRate.toFixed(1)}% conversion`,
+      change: `${accurateAnalytics.current.conversionRate.toFixed(1)}% ${t('conversion')}`,
       changeType: 'neutral' as const,
       icon: <Eye className="h-8 w-8 text-orange-500" />
     }
   ] : [
     // Fallback to estimates if accurate data is not available
     {
-      title: 'Total Listings',
+      title: t('totalListings'),
       value: safeStats.totalListings.toString(),
-      change: '+2 this week',
+      change: `+2 ${t('thisWeek')}`,
       changeType: 'positive' as const,
       icon: <Package className="h-8 w-8 text-blue-500" />
     },
     {
-      title: 'Items Sold (This Month)',
+      title: t('itemsSoldThisMonth'),
       value: safeStats.soldItems.toString(),
-      change: '+12% from last month',
+      change: `+12% ${t('fromLastMonth')}`,
       changeType: 'positive' as const,
       icon: <TrendingUp className="h-8 w-8 text-green-500" />
     },
     {
-      title: 'Total Earnings',
-      value: `${safeStats.totalEarnings.toFixed(2)} MKD`,
-      change: '+340 MKD this month',
+      title: t('totalEarnings'),
+      value: `${safeStats.totalEarnings.toFixed(2)} ${t('currency')}`,
+      change: `+340 ${t('currency')} ${t('thisMonth')}`,
       changeType: 'positive' as const,
       icon: <DollarSign className="h-8 w-8 text-emerald-500" />
     },
     {
-      title: 'Total Orders',
+      title: t('totalOrders'),
       value: safeStats.totalOrders.toString(),
-      change: `${safeStats.conversionRate.toFixed(1)}% conversion`,
+      change: `${safeStats.conversionRate.toFixed(1)}% ${t('conversion')}`,
       changeType: 'neutral' as const,
       icon: <Eye className="h-8 w-8 text-orange-500" />
     }
@@ -124,10 +128,10 @@ export default function SummaryCards() {
       <div>
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            Store Overview
+            {t('storeOverview')}
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Key metrics for your store performance
+            {t('keyMetrics')}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -150,10 +154,10 @@ export default function SummaryCards() {
     <div>
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-          Store Overview
+          {t('storeOverview')}
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          Key metrics for your store performance
+          {t('keyMetrics')}
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

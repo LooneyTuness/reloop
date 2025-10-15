@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, User, Mail, Store, Globe, CheckCircle } from "lucide-react";
+import { FileText, User, Mail, Home, Globe, CheckCircle } from "lucide-react";
 
 export default function SellerApplicationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -143,17 +143,17 @@ export default function SellerApplicationPage() {
               {/* Business Information Section */}
               <div className="space-y-6">
                 <h3 className="text-lg font-semibold text-gray-900text-white flex items-center gap-2">
-                  <Store className="w-5 h-5 text-green-600" />
+                  <Home className="w-5 h-5 text-green-600" />
                   Business Information
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="storeName" className="text-sm font-medium text-gray-700text-gray-300">
-                      Store Name or Brand Name
+                      Home Name or Brand Name
                     </Label>
                     <div className="relative">
-                      <Store className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                       <Input
                         id="storeName"
                         name="storeName"
