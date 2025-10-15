@@ -51,7 +51,7 @@ export default function CartPage() {
       if (!itemsData || itemsData.length === 0) throw new Error("Could not find item information");
       
       // Get the seller_id from the first item (assuming all items are from the same seller for simplicity)
-      const sellerId = itemsData[0]?.user_id;
+      const sellerId = (itemsData as Array<{ id: string; user_id: string }>)[0]?.user_id;
       if (!sellerId) throw new Error("Could not determine seller");
       
       // 1) Create order
@@ -123,7 +123,7 @@ export default function CartPage() {
           ? i.image_url
           : null,
       }));
-      const { error: itemsError } = await (
+      const { error: orderItemsError } = await (
         supabase as unknown as {
           from: (table: string) => {
             insert: (
@@ -141,7 +141,7 @@ export default function CartPage() {
       )
         .from("order_items")
         .insert(orderItems);
-      if (itemsError) throw itemsError;
+      if (orderItemsError) throw orderItemsError;
 
       // 3) Create notifications for sellers (vendors) whose items were ordered
       try {
