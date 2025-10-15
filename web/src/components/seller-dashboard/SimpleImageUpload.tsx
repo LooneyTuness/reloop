@@ -2,6 +2,8 @@
 
 import React, { useState, useRef } from 'react';
 import { Upload, X } from 'lucide-react';
+import { imageStorageService } from '@/lib/supabase/image-storage';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface SimpleImageUploadProps {
   images: string[];
@@ -17,10 +19,12 @@ export default function SimpleImageUpload({
   required = false 
 }: SimpleImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileSelect = (files: FileList | null) => {
+  const handleFileSelect = async (files: FileList | null) => {
     console.log('SimpleImageUpload: handleFileSelect called with files:', files);
-    if (!files) return;
+    if (!files || !user?.id) return;
 
     const validFiles = Array.from(files).filter(file => {
       if (!file.type.startsWith('image/')) {
@@ -43,30 +47,26 @@ export default function SimpleImageUpload({
       return;
     }
 
-    const newImages: string[] = [];
-    let processedCount = 0;
+    setIsUploading(true);
 
-    validFiles.forEach((file, index) => {
-      console.log(`SimpleImageUpload: Processing file ${index + 1}:`, file.name);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const imageUrl = event.target?.result as string;
-        console.log(`SimpleImageUpload: File ${index + 1} loaded, URL length:`, imageUrl.length);
-        newImages.push(imageUrl);
-        processedCount++;
-        
-        console.log(`SimpleImageUpload: Processed ${processedCount}/${validFiles.length} files`);
-        if (processedCount === validFiles.length) {
-          console.log('SimpleImageUpload: All files processed, updating images:', newImages.length);
-          onImagesChange([...images, ...newImages]);
-        }
-      };
-      reader.onerror = (error) => {
-        console.error('SimpleImageUpload: Error reading file:', error);
-        alert(`Error reading file: ${file.name}`);
-      };
-      reader.readAsDataURL(file);
-    });
+    try {
+      // Upload files to Supabase Storage
+      const uploadedUrls = await imageStorageService.uploadImages(
+        validFiles, 
+        'products', 
+        user.id
+      );
+
+      console.log('SimpleImageUpload: Files uploaded successfully:', uploadedUrls);
+      
+      // Update images with the new URLs
+      onImagesChange([...images, ...uploadedUrls]);
+    } catch (error) {
+      console.error('SimpleImageUpload: Error uploading files:', error);
+      alert('Error uploading images. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +78,20 @@ export default function SimpleImageUpload({
     }
   };
 
-  const removeImage = (index: number) => {
+  const removeImage = async (index: number) => {
+    const imageToRemove = images[index];
+    
+    // If it's a Supabase Storage URL, delete it from storage
+    if (imageStorageService.isSupabaseImage(imageToRemove)) {
+      try {
+        await imageStorageService.deleteImage(imageToRemove, 'products');
+        console.log('Image deleted from storage:', imageToRemove);
+      } catch (error) {
+        console.error('Error deleting image from storage:', error);
+        // Continue with removal from UI even if storage deletion fails
+      }
+    }
+    
     const newImages = images.filter((_, i) => i !== index);
     onImagesChange(newImages);
   };
@@ -106,24 +119,32 @@ export default function SimpleImageUpload({
             multiple
             onChange={handleFileInputChange}
             className="hidden"
+            disabled={isUploading}
           />
           
           <div className="space-y-2">
             <div className="flex justify-center">
               <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-full">
-                <Upload size={24} className="text-gray-400" />
+                {isUploading ? (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                ) : (
+                  <Upload size={24} className="text-gray-400" />
+                )}
               </div>
             </div>
             <div>
               <button
                 type="button"
                 onClick={() => {
-                  console.log('SimpleImageUpload: Upload button clicked, fileInputRef:', fileInputRef.current);
-                  fileInputRef.current?.click();
+                  if (!isUploading) {
+                    console.log('SimpleImageUpload: Upload button clicked, fileInputRef:', fileInputRef.current);
+                    fileInputRef.current?.click();
+                  }
                 }}
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                disabled={isUploading}
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Click to upload
+                {isUploading ? 'Uploading...' : 'Click to upload'}
               </button>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400">

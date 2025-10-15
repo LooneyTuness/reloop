@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { supabaseDataService } from '@/lib/supabase/data-service';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
+import { imageStorageService } from '@/lib/supabase/image-storage';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { User, Mail, Phone, MapPin, Globe, Save, Camera } from 'lucide-react';
 import Image from 'next/image';
@@ -144,19 +145,23 @@ export default function SellerProfileManager() {
     if (!user?.id) return;
 
     try {
-      // Convert blob to data URL for display
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const imageUrl = event.target?.result as string;
-        
-        // In a real app, you would upload the blob to Supabase Storage
-        // For now, we'll use the data URL directly
-        await supabaseDataService.updateSellerProfile(user.id, { avatar_url: imageUrl });
-        setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
-        updateAvatar(imageUrl);
-        setSuccess('Profile picture updated!');
-      };
-      reader.readAsDataURL(croppedImageBlob);
+      // Convert blob to file
+      const file = new File([croppedImageBlob], 'profile-picture.jpg', {
+        type: 'image/jpeg'
+      });
+
+      // Upload to Supabase Storage
+      const imageUrl = await imageStorageService.uploadImage(
+        file, 
+        'profiles', 
+        user.id
+      );
+      
+      // Update profile in database
+      await supabaseDataService.updateSellerProfile(user.id, { avatar_url: imageUrl });
+      setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
+      updateAvatar(imageUrl);
+      setSuccess('Profile picture updated!');
     } catch (error) {
       console.error('Error uploading cropped image:', error);
       setError('Failed to update profile picture');
