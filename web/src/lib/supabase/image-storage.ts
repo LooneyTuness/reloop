@@ -26,7 +26,7 @@ export class ImageStorageService {
         const { error } = await this.supabase.storage
           .from('images')
           .upload(filePath, file, {
-            cacheControl: '3600',
+            cacheControl: '31536000', // 1 year cache for better performance
             upsert: false
           });
 
@@ -146,6 +146,36 @@ export class ImageStorageService {
     url.searchParams.set('quality', quality.toString());
     
     return url.toString();
+  }
+
+  /**
+   * Get a refreshed image URL with cache-busting parameter
+   * @param imageUrl - Original image URL
+   * @returns Refreshed image URL
+   */
+  getRefreshedImageUrl(imageUrl: string): string {
+    if (!this.isSupabaseImage(imageUrl)) {
+      return imageUrl;
+    }
+
+    const url = new URL(imageUrl);
+    url.searchParams.set('t', Date.now().toString());
+    return url.toString();
+  }
+
+  /**
+   * Check if an image URL is accessible
+   * @param imageUrl - Image URL to check
+   * @returns Promise<boolean>
+   */
+  async isImageAccessible(imageUrl: string): Promise<boolean> {
+    try {
+      const response = await fetch(imageUrl, { method: 'HEAD' });
+      return response.ok;
+    } catch (error) {
+      console.error('Error checking image accessibility:', error);
+      return false;
+    }
   }
 }
 

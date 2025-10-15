@@ -5,6 +5,7 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { ProductsZeroState } from '@/components/seller-dashboard/ZeroStates';
 import PlaceholderImage from '@/components/PlaceholderImage';
+import EnhancedImage from '@/components/EnhancedImage';
 import { Search, Filter, Plus, Edit, Trash2, Eye, MoreVertical, Package } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
@@ -242,11 +243,13 @@ function ListingsContent() {
                   <div className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs px-1 py-0.5 rounded z-10">
                     #{index + 1}
                   </div>
-                  <PlaceholderImage
+                  <EnhancedImage
                     src={productImage}
                     alt={product.title || 'Product'}
                     className="w-full h-full object-cover"
                     fallbackText={t("noImage")}
+                    retryCount={3}
+                    enableRefresh={true}
                   />
                   <div className="absolute top-2 right-2">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(product.status || 'active')}`}>

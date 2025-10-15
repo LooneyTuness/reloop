@@ -23,11 +23,11 @@ export default function PlaceholderImage({
     setImageError(false);
     setImageLoaded(false);
     
-    // Set a timeout to show fallback if image doesn't load within 10 seconds
+    // Set a longer timeout to show fallback if image doesn't load within 30 seconds
     const timeout = setTimeout(() => {
       console.log('Image load timeout for:', src.substring(0, 50) + '...');
       setImageError(true);
-    }, 10000);
+    }, 30000); // Increased from 10 to 30 seconds
     
     return () => clearTimeout(timeout);
   }, [src]); // Only depend on src, not on imageLoaded or imageError
@@ -35,6 +35,34 @@ export default function PlaceholderImage({
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     console.log('Image failed to load:', src);
     console.log('Error event:', e);
+    
+    // For Supabase images, try to refresh the URL before giving up
+    if (src.includes('supabase.co') && src.includes('/storage/v1/object/public/images/')) {
+      console.log('Attempting to refresh Supabase image URL...');
+      // Add a cache-busting parameter to force refresh
+      const url = new URL(src);
+      url.searchParams.set('t', Date.now().toString());
+      const refreshedSrc = url.toString();
+      
+      // Try loading the refreshed URL
+      const img = new Image();
+      img.onload = () => {
+        console.log('Refreshed image loaded successfully');
+        setImageError(false);
+        setImageLoaded(true);
+        // Update the src to the refreshed URL
+        if (e.currentTarget) {
+          e.currentTarget.src = refreshedSrc;
+        }
+      };
+      img.onerror = () => {
+        console.log('Refreshed image also failed to load');
+        setImageError(true);
+      };
+      img.src = refreshedSrc;
+      return;
+    }
+    
     setImageError(true);
   };
 

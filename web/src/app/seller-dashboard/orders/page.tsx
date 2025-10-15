@@ -5,6 +5,7 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { OrdersZeroState } from '@/components/seller-dashboard/ZeroStates';
 import { Search, Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, Download, MoreVertical, CreditCard, Info, Mail, Phone, MapPin } from 'lucide-react';
+import EnhancedImage from '@/components/EnhancedImage';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
@@ -476,10 +477,12 @@ function OrdersContent() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10 relative group">
-                          <img
+                          <EnhancedImage
                             className="h-10 w-10 rounded-lg object-cover cursor-pointer hover:opacity-80 transition-opacity"
                             src={order.product_image || '/api/placeholder/60/60'}
                             alt={order.product_name || 'Product'}
+                            retryCount={2}
+                            enableRefresh={true}
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
@@ -544,10 +547,12 @@ function OrdersContent() {
                           return (
                           <div key={index} className="flex items-center gap-2">
                               <div className="relative group">
-                                <img
+                                <EnhancedImage
                                   src={images[0]}
                               alt={item.items?.title || 'Product'}
                                   className="w-8 h-8 rounded object-cover flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                                  retryCount={2}
+                                  enableRefresh={true}
                                   onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -1012,10 +1017,12 @@ function OrdersContent() {
                           <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-xl p-4 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
                           <div className="flex gap-4">
                               <div className="flex-shrink-0 relative group">
-                                <img
+                                <EnhancedImage
                                   src={images[0]}
                                 alt={orderItem.items?.title || 'Product'}
                                   className="w-20 h-20 rounded-lg object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                                  retryCount={2}
+                                  enableRefresh={true}
                                   onClick={() => openImageViewer(images, orderItem.items?.title || 'Product', 0)}
                                 />
                                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center transition-all">
