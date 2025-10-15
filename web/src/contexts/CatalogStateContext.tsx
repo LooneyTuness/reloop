@@ -7,7 +7,7 @@ interface CatalogItem {
   id: string;
   name?: string;
   title?: string;
-  photos?: string[] | string;
+  images?: string[] | string;
   price: number;
   condition?: string;
   brand?: string;
