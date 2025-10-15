@@ -117,6 +117,37 @@ function OrdersContent() {
   }, []);
 
   const generatePDF = useCallback((order: ExtendedOrder) => {
+    // Get all translations upfront to ensure they're available
+    const translations = {
+      orderDetails: t('orderDetails'),
+      orderId: t('orderId'),
+      orderDate: t('orderDate'),
+      status: t('status'),
+      customerInformation: t('customerInformation'),
+      fullName: t('fullName'),
+      email: t('email'),
+      phone: t('phone'),
+      shippingAddress: t('shippingAddress'),
+      address: t('address'),
+      cityPostalCode: t('cityPostalCode'),
+      orderNotes: t('orderNotes'),
+      productsInThisOrder: t('productsInThisOrder'),
+      unknownProduct: t('unknownProduct'),
+      quantity: t('quantity'),
+      unitPrice: t('unitPrice'),
+      totalPrice: t('totalPrice'),
+      size: t('size'),
+      brand: t('brand'),
+      condition: t('condition'),
+      orderSummary: t('orderSummary'),
+      numberOfItems: t('numberOfItems'),
+      paymentMethod: t('paymentMethod'),
+      totalAmount: t('totalAmount'),
+      generatedOn: t('generatedOn'),
+      unknown: t('unknown'),
+      errorGeneratingPDF: t('errorGeneratingPDF')
+    };
+
     try {
       const pdf = new jsPDF();
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -157,13 +188,13 @@ function OrdersContent() {
       // Order Details
       pdf.setFontSize(20);
       pdf.setFont('helvetica', 'bold');
-      yPosition = addText('Order Details', margin, yPosition);
+      yPosition = addText(translations.orderDetails, margin, yPosition);
       
       pdf.setFontSize(12);
       pdf.setFont('helvetica', 'normal');
-      yPosition = addText(`Order ID: ${order.id}`, margin, yPosition + 5);
-      yPosition = addText(`Order Date: ${order.created_at ? new Date(order.created_at).toLocaleDateString() : 'Unknown date'}`, margin, yPosition);
-      yPosition = addText(`Status: ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}`, margin, yPosition);
+      yPosition = addText(`${translations.orderId}: ${order.id}`, margin, yPosition + 5);
+      yPosition = addText(`${translations.orderDate}: ${order.created_at ? new Date(order.created_at).toLocaleDateString() : translations.unknown}`, margin, yPosition);
+      yPosition = addText(`${translations.status}: ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}`, margin, yPosition);
       
       yPosition = addLine(yPosition + 5);
 
@@ -171,13 +202,13 @@ function OrdersContent() {
       if (order.full_name || order.email || order.phone) {
         pdf.setFontSize(14);
         pdf.setFont('helvetica', 'bold');
-        yPosition = addText('Customer Information', margin, yPosition);
+        yPosition = addText(translations.customerInformation, margin, yPosition);
         
         pdf.setFontSize(10);
         pdf.setFont('helvetica', 'normal');
-        if (order.full_name) yPosition = addText(`Full Name: ${order.full_name}`, margin, yPosition);
-        if (order.email) yPosition = addText(`Email: ${order.email}`, margin, yPosition);
-        if (order.phone) yPosition = addText(`Phone: ${order.phone}`, margin, yPosition);
+        if (order.full_name) yPosition = addText(`${translations.fullName}: ${order.full_name}`, margin, yPosition);
+        if (order.email) yPosition = addText(`${translations.email}: ${order.email}`, margin, yPosition);
+        if (order.phone) yPosition = addText(`${translations.phone}: ${order.phone}`, margin, yPosition);
         
         yPosition = addLine(yPosition + 5);
       }
@@ -186,14 +217,14 @@ function OrdersContent() {
       if (order.address_line1 || order.city || order.postal_code) {
         pdf.setFontSize(14);
         pdf.setFont('helvetica', 'bold');
-        yPosition = addText('Shipping Address', margin, yPosition);
+        yPosition = addText(translations.shippingAddress, margin, yPosition);
         
         pdf.setFontSize(10);
         pdf.setFont('helvetica', 'normal');
-        if (order.address_line1) yPosition = addText(`Address: ${order.address_line1}`, margin, yPosition);
+        if (order.address_line1) yPosition = addText(`${translations.address}: ${order.address_line1}`, margin, yPosition);
         if (order.address_line2) yPosition = addText(order.address_line2, margin, yPosition);
         if (order.city || order.postal_code) {
-          yPosition = addText(`City & Postal Code: ${[order.city, order.postal_code].filter(Boolean).join(', ')}`, margin, yPosition);
+          yPosition = addText(`${translations.cityPostalCode}: ${[order.city, order.postal_code].filter(Boolean).join(', ')}`, margin, yPosition);
         }
         
         yPosition = addLine(yPosition + 5);
@@ -203,7 +234,7 @@ function OrdersContent() {
       if (order.notes) {
         pdf.setFontSize(14);
         pdf.setFont('helvetica', 'bold');
-        yPosition = addText('Order Notes', margin, yPosition);
+        yPosition = addText(translations.orderNotes, margin, yPosition);
         
         pdf.setFontSize(10);
         pdf.setFont('helvetica', 'normal');
@@ -215,7 +246,7 @@ function OrdersContent() {
       // Products
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'bold');
-      yPosition = addText('Products in this Order', margin, yPosition);
+      yPosition = addText(translations.productsInThisOrder, margin, yPosition);
       
       pdf.setFontSize(10);
       pdf.setFont('helvetica', 'normal');
@@ -224,14 +255,14 @@ function OrdersContent() {
       orderItems.forEach((item: OrderItem, index: number) => {
         yPosition = checkNewPage(yPosition);
         
-        yPosition = addText(`${index + 1}. ${item.items?.title || 'Unknown Product'}`, margin, yPosition);
-        yPosition = addText(`   Quantity: ${item.quantity}`, margin + 10, yPosition);
-        yPosition = addText(`   Unit Price: ${item.price?.toFixed(2)} MKD`, margin + 10, yPosition);
-        yPosition = addText(`   Total Price: ${(item.quantity * item.price)?.toFixed(2)} MKD`, margin + 10, yPosition);
+        yPosition = addText(`${index + 1}. ${item.items?.title || translations.unknownProduct}`, margin, yPosition);
+        yPosition = addText(`   ${translations.quantity}: ${item.quantity}`, margin + 10, yPosition);
+        yPosition = addText(`   ${translations.unitPrice}: ${item.price?.toFixed(2)} MKD`, margin + 10, yPosition);
+        yPosition = addText(`   ${translations.totalPrice}: ${(item.quantity * item.price)?.toFixed(2)} MKD`, margin + 10, yPosition);
         
-        if (item.items?.size) yPosition = addText(`   Size: ${item.items.size}`, margin + 10, yPosition);
-        if (item.items?.brand) yPosition = addText(`   Brand: ${item.items.brand}`, margin + 10, yPosition);
-        if (item.items?.condition) yPosition = addText(`   Condition: ${item.items.condition}`, margin + 10, yPosition);
+        if (item.items?.size) yPosition = addText(`   ${translations.size}: ${item.items.size}`, margin + 10, yPosition);
+        if (item.items?.brand) yPosition = addText(`   ${translations.brand}: ${item.items.brand}`, margin + 10, yPosition);
+        if (item.items?.condition) yPosition = addText(`   ${translations.condition}: ${item.items.condition}`, margin + 10, yPosition);
         if (item.items?.category_id) yPosition = addText(`   Category ID: ${item.items.category_id}`, margin + 10, yPosition);
         
         yPosition += 5;
@@ -242,12 +273,12 @@ function OrdersContent() {
       // Order Summary
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'bold');
-      yPosition = addText('Order Summary', margin, yPosition);
+      yPosition = addText(translations.orderSummary, margin, yPosition);
       
       pdf.setFontSize(10);
       pdf.setFont('helvetica', 'normal');
-      yPosition = addText(`Number of Items: ${orderItems.length}`, margin, yPosition);
-      yPosition = addText(`Payment Method: ${order.payment_method || 'Unknown'}`, margin, yPosition);
+      yPosition = addText(`${translations.numberOfItems}: ${orderItems.length}`, margin, yPosition);
+      yPosition = addText(`${translations.paymentMethod}: ${order.payment_method || translations.unknown}`, margin, yPosition);
 
       // Calculate total amount
       const totalAmount = orderItems.reduce((sum: number, item: OrderItem) => sum + (item.quantity * item.price), 0);
@@ -257,20 +288,20 @@ function OrdersContent() {
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(0, 0, 0);
-      pdf.text(`${t('totalAmount')}: ${totalAmount.toFixed(2)} MKD`, pageWidth - 80, totalY);
+      pdf.text(`${translations.totalAmount}: ${totalAmount.toFixed(2)} MKD`, pageWidth - 80, totalY);
 
       // Footer
       pdf.setFontSize(8);
       pdf.setFont('helvetica', 'normal');
       pdf.setTextColor(100, 100, 100);
-      pdf.text(`${t('generatedOn')}:`, margin, pdf.internal.pageSize.getHeight() - 20);
+      pdf.text(`${translations.generatedOn}:`, margin, pdf.internal.pageSize.getHeight() - 20);
       pdf.text(new Date().toLocaleString(), margin + 30, pdf.internal.pageSize.getHeight() - 20);
 
       // Save the PDF
       pdf.save(`order-${order.id}-${new Date().toISOString().split('T')[0]}.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert(t('errorGeneratingPDF'));
+      alert(translations.errorGeneratingPDF);
     }
   }, [t]);
 
