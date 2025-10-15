@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/supabase.admin";
 
-export async function GET(req: NextRequest) {
+// Simple in-memory rate limiting (use Redis in production)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 10; // 10 requests per minute per user
+
+export async function GET() {
   try {
     if (!supabaseAdmin) {
       return NextResponse.json(
@@ -11,7 +16,7 @@ export async function GET(req: NextRequest) {
     }
 
     // First check if the table exists
-    const { data: tableCheck, error: tableError } = await supabaseAdmin
+    const { error: tableError } = await supabaseAdmin
       .from("seller_profiles")
       .select("id")
       .limit(1);
@@ -63,6 +68,60 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check if user is authenticated and has admin role
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.split(' ')[1];
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: "Invalid authentication token" },
+        { status: 401 }
+      );
+    }
+
+    // Check if user has admin role
+    const { data: profile } = await supabaseAdmin
+      .from("seller_profiles")
+      .select("role")
+      .eq("user_id", user.id)
+      .single();
+
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.json(
+        { error: "Admin access required" },
+        { status: 403 }
+      );
+    }
+
+    // Rate limiting check
+    const now = Date.now();
+    const userRateLimit = rateLimitMap.get(user.id);
+    
+    if (userRateLimit) {
+      if (now < userRateLimit.resetTime) {
+        if (userRateLimit.count >= RATE_LIMIT_MAX_REQUESTS) {
+          return NextResponse.json(
+            { error: "Rate limit exceeded. Please try again later." },
+            { status: 429 }
+          );
+        }
+        userRateLimit.count++;
+      } else {
+        // Reset the counter
+        rateLimitMap.set(user.id, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+      }
+    } else {
+      rateLimitMap.set(user.id, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    }
+
     const { email, fullName, createdBy } = await req.json();
 
     if (!email || !fullName || !createdBy) {
@@ -72,9 +131,30 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Sanitize and validate inputs
+    const sanitizedEmail = email.trim().toLowerCase();
+    const sanitizedFullName = fullName.trim().replace(/[<>]/g, '');
+    const sanitizedCreatedBy = createdBy.trim().replace(/[<>]/g, '');
+
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(sanitizedEmail)) {
+      return NextResponse.json(
+        { error: "Invalid email format" },
+        { status: 400 }
+      );
+    }
+
+    // Validate name length and characters
+    if (sanitizedFullName.length < 2 || sanitizedFullName.length > 100) {
+      return NextResponse.json(
+        { error: "Full name must be between 2 and 100 characters" },
+        { status: 400 }
+      );
+    }
+
+    // Check for suspicious patterns
+    if (sanitizedEmail.includes('..') || sanitizedEmail.startsWith('.') || sanitizedEmail.endsWith('.')) {
       return NextResponse.json(
         { error: "Invalid email format" },
         { status: 400 }
@@ -82,7 +162,7 @@ export async function POST(req: NextRequest) {
     }
 
     // First check if the table exists
-    const { data: tableCheck, error: tableError } = await supabaseAdmin
+    const { error: tableError } = await supabaseAdmin
       .from("seller_profiles")
       .select("id")
       .limit(1);
@@ -104,7 +184,7 @@ export async function POST(req: NextRequest) {
     const { data: existingProfile } = await supabaseAdmin
       .from("seller_profiles")
       .select("id")
-      .eq("email", email)
+      .eq("email", sanitizedEmail)
       .single();
 
     if (existingProfile) {
@@ -118,8 +198,8 @@ export async function POST(req: NextRequest) {
     let existingUser = null;
     try {
       const { data: users } = await supabaseAdmin.auth.admin.listUsers();
-      existingUser = users.users.find(user => user.email === email);
-    } catch (listError) {
+      existingUser = users.users.find(user => user.email === sanitizedEmail);
+    } catch {
       console.log("Could not list users, will create new user");
     }
 
@@ -128,10 +208,10 @@ export async function POST(req: NextRequest) {
     if (!existingUser) {
       // User doesn't exist, create them
       const { data: newUser, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
-        email: email,
+        email: sanitizedEmail,
         email_confirm: true,
         user_metadata: {
-          full_name: fullName
+          full_name: sanitizedFullName
         }
       });
 
@@ -152,13 +232,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Create seller profile
+    // For production, you can change this to false for manual approval
+    const autoApprove = process.env.NODE_ENV === 'production' ? false : true;
+    
     const { data: seller, error: profileError } = await supabaseAdmin
       .from("seller_profiles")
       .insert({
         user_id: userId,
-        email: email,
+        email: sanitizedEmail,
+        full_name: sanitizedFullName,
         role: "seller",
-        is_approved: true
+        is_approved: autoApprove
       })
       .select()
       .single();
@@ -175,6 +259,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Log the seller creation for audit purposes
+    console.log(`[AUDIT] Seller created by admin ${user.id} (${sanitizedCreatedBy}):`, {
+      sellerId: seller.id,
+      sellerEmail: sanitizedEmail,
+      sellerName: sanitizedFullName,
+      createdBy: sanitizedCreatedBy,
+      timestamp: new Date().toISOString(),
+      adminUserId: user.id,
+      isApproved: autoApprove
+    });
+
     // Generate dashboard URL
     const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL}/seller-dashboard`;
 
@@ -182,7 +277,10 @@ export async function POST(req: NextRequest) {
       success: true,
       seller,
       dashboardUrl,
-      message: "Seller created successfully"
+      message: autoApprove 
+        ? "Seller created and approved successfully" 
+        : "Seller created successfully. Pending admin approval.",
+      requiresApproval: !autoApprove
     });
 
   } catch (error) {

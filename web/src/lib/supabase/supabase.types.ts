@@ -66,7 +66,6 @@ export type Database = {
           condition?: string
           size?: string | null
           brand?: string | null
-          category?: string
           category_id?: string | null
           photos?: string[] | null
           seller_id?: string | null
@@ -94,7 +93,6 @@ export type Database = {
           condition?: string
           size?: string | null
           brand?: string | null
-          category?: string
           category_id?: string | null
           photos?: string[] | null
           seller_id?: string | null
@@ -122,7 +120,6 @@ export type Database = {
           condition?: string
           size?: string | null
           brand?: string | null
-          category?: string
           category_id?: string | null
           photos?: string[] | null
           seller_id?: string | null

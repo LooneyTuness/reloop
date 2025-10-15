@@ -465,7 +465,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         user_id: user.id,
         user_email: user.email,
         description: productData.description || null,
-        category: productData.category || null,
         category_id: productData.category_id || null,
         condition: productData.condition || 'excellent',
         size: productData.size || null,

@@ -24,9 +24,11 @@ export function useSignUpWithEmail() {
       const redirectUrl = urlParams.get('redirect') || '';
       
       // Include redirect URL in the email confirmation link
+      // Use environment variable for production, fallback to window.location.origin for development
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
       const emailRedirectTo = redirectUrl 
-        ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectUrl)}`
-        : `${window.location.origin}/auth/callback`;
+        ? `${baseUrl}/auth/callback?redirect=${encodeURIComponent(redirectUrl)}`
+        : `${baseUrl}/auth/callback`;
       
       console.log('Sign-up with email redirect to:', emailRedirectTo);
       

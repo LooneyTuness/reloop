@@ -6,10 +6,12 @@ export async function signInWithProvider(provider: AuthProvider) {
   const supabase = createBrowserClient();
   
   if (provider === "google") {
+    // Use environment variable for production, fallback to window.location.origin for development
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
     return supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${baseUrl}/auth/callback`,
       },
     });
   }
@@ -25,11 +27,14 @@ export async function signOut() {
 export async function signUpWithEmail(email: string, password: string) {
   const supabase = createBrowserClient();
   
+  // Use environment variable for production, fallback to window.location.origin for development
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+  
   return supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: `${baseUrl}/auth/callback`,
     },
   });
 } 

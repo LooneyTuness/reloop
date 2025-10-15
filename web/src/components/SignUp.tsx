@@ -67,7 +67,7 @@ export default function SignUpForm(props: SignUpFormProps) {
           data: {
             username: formData.username,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/auth/callback`
         },
       });
 

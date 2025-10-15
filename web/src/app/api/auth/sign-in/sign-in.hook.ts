@@ -89,9 +89,11 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       });
       
       // Include redirect URL in the magic link callback URL
+      // Use environment variable for production, fallback to window.location.origin for development
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
       const emailRedirectTo = redirectUrl 
-        ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectUrl)}`
-        : `${window.location.origin}/auth/callback`;
+        ? `${baseUrl}/auth/callback?redirect=${encodeURIComponent(redirectUrl)}`
+        : `${baseUrl}/auth/callback`;
       
       console.log('Magic link email redirect to:', emailRedirectTo);
       
