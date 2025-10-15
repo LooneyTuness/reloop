@@ -980,191 +980,205 @@ function OrdersContent() {
 
                   {/* Product Items */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 print-mk-products">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2 print-mk-products">
                       <Package className="w-5 h-5" />
                       Products in this Order ({selectedOrder.seller_order_items?.length || selectedOrder.order_items?.length || 0} <span className="print-mk-items">items</span>)
                     </h3>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {(selectedOrder.seller_order_items || selectedOrder.order_items || []).map((orderItem: OrderItem, index: number) => {
                         const images = orderItem.items?.images ? 
                           (Array.isArray(orderItem.items.images) ? orderItem.items.images : [orderItem.items.images]) : 
                           ['/api/placeholder/80/80'];
                         
                         return (
-                          <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-xl p-4 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
-                          <div className="flex gap-4">
-                              <div className="flex-shrink-0 relative group">
+                          <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-xl p-4 sm:p-6 bg-white dark:bg-gray-800 hover:shadow-lg transition-all duration-300">
+                            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                              {/* Image Section */}
+                              <div className="flex-shrink-0 relative group self-start">
                                 <EnhancedImage
                                   src={images[0]}
-                                alt={orderItem.items?.title || 'Product'}
-                                  className="w-20 h-20 rounded-lg object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                                  alt={orderItem.items?.title || 'Product'}
+                                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover cursor-pointer hover:opacity-80 transition-opacity shadow-md"
                                   retryCount={2}
                                   enableRefresh={true}
                                   onClick={() => openImageViewer(images, orderItem.items?.title || 'Product', 0)}
                                 />
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center transition-all">
-                                  <ZoomIn className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-xl flex items-center justify-center transition-all">
+                                  <ZoomIn className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
                                 {images.length > 1 && (
-                                  <div className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                                  <div className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold shadow-lg">
                                     {images.length}
                                   </div>
                                 )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex justify-between items-start mb-2">
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                  {orderItem.items?.title || 'Unknown Product'}
-                                </h4>
-                                <div className="text-right">
-                                  <p className="text-lg font-bold text-gray-900 dark:text-white print-currency">
-                                    {(orderItem.quantity * orderItem.price)?.toFixed(2)} MKD
-                                  </p>
-                                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    {orderItem.quantity} × <span className="print-currency">{orderItem.price?.toFixed(2)} MKD</span> <span className="print-mk-each">each</span>
-                                  </p>
-                                </div>
                               </div>
                               
-                              <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                  <span className="text-gray-600 dark:text-gray-400 print-mk-quantity">Quantity:</span>
-                                  <span className="ml-2 font-medium text-gray-900 dark:text-white">
-                                    {orderItem.quantity}
-                                  </span>
+                              {/* Content Section */}
+                              <div className="flex-1 min-w-0">
+                                {/* Header with title and price */}
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                                  <div className="flex-1 min-w-0">
+                                    <h4 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                                      {orderItem.items?.title || 'Unknown Product'}
+                                    </h4>
+                                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                      <span className="print-mk-qty">Qty:</span>
+                                      <span className="font-medium">{orderItem.quantity}</span>
+                                      <span>×</span>
+                                      <span className="print-currency font-medium">{orderItem.price?.toFixed(2)} MKD</span>
+                                      <span className="print-mk-each">each</span>
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white print-currency">
+                                      {(orderItem.quantity * orderItem.price)?.toFixed(2)} MKD
+                                    </p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <span className="text-gray-600 dark:text-gray-400 print-mk-unit-price">Unit Price:</span>
-                                  <span className="ml-2 font-medium text-gray-900 dark:text-white print-currency">
-                                    {orderItem.price?.toFixed(2)} MKD
-                                  </span>
-                                </div>
-                                <div>
-                                  <span className="text-gray-600 dark:text-gray-400 print-mk-size">Size:</span>
-                                  <span className="ml-2 font-medium text-gray-900 dark:text-white">
-                                    {orderItem.items?.size || 'N/A'}
-                                  </span>
-                                </div>
-                                <div>
-                                  <span className="text-gray-600 dark:text-gray-400 print-mk-brand">Brand:</span>
-                                  <span className="ml-2 font-medium text-gray-900 dark:text-white">
-                                    {orderItem.items?.brand || 'N/A'}
-                                  </span>
-                                </div>
-                                <div>
-                                  <span className="text-gray-600 dark:text-gray-400 print-mk-condition">Condition:</span>
-                                  <span className="ml-2 font-medium text-gray-900 dark:text-white">
-                                    {orderItem.items?.condition || 'N/A'}
-                                  </span>
-                                </div>
-                                <div>
-                                  <span className="text-gray-600 dark:text-gray-400 print-mk-category">Category:</span>
-                                  <span className="ml-2 font-medium text-gray-900 dark:text-white">
-                                    {orderItem.items?.category_id || 'N/A'}
-                                  </span>
-                                </div>
-                                {orderItem.items?.old_price && (
-                                  <div className="col-span-2">
-                                    <span className="text-gray-600 dark:text-gray-400 print-mk-original-price">Original Price:</span>
-                                    <span className="ml-2 font-medium text-gray-500 line-through print-currency">
-                                      {orderItem.items.old_price.toFixed(2)} MKD
-                                    </span>
-                                    <span className="ml-2 text-green-600 dark:text-green-400 font-medium">
-                                      (<span className="print-mk-save">Save</span> {((orderItem.items.old_price - orderItem.items.price) / orderItem.items.old_price * 100).toFixed(0)}%)
+                                
+                                {/* Product Details Grid */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-sm">
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                    <span className="text-gray-600 dark:text-gray-400 print-mk-quantity font-medium">Quantity:</span>
+                                    <span className="font-semibold text-gray-900 dark:text-white">
+                                      {orderItem.quantity}
                                     </span>
                                   </div>
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                    <span className="text-gray-600 dark:text-gray-400 print-mk-unit-price font-medium">Unit Price:</span>
+                                    <span className="font-semibold text-gray-900 dark:text-white print-currency">
+                                      {orderItem.price?.toFixed(2)} MKD
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                    <span className="text-gray-600 dark:text-gray-400 print-mk-size font-medium">Size:</span>
+                                    <span className="font-semibold text-gray-900 dark:text-white">
+                                      {orderItem.items?.size || 'N/A'}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                    <span className="text-gray-600 dark:text-gray-400 print-mk-brand font-medium">Brand:</span>
+                                    <span className="font-semibold text-gray-900 dark:text-white">
+                                      {orderItem.items?.brand || 'N/A'}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                    <span className="text-gray-600 dark:text-gray-400 print-mk-condition font-medium">Condition:</span>
+                                    <span className="font-semibold text-gray-900 dark:text-white">
+                                      {orderItem.items?.condition || 'N/A'}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                    <span className="text-gray-600 dark:text-gray-400 print-mk-category font-medium">Category:</span>
+                                    <span className="font-semibold text-gray-900 dark:text-white">
+                                      {orderItem.items?.category_id || 'N/A'}
+                                    </span>
+                                  </div>
+                                  {orderItem.items?.old_price && (
+                                    <div className="col-span-1 sm:col-span-2 lg:col-span-3 bg-green-50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-700">
+                                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                        <span className="text-gray-600 dark:text-gray-400 print-mk-original-price font-medium">Original Price:</span>
+                                        <span className="font-medium text-gray-500 line-through print-currency">
+                                          {orderItem.items.old_price.toFixed(2)} MKD
+                                        </span>
+                                        <span className="text-green-600 dark:text-green-400 font-semibold">
+                                          (<span className="print-mk-save">Save</span> {((orderItem.items.old_price - orderItem.items.price) / orderItem.items.old_price * 100).toFixed(0)}%)
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                
+                                {/* Description Section */}
+                                {orderItem.items?.description && (
+                                  <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                                    <span className="text-gray-600 dark:text-gray-400 text-sm font-medium print-mk-description">Description:</span>
+                                    <p className="text-sm text-gray-700 dark:text-gray-300 mt-2 leading-relaxed">
+                                      {orderItem.items.description}
+                                    </p>
+                                  </div>
                                 )}
-                              </div>
-                              
-                              {orderItem.items?.description && (
-                                <div className="mt-3">
-                                  <span className="text-gray-600 dark:text-gray-400 text-sm print-mk-description">Description:</span>
-                                  <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
-                                    {orderItem.items.description}
-                                  </p>
-                                </div>
-                              )}
 
-                              {/* Order Item Metadata */}
-                              <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1 print-mk-order-details">
-                                  <Info className="w-4 h-4" />
-                                  Item Details
-                                </h5>
-                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                  <div>
-                                    <span className="text-gray-500 dark:text-gray-400 print-mk-item-id">Item ID:</span>
-                                    <span className="ml-1 font-mono text-gray-700 dark:text-gray-300">
-                                      {orderItem.item_id}
-                                    </span>
-                            </div>
-                                  <div>
-                                    <span className="text-gray-500 dark:text-gray-400 print-mk-order-item-id">Order Item ID:</span>
-                                    <span className="ml-1 font-mono text-gray-700 dark:text-gray-300">
-                                      {orderItem.id}
-                                    </span>
-                          </div>
-                                  {orderItem.vendor_id && (
-                                    <div>
-                                      <span className="text-gray-500 dark:text-gray-400 print-mk-vendor-id">Vendor ID:</span>
-                                      <span className="ml-1 font-mono text-gray-700 dark:text-gray-300">
-                                        {orderItem.vendor_id}
-                                      </span>
-                        </div>
-                                  )}
-                                  {orderItem.buyer_name && (
-                                    <div>
-                                      <span className="text-gray-500 dark:text-gray-400 print-mk-buyer-name">Buyer:</span>
-                                      <span className="ml-1 text-gray-700 dark:text-gray-300">
-                                        {orderItem.buyer_name}
+                                {/* Order Item Metadata */}
+                                <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                                  <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2 print-mk-order-details">
+                                    <Info className="w-4 h-4" />
+                                    Item Details
+                                  </h5>
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                                    <div className="flex flex-col gap-1">
+                                      <span className="text-gray-500 dark:text-gray-400 print-mk-item-id font-medium">Item ID:</span>
+                                      <span className="font-mono text-gray-700 dark:text-gray-300 text-xs">
+                                        {orderItem.item_id}
                                       </span>
                                     </div>
-                                  )}
-                                  {orderItem.buyer_email && (
-                                    <div>
-                                      <span className="text-gray-500 dark:text-gray-400 print-mk-buyer-email">Buyer Email:</span>
-                                      <span className="ml-1 text-gray-700 dark:text-gray-300">
-                                        {orderItem.buyer_email}
+                                    <div className="flex flex-col gap-1">
+                                      <span className="text-gray-500 dark:text-gray-400 print-mk-order-item-id font-medium">Order Item ID:</span>
+                                      <span className="font-mono text-gray-700 dark:text-gray-300 text-xs">
+                                        {orderItem.id}
                                       </span>
                                     </div>
-                                  )}
-                                  {orderItem.buyer_phone && (
-                                    <div>
-                                      <span className="text-gray-500 dark:text-gray-400 print-mk-buyer-phone">Buyer Phone:</span>
-                                      <span className="ml-1 text-gray-700 dark:text-gray-300">
-                                        {orderItem.buyer_phone}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {orderItem.created_at && (
-                                    <div>
-                                      <span className="text-gray-500 dark:text-gray-400 print-mk-added-to-order">Added to Order:</span>
-                                      <span className="ml-1 text-gray-700 dark:text-gray-300">
-                                        {new Date(orderItem.created_at).toLocaleString()}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {orderItem.items?.sold_at && (
-                                    <div>
-                                      <span className="text-gray-500 dark:text-gray-400 print-mk-sold-at">Sold At:</span>
-                                      <span className="ml-1 text-gray-700 dark:text-gray-300">
-                                        {new Date(orderItem.items.sold_at).toLocaleString()}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {orderItem.items?.is_active !== undefined && (
-                                    <div>
-                                      <span className="text-gray-500 dark:text-gray-400 print-mk-status">Status:</span>
-                                      <span className={`ml-1 font-medium ${
-                                        orderItem.items.is_active 
-                                          ? 'text-green-600 dark:text-green-400' 
-                                          : 'text-red-600 dark:text-red-400'
-                                      }`}>
-                                        {orderItem.items.is_active ? <span className="print-mk-status-active">Active</span> : <span className="print-mk-status-inactive">Inactive</span>}
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
+                                    {orderItem.vendor_id && (
+                                      <div className="flex flex-col gap-1">
+                                        <span className="text-gray-500 dark:text-gray-400 print-mk-vendor-id font-medium">Vendor ID:</span>
+                                        <span className="font-mono text-gray-700 dark:text-gray-300 text-xs">
+                                          {orderItem.vendor_id}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {orderItem.buyer_name && (
+                                      <div className="flex flex-col gap-1">
+                                        <span className="text-gray-500 dark:text-gray-400 print-mk-buyer-name font-medium">Buyer:</span>
+                                        <span className="text-gray-700 dark:text-gray-300 text-xs">
+                                          {orderItem.buyer_name}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {orderItem.buyer_email && (
+                                      <div className="flex flex-col gap-1">
+                                        <span className="text-gray-500 dark:text-gray-400 print-mk-buyer-email font-medium">Buyer Email:</span>
+                                        <span className="text-gray-700 dark:text-gray-300 text-xs break-all">
+                                          {orderItem.buyer_email}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {orderItem.buyer_phone && (
+                                      <div className="flex flex-col gap-1">
+                                        <span className="text-gray-500 dark:text-gray-400 print-mk-buyer-phone font-medium">Buyer Phone:</span>
+                                        <span className="text-gray-700 dark:text-gray-300 text-xs">
+                                          {orderItem.buyer_phone}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {orderItem.created_at && (
+                                      <div className="flex flex-col gap-1">
+                                        <span className="text-gray-500 dark:text-gray-400 print-mk-added-to-order font-medium">Added to Order:</span>
+                                        <span className="text-gray-700 dark:text-gray-300 text-xs">
+                                          {new Date(orderItem.created_at).toLocaleString()}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {orderItem.items?.sold_at && (
+                                      <div className="flex flex-col gap-1">
+                                        <span className="text-gray-500 dark:text-gray-400 print-mk-sold-at font-medium">Sold At:</span>
+                                        <span className="text-gray-700 dark:text-gray-300 text-xs">
+                                          {new Date(orderItem.items.sold_at).toLocaleString()}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {orderItem.items?.is_active !== undefined && (
+                                      <div className="flex flex-col gap-1">
+                                        <span className="text-gray-500 dark:text-gray-400 print-mk-status font-medium">Status:</span>
+                                        <span className={`font-medium text-xs ${
+                                          orderItem.items.is_active 
+                                            ? 'text-green-600 dark:text-green-400' 
+                                            : 'text-red-600 dark:text-red-400'
+                                        }`}>
+                                          {orderItem.items.is_active ? <span className="print-mk-status-active">Active</span> : <span className="print-mk-status-inactive">Inactive</span>}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
                               </div>
                             </div>
                           </div>
