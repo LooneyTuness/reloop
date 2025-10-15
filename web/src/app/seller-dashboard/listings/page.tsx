@@ -226,7 +226,6 @@ function ListingsContent() {
             // Simplified image handling
             let productImage = '/api/placeholder/400/400'; // Default fallback
             
-            
             if (product.images) {
               if (Array.isArray(product.images) && product.images.length > 0) {
                 productImage = product.images[0];

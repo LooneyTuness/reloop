@@ -86,7 +86,7 @@ function AddProductContent() {
         brand: formData.brand.trim(),
         quantity: parseInt(formData.quantity),
         status: formData.status,
-        photos: images // Use uploaded images instead of placeholder
+        images: images // Use uploaded images instead of placeholder
       };
 
       await addNewProduct(productData);
