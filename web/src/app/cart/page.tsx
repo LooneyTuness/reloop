@@ -129,23 +129,19 @@ export default function CartPage() {
 
       // 2) Create order items
       const orderItems = cart.map((i) => ({
-        order_id: orderData.id,
+        order_id: orderData.id.toString(),
         item_id: i.id,
         name: i.name,
         price: i.price,
         quantity: i.quantity,
-        image_url: Array.isArray(i.image_url)
-          ? (i.image_url[0] as unknown as string)
-          : typeof i.image_url === "string"
-          ? i.image_url
-          : null,
+        image_url: i.image_url || null,
       }));
       const { error: orderItemsError } = await (
         supabase as unknown as {
           from: (table: string) => {
             insert: (
               rows: Array<{
-                order_id: number;
+                order_id: string;
                 item_id: string | number;
                 name: string;
                 price: number;

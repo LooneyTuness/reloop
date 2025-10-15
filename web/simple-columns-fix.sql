@@ -17,16 +17,21 @@ ADD COLUMN IF NOT EXISTS notes TEXT;
 -- 2. Make buyer_id nullable to allow guest orders
 ALTER TABLE orders ALTER COLUMN buyer_id DROP NOT NULL;
 
--- 3. Update existing records to have user_id = buyer_id for backward compatibility
+-- 3. Add missing columns to order_items table for better seller experience
+ALTER TABLE order_items 
+ADD COLUMN IF NOT EXISTS name TEXT,
+ADD COLUMN IF NOT EXISTS image_url TEXT;
+
+-- 4. Update existing records to have user_id = buyer_id for backward compatibility
 UPDATE orders 
 SET user_id = buyer_id 
 WHERE user_id IS NULL AND buyer_id IS NOT NULL;
 
--- 4. Temporarily disable RLS to allow order creation
+-- 5. Temporarily disable RLS to allow order creation
 ALTER TABLE orders DISABLE ROW LEVEL SECURITY;
 ALTER TABLE order_items DISABLE ROW LEVEL SECURITY;
 
--- 5. Verify the changes
+-- 6. Verify the changes
 SELECT column_name, data_type, is_nullable
 FROM information_schema.columns 
 WHERE table_name = 'orders' 
