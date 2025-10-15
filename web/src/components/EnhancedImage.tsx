@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { imageStorageService } from '@/lib/supabase/image-storage';
 
 interface EnhancedImageProps {
@@ -10,6 +10,7 @@ interface EnhancedImageProps {
   fallbackText?: string;
   retryCount?: number;
   enableRefresh?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLImageElement>) => void;
 }
 
 export default function EnhancedImage({ 
@@ -18,10 +19,10 @@ export default function EnhancedImage({
   className = "w-full h-full object-cover",
   fallbackText = "No Image",
   retryCount = 3,
-  enableRefresh = true
+  enableRefresh = true,
+  onClick
 }: EnhancedImageProps) {
   const [imageError, setImageError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [currentSrc, setCurrentSrc] = useState<string | null>(null);
   const [retryAttempts, setRetryAttempts] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -61,15 +62,14 @@ export default function EnhancedImage({
     }
     
     setImageError(false);
-    setImageLoaded(false);
     setRetryAttempts(0);
   }, [src]);
 
   const handleError = async (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     console.log('Image failed to load:', currentSrc);
     
-    // If we haven't exceeded retry attempts and it's a Supabase image
-    if (retryAttempts < retryCount && currentSrc && imageStorageService.isSupabaseImage(currentSrc)) {
+    // If we haven't exceeded retry attempts and it's a Supabase image and refresh is enabled
+    if (retryAttempts < retryCount && currentSrc && imageStorageService.isSupabaseImage(currentSrc) && enableRefresh) {
       console.log(`Retrying image load (attempt ${retryAttempts + 1}/${retryCount})...`);
       
       setIsRefreshing(true);
@@ -88,7 +88,6 @@ export default function EnhancedImage({
         img.onload = () => {
           console.log('Refreshed image loaded successfully');
           setImageError(false);
-          setImageLoaded(true);
           setIsRefreshing(false);
           // Update the src to the refreshed URL
           if (e.currentTarget) {
@@ -125,7 +124,6 @@ export default function EnhancedImage({
 
   const handleLoad = () => {
     console.log('Image loaded successfully:', currentSrc?.substring(0, 50) + '...');
-    setImageLoaded(true);
     setIsRefreshing(false);
   };
 
@@ -173,6 +171,7 @@ export default function EnhancedImage({
       className={className}
       onError={handleError}
       onLoad={handleLoad}
+      onClick={onClick}
       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
     />
   );
