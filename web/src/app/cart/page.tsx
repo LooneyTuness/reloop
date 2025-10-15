@@ -36,6 +36,12 @@ export default function CartPage() {
   const handlePlaceOrder = async () => {
     if (submitting) return;
     if (cart.length === 0) return;
+    
+    // Check if user is authenticated
+    if (!user) {
+      alert("Please sign in to place an order");
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -53,6 +59,23 @@ export default function CartPage() {
       // Get the seller_id from the first item (assuming all items are from the same seller for simplicity)
       const sellerId = (itemsData as Array<{ id: string; user_id: string }>)[0]?.user_id;
       if (!sellerId) throw new Error("Could not determine seller");
+      
+      // Debug logging
+      console.log("Order creation debug:", {
+        userId: user?.id,
+        userObject: user,
+        sellerId: sellerId,
+        total: total,
+        checkout: checkout
+      });
+      
+      // Double-check user authentication
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      console.log("Current user from auth:", currentUser);
+      
+      if (!currentUser) {
+        throw new Error("User not authenticated");
+      }
       
       // 1) Create order
       const { data: orderData, error: orderError } = await (
@@ -89,8 +112,8 @@ export default function CartPage() {
         .from("orders")
         .insert([
           {
-            user_id: user ? user.id : null,
-            buyer_id: user ? user.id : null,
+            user_id: currentUser.id,
+            buyer_id: currentUser.id,
             seller_id: sellerId,
             total_amount: total,
             payment_method: "cash_on_delivery",
