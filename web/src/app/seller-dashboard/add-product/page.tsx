@@ -80,7 +80,6 @@ function AddProductContent() {
         title: formData.name, // Also set title for compatibility
         description: formData.description,
         price: parseFloat(formData.price),
-        category: formData.category,
         category_id: formData.category_id || null,
         condition: formData.condition,
         size: formData.size || null,

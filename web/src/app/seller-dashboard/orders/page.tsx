@@ -231,7 +231,7 @@ function OrdersContent() {
         if (item.items?.size) yPosition = addText(`   Size: ${item.items.size}`, margin + 10, yPosition);
         if (item.items?.brand) yPosition = addText(`   Brand: ${item.items.brand}`, margin + 10, yPosition);
         if (item.items?.condition) yPosition = addText(`   Condition: ${item.items.condition}`, margin + 10, yPosition);
-        if (item.items?.category) yPosition = addText(`   Category: ${item.items.category}`, margin + 10, yPosition);
+        if (item.items?.category_id) yPosition = addText(`   Category ID: ${item.items.category_id}`, margin + 10, yPosition);
         
         yPosition += 5;
       });
@@ -1076,7 +1076,7 @@ function OrdersContent() {
                                 <div>
                                   <span className="text-gray-600 dark:text-gray-400 print-mk-category">Category:</span>
                                   <span className="ml-2 font-medium text-gray-900 dark:text-white">
-                                    {orderItem.items?.category || 'N/A'}
+                                    {orderItem.items?.category_id || 'N/A'}
                                   </span>
                                 </div>
                                 {orderItem.items?.old_price && (

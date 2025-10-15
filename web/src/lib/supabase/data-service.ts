@@ -894,7 +894,7 @@ export class SupabaseDataService {
         productSales[item.id].revenue += orderItem.quantity * orderItem.price;
 
         // Category breakdown
-        const category = item.category || 'Uncategorized';
+        const category = item.category_id || 'Uncategorized';
         if (!categoryData[category]) {
           categoryData[category] = { count: 0, revenue: 0 };
         }

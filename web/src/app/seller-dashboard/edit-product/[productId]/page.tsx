@@ -19,7 +19,7 @@ function EditProductContent() {
     title: '',
     description: '',
     price: '',
-    category: '',
+    category_id: '',
     status: 'active'
   });
 
@@ -32,7 +32,7 @@ function EditProductContent() {
           title: foundProduct.title || '',
           description: foundProduct.description || '',
           price: foundProduct.price?.toString() || '',
-          category: foundProduct.category || '',
+          category_id: foundProduct.category_id || '',
           status: foundProduct.status || 'active'
         });
       }
@@ -57,7 +57,7 @@ function EditProductContent() {
         title: formData.title,
         description: formData.description,
         price: parseFloat(formData.price),
-        category: formData.category,
+        category_id: formData.category_id,
         status: formData.status
       };
 
@@ -157,14 +157,14 @@ function EditProductContent() {
                 </div>
 
                 <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Category
+                  <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Category ID
                   </label>
                   <input
-                    id="category"
-                    name="category"
+                    id="category_id"
+                    name="category_id"
                     type="text"
-                    value={formData.category}
+                    value={formData.category_id}
                     onChange={handleInputChange}
                     placeholder="e.g., Clothing, Electronics"
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"

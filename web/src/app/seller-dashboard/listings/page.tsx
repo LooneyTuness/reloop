@@ -61,7 +61,6 @@ function ListingsContent() {
     // Filter products based on search query and status filter
     let filtered = products.filter(product => {
       const matchesSearch = (product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                           (product.category && product.category.toLowerCase().includes(searchQuery.toLowerCase())) ||
                            (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
       return matchesSearch && matchesStatus;
@@ -267,7 +266,7 @@ function ListingsContent() {
                     {product.title || 'Untitled Product'}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    {product.category || t('uncategorized')}
+                    {product.category_id ? 'Category ID: ' + product.category_id : t('uncategorized')}
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
