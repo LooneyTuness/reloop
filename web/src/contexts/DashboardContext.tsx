@@ -198,7 +198,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           ...item,
           name: item.title,
           views: 0, // Will be updated with real data after fetching
-          price: `${item.price?.toFixed(2) || '0.00'} MKD`,
+          price: item.price?.toFixed(2) || '0.00',
           status: lifecycleStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
         };
       });
@@ -489,7 +489,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       const dashboardProduct: DashboardProduct = {
         ...newProduct,
         views: 0,
-        price: `${newProduct.price?.toFixed(2) || '0.00'} MKD`,
+        price: newProduct.price?.toFixed(2) || '0.00',
         status: 'active'
       };
       setProducts(prev => [dashboardProduct, ...prev]);
@@ -537,7 +537,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         product.id === productId ? { 
           ...product, 
           ...updatedProduct,
-          price: updatedProduct.price ? `${updatedProduct.price.toFixed(2)} MKD` : product.price,
+          price: updatedProduct.price ? updatedProduct.price.toFixed(2) : product.price,
           status: (updatedProduct.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || product.status
         } : product
       ));
@@ -574,7 +574,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return searchResults.map(item => ({
         ...item,
         views: Math.floor(Math.random() * 1000) + 100,
-        price: `${item.price?.toFixed(2) || '0.00'} MKD`,
+        price: item.price?.toFixed(2) || '0.00',
         status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || 'active'
       }));
     } catch (err) {
