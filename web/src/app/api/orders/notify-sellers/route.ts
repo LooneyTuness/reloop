@@ -4,31 +4,22 @@ import { sendEmail } from "@/lib/email";
 export async function POST(req: NextRequest) {
   try {
     const { 
-      buyerEmail, 
-      buyerName, 
+      sellerEmail, 
       items, 
       orderId, 
-      totalAmount, 
-      shippingAddress,
+      buyerName, 
+      totalAmount,
       language = "mk"
     }: {
-      buyerEmail: string;
-      buyerName: string;
+      sellerEmail: string;
       items: Array<{ name: string; quantity: number; price: number }>;
       orderId: number | string;
+      buyerName: string;
       totalAmount: number;
-      shippingAddress: {
-        full_name: string;
-        address_line1: string;
-        address_line2?: string;
-        city: string;
-        postal_code: string;
-        phone: string;
-      };
       language?: string;
     } = await req.json();
 
-    if (!buyerEmail || !Array.isArray(items) || !buyerName) {
+    if (!sellerEmail || !Array.isArray(items) || !buyerName) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
 
@@ -36,8 +27,8 @@ export async function POST(req: NextRequest) {
     const isMacedonian = language === "mk";
     
     const subject = isMacedonian 
-      ? `Потврда за нарачка #${orderId} - vtoraraka`
-      : `Order Confirmation #${orderId} - vtoraraka`;
+      ? `Нова нарачка #${orderId} - vtoraraka`
+      : `New Order #${orderId} - vtoraraka`;
 
     const itemsList = items
       .map((i) => 
@@ -47,26 +38,6 @@ export async function POST(req: NextRequest) {
       )
       .join("<br/>");
 
-    const addressText = isMacedonian ? `
-      <p><strong>Адреса за испорака:</strong></p>
-      <p>
-        ${shippingAddress.full_name}<br/>
-        ${shippingAddress.address_line1}<br/>
-        ${shippingAddress.address_line2 ? shippingAddress.address_line2 + '<br/>' : ''}
-        ${shippingAddress.postal_code} ${shippingAddress.city}<br/>
-        Телефон: ${shippingAddress.phone}
-      </p>
-    ` : `
-      <p><strong>Shipping Address:</strong></p>
-      <p>
-        ${shippingAddress.full_name}<br/>
-        ${shippingAddress.address_line1}<br/>
-        ${shippingAddress.address_line2 ? shippingAddress.address_line2 + '<br/>' : ''}
-        ${shippingAddress.postal_code} ${shippingAddress.city}<br/>
-        Phone: ${shippingAddress.phone}
-      </p>
-    `;
-
     const html = `
       <div style="font-family: system-ui, Segoe UI, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
@@ -74,15 +45,18 @@ export async function POST(req: NextRequest) {
           <p style="color: #6b7280; margin: 5px 0 0 0;">Circular fashion for sustainability</p>
         </div>
         
-        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #0ea5e9;">
           <h2 style="color: #111827; margin: 0 0 15px 0;">
-            ${isMacedonian ? 'Ви благодариме за вашата нарачка!' : 'Thank you for your order!'}
+            ${isMacedonian ? '🎉 Нова нарачка!' : '🎉 New Order!'}
           </h2>
           <p style="color: #374151; margin: 0 0 10px 0;">
-            ${isMacedonian ? 'Здраво' : 'Hello'} ${buyerName},
+            ${isMacedonian ? 'Здраво,' : 'Hello,'}
           </p>
           <p style="color: #374151; margin: 0;">
-            ${isMacedonian ? 'Вашата нарачка е успешно примена и ќе биде обработена наскоро.' : 'Your order has been successfully received and will be processed shortly.'}
+            ${isMacedonian 
+              ? `Имате нова нарачка од ${buyerName}. Ве молиме проверете ги деталите подолу и контактирајте го купувачот за испорака.`
+              : `You have a new order from ${buyerName}. Please review the details below and contact the buyer for shipping.`
+            }
           </p>
         </div>
 
@@ -91,6 +65,7 @@ export async function POST(req: NextRequest) {
             ${isMacedonian ? 'Детали за нарачката' : 'Order Details'}
           </h3>
           <p style="margin: 0 0 10px 0;"><strong>${isMacedonian ? 'Нарачка #' : 'Order #'}: ${orderId}</strong></p>
+          <p style="margin: 0 0 10px 0;"><strong>${isMacedonian ? 'Купувач' : 'Buyer'}: ${buyerName}</strong></p>
           <p style="margin: 0 0 15px 0;">${itemsList}</p>
           <div style="border-top: 1px solid #e5e7eb; padding-top: 10px;">
             <p style="margin: 0; font-size: 18px; font-weight: bold; color: #111827;">
@@ -99,24 +74,33 @@ export async function POST(req: NextRequest) {
           </div>
         </div>
 
-        <div style="margin-bottom: 20px;">
-          ${addressText}
+        <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f59e0b;">
+          <h4 style="color: #92400e; margin: 0 0 10px 0;">
+            ${isMacedonian ? '⚠️ Важно' : '⚠️ Important'}
+          </h4>
+          <ul style="color: #92400e; margin: 0; padding-left: 20px;">
+            <li>${isMacedonian ? 'Контактирајте го купувачот во рок од 24 часа' : 'Contact the buyer within 24 hours'}</li>
+            <li>${isMacedonian ? 'Договорете детали за испорака и плаќање' : 'Arrange shipping and payment details'}</li>
+            <li>${isMacedonian ? 'Плаќањето се врши при доставка' : 'Payment is made upon delivery'}</li>
+            <li>${isMacedonian ? 'За прашања, одете во вашиот продавачки панел' : 'For questions, go to your seller dashboard'}</li>
+          </ul>
         </div>
 
         <div style="background: #ecfdf5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
           <h4 style="color: #059669; margin: 0 0 10px 0;">
             ${isMacedonian ? 'Следни чекори' : 'Next Steps'}
           </h4>
-          <ul style="color: #374151; margin: 0; padding-left: 20px;">
-            <li>${isMacedonian ? 'Продавачот ќе ве контактира со детали за испораката' : 'The seller will contact you with shipping details'}</li>
-            <li>${isMacedonian ? 'Плаќањето се врши при доставка' : 'Payment is made upon delivery'}</li>
-            <li>${isMacedonian ? 'За прашања, контактирајте го продавачот директно' : 'For questions, contact the seller directly'}</li>
-          </ul>
+          <ol style="color: #374151; margin: 0; padding-left: 20px;">
+            <li>${isMacedonian ? 'Проверете ги деталите за нарачката' : 'Review the order details'}</li>
+            <li>${isMacedonian ? 'Контактирајте го купувачот за испорака' : 'Contact the buyer for shipping'}</li>
+            <li>${isMacedonian ? 'Договорете време и место за доставка' : 'Arrange delivery time and location'}</li>
+            <li>${isMacedonian ? 'Одете во вашиот панел за да ја означите нарачката како завршена' : 'Go to your dashboard to mark the order as completed'}</li>
+          </ol>
         </div>
 
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
           <p style="color: #6b7280; font-size: 14px; margin: 0;">
-            ${isMacedonian ? 'За дополнителни прашања, посетете ја нашата веб-страница или контактирајте не.' : 'For additional questions, visit our website or contact us.'}
+            ${isMacedonian ? 'За дополнителни прашања, посетете го вашиот продавачки панел.' : 'For additional questions, visit your seller dashboard.'}
           </p>
           <p style="color: #6b7280; font-size: 12px; margin: 10px 0 0 0;">
             © 2024 vtoraraka. ${isMacedonian ? 'Сите права се задржани.' : 'All rights reserved.'}
@@ -126,13 +110,15 @@ export async function POST(req: NextRequest) {
     `;
 
     await sendEmail({
-      to: buyerEmail,
+      to: sellerEmail,
       subject,
       html,
     });
+    
     return NextResponse.json({ ok: true });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("Error sending seller notification:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
