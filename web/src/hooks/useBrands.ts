@@ -42,6 +42,6 @@ export function useBrands({
     queryFn: () => fetchBrands({ categoryId, mainCategory, subcategory, type }),
     enabled: enabled && (!!categoryId || !!mainCategory || !!subcategory || !!type),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes (garbage collection time)
   });
 }
