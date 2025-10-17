@@ -298,7 +298,7 @@ export class SupabaseDataService {
 
       // Get all order items for these orders
       console.log('🔍 Step 2: Fetching order items...');
-      const orderIds = userOrders.map(order => order.id);
+      const orderIds = userOrders.map((order: Order) => order.id);
       const { data: orderItems, error: orderItemsError } = await (this.supabase as any)
         .from('order_items')
         .select('*')
@@ -313,7 +313,7 @@ export class SupabaseDataService {
 
       // Get all items for these order items
       console.log('🔍 Step 3: Fetching items...');
-      const itemIds = orderItems?.map(item => item.item_id) || [];
+      const itemIds = orderItems?.map((item: OrderItem) => item.item_id) || [];
       const { data: items, error: itemsError } = await (this.supabase as any)
         .from('items')
         .select('id, title, price, images, user_id, size, brand, condition, category_id, old_price, description, is_active, sold_at')
@@ -328,12 +328,12 @@ export class SupabaseDataService {
 
       // Create items map for quick lookup
       const itemsMap = new Map();
-      items?.forEach(item => {
+      items?.forEach((item: Item) => {
         itemsMap.set(item.id, item);
       });
 
       // Combine orders with their items
-      const ordersWithItems = userOrders.map(order => {
+      const ordersWithItems = userOrders.map((order: Order) => {
         const orderItemsForOrder = orderItems
           ?.filter((orderItem: OrderItem) => orderItem?.order_id === order?.id)
           .map((orderItem: OrderItem) => ({
