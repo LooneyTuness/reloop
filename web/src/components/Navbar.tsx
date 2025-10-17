@@ -27,6 +27,9 @@ export default function Navbar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [mobileSearchTerm, setMobileSearchTerm] = useState("");
+  const [mobileSuggestions, setMobileSuggestions] = useState<Suggestion[]>([]);
+  const [showMobileSuggestions, setShowMobileSuggestions] = useState(false);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -40,6 +43,45 @@ export default function Navbar() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showMobileMenu]);
+
+  // Close search suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showSuggestions && !target.closest('.search-container')) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSuggestions]);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showUserMenu && !target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showUserMenu]);
+
+  // Close mobile search suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showMobileSuggestions && !target.closest('.mobile-search-container')) {
+        setShowMobileSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMobileSuggestions]);
 
   async function fetchSuggestions(term: string) {
     if (!term) {
@@ -55,6 +97,22 @@ export default function Navbar() {
       .order("created_at", { ascending: false })
       .limit(6);
     setSuggestions(data || []);
+  }
+
+  async function fetchMobileSuggestions(term: string) {
+    if (!term) {
+      setMobileSuggestions([]);
+      return;
+    }
+    const like = `%${term}%`;
+    const { data } = await supabase
+      .from("items")
+      .select("id,title,description,images")
+      .eq("is_active", true)
+      .or(`title.ilike.${like},description.ilike.${like}`)
+      .order("created_at", { ascending: false })
+      .limit(6);
+    setMobileSuggestions(data || []);
   }
 
   return (
@@ -114,7 +172,7 @@ export default function Navbar() {
 
             {/* Search Bar - Desktop */}
             <div className="hidden lg:flex items-center flex-1 max-w-md mx-6 lg:mx-8">
-              <div className="relative w-full group">
+              <div className="relative w-full group search-container">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -128,8 +186,13 @@ export default function Navbar() {
                   onChange={(e) => {
                     const term = e.target.value;
                     setSearchTerm(term);
-                    setShowSuggestions(true);
-                    fetchSuggestions(term);
+                    if (term.trim()) {
+                      setShowSuggestions(true);
+                      fetchSuggestions(term);
+                    } else {
+                      setShowSuggestions(false);
+                      setSuggestions([]);
+                    }
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
@@ -205,7 +268,7 @@ export default function Navbar() {
 
               {/* User Menu */}
               {user ? (
-                <div className="relative">
+                <div className="relative user-menu-container">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     className="flex items-center space-x-2 p-2 text-gray-600 hover:text-gray-900 transition-all duration-300 rounded-xl hover:bg-gray-50"
@@ -332,12 +395,24 @@ export default function Navbar() {
 
               {/* Search Bar */}
               <div className="p-6 border-b border-gray-200">
-                <div className="relative">
+                <div className="relative mobile-search-container">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                   <input
                     type="text"
                     placeholder={t("searchItems")}
                     className="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                    value={mobileSearchTerm}
+                    onChange={(e) => {
+                      const term = e.target.value;
+                      setMobileSearchTerm(term);
+                      if (term.trim()) {
+                        setShowMobileSuggestions(true);
+                        fetchMobileSuggestions(term);
+                      } else {
+                        setShowMobileSuggestions(false);
+                        setMobileSuggestions([]);
+                      }
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         const term = (e.target as HTMLInputElement).value.trim();
@@ -348,6 +423,42 @@ export default function Navbar() {
                       }
                     }}
                   />
+                  
+                  {/* Mobile Search Suggestions */}
+                  {showMobileSuggestions && mobileSuggestions.length > 0 && (
+                    <div className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden">
+                      {mobileSuggestions.map((s) => {
+                        const img = Array.isArray(s.images) ? s.images[0] : s.images;
+                        return (
+                          <Link
+                            key={s.id}
+                            href={`/products/${s.id}`}
+                            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 last:border-b-0 transition-colors duration-200"
+                            onClick={() => {
+                              setShowMobileSuggestions(false);
+                              setShowMobileMenu(false);
+                            }}
+                          >
+                            <Image
+                              src={img || "/placeholder.svg"}
+                              alt={s.title}
+                              width={32}
+                              height={32}
+                              className="w-8 h-8 object-cover rounded-lg"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium text-gray-900 truncate">
+                                {s.title}
+                              </div>
+                              <div className="text-xs text-gray-500 truncate">
+                                {s.description}
+                              </div>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
 
