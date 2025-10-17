@@ -93,8 +93,6 @@ export default function MyOrdersPage() {
     title: ''
   });
 
-  const dataService = new SupabaseDataService();
-
   const fetchOrders = useCallback(async () => {
     if (!user?.id) {
       setIsLoading(false);
@@ -104,6 +102,7 @@ export default function MyOrdersPage() {
     try {
       setIsLoading(true);
       setError(null);
+      const dataService = new SupabaseDataService();
       const userOrders = await dataService.getUserOrders(user.id);
       setOrders(userOrders);
     } catch (err) {
@@ -112,7 +111,7 @@ export default function MyOrdersPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, dataService]);
+  }, [user?.id]);
 
   useEffect(() => {
     fetchOrders();
