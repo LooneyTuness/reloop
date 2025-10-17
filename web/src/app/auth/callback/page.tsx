@@ -3,12 +3,33 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@/lib/supabase/supabase.browser';
+import { supabaseDataService } from '@/lib/supabase/data-service';
 import { toast } from 'sonner';
 
 export default function AuthCallbackPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  // Helper function to determine redirect URL based on user role
+  const getRedirectUrl = async (userId: string, fallbackUrl: string | null): Promise<string> => {
+    try {
+      // Check if user is a seller
+      const isSeller = await supabaseDataService.isUserSeller(userId);
+      
+      if (isSeller) {
+        console.log('User is a seller, redirecting to seller dashboard');
+        return '/seller-dashboard';
+      } else {
+        console.log('User is a buyer, redirecting to home page');
+        return '/';
+      }
+    } catch (error) {
+      console.error('Error checking user role:', error);
+      // Fallback to provided URL or home page
+      return fallbackUrl || '/';
+    }
+  };
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -57,21 +78,20 @@ export default function AuthCallbackPage() {
               console.log('Magic link authentication successful');
 
               // Check for redirect URL from URL params first, then localStorage
-              const redirectUrl = redirectParam || localStorage.getItem('auth_redirect');
-              console.log('Redirect URL (from URL param or localStorage):', redirectUrl);
+              const fallbackUrl = redirectParam || localStorage.getItem('auth_redirect');
+              console.log('Fallback URL (from URL param or localStorage):', fallbackUrl);
+
+              // Determine the correct redirect URL based on user role
+              const redirectUrl = await getRedirectUrl(sessionData.session.user.id, fallbackUrl);
+              console.log('Final redirect URL based on user role:', redirectUrl);
 
               toast.success("Welcome! You're now signed in.", {
                 duration: 5000,
               });
 
-              if (redirectUrl) {
-                console.log('Redirecting to:', redirectUrl);
-                localStorage.removeItem('auth_redirect');
-                router.push(redirectUrl);
-              } else {
-                console.log('No redirect URL found, going to seller dashboard');
-                router.push('/seller-dashboard');
-              }
+              console.log('Redirecting to:', redirectUrl);
+              localStorage.removeItem('auth_redirect');
+              router.push(redirectUrl);
               setLoading(false);
               return;
             }
@@ -85,22 +105,19 @@ export default function AuthCallbackPage() {
         if (type === 'signup' || type === 'recovery') {
           console.log('Email confirmation link clicked');
           
-          // Check for redirect URL from URL params first, then localStorage
-          const redirectUrl = redirectParam || localStorage.getItem('auth_redirect');
-          console.log('Redirect URL after email confirmation (from URL param or localStorage):', redirectUrl);
+          // For new users, redirect to home page (they're buyers by default)
+          const fallbackUrl = redirectParam || localStorage.getItem('auth_redirect');
+          console.log('Fallback URL after email confirmation (from URL param or localStorage):', fallbackUrl);
           
           toast.success("Your email has been confirmed! You can now sign in.", {
             duration: 5000,
           });
           
-          if (redirectUrl) {
-            console.log('Redirecting to:', redirectUrl);
-            localStorage.removeItem('auth_redirect');
-            router.push(redirectUrl);
-          } else {
-            console.log('No redirect URL found after email confirmation, going to seller dashboard');
-            router.push('/seller-dashboard');
-          }
+          // New users are buyers by default, so redirect to home page
+          const redirectUrl = fallbackUrl || '/';
+          console.log('Redirecting new user to:', redirectUrl);
+          localStorage.removeItem('auth_redirect');
+          router.push(redirectUrl);
           setLoading(false);
           return;
         }
@@ -112,7 +129,8 @@ export default function AuthCallbackPage() {
           for (let i = 0; i < 10; i++) {
             const { data: sessionData } = await supabase.auth.getSession();
             if (sessionData.session) {
-              const redirectUrl = redirectParam || localStorage.getItem('auth_redirect') || '/';
+              const fallbackUrl = redirectParam || localStorage.getItem('auth_redirect');
+              const redirectUrl = await getRedirectUrl(sessionData.session.user.id, fallbackUrl);
               console.log('Session detected via auto handling. Redirecting to:', redirectUrl);
               localStorage.removeItem('auth_redirect');
               router.push(redirectUrl);
@@ -124,9 +142,9 @@ export default function AuthCallbackPage() {
           console.warn('No session detected after waiting; falling back to home');
         }
 
-        // Fallback - redirect to seller dashboard
-        console.log('No specific type detected, redirecting to seller dashboard');
-        router.push('/seller-dashboard');
+        // Fallback - redirect to home page (buyers by default)
+        console.log('No specific type detected, redirecting to home page');
+        router.push('/');
         setLoading(false);
 
       } catch (err) {

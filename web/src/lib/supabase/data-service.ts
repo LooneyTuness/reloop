@@ -270,6 +270,17 @@ export class SupabaseDataService {
     }
   }
 
+  // Check if user is a seller (has approved seller profile)
+  async isUserSeller(userId: string): Promise<boolean> {
+    try {
+      const sellerProfile = await this.getSellerProfile(userId);
+      return !!sellerProfile && (sellerProfile as any).is_approved === true;
+    } catch (error) {
+      console.error('Error checking seller status:', error);
+      return false;
+    }
+  }
+
   // Get orders for a specific buyer/user
   async getUserOrders(buyerId: string): Promise<Order[]> {
     console.log('🔍 getUserOrders called with buyerId:', buyerId);

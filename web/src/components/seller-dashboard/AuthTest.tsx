@@ -46,7 +46,7 @@ export default function AuthTest() {
       console.log('Sending magic link to:', email);
       
       // Store the current page as redirect URL
-      localStorage.setItem('auth_redirect', '/seller-dashboard');
+      localStorage.setItem('auth_redirect', '/');
       
       const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
@@ -70,7 +70,7 @@ export default function AuthTest() {
 
   const goToSignIn = () => {
     // Store the current page as redirect URL
-    localStorage.setItem('auth_redirect', '/seller-dashboard');
+    localStorage.setItem('auth_redirect', '/');
     router.push('/sign-in');
   };
 
