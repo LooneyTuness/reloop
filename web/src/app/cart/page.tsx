@@ -25,6 +25,144 @@ export default function CartPage() {
     notes: "",
   });
 
+  const [fieldErrors, setFieldErrors] = useState({
+    full_name: "",
+    email: "",
+    phone: "",
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    postal_code: "",
+    notes: "",
+  });
+
+  // Validation functions
+  const validateFullName = (name: string) => {
+    if (!name.trim()) return t("fullNameRequired") || "Full name is required";
+    if (name.length < 2) return t("fullNameTooShort") || "Name must be at least 2 characters";
+    if (name.length > 50) return t("fullNameTooLong") || "Name must be less than 50 characters";
+    if (!/^[a-zA-Z\s\-'\.]+$/.test(name)) return t("fullNameInvalidChars") || "Name can only contain letters, spaces, hyphens, apostrophes, and periods";
+    return "";
+  };
+
+  const validateEmail = (email: string) => {
+    if (!email.trim()) return t("emailRequired") || "Email is required";
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) return t("emailInvalid") || "Please enter a valid email address";
+    if (email.length > 100) return t("emailTooLong") || "Email must be less than 100 characters";
+    return "";
+  };
+
+  const validatePhone = (phone: string) => {
+    if (!phone.trim()) return t("phoneRequired") || "Phone number is required";
+    // Remove all non-digit characters for validation
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (cleanPhone.length < 8) return t("phoneTooShort") || "Phone number must be at least 8 digits";
+    if (cleanPhone.length > 15) return t("phoneTooLong") || "Phone number must be less than 15 digits";
+    // Allow various phone formats: +1234567890, 123-456-7890, (123) 456-7890, etc.
+    const phoneRegex = /^[\+]?[\d\s\-\(\)]{8,15}$/;
+    if (!phoneRegex.test(phone)) return t("phoneInvalid") || "Please enter a valid phone number";
+    return "";
+  };
+
+  const validateCity = (city: string) => {
+    if (!city.trim()) return t("cityRequired") || "City is required";
+    if (city.length < 2) return t("cityTooShort") || "City must be at least 2 characters";
+    if (city.length > 50) return t("cityTooLong") || "City must be less than 50 characters";
+    if (!/^[a-zA-Z\s\-'\.]+$/.test(city)) return t("cityInvalidChars") || "City can only contain letters, spaces, hyphens, apostrophes, and periods";
+    return "";
+  };
+
+  const validateAddress = (address: string, fieldName: string) => {
+    if (fieldName === "address_line1" && !address.trim()) {
+      return t("addressRequired") || "Address is required";
+    }
+    if (address.length > 100) {
+      return fieldName === "address_line1" 
+        ? (t("addressTooLong") || "Address must be less than 100 characters")
+        : (t("additionalAddressTooLong") || "Additional address must be less than 100 characters");
+    }
+    // Allow letters, numbers, spaces, common address characters
+    if (address && !/^[a-zA-Z0-9\s\-'\.\,\#\/]+$/.test(address)) {
+      return fieldName === "address_line1"
+        ? (t("addressInvalidChars") || "Address contains invalid characters")
+        : (t("additionalAddressInvalidChars") || "Additional address contains invalid characters");
+    }
+    return "";
+  };
+
+  const validatePostalCode = (postalCode: string) => {
+    if (!postalCode.trim()) return t("postalCodeRequired") || "Postal code is required";
+    if (postalCode.length < 3) return t("postalCodeTooShort") || "Postal code must be at least 3 characters";
+    if (postalCode.length > 10) return t("postalCodeTooLong") || "Postal code must be less than 10 characters";
+    // Allow various postal code formats: 12345, 12345-6789, A1A 1A1, etc.
+    const postalRegex = /^[a-zA-Z0-9\s\-]{3,10}$/;
+    if (!postalRegex.test(postalCode)) return t("postalCodeInvalid") || "Please enter a valid postal code";
+    return "";
+  };
+
+  const validateNotes = (notes: string) => {
+    if (notes.length > 500) return t("notesTooLong") || "Notes must be less than 500 characters";
+    // Allow most characters but restrict some potentially harmful ones
+    if (notes && !/^[a-zA-Z0-9\s\-'\.\,\!\?\:\;\(\)\[\]\{\}\"\'\/\\\@\#\$\%\&\*\+\=\<\>\|~`]+$/.test(notes)) {
+      return t("notesInvalidChars") || "Notes contain invalid characters";
+    }
+    return "";
+  };
+
+  // Input change handlers with validation
+  const handleInputChange = (field: string, value: string) => {
+    setCheckout(prev => ({ ...prev, [field]: value }));
+    
+    // Validate the field and update errors
+    let error = "";
+    switch (field) {
+      case "full_name":
+        error = validateFullName(value);
+        break;
+      case "email":
+        error = validateEmail(value);
+        break;
+      case "phone":
+        error = validatePhone(value);
+        break;
+      case "city":
+        error = validateCity(value);
+        break;
+      case "address_line1":
+        error = validateAddress(value, "address_line1");
+        break;
+      case "address_line2":
+        error = validateAddress(value, "address_line2");
+        break;
+      case "postal_code":
+        error = validatePostalCode(value);
+        break;
+      case "notes":
+        error = validateNotes(value);
+        break;
+    }
+    
+    setFieldErrors(prev => ({ ...prev, [field]: error }));
+  };
+
+  // Validate all fields
+  const validateAllFields = () => {
+    const errors = {
+      full_name: validateFullName(checkout.full_name),
+      email: validateEmail(checkout.email),
+      phone: validatePhone(checkout.phone),
+      address_line1: validateAddress(checkout.address_line1, "address_line1"),
+      address_line2: validateAddress(checkout.address_line2, "address_line2"),
+      city: validateCity(checkout.city),
+      postal_code: validatePostalCode(checkout.postal_code),
+      notes: validateNotes(checkout.notes),
+    };
+    
+    setFieldErrors(errors);
+    return !Object.values(errors).some(error => error !== "");
+  };
+
   const handleCloseSignupModal = () => {
     setShowSignupModal(false);
     // Redirect to home after closing modal
@@ -36,6 +174,12 @@ export default function CartPage() {
   const handlePlaceOrder = async () => {
     if (submitting) return;
     if (cart.length === 0) return;
+
+    // Validate all fields before proceeding
+    if (!validateAllFields()) {
+      toast.error(t("pleaseFixErrors") || "Please fix the errors below before placing your order");
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -230,9 +374,11 @@ export default function CartPage() {
           const notificationErrors = notificationResults.filter(result => result.status === 'rejected');
           
           if (notificationErrors.length > 0) {
+            console.warn("Some buyer notifications failed:", notificationErrors);
           }
         }
       } catch (error) {
+        console.error("Error sending buyer notifications:", error);
       }
 
       // 4) Notify seller(s) using items.user_email from DB
@@ -556,14 +702,21 @@ export default function CartPage() {
                   {t("fullName")} <span className="text-red-500">*</span>
                 </label>
                 <input
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
+                    fieldErrors.full_name 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-brand-500'
+                  }`}
                   placeholder={t("fullName")}
                   value={checkout.full_name}
-                  onChange={(e) =>
-                    setCheckout({ ...checkout, full_name: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("full_name", e.target.value)}
+                  onBlur={() => handleInputChange("full_name", checkout.full_name)}
+                  maxLength={50}
                   required
                 />
+                {fieldErrors.full_name && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.full_name}</p>
+                )}
               </div>
               
               {/* Email - Required */}
@@ -573,14 +726,21 @@ export default function CartPage() {
                 </label>
                 <input
                   type="email"
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
+                    fieldErrors.email 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-brand-500'
+                  }`}
                   placeholder={t("email")}
                   value={checkout.email}
-                  onChange={(e) =>
-                    setCheckout({ ...checkout, email: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  onBlur={() => handleInputChange("email", checkout.email)}
+                  maxLength={100}
                   required
                 />
+                {fieldErrors.email && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
+                )}
               </div>
               
               {/* Phone - Required */}
@@ -590,14 +750,21 @@ export default function CartPage() {
                 </label>
                 <input
                   type="tel"
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
+                    fieldErrors.phone 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-brand-500'
+                  }`}
                   placeholder={t("phone")}
                   value={checkout.phone}
-                  onChange={(e) =>
-                    setCheckout({ ...checkout, phone: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  onBlur={() => handleInputChange("phone", checkout.phone)}
+                  maxLength={20}
                   required
                 />
+                {fieldErrors.phone && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.phone}</p>
+                )}
               </div>
               
               {/* City - Required */}
@@ -606,14 +773,21 @@ export default function CartPage() {
                   {t("city")} <span className="text-red-500">*</span>
                 </label>
                 <input
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
+                    fieldErrors.city 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-brand-500'
+                  }`}
                   placeholder={t("city")}
                   value={checkout.city}
-                  onChange={(e) =>
-                    setCheckout({ ...checkout, city: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("city", e.target.value)}
+                  onBlur={() => handleInputChange("city", checkout.city)}
+                  maxLength={50}
                   required
                 />
+                {fieldErrors.city && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.city}</p>
+                )}
               </div>
               
               {/* Address - Required */}
@@ -622,14 +796,21 @@ export default function CartPage() {
                   {t("address")} <span className="text-red-500">*</span>
                 </label>
                 <input
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
+                    fieldErrors.address_line1 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-brand-500'
+                  }`}
                   placeholder={t("address")}
                   value={checkout.address_line1}
-                  onChange={(e) =>
-                    setCheckout({ ...checkout, address_line1: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("address_line1", e.target.value)}
+                  onBlur={() => handleInputChange("address_line1", checkout.address_line1)}
+                  maxLength={100}
                   required
                 />
+                {fieldErrors.address_line1 && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.address_line1}</p>
+                )}
               </div>
               
               {/* Additional Address - Optional */}
@@ -638,13 +819,20 @@ export default function CartPage() {
                   {t("additionalAddress")} <span className="text-gray-400 text-xs">({t("optional")})</span>
                 </label>
                 <input
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
+                    fieldErrors.address_line2 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-brand-500'
+                  }`}
                   placeholder={t("additionalAddress")}
                   value={checkout.address_line2}
-                  onChange={(e) =>
-                    setCheckout({ ...checkout, address_line2: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("address_line2", e.target.value)}
+                  onBlur={() => handleInputChange("address_line2", checkout.address_line2)}
+                  maxLength={100}
                 />
+                {fieldErrors.address_line2 && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.address_line2}</p>
+                )}
               </div>
               
               {/* Postal Code - Required */}
@@ -653,14 +841,21 @@ export default function CartPage() {
                   {t("postalCode")} <span className="text-red-500">*</span>
                 </label>
                 <input
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border rounded-lg sm:rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
+                    fieldErrors.postal_code 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-brand-500'
+                  }`}
                   placeholder={t("postalCode")}
                   value={checkout.postal_code}
-                  onChange={(e) =>
-                    setCheckout({ ...checkout, postal_code: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("postal_code", e.target.value)}
+                  onBlur={() => handleInputChange("postal_code", checkout.postal_code)}
+                  maxLength={10}
                   required
                 />
+                {fieldErrors.postal_code && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.postal_code}</p>
+                )}
               </div>
               
               {/* Notes - Optional */}
@@ -669,14 +864,24 @@ export default function CartPage() {
                   {t("notes")} <span className="text-gray-400 text-xs">({t("optional")})</span>
                 </label>
                 <textarea
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 resize-none"
+                  className={`w-full px-4 py-3 bg-gray-50 border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 resize-none ${
+                    fieldErrors.notes 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-brand-500'
+                  }`}
                   placeholder={t("notes")}
                   value={checkout.notes}
-                  onChange={(e) =>
-                    setCheckout({ ...checkout, notes: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("notes", e.target.value)}
+                  onBlur={() => handleInputChange("notes", checkout.notes)}
+                  maxLength={500}
                   rows={3}
                 />
+                {fieldErrors.notes && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.notes}</p>
+                )}
+                <p className="mt-1 text-xs text-gray-500">
+                  {checkout.notes.length}/500 {t("characters") || "characters"}
+                </p>
               </div>
             </div>
             <p className="text-gray-500 text-xs">

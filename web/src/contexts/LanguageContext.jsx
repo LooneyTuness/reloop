@@ -76,6 +76,41 @@ const translations = {
     orderConfirmationMessage:
       "Некој нарача ваши производи! Нарачка #{orderId} - контактирајте го купувачот за испорака.",
 
+    // Validation Messages
+    pleaseFixErrors:
+      "Ве молиме поправете ги грешките подолу пред да ја завршите нарачката",
+    fullNameRequired: "Името е задолжително",
+    fullNameTooShort: "Името мора да има најмалку 2 карактери",
+    fullNameTooLong: "Името мора да има помалку од 50 карактери",
+    fullNameInvalidChars:
+      "Името може да содржи само букви, празни места, цртички, апострофи и точки",
+    emailRequired: "E-mail адресата е задолжителна",
+    emailInvalid: "Ве молиме внесете валидна e-mail адреса",
+    emailTooLong: "E-mail адресата мора да има помалку од 100 карактери",
+    phoneRequired: "Телефонскиот број е задолжителен",
+    phoneTooShort: "Телефонскиот број мора да има најмалку 8 цифри",
+    phoneTooLong: "Телефонскиот број мора да има помалку од 15 цифри",
+    phoneInvalid: "Ве молиме внесете валиден телефонски број",
+    cityRequired: "Градот е задолжителен",
+    cityTooShort: "Градот мора да има најмалку 2 карактери",
+    cityTooLong: "Градот мора да има помалку од 50 карактери",
+    cityInvalidChars:
+      "Градот може да содржи само букви, празни места, цртички, апострофи и точки",
+    addressRequired: "Адресата е задолжителна",
+    addressTooLong: "Адресата мора да има помалку од 100 карактери",
+    addressInvalidChars: "Адресата содржи невалидни карактери",
+    additionalAddressTooLong:
+      "Додатната адреса мора да има помалку од 100 карактери",
+    additionalAddressInvalidChars:
+      "Додатната адреса содржи невалидни карактери",
+    postalCodeRequired: "Поштенскиот код е задолжителен",
+    postalCodeTooShort: "Поштенскиот код мора да има најмалку 3 карактери",
+    postalCodeTooLong: "Поштенскиот код мора да има помалку од 10 карактери",
+    postalCodeInvalid: "Ве молиме внесете валиден поштенски код",
+    notesTooLong: "Забелешките мора да имаат помалку од 500 карактери",
+    notesInvalidChars: "Забелешките содржат невалидни карактери",
+    characters: "карактери",
+
     // Trust Badges
     secureCheckout: "Безбедна нарачка",
 
@@ -765,6 +800,40 @@ const translations = {
     orderConfirmation: "New Order",
     orderConfirmationMessage:
       "Someone ordered your products! Order #{orderId} - contact the buyer for delivery.",
+
+    // Validation Messages
+    pleaseFixErrors: "Please fix the errors below before placing your order",
+    fullNameRequired: "Full name is required",
+    fullNameTooShort: "Name must be at least 2 characters",
+    fullNameTooLong: "Name must be less than 50 characters",
+    fullNameInvalidChars:
+      "Name can only contain letters, spaces, hyphens, apostrophes, and periods",
+    emailRequired: "Email is required",
+    emailInvalid: "Please enter a valid email address",
+    emailTooLong: "Email must be less than 100 characters",
+    phoneRequired: "Phone number is required",
+    phoneTooShort: "Phone number must be at least 8 digits",
+    phoneTooLong: "Phone number must be less than 15 digits",
+    phoneInvalid: "Please enter a valid phone number",
+    cityRequired: "City is required",
+    cityTooShort: "City must be at least 2 characters",
+    cityTooLong: "City must be less than 50 characters",
+    cityInvalidChars:
+      "City can only contain letters, spaces, hyphens, apostrophes, and periods",
+    addressRequired: "Address is required",
+    addressTooLong: "Address must be less than 100 characters",
+    addressInvalidChars: "Address contains invalid characters",
+    additionalAddressTooLong:
+      "Additional address must be less than 100 characters",
+    additionalAddressInvalidChars:
+      "Additional address contains invalid characters",
+    postalCodeRequired: "Postal code is required",
+    postalCodeTooShort: "Postal code must be at least 3 characters",
+    postalCodeTooLong: "Postal code must be less than 10 characters",
+    postalCodeInvalid: "Please enter a valid postal code",
+    notesTooLong: "Notes must be less than 500 characters",
+    notesInvalidChars: "Notes contain invalid characters",
+    characters: "characters",
 
     // Trust Badges
     secureCheckout: "Secure Checkout",
