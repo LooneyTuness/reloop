@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, User, X, Package, ShoppingBag } from 'lucide-react';
+import { Search, Bell, User, X, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
@@ -145,9 +145,9 @@ export default function TopBar() {
             className="p-2 sm:p-3 rounded-lg sm:rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:scale-105 flex-shrink-0"
           >
             {isDarkMode ? (
-              <Package className="text-gray-600 dark:text-gray-400" size={18} />
+              <Eye className="text-gray-600 dark:text-gray-400" size={18} />
             ) : (
-              <ShoppingBag className="text-gray-600 dark:text-gray-400" size={18} />
+              <EyeOff className="text-gray-600 dark:text-gray-400" size={18} />
             )}
           </button>
 

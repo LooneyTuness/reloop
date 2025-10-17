@@ -91,7 +91,103 @@ export async function GET(request: NextRequest) {
               // More lenient filtering - allow brands that are not null/undefined and have some content
               return brand !== null && brand !== undefined && String(brand).trim() !== '';
             })
-            .map(brand => String(brand).trim()) // Normalize brands
+            .map(brand => {
+              // Normalize brands: trim, capitalize first letter, handle common variations
+              const normalized = String(brand).trim();
+              
+              // Handle common brand name variations
+              const brandMap: { [key: string]: string } = {
+                'nike': 'Nike',
+                'adidas': 'Adidas',
+                'apple': 'Apple',
+                'samsung': 'Samsung',
+                'sony': 'Sony',
+                'lg': 'LG',
+                'hp': 'HP',
+                'dell': 'Dell',
+                'lenovo': 'Lenovo',
+                'asus': 'ASUS',
+                'msi': 'MSI',
+                'intel': 'Intel',
+                'amd': 'AMD',
+                'nvidia': 'NVIDIA',
+                'zara': 'Zara',
+                'h&m': 'H&M',
+                'uniqlo': 'Uniqlo',
+                'gap': 'Gap',
+                'levi\'s': 'Levi\'s',
+                'calvin klein': 'Calvin Klein',
+                'tommy hilfiger': 'Tommy Hilfiger',
+                'ralph lauren': 'Ralph Lauren',
+                'gucci': 'Gucci',
+                'prada': 'Prada',
+                'versace': 'Versace',
+                'armani': 'Armani',
+                'hugo boss': 'Hugo Boss',
+                'diesel': 'Diesel',
+                'guess': 'Guess',
+                'michael kors': 'Michael Kors',
+                'coach': 'Coach',
+                'kate spade': 'Kate Spade',
+                'tory burch': 'Tory Burch',
+                'mk': 'Michael Kors',
+                'ck': 'Calvin Klein',
+                'rl': 'Ralph Lauren',
+                'hb': 'Hugo Boss',
+                'dkny': 'DKNY',
+                'dk': 'DKNY',
+                'ysl': 'YSL',
+                'chanel': 'Chanel',
+                'dior': 'Dior',
+                'louis vuitton': 'Louis Vuitton',
+                'lv': 'Louis Vuitton',
+                'hermes': 'Hermès',
+                'cartier': 'Cartier',
+                'rolex': 'Rolex',
+                'omega': 'Omega',
+                'tag heuer': 'Tag Heuer',
+                'breitling': 'Breitling',
+                'tissot': 'Tissot',
+                'seiko': 'Seiko',
+                'citizen': 'Citizen',
+                'casio': 'Casio',
+                'fossil': 'Fossil',
+                // Popular brands in Macedonia
+                'bershka': 'Bershka',
+                'stradivarius': 'Stradivarius',
+                'pull & bear': 'Pull & Bear',
+                'mango': 'Mango',
+                'springfield': 'Springfield',
+                'tom tailor': 'Tom Tailor',
+                'timberland': 'Timberland',
+                'vans': 'Vans',
+                'skechers': 'Skechers',
+                'converse': 'Converse',
+                'karl lagerfeld': 'Karl Lagerfeld',
+                'liu jo': 'Liu Jo',
+                'hatemoglu': 'Hatemoğlu',
+                'hatemoğlu': 'Hatemoğlu',
+                'kigili': 'Kiğılı',
+                'kiğılı': 'Kiğılı',
+                'mavi jeans': 'Mavi Jeans',
+                'mavi': 'Mavi Jeans',
+                'modanisa': 'Modanisa',
+                'ipekyol': 'Ipekyol',
+                'defacto': 'DeFacto',
+                'damat tween': 'Damat Tween',
+                'derimod': 'Derimod',
+                // Local Macedonian brands
+                'valdrin sahiti': 'Valdrin Sahiti',
+                'valdrin sahiti official': 'Valdrin Sahiti',
+                'sara fashion': 'Sara Fashion',
+                'luxuryshoes': 'Luxuryshoes',
+                'perla shoes': 'Perla Shoes',
+                'fashion group macedonia': 'Fashion Group Macedonia'
+              };
+              
+              const lowerBrand = normalized.toLowerCase();
+              return brandMap[lowerBrand] || normalized.charAt(0).toUpperCase() + normalized.slice(1).toLowerCase();
+            })
         )]
       : [];
 

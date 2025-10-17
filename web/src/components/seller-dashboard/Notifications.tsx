@@ -72,6 +72,14 @@ export default function Notifications({ notifications, onMarkAsRead, onMarkAllAs
     return notificationDate.toLocaleDateString();
   };
 
+  // Prevent body scroll when notification panel is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}

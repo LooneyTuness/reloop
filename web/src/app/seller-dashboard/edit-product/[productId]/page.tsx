@@ -6,6 +6,7 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
+import BrandDropdown from '@/components/BrandDropdown';
 
 function EditProductContent() {
   const router = useRouter();
