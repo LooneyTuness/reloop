@@ -270,6 +270,94 @@ export class SupabaseDataService {
     }
   }
 
+  // Get orders for a specific buyer/user
+  async getUserOrders(buyerId: string): Promise<Order[]> {
+    console.log('🔍 getUserOrders called with buyerId:', buyerId);
+    
+    try {
+      // Get all orders where the user is the buyer
+      console.log('🔍 Step 1: Fetching user orders...');
+      const { data: userOrders, error: userOrdersError } = await (this.supabase as any)
+        .from('orders')
+        .select('*')
+        .eq('buyer_id', buyerId)
+        .order('created_at', { ascending: false });
+
+      if (userOrdersError) {
+        console.error('❌ Error fetching user orders:', userOrdersError);
+        throw userOrdersError;
+      }
+
+      console.log('📦 User orders found:', userOrders?.length || 0);
+      console.log('📦 Sample user order:', userOrders?.[0]);
+
+      if (!userOrders || userOrders.length === 0) {
+        console.log('❌ No user orders found');
+        return [];
+      }
+
+      // Get all order items for these orders
+      console.log('🔍 Step 2: Fetching order items...');
+      const orderIds = userOrders.map(order => order.id);
+      const { data: orderItems, error: orderItemsError } = await (this.supabase as any)
+        .from('order_items')
+        .select('*')
+        .in('order_id', orderIds);
+
+      if (orderItemsError) {
+        console.error('❌ Error fetching order items:', orderItemsError);
+        throw orderItemsError;
+      }
+
+      console.log('📦 Order items found:', orderItems?.length || 0);
+
+      // Get all items for these order items
+      console.log('🔍 Step 3: Fetching items...');
+      const itemIds = orderItems?.map(item => item.item_id) || [];
+      const { data: items, error: itemsError } = await (this.supabase as any)
+        .from('items')
+        .select('id, title, price, images, user_id, size, brand, condition, category_id, old_price, description, is_active, sold_at')
+        .in('id', itemIds);
+
+      if (itemsError) {
+        console.error('❌ Error fetching items:', itemsError);
+        throw itemsError;
+      }
+
+      console.log('📦 Items found:', items?.length || 0);
+
+      // Create items map for quick lookup
+      const itemsMap = new Map();
+      items?.forEach(item => {
+        itemsMap.set(item.id, item);
+      });
+
+      // Combine orders with their items
+      const ordersWithItems = userOrders.map(order => {
+        const orderItemsForOrder = orderItems
+          ?.filter((orderItem: OrderItem) => orderItem?.order_id === order?.id)
+          .map((orderItem: OrderItem) => ({
+            ...orderItem,
+            items: orderItem?.item_id ? itemsMap.get(orderItem.item_id) || null : null
+          })) || [];
+        
+        return {
+          ...order,
+          order_items: orderItemsForOrder
+        };
+      });
+
+      console.log('✅ Final user orders with items:', ordersWithItems.length);
+      console.log('✅ Sample final user order:', ordersWithItems[0]);
+
+      return ordersWithItems;
+      
+    } catch (error) {
+      console.error('❌ Error in getUserOrders:', error);
+      return [];
+    }
+  }
+
   async getOrderById(orderId: string): Promise<Order | null> {
     const { data, error } = await (this.supabase as any)
       .from('orders')
