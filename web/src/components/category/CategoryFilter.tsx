@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useCategory } from '@/contexts/CategoryContext';
 import { useDropdownState } from '@/contexts/DropdownStateContext';
-import { CategoryFilter as CategoryFilterType, getBrandsForCategoryHierarchy } from '@/types/category';
+import { CategoryFilter as CategoryFilterType } from '@/types/category';
+import { useBrands } from '@/hooks/useBrands';
 import { ChevronDown, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -38,7 +39,7 @@ export default function CategoryFilter({
   selectedSubcategory: selectedSubcategoryProp = null,
   selectedType: selectedTypeProp = null,
 }: CategoryFilterProps) {
-  const { categoryTree, loading, categories } = useCategory();
+  const { categoryTree, loading } = useCategory();
   const { t, translateCategory } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
@@ -407,22 +408,21 @@ export default function CategoryFilter({
     return categoryTree.types[currentSubcategory] || [];
   };
 
+  // Use the passed category context or fall back to internal state
+  const currentMainCategory = selectedCategory || (showApplyButton ? pendingMainCategory : selectedMainCategory);
+  const currentSubcategory = selectedSubcategoryProp || (showApplyButton ? pendingSubcategory : internalSelectedSubcategory);
+  const currentType = selectedTypeProp || (showApplyButton ? pendingType : internalSelectedType);
+
+  // Fetch brands from API
+  const { data: brandsData, isLoading: brandsLoading } = useBrands({
+    mainCategory: currentMainCategory || undefined,
+    subcategory: currentSubcategory || undefined,
+    type: currentType || undefined,
+    enabled: !!categoryTree
+  });
+
   const getAvailableBrands = () => {
-    if (!categoryTree) return [];
-    
-    // Use the passed category context or fall back to internal state
-    const currentMainCategory = selectedCategory || (showApplyButton ? pendingMainCategory : selectedMainCategory);
-    const currentSubcategory = selectedSubcategoryProp || (showApplyButton ? pendingSubcategory : internalSelectedSubcategory);
-    const currentType = selectedTypeProp || (showApplyButton ? pendingType : internalSelectedType);
-    
-    // Find category slugs by looking in the categories array from the context
-    const mainCategorySlug = currentMainCategory ? categories.find(c => c.id === currentMainCategory)?.slug : undefined;
-    const subcategorySlug = currentSubcategory ? categories.find(c => c.id === currentSubcategory)?.slug : undefined;
-    const typeSlug = currentType ? categories.find(c => c.id === currentType)?.slug : undefined;
-    
-    const brands = getBrandsForCategoryHierarchy(mainCategorySlug, subcategorySlug, typeSlug);
-    
-    return brands;
+    return (brandsData as { brands?: string[] })?.brands || [];
   };
 
   if (loading || !categoryTree) {
@@ -457,6 +457,16 @@ export default function CategoryFilter({
   // If we have category context, only show brand filter
   if (selectedCategory || selectedSubcategoryProp || selectedTypeProp) {
     const availableBrands = getAvailableBrands();
+    
+    if (brandsLoading) {
+      return (
+        <div className={`space-y-4 ${className}`}>
+          <div className="text-sm text-gray-500 text-center py-4">
+            Loading brands...
+          </div>
+        </div>
+      );
+    }
     
     if (availableBrands.length === 0) {
       return (
@@ -493,7 +503,7 @@ export default function CategoryFilter({
           {isBrandOpen && (
             <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-2xl z-[9999] w-full">
               <div className="py-2 max-h-60 overflow-y-auto scrollbar-hide">
-                {availableBrands.map(brand => (
+                {availableBrands.map((brand: string) => (
                   <button
                     key={brand}
                     onClick={() => handleBrandSelect(brand)}
@@ -686,7 +696,7 @@ export default function CategoryFilter({
           {isBrandOpen && (
             <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-2xl z-[9999] w-full min-w-full">
               <div className="py-2 max-h-60 overflow-y-auto scrollbar-hide">
-                {getAvailableBrands().map(brand => (
+                {getAvailableBrands().map((brand: string) => (
                   <button
                     key={brand}
                     onClick={() => handleBrandSelect(brand)}
@@ -754,6 +764,12 @@ export function CategoryFilterCompact({
   const onFilterChangeRef = useRef(onFilterChange);
   onFilterChangeRef.current = onFilterChange;
 
+  // Fetch brands from API - moved outside conditional
+  const { data: brandsData, isLoading: brandsLoading } = useBrands({
+    categoryId: selectedCategory || undefined,
+    enabled: !!categoryTree && !!selectedCategory
+  });
+
   useEffect(() => {
     const filter: CategoryFilterType = {};
     
@@ -794,24 +810,7 @@ export function CategoryFilterCompact({
     ...Object.values(categoryTree.types).flat(),
   ];
 
-  // Get available brands for the selected category
-  const getAvailableBrands = () => {
-    if (!categoryTree || !selectedCategory) return [];
-    
-    const category = categoryTree.mainCategories.find(c => c.id === selectedCategory) ||
-                   Object.values(categoryTree.subcategories || {}).flat().find(c => c.id === selectedCategory) ||
-                   Object.values(categoryTree.types || {}).flat().find(c => c.id === selectedCategory);
-    
-    if (!category) return [];
-    
-    return getBrandsForCategoryHierarchy(
-      category.level === 0 ? category.slug : undefined,
-      category.level === 1 ? category.slug : undefined,
-      category.level === 2 ? category.slug : undefined
-    );
-  };
-
-  const availableBrands = getAvailableBrands();
+  const availableBrands = (brandsData as { brands?: string[] })?.brands || [];
 
   return (
     <div className={`space-y-2 ${className}`}>
@@ -828,20 +827,24 @@ export function CategoryFilterCompact({
         ))}
       </select>
       
-      {availableBrands.length > 0 && (
+      {brandsLoading ? (
+        <div className="w-full px-4 py-2 border border-gray-100 rounded-md bg-gray-50 text-sm text-gray-500">
+          Loading brands...
+        </div>
+      ) : availableBrands.length > 0 ? (
         <select
           value={selectedBrand || ''}
           onChange={(e) => setSelectedBrand(e.target.value || null)}
           className="w-full px-4 py-2 border border-gray-100 rounded-md bg-gray-50 text-sm scrollbar-hide"
         >
           <option value="">All Brands</option>
-          {availableBrands.map(brand => (
+          {availableBrands.map((brand: string) => (
             <option key={brand} value={brand}>
               {brand}
             </option>
           ))}
         </select>
-      )}
+      ) : null}
     </div>
   );
 }
