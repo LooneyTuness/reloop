@@ -587,7 +587,7 @@ export default function Products({
                       }`}
                       style={{ fontFamily: "var(--font-poppins)" }}
                     >
-                      {item.price} MKD
+                      {item.price} {t("currency")}
                     </span>
                     {/* Seller Information */}
                     <p
