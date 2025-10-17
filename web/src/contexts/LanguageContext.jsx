@@ -662,6 +662,8 @@ const translations = {
     footerHelp: "Помош",
     footerPrivacy: "Приватност",
     footerTerms: "Услови",
+    footerEmail: "Е-пошта",
+    footerPhone: "Телефон",
 
     // Video Error Messages
     videoUnavailable: "Видео недостижно",
@@ -1343,6 +1345,8 @@ const translations = {
     footerHelp: "Help",
     footerPrivacy: "Privacy",
     footerTerms: "Terms",
+    footerEmail: "Email",
+    footerPhone: "Phone",
 
     // Video Error Messages
     videoUnavailable: "Video unavailable",

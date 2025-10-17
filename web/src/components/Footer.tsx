@@ -67,7 +67,7 @@ export default function Footer() {
               </div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">
-                  Е-пошта
+                  {t("footerEmail")}
                 </p>
                 <p className="text-gray-900 font-bold text-lg">info@vtoraraka.mk</p>
               </div>
@@ -80,7 +80,7 @@ export default function Footer() {
               </div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">
-                  Телефон
+                  {t("footerPhone")}
                 </p>
                 <p className="text-gray-900 font-bold text-lg">+389 75 251 009</p>
               </div>
