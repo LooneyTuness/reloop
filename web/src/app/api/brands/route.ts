@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
     brands.sort();
 
     // Add "All" option at the beginning for better UX
-    const brandsWithAll = ['сите', ...brands];
+    const brandsWithAll = ['Сите', ...brands];
 
     return NextResponse.json({
       brands: brandsWithAll,

@@ -103,10 +103,10 @@ export async function GET(
     }
     if (brand) {
       // Handle special case for "All" option
-      if (brand === 'сите') {
+      if (brand === 'Сите') {
         // Don't apply any brand filter - show all products
-        console.log('Showing all products (сите selected)');
-      } else if (brand === 'Other (Друго)' || brand === 'Other') {
+        console.log('Showing all products (Сите selected)');
+      } else if (brand === 'Друго' || brand === 'Other (Друго)' || brand === 'Other') {
         query = query.or('brand.ilike.%Other%,brand.ilike.%Друго%,brand.is.null');
       } else {
         query = query.ilike('brand', `%${brand}%`);
