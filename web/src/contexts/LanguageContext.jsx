@@ -653,6 +653,15 @@ const translations = {
     footerDescription:
       "Прескокни ја маката од традиционална препродажба. Листај облека инстантно, откриј уникатни парчиња без проблем.",
     footerEmail: "vtoraraka.mk",
+    footerLocation: "Локација",
+    footerLocationText: "Скопје, Македонија",
+    footerFollowUs: "Следете не:",
+    footerBrandTagline: "Втора рака. Прв избор.",
+    footerContactUs: "Контактирајте не",
+    footerAboutUs: "За нас",
+    footerHelp: "Помош",
+    footerPrivacy: "Приватност",
+    footerTerms: "Услови",
 
     // Video Error Messages
     videoUnavailable: "Видео недостижно",
@@ -1325,6 +1334,15 @@ const translations = {
     footerDescription:
       "Skip the hassle of traditional resale. Browse clothing instantly, discover unique pieces without the trouble.",
     footerEmail: "vtoraraka.mk",
+    footerLocation: "Location",
+    footerLocationText: "Skopje, Macedonia",
+    footerFollowUs: "Follow us:",
+    footerBrandTagline: "Second-hand. First choice.",
+    footerContactUs: "Contact Us",
+    footerAboutUs: "About Us",
+    footerHelp: "Help",
+    footerPrivacy: "Privacy",
+    footerTerms: "Terms",
 
     // Video Error Messages
     videoUnavailable: "Video unavailable",

@@ -11,7 +11,12 @@ const nextConfig = {
   poweredByHeader: false,
   generateEtags: true,
   images: {
-    domains: ["wkttbmstlttzuavtqpxb.supabase.co", "localhost", "127.0.0.1"],
+    domains: [
+      process.env.NEXT_PUBLIC_SUPABASE_URL?.replace("https://", "") ||
+        "localhost",
+      "localhost",
+      "127.0.0.1",
+    ],
     formats: ["image/webp", "image/avif"],
     minimumCacheTTL: 31536000, // 1 year cache
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

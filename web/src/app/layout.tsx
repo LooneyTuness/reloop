@@ -17,9 +17,22 @@ import GlobalErrorHandler from "@/components/GlobalErrorHandler";
 
 
 export const metadata: Metadata = {
-  title: "vtoraraka.mk - Облека од втора рака | Купувај и продавај со стил",
+  title: "vtoraraka.mk - Second-hand Clothing | Buy and Sell with Style",
   description:
-    "Купувај и продавај облека од втора рака онлајн. Заштеди пари, најди уникатни парчиња и придонеси за одржлива мода – сè на едно место.",
+    "Buy and sell second-hand clothing online. Save money, find unique pieces and contribute to sustainable fashion – all in one place.",
+  openGraph: {
+    title: "vtoraraka.mk - Second-hand Clothing | Buy and Sell with Style",
+    description: "Buy and sell second-hand clothing online. Save money, find unique pieces and contribute to sustainable fashion – all in one place.",
+    type: "website",
+    locale: "en_US",
+    alternateLocale: "mk_MK",
+  },
+  alternates: {
+    languages: {
+      "en": "/en",
+      "mk": "/mk",
+    },
+  },
 };
 
 export default function RootLayout({
@@ -28,12 +41,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="mk">
+    <html lang="en">
       <head>
         <link rel="icon" href="/logo192.png" type="image/png" />
         <meta name="theme-color" content="#000000" />
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="vtoraraka.mk" />
+        <meta name="keywords" content="second-hand clothing, sustainable fashion, pre-loved items, circular fashion, Macedonia, Skopje" />
+        <meta property="og:site_name" content="vtoraraka.mk" />
+        <meta property="og:url" content="https://vtoraraka.mk" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="vtoraraka.mk - Second-hand Clothing | Buy and Sell with Style" />
+        <meta name="twitter:description" content="Buy and sell second-hand clothing online. Save money, find unique pieces and contribute to sustainable fashion – all in one place." />
       </head>
       <body className="antialiased bg-white">
         <GlobalErrorHandler />

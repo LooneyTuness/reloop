@@ -18,6 +18,8 @@
     "deploy:vercel": "vercel --prod",
     "deploy:netlify": "npm run build && netlify deploy --prod --dir=.next",
     "setup:production": "node setup-production-db.js",
+    "setup:env": "node setup-production-env.js",
+    "switch:production": "node switch-to-production-db.js",
     "test:production": "node test-production-db.js",
     "deploy:production": "bash deploy-production.sh",
     "deploy:production:test": "bash deploy-production.sh --test"

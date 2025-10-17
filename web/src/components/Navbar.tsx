@@ -159,7 +159,7 @@ export default function Navbar() {
                   vtoraraka.mk
                 </h1>
                   <p className="text-xs sm:text-sm text-gray-500 font-medium leading-tight">
-                    Втора рака. Прв избор.
+                    {t("footerBrandTagline")}
                   </p>
                 </div>
               </div>
@@ -382,7 +382,7 @@ export default function Navbar() {
                   </div>
                   <div className="flex flex-col">
                     <h2 className="text-lg font-bold text-gray-900 leading-tight">{t("menu")}</h2>
-                    <p className="text-xs text-gray-500 font-medium leading-tight">vtoraraka.mk</p>
+                    <p className="text-xs text-gray-500 font-medium leading-tight">{t("footerBrandTagline")}</p>
                   </div>
                 </div>
                 <button

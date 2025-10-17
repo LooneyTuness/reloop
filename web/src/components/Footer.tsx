@@ -2,8 +2,10 @@
 
 import { Mail, Phone, MapPin, Camera } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
 
 
   return (
@@ -47,7 +49,7 @@ export default function Footer() {
                   vtoraraka.mk
                 </h3>
                 <p className="text-sm text-gray-500 font-medium leading-tight">
-                  Втора рака. Прв избор.
+                  {t("footerBrandTagline")}
                 </p>
               </div>
             </Link>
@@ -91,10 +93,10 @@ export default function Footer() {
               </div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">
-                  Локација
+                  {t("footerLocation")}
                 </p>
                 <p className="text-gray-900 font-bold text-lg">
-                  Скопје, Македонија
+                  {t("footerLocationText")}
                 </p>
               </div>
             </div>
@@ -107,7 +109,7 @@ export default function Footer() {
             {/* Social Media */}
             <div className="flex items-center space-x-6">
               <span className="text-lg font-semibold text-gray-700">
-                Следете не:
+                {t("footerFollowUs")}
               </span>
               <div className="flex">
                 <a 
