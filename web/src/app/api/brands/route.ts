@@ -98,12 +98,9 @@ export async function GET(request: NextRequest) {
     // Sort brands alphabetically
     brands.sort();
 
-    // Add "Other" option at the end
-    const brandsWithOther = [...brands, 'Other (Друго)'];
-
     return NextResponse.json({
-      brands: brandsWithOther,
-      count: brandsWithOther.length
+      brands: brands,
+      count: brands.length
     });
 
   } catch (error) {
