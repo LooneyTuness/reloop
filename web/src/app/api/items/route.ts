@@ -60,8 +60,11 @@ export async function GET(request: NextRequest) {
       query = query.eq('condition', condition);
     }
     if (brand) {
-      // Handle special case for "Other" brand variations
-      if (brand === 'Other (Друго)' || brand === 'Other') {
+      // Handle special case for "All" option
+      if (brand === 'сите') {
+        // Don't apply any brand filter - show all products
+        console.log('Showing all products (сите selected)');
+      } else if (brand === 'Other (Друго)' || brand === 'Other') {
         query = query.or('brand.ilike.%Other%,brand.ilike.%Друго%,brand.is.null');
       } else {
         // Try exact match first, then fall back to partial match
