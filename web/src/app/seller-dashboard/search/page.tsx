@@ -5,12 +5,14 @@ import { useSearchParams } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { useSearch } from '@/contexts/SearchContext';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { Search, Package, ShoppingBag, Eye, Calendar } from 'lucide-react';
 
 function SearchContent() {
   const searchParams = useSearchParams();
   const { products, activities, isLoading } = useDashboard();
   const { searchQuery, performSearch } = useSearch();
+  const { t } = useDashboardLanguage();
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
