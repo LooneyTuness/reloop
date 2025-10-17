@@ -422,7 +422,10 @@ export default function CategoryFilter({
   });
 
   const getAvailableBrands = () => {
-    return (brandsData as { brands?: string[] })?.brands || [];
+    const brands = (brandsData as { brands?: string[] })?.brands || [];
+    console.log('CategoryFilter - Available brands:', brands);
+    console.log('CategoryFilter - Current category context:', { currentMainCategory, currentSubcategory, currentType });
+    return brands;
   };
 
   if (loading || !categoryTree) {
@@ -767,7 +770,7 @@ export function CategoryFilterCompact({
   // Fetch brands from API - moved outside conditional
   const { data: brandsData, isLoading: brandsLoading } = useBrands({
     categoryId: selectedCategory || undefined,
-    enabled: !!categoryTree && !!selectedCategory
+    enabled: !!categoryTree
   });
 
   useEffect(() => {

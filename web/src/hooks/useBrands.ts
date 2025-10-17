@@ -40,7 +40,7 @@ export function useBrands({
   return useQuery({
     queryKey: ['brands', { categoryId, mainCategory, subcategory, type }],
     queryFn: () => fetchBrands({ categoryId, mainCategory, subcategory, type }),
-    enabled: enabled && (!!categoryId || !!mainCategory || !!subcategory || !!type),
+    enabled: enabled, // Allow fetching even when no category is selected
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes (garbage collection time)
   });
