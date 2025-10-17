@@ -562,7 +562,6 @@ const dashboardTranslations = {
     requestNewBrand: "Request new brand",
     enterBrandName: "Enter brand name",
     request: "Request",
-    cancel: "Cancel",
     quantity: "Quantity",
     status: "Status",
     active: "Active",
