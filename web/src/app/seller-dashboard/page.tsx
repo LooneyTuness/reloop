@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
-import SummaryCards from '@/components/seller-dashboard/SummaryCards';
 import RecentOrders from '@/components/seller-dashboard/RecentOrders';
 import ProductLifecycle from '@/components/seller-dashboard/ProductLifecycle';
 import DashboardZeroState from '@/components/seller-dashboard/DashboardZeroState';
@@ -222,10 +221,6 @@ function DashboardContent() {
         </div>
       </div>
 
-      {/* Summary Cards Section */}
-      <div className="mb-8">
-        <SummaryCards />
-      </div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
