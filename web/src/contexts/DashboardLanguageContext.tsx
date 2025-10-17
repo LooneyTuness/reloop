@@ -254,7 +254,6 @@ const dashboardTranslations = {
     requestNewBrand: "Побарај нов бренд",
     enterBrandName: "Внесете име на бренд",
     request: "Побарај",
-    cancel: "Откажи",
     quantity: "Количина",
     status: "Статус",
     active: "Активен",
