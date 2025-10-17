@@ -83,11 +83,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Extract unique brands and filter out empty/null values
-    const brands = [...new Set(
-      items
-        ?.map(item => item.brand)
-        .filter(brand => brand && brand.trim() !== '')
-    )] || [];
+    const brands = items 
+      ? [...new Set(
+          items
+            .map(item => item.brand)
+            .filter(brand => brand && brand.trim() !== '')
+        )]
+      : [];
 
     // Sort brands alphabetically
     brands.sort();
