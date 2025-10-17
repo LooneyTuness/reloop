@@ -257,8 +257,8 @@ function OrdersContent() {
         
         yPosition = addText(`${index + 1}. ${item.items?.title || translations.unknownProduct}`, margin, yPosition);
         yPosition = addText(`   ${translations.quantity}: ${item.quantity}`, margin + 10, yPosition);
-        yPosition = addText(`   ${translations.unitPrice}: ${item.price?.toFixed(2)} MKD`, margin + 10, yPosition);
-        yPosition = addText(`   ${translations.totalPrice}: ${(item.quantity * item.price)?.toFixed(2)} MKD`, margin + 10, yPosition);
+        yPosition = addText(`   ${translations.unitPrice}: ${item.price?.toFixed(2)} ${t("currency")}`, margin + 10, yPosition);
+        yPosition = addText(`   ${translations.totalPrice}: ${(item.quantity * item.price)?.toFixed(2)} ${t("currency")}`, margin + 10, yPosition);
         
         if (item.items?.size) yPosition = addText(`   ${translations.size}: ${item.items.size}`, margin + 10, yPosition);
         if (item.items?.brand) yPosition = addText(`   ${translations.brand}: ${item.items.brand}`, margin + 10, yPosition);
@@ -288,7 +288,7 @@ function OrdersContent() {
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(0, 0, 0);
-      pdf.text(`${translations.totalAmount}: ${totalAmount.toFixed(2)} MKD`, pageWidth - 80, totalY);
+      pdf.text(`${translations.totalAmount}: ${totalAmount.toFixed(2)} ${t("currency")}`, pageWidth - 80, totalY);
 
       // Footer
       pdf.setFontSize(8);
@@ -578,7 +578,7 @@ function OrdersContent() {
                                 {item.items?.title || 'Unknown Product'}
                               </div>
                               <div className="text-xs text-gray-500 dark:text-gray-400">
-                                <span className="print-mk-qty">Qty:</span> {item.quantity} × <span className="print-currency">{item.price?.toFixed(2)} MKD</span>
+                                <span className="print-mk-qty">Qty:</span> {item.quantity} × <span className="print-currency">{item.price?.toFixed(2)} {t("currency")}</span>
                               </div>
                             </div>
                           </div>
@@ -593,7 +593,7 @@ function OrdersContent() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
-                        {order.total_amount.toFixed(2)} MKD
+                        {order.total_amount.toFixed(2)} {t("currency")}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -771,7 +771,7 @@ function OrdersContent() {
                       <div className="text-right">
                         <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-order-total">Order Total</p>
                         <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 print-currency">
-                          {selectedOrder.total_amount?.toFixed(2) || '0.00'} MKD
+                          {selectedOrder.total_amount?.toFixed(2) || '0.00'} {t("currency")}
                         </p>
                       </div>
                     </div>
@@ -905,7 +905,7 @@ function OrdersContent() {
                           <span className="text-lg font-bold text-blue-600 dark:text-blue-400 print-currency">
                             {(selectedOrder.seller_order_items || selectedOrder.order_items || [])
                               .reduce((sum: number, item: OrderItem) => sum + (item.quantity * item.price), 0)
-                              .toFixed(2) || '0.00'} MKD
+                              .toFixed(2) || '0.00'} {t("currency")}
                           </span>
                         </div>
                       </div>
@@ -1056,13 +1056,13 @@ function OrdersContent() {
                                       <span className="print-mk-qty">Qty:</span>
                                       <span className="font-medium">{orderItem.quantity}</span>
                                       <span>×</span>
-                                      <span className="print-currency font-medium">{orderItem.price?.toFixed(2)} MKD</span>
+                                      <span className="print-currency font-medium">{orderItem.price?.toFixed(2)} {t("currency")}</span>
                                       <span className="print-mk-each">each</span>
                                     </div>
                                   </div>
                                   <div className="text-right">
                                     <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white print-currency">
-                                      {(orderItem.quantity * orderItem.price)?.toFixed(2)} MKD
+                                      {(orderItem.quantity * orderItem.price)?.toFixed(2)} {t("currency")}
                                     </p>
                                   </div>
                                 </div>
@@ -1078,7 +1078,7 @@ function OrdersContent() {
                                   <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                                     <span className="text-gray-600 dark:text-gray-400 print-mk-unit-price font-medium">Unit Price:</span>
                                     <span className="font-semibold text-gray-900 dark:text-white print-currency">
-                                      {orderItem.price?.toFixed(2)} MKD
+                                      {orderItem.price?.toFixed(2)} {t("currency")}
                                     </span>
                                   </div>
                                   <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
@@ -1110,7 +1110,7 @@ function OrdersContent() {
                                       <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                         <span className="text-gray-600 dark:text-gray-400 print-mk-original-price font-medium">Original Price:</span>
                                         <span className="font-medium text-gray-500 line-through print-currency">
-                                          {orderItem.items.old_price.toFixed(2)} MKD
+                                          {orderItem.items.old_price.toFixed(2)} {t("currency")}
                                         </span>
                                         <span className="text-green-600 dark:text-green-400 font-semibold">
                                           (<span className="print-mk-save">Save</span> {((orderItem.items.old_price - orderItem.items.price) / orderItem.items.old_price * 100).toFixed(0)}%)
@@ -1228,7 +1228,7 @@ function OrdersContent() {
                           <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 print-currency">
                             {(selectedOrder.seller_order_items || selectedOrder.order_items || [])
                               .reduce((sum: number, item: OrderItem) => sum + (item.quantity * item.price), 0)
-                              .toFixed(2)} MKD
+                              .toFixed(2)} {t("currency")}
                           </span>
                         </div>
                       </div>

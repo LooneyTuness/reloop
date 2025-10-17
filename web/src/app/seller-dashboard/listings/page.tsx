@@ -274,7 +274,7 @@ function ListingsContent() {
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
-                      {product.price || '0.00'} MKD
+                      {product.price || '0.00'} {t("currency")}
                     </span>
                   </div>
                   

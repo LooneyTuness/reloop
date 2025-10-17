@@ -138,7 +138,7 @@ function SearchContent() {
                       <span className="capitalize">{result.type}</span>
                       {result.price && (
                         <span className="font-medium text-green-600 dark:text-green-400">
-                          {result.price} MKD
+                          {result.price} {t("currency")}
                         </span>
                       )}
                       {result.status && (
