@@ -199,8 +199,6 @@ const translations = {
     myOrders: "Мои нарачки",
     viewYourOrderHistory:
       "Погледајте ја вашата историја на нарачки и следете ги вашите купувања",
-    searchOrders: "Пребарај нарачки...",
-    allStatuses: "Сите статуси",
     viewDetails: "Погледај детали",
     downloadReceipt: "Преземи потврда",
     noOrdersYet: "Сè уште немате направено нарачки",
@@ -931,8 +929,6 @@ const translations = {
     loggedInUser: "Logged in user",
     myOrders: "My Orders",
     viewYourOrderHistory: "View your order history and track your purchases",
-    searchOrders: "Search orders...",
-    allStatuses: "All Statuses",
     viewDetails: "View Details",
     downloadReceipt: "Download Receipt",
     noOrdersYet: "You haven't placed any orders yet.",

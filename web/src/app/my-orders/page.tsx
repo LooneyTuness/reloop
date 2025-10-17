@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SupabaseDataService } from '@/lib/supabase/data-service';
-import { Search, Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, Download, MoreVertical, CreditCard, Info, Mail, Phone, MapPin, ShoppingBag } from 'lucide-react';
+import { Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, Download, MoreVertical, CreditCard, Info, Mail, Phone, MapPin, ShoppingBag } from 'lucide-react';
 import EnhancedImage from '@/components/EnhancedImage';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
@@ -72,14 +72,12 @@ interface UserOrder {
 }
 
 export default function MyOrdersPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
   const [orders, setOrders] = useState<UserOrder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<UserOrder | null>(null);
   const [imageViewer, setImageViewer] = useState<{
     isOpen: boolean;
@@ -183,10 +181,39 @@ export default function MyOrdersPage() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [imageViewer.isOpen, nextImage, prevImage]);
 
-  // Redirect to login if not authenticated
-  if (!user) {
+  // Redirect to login if not authenticated (but only if not loading)
+  if (!loading && !user) {
     router.push('/sign-in?redirect=/my-orders');
     return null;
+  }
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 pt-24 sm:pt-28">
+          <div className="h-7 w-40 bg-gray-200 rounded mb-6 animate-pulse" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-white rounded-3xl shadow-2xl border border-gray-200 p-4 animate-pulse"
+                >
+                  <div className="flex items-center gap-4 w-full">
+                    <div className="w-20 h-20 bg-gray-200 rounded-lg animate-pulse" />
+                    <div className="flex-1">
+                      <div className="h-4 w-2/3 bg-gray-200 rounded mb-2 animate-pulse" />
+                      <div className="h-4 w-1/3 bg-gray-200 rounded animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Show zero state if no orders
@@ -227,14 +254,7 @@ export default function MyOrdersPage() {
     );
   }
 
-  const filteredOrders = orders.filter(order => {
-    const matchesSearch = (order.id && String(order.id).toLowerCase().includes(searchQuery.toLowerCase())) ||
-                         (order.order_items?.some(item => 
-                           item.items?.title?.toLowerCase().includes(searchQuery.toLowerCase())
-                         ));
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredOrders = orders;
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -299,37 +319,6 @@ export default function MyOrdersPage() {
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 mb-8">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder={t('searchOrders') || 'Search orders...'}
-                  className="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="sm:w-48">
-              <select
-                className="w-full px-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="all">{t('allStatuses') || 'All Statuses'}</option>
-                <option value="pending">{t('pending') || 'Pending'}</option>
-                <option value="processing">{t('processing') || 'Processing'}</option>
-                <option value="shipped">{t('shipped') || 'Shipped'}</option>
-                <option value="delivered">{t('delivered') || 'Delivered'}</option>
-                <option value="cancelled">{t('cancelled') || 'Cancelled'}</option>
-              </select>
-            </div>
-          </div>
-        </div>
 
         {/* Orders List */}
         <div className="space-y-6">
