@@ -60,12 +60,12 @@ export async function GET(request: NextRequest) {
       query = query.eq('condition', condition);
     }
     if (brand) {
-      console.log('Applying brand filter:', brand);
       // Handle special case for "Other" brand variations
       if (brand === 'Other (Друго)' || brand === 'Other') {
         query = query.or('brand.ilike.%Other%,brand.ilike.%Друго%,brand.is.null');
       } else {
-        query = query.ilike('brand', `%${brand}%`);
+        // Try exact match first, then fall back to partial match
+        query = query.or(`brand.eq.${brand},brand.ilike.%${brand}%`);
       }
     }
     if (search) {

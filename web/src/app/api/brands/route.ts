@@ -64,15 +64,11 @@ export async function GET(request: NextRequest) {
       .from('items')
       .select('brand')
       .eq('is_active', true)
-      .is('deleted_at', null)
-      .not('brand', 'is', null);
+      .is('deleted_at', null);
 
     // Apply category filter if specified
     if (categoryIds.length > 0) {
       query = query.in('category_id', categoryIds);
-    } else {
-      // If no specific category is selected, get brands from all active items
-      console.log('No category filter applied - fetching all brands');
     }
 
     const { data: items, error } = await query;
@@ -85,32 +81,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Debug logging
-    console.log('=== BRANDS API DEBUG ===');
-    console.log('Query parameters:', { categoryId, mainCategory, subcategory, type });
-    console.log('Category IDs:', categoryIds);
-    console.log('Total items found:', items?.length || 0);
-    console.log('Raw items sample:', items?.slice(0, 5));
-    console.log('========================');
 
     // Extract unique brands and filter out empty/null values
     const brands = items 
       ? [...new Set(
           items
             .map(item => item.brand)
-            .filter(brand => brand && brand.trim() !== '')
+            .filter(brand => {
+              // More lenient filtering - allow brands that are not null/undefined and have some content
+              return brand !== null && brand !== undefined && String(brand).trim() !== '';
+            })
+            .map(brand => String(brand).trim()) // Normalize brands
         )]
       : [];
-
-    console.log('Filtered brands:', brands);
 
     // Sort brands alphabetically
     brands.sort();
 
     // Add "Other" option at the end
     const brandsWithOther = [...brands, 'Other (Друго)'];
-
-    console.log('Final brands with Other:', brandsWithOther);
 
     return NextResponse.json({
       brands: brandsWithOther,

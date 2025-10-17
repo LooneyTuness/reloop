@@ -468,7 +468,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         category_id: productData.category_id || null,
         condition: productData.condition || 'excellent',
         size: productData.size || null,
-        brand: productData.brand || null,
+        brand: productData.brand && productData.brand.trim() !== '' ? productData.brand.trim() : null,
         quantity: productData.quantity || 1,
         status: productData.status || 'active',
         images: productData.images || ['/api/placeholder/400/400']
@@ -478,6 +478,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       console.log('User ID type:', typeof user.id, 'value:', user.id);
       console.log('User email type:', typeof user.email, 'value:', user.email);
       console.log('Item data user_id type:', typeof itemData.user_id, 'value:', itemData.user_id);
+      
       
       console.log('Final item data being sent to database:', itemData);
       

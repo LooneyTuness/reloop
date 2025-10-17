@@ -422,10 +422,7 @@ export default function CategoryFilter({
   });
 
   const getAvailableBrands = () => {
-    const brands = (brandsData as { brands?: string[] })?.brands || [];
-    console.log('CategoryFilter - Available brands:', brands);
-    console.log('CategoryFilter - Current category context:', { currentMainCategory, currentSubcategory, currentType });
-    return brands;
+    return (brandsData as { brands?: string[] })?.brands || [];
   };
 
   if (loading || !categoryTree) {
