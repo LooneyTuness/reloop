@@ -27,31 +27,6 @@ export default function Products({
 
   const handleAddToCart = async (item) => {
     try {
-      // First, try to reserve the item if reservation system is available
-      if (item.status === "active" && item.quantity > 0) {
-        try {
-          const { data: reserved, error: reserveError } = await supabase.rpc(
-            "reserve_item",
-            {
-              item_uuid: item.id,
-              user_uuid: user?.id,
-              reserve_minutes: 15,
-            }
-          );
-
-          if (reserveError) throw reserveError;
-
-          if (!reserved) {
-            toast.error(t("itemNotAvailable") || "Item not available");
-            return;
-          }
-        } catch (reserveError) {
-          console.log(
-            "Reservation system not available, proceeding with normal cart add"
-          );
-        }
-      }
-
       await addToCart({
         id: item.id,
         name: item.title,
@@ -67,15 +42,6 @@ export default function Products({
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
-
-      // Release reservation if cart add failed
-      try {
-        await supabase.rpc("release_reservation", {
-          item_uuid: item.id,
-        });
-      } catch (releaseError) {
-        console.error("Error releasing reservation:", releaseError);
-      }
 
       if (error.message === "Item already in cart") {
         toast.error(t("alreadyInCart"));
@@ -191,9 +157,6 @@ export default function Products({
 
   const canAddToCart = (item) => {
     if (item.status === "active" && item.quantity > 0) {
-      if (item.reserved_until && new Date(item.reserved_until) > new Date()) {
-        return false; // Item is reserved
-      }
       return !isInCart(item.id);
     }
     return false;
