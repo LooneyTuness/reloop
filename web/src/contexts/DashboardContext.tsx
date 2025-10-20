@@ -409,14 +409,15 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         console.log('⚠️ No products found in order, skipping product updates');
       }
       
-      // Update the database status for the specific products in this order
-      if (productIdsInOrder.length > 0) {
-        try {
-          await supabaseDataService.updateItemsStatus(productIdsInOrder, productStatus);
-        } catch (dbError) {
-          console.error('Error updating product statuses in database:', dbError);
-          // Don't throw here - the order status was already updated successfully
-        }
+      // Update the database status for the specific products in this order (server-side admin API)
+      try {
+        await fetch('/api/orders/update-items-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: orderIdStr, status: productStatus })
+        });
+      } catch (dbError) {
+        console.error('Error updating product statuses via admin API:', dbError);
       }
       
       
