@@ -173,10 +173,48 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       console.log('🔍 Orders status:', sellerOrders.status);
       console.log('🔍 Stats status:', sellerStats.status);
 
-      // Transform items to dashboard products
+      // Derive lifecycle status overrides from orders so lifecycle follows order states
+      const orderDerivedStatusByItem: Record<string, 'sold' | 'shipped' | 'delivered' | 'listed'> = {};
+      const statusPrecedence: Record<string, number> = { listed: 0, sold: 1, shipped: 2, delivered: 3 };
+      const mapOrderToLifecycle = (orderStatus: string): 'sold' | 'shipped' | 'delivered' | 'listed' => {
+        switch (orderStatus) {
+          case 'pending':
+          case 'processing':
+            return 'sold';
+          case 'shipped':
+            return 'shipped';
+          case 'delivered':
+            return 'delivered';
+          case 'cancelled':
+            return 'listed';
+          default:
+            return 'listed';
+        }
+      };
+
+      try {
+        (orders as DashboardOrder[])?.forEach((ord: DashboardOrder) => {
+          const lifecycle = mapOrderToLifecycle(ord?.status || '');
+          const ordItems = (ord?.order_items as (OrderItem & { items?: Item | null })[] | undefined) || [];
+          ordItems.forEach((oi) => {
+            const rawItemId = oi?.item_id as unknown as string | number | null;
+            const itemId = rawItemId ? String(rawItemId) : '';
+            const sellerUserId = oi?.items?.user_id || null;
+            if (!itemId || sellerUserId !== user.id) return;
+            const prev = orderDerivedStatusByItem[itemId];
+            if (!prev || statusPrecedence[lifecycle] > statusPrecedence[prev]) {
+              orderDerivedStatusByItem[itemId] = lifecycle;
+            }
+          });
+        });
+      } catch (e) {
+        console.warn('Non-blocking: failed to derive lifecycle from orders', e);
+      }
+
+      // Transform items to dashboard products with order-derived overrides
       const dashboardProducts: DashboardProduct[] = items.map(item => {
-        // Map database status to Product Lifecycle status
-        let lifecycleStatus = 'listed';
+        // Base mapping from item.status
+        let lifecycleStatus: 'listed' | 'sold' | 'shipped' | 'delivered' = 'listed';
         switch (item.status) {
           case 'active':
             lifecycleStatus = 'listed';
@@ -193,11 +231,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           default:
             lifecycleStatus = 'listed';
         }
+
+        // Override if orders indicate a more advanced lifecycle state
+        const override = orderDerivedStatusByItem[item.id];
+        if (override && statusPrecedence[override] >= statusPrecedence[lifecycleStatus]) {
+          lifecycleStatus = override;
+        }
         
         return {
           ...item,
           name: item.title,
-          views: 0, // Will be updated with real data after fetching
+          views: 0,
           price: item.price?.toFixed(2) || '0.00',
           status: lifecycleStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
         };
