@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { supabaseAdmin } from '@/lib/supabase/supabase.admin';
 
 export const runtime = 'nodejs';
@@ -40,6 +41,15 @@ export async function POST(req: NextRequest) {
         { error: 'Failed to mark items as sold' },
         { status: 500 }
       );
+    }
+
+    // Revalidate key pages that show listings
+    try {
+      revalidatePath('/');
+      revalidatePath('/products');
+      revalidatePath('/catalog');
+    } catch (e) {
+      console.warn('Revalidate failed (non-blocking):', e);
     }
 
     return NextResponse.json({ ok: true });
