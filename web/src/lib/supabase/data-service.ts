@@ -503,7 +503,7 @@ export class SupabaseDataService {
       const updatePayload: any = { status };
       if (status === 'sold') {
         updatePayload.sold_at = new Date().toISOString();
-        updatePayload.quantity = 0;
+        // Do not touch quantity to avoid violating DB quantity constraints
       } else if (status === 'active') {
         updatePayload.sold_at = null;
         updatePayload.quantity = 1;

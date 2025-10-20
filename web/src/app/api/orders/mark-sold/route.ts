@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
       .from('items')
       .update({
         status: 'sold',
-        quantity: 0,
         sold_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -54,7 +53,7 @@ export async function POST(req: NextRequest) {
     }
 
     const updatedIds = (verifyItems || [])
-      .filter((it: { id: string; status: string | null; quantity: number | null }) => it.status === 'sold' && (it.quantity ?? 0) === 0)
+      .filter((it: { id: string; status: string | null; quantity: number | null }) => it.status === 'sold')
       .map((it: { id: string }) => it.id);
 
     // Revalidate key pages that show listings
