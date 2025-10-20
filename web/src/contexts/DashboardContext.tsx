@@ -430,6 +430,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       };
       setActivities(prev => [newActivity, ...prev]);
       
+      // Ensure UI reflects fresh statuses (in case local state missed any items)
+      try {
+        await refreshData();
+      } catch (e) {
+        console.warn('Non-blocking: refresh after status update failed:', e);
+      }
       
     } catch (err) {
       console.error('❌ Error updating order status:', err);
