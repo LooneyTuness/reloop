@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useProductView } from "../hooks/useProductView";
 import Link from "next/link";
-import ProductImage from "./ProductImage";
 import {
   ShoppingBag,
   Heart,
@@ -192,15 +191,14 @@ export default function ProductDetail() {
           {/* Image Gallery */}
           <div className="space-y-4">
             <div className="relative bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden aspect-[4/5]">
-              <ProductImage
+              <img
                 src={
-                  Array.isArray(product.images)
+                  (Array.isArray(product.images)
                     ? product.images[currentIndex]
-                    : product.images
+                    : product.images) || "/placeholder.svg"
                 }
-                alt={product.name || product.title || "Product"}
+                alt={product.name}
                 className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
-                fallbackText={t("noImage")}
               />
 
               {/* Navigation arrows */}
@@ -265,11 +263,10 @@ export default function ProductDetail() {
                         : "border-gray-200 hover:border-blue-300"
                     }`}
                   >
-                    <ProductImage
+                    <img
                       src={url}
                       alt={`thumb-${idx}`}
                       className="w-full h-full object-cover"
-                      fallbackText=""
                     />
                   </button>
                 ))}

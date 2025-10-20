@@ -175,7 +175,6 @@ export async function GET(request: NextRequest) {
     // Merge seller profile data with items
     const itemsWithSellerInfo = items.map(item => ({
       ...item,
-      images: (item as { photos?: string[] }).photos || [], // Map photos field to images for frontend compatibility
       seller_profiles: item.user_id ? sellerProfiles[item.user_id] || null : null
     }));
 
