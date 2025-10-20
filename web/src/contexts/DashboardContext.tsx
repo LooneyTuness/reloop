@@ -348,9 +348,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       
       await supabaseDataService.updateOrderStatus(orderId, status);
       
-      // Update local state
+      // Update local state (be tolerant of id type mismatches)
       setOrders(prev => prev.map(order => 
-        order.id === orderId ? { ...order, status } : order
+        String(order.id) === String(orderId) ? { ...order, status } : order
       ));
       
       // Map order status to product status for Product Lifecycle
@@ -385,15 +385,16 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       
       const orderItems = await supabaseDataService.getOrderItems(orderIdStr);
       console.log('📦 Order items found:', orderItems);
-      const productIdsInOrder = orderItems.map(item => item.item_id);
+      const productIdsInOrder = orderItems.map(item => String(item.item_id));
       console.log('🆔 Product IDs in order:', productIdsInOrder);
       
       // Only update products that are actually in this order
       if (productIdsInOrder.length > 0) {
         console.log('✅ Updating products with new status:', productStatus);
         setProducts(prev => {
+          const productIdsInOrderSet = new Set(productIdsInOrder.map(String));
           const updatedProducts = prev.map(product => {
-            if (productIdsInOrder.includes(product.id)) {
+            if (productIdsInOrderSet.has(String(product.id))) {
               console.log(`🔄 Updating product ${product.id} (${product.name}) from ${product.status} to ${productStatus}`);
               return {
                 ...product,
