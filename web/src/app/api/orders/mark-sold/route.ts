@@ -43,6 +43,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Verify update by re-reading statuses
+    const { data: verifyItems, error: verifyError } = await (supabaseAdmin as any)
+      .from('items')
+      .select('id, status, quantity')
+      .in('id', ids);
+
+    if (verifyError) {
+      console.warn('Verification read failed:', verifyError);
+    }
+
+    const updatedIds = (verifyItems || [])
+      .filter((it: { id: string; status: string | null; quantity: number | null }) => it.status === 'sold' && (it.quantity ?? 0) === 0)
+      .map((it: { id: string }) => it.id);
+
     // Revalidate key pages that show listings
     try {
       revalidatePath('/');
@@ -52,7 +66,7 @@ export async function POST(req: NextRequest) {
       console.warn('Revalidate failed (non-blocking):', e);
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, updatedIds });
   } catch (e) {
     console.error('Error in mark-sold API:', e);
     return NextResponse.json(

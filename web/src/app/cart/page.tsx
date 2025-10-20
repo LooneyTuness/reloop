@@ -303,11 +303,27 @@ export default function CartPage() {
       // 2.5) Immediately mark ordered items as sold via admin API (server-side)
       try {
         const orderedItemIds = cart.map((i) => String(i.id));
-        await fetch('/api/orders/mark-sold', {
+        const res = await fetch('/api/orders/mark-sold', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ itemIds: orderedItemIds })
         });
+        if (res.ok) {
+          try {
+            const body = await res.json();
+            console.log('Mark-sold API success:', body);
+          } catch {}
+        } else {
+          const msg = await res.text().catch(() => '');
+          console.warn('Mark-sold API responded non-OK:', res.status, msg);
+          // Fallback (best-effort) using client supabase in case API failed
+          try {
+            const { supabaseDataService } = await import('@/lib/supabase/data-service');
+            await supabaseDataService.updateItemsStatus(orderedItemIds, 'sold');
+          } catch (fallbackErr) {
+            console.warn('Fallback mark-sold failed:', fallbackErr);
+          }
+        }
       } catch (updateErr) {
         console.warn("Non-blocking: failed to mark items as sold", updateErr);
       }
