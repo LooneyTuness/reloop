@@ -185,11 +185,11 @@ export default function CartPage() {
       setSubmitting(true);
       
       // First, get the seller information for the items in the cart
-      const itemIds = cart.map(item => item.id);
+      const cartItemIds = cart.map(item => item.id);
       const { data: itemsData, error: itemsError } = await supabase
         .from('items')
         .select('id, user_id')
-        .in('id', itemIds);
+        .in('id', cartItemIds);
       
       if (itemsError) throw itemsError;
       if (!itemsData || itemsData.length === 0) throw new Error("Could not find item information");
@@ -300,10 +300,51 @@ export default function CartPage() {
         .insert(orderItems);
       if (orderItemsError) throw orderItemsError;
 
+      // 2.5) Update item statuses to "sold" to remove them from listings
+      // This is especially helpful for older people who might not realize items are already sold
+      const orderedItemIds = cart.map(item => item.id);
+      try {
+        // Use the existing data service method for consistency
+        const { SupabaseDataService } = await import("@/lib/supabase/data-service");
+        const dataService = new SupabaseDataService();
+        
+        // Update items to sold status
+        await dataService.updateItemsStatus(orderedItemIds.map(id => String(id)), "sold");
+        
+        // Also update quantity to 0 and set sold_at timestamp
+        for (const itemId of orderedItemIds) {
+          const { error: updateError } = await (
+            supabase as unknown as {
+              from: (table: string) => {
+                update: (data: { sold_at: string; quantity: number }) => {
+                  eq: (col: string, val: string | number) => Promise<{ error: { message: string } | null }>;
+                };
+              };
+            }
+          )
+            .from("items")
+            .update({ 
+              sold_at: new Date().toISOString(),
+              quantity: 0 
+            })
+            .eq("id", itemId);
+          
+          if (updateError) {
+            console.warn(`Failed to update additional fields for item ${itemId}:`, updateError);
+          }
+        }
+        
+        console.log("Successfully updated item statuses to 'sold' for items:", orderedItemIds);
+      } catch (updateError) {
+        console.warn("Failed to update item statuses:", updateError);
+        // Don't throw error here as the order was already created successfully
+        // This is a non-critical operation for better user experience
+      }
+
       // 3) Create notifications for sellers (vendors) whose items were ordered
       try {
         // Get seller information for each item in the cart
-        const itemIds = cart.map(item => item.id);
+        // orderedItemIds already defined above
         const { data: sellerData, error: sellerError } = await (
           supabase as unknown as {
             from: (table: string) => {
@@ -321,7 +362,7 @@ export default function CartPage() {
         )
           .from("items")
           .select("id,user_id,title")
-          .in("id", itemIds);
+          .in("id", orderedItemIds);
 
         if (sellerError) {
           console.error("Error fetching seller data:", sellerError);

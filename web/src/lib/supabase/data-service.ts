@@ -499,12 +499,19 @@ export class SupabaseDataService {
     for (const itemId of itemIds) {
       console.log(`🔧 Updating item ${itemId} to status ${status}`);
       
-      // Try to update with just the status first
+      // Prepare update data based on status
+      const updateData: any = { status };
+      
+      // If restoring to active status, also restore quantity and clear sold_at
+      if (status === 'active') {
+        updateData.quantity = 1; // Restore to available quantity
+        updateData.sold_at = null; // Clear sold timestamp
+      }
+      
+      // Try to update with the appropriate data
       const { error } = await (this.supabase as any)
         .from('items')
-        .update({ 
-          status
-        })
+        .update(updateData)
         .eq('id', itemId);
 
       if (error) {
