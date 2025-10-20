@@ -142,7 +142,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
       // Handle individual results
       const items = sellerItems.status === 'fulfilled' ? sellerItems.value : [];
-      const orders = sellerOrders.status === 'fulfilled' ? (sellerOrders.value as any[]) : [];
+      const orders = sellerOrders.status === 'fulfilled' ? (sellerOrders.value as DashboardOrder[]) : [];
       const stats = sellerStats.status === 'fulfilled' ? sellerStats.value : {
         totalItems: 0,
         activeItems: 0,
@@ -207,12 +207,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       console.log('🔄 Transforming orders to dashboard orders:', orders.length);
       console.log('🔄 User ID for filtering:', user.id);
       
-      const dashboardOrders: DashboardOrder[] = orders.map((order, index) => {
+      const dashboardOrders: DashboardOrder[] = (orders as DashboardOrder[]).map((order: DashboardOrder, index: number) => {
         console.log(`🔄 Processing order ${index + 1}:`, order.id);
         console.log(`🔄 Order items:`, order.order_items);
         
         // Get ALL items from this seller for display
-        const sellerOrderItems = order.order_items?.filter((item: any) => {
+        const sellerOrderItems = (order.order_items as (OrderItem & { items?: Item | null })[] | undefined)?.filter((item) => {
           console.log(`🔄 Checking item:`, item);
           console.log(`🔄 Item user_id:`, item.items?.user_id);
           console.log(`🔄 Current user ID:`, user.id);
@@ -414,7 +414,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         await fetch('/api/orders/update-items-status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderId: orderIdStr, status: productStatus })
+          // Pass explicit itemIds to avoid any ambiguity with orderId
+          body: JSON.stringify({ itemIds: productIdsInOrder, status: productStatus })
         });
       } catch (dbError) {
         console.error('Error updating product statuses via admin API:', dbError);
