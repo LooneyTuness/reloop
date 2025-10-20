@@ -1272,10 +1272,12 @@ function OrdersContent() {
               <div className="relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
                 {/* Image */}
                 <div className="relative">
-                  <img
+                  <EnhancedImage
                     src={imageViewer.images[imageViewer.currentIndex]}
                     alt={imageViewer.title}
                     className="w-full h-auto max-h-[70vh] object-contain"
+                    retryCount={2}
+                    enableRefresh={true}
                   />
                   
                   {/* Navigation arrows */}

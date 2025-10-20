@@ -191,7 +191,7 @@ const dashboardTranslations = {
     brandNameRules: "Името на брендот ќе биде автоматски форматирано со правилна капитализација.",
     addBrand: "Додај бренд",
     adding: "Се додава...",
-    noBrandsFound: "Не се пронајдени брендови",
+    noBrandsFound: "Не се пронајдени брендови - можете да внесете сопствено име на бренд",
     noBrandsAvailable: "Нема достапни брендови",
     
     // Time references
@@ -508,7 +508,7 @@ const dashboardTranslations = {
     brandNameRules: "Brand name will be automatically formatted with proper capitalization.",
     addBrand: "Add Brand",
     adding: "Adding...",
-    noBrandsFound: "No brands found",
+    noBrandsFound: "No brands found - you can type a custom brand name",
     noBrandsAvailable: "No brands available",
     
     // Time references

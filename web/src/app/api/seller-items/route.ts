@@ -38,8 +38,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log('✅ API: Found', items?.length || 0, 'items for seller');
-    return NextResponse.json({ items: items || [] });
+    // Map photos field to images for frontend compatibility
+    const itemsWithImages = (items || []).map(item => ({
+      ...item,
+      images: (item as { photos?: string[] }).photos || []
+    }));
+
+    console.log('✅ API: Found', itemsWithImages.length, 'items for seller');
+    return NextResponse.json({ items: itemsWithImages });
   } catch (error) {
     console.error('Error in seller-items API:', error);
     return NextResponse.json(

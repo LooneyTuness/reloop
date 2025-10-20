@@ -93,7 +93,7 @@ export async function POST(
 
     // Get updated view count for this product
     const { data: viewCount, error: viewCountError } = await supabase
-      .rpc('get_product_view_count', { product_uuid: productId });
+      .rpc('get_product_view_count', { product_uuid: productId as any });
 
     if (viewCountError) {
       console.log('View count function not available, using fallback');
@@ -166,7 +166,7 @@ export async function GET(
 
     // Get view count for the product
     const { data: viewCount, error } = await supabase
-      .rpc('get_product_view_count', { product_uuid: productId });
+      .rpc('get_product_view_count', { product_uuid: productId as any });
 
     if (error) {
       console.log('View count function not available, using fallback');
