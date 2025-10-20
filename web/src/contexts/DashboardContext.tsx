@@ -358,7 +358,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       let productStatus: string = 'active';
       switch (status) {
         case 'pending':
+          productStatus = 'sold';
+          break;
         case 'processing':
+          // Processing should still be considered sold (not shipped yet)
           productStatus = 'sold';
           break;
         case 'shipped':

@@ -75,7 +75,7 @@ const dashboardTranslations = {
     trackProductsThroughSalesFunnel: "Следете ги вашите производи низ продажниот ворон",
     salesFunnel: "Продажен ворон",
     productsSold: "продадени производи",
-    listed: "Листирани",
+    listed: "Откажани",
     viewed: "Прегледани",
     inCart: "Во кошничка",
     sold: "Продадени",
