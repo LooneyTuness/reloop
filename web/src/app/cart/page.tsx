@@ -300,6 +300,15 @@ export default function CartPage() {
         .insert(orderItems);
       if (orderItemsError) throw orderItemsError;
 
+      // 2.5) Immediately mark ordered items as sold (remove from listings)
+      try {
+        const orderedItemIds = cart.map((i) => String(i.id));
+        const { supabaseDataService } = await import("@/lib/supabase/data-service");
+        await supabaseDataService.updateItemsStatus(orderedItemIds, "sold");
+      } catch (updateErr) {
+        console.warn("Non-blocking: failed to mark items as sold", updateErr);
+      }
+
       // 3) Create notifications for sellers (vendors) whose items were ordered
       try {
         // Get seller information for each item in the cart
