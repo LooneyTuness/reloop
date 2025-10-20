@@ -17,13 +17,32 @@ export default function ProductLifecycle() {
   const { products, isLoading } = useDashboard();
   const { t } = useDashboardLanguage();
   
-  // Debug logging
-  console.log('🔄 ProductLifecycle: Received products:', products);
-  console.log('🔄 ProductLifecycle: Product statuses:', products.map(p => ({ id: p.id, name: p.name, status: p.status })));
-  
-  // Force re-render when products change
-  const renderKey = products.map(p => `${p.id}-${p.status}`).join(',');
-  console.log('🔑 ProductLifecycle render key:', renderKey);
+  // Normalize statuses to lifecycle stages to avoid mismatches (e.g., 'active' -> 'listed')
+  const normalizeStatus = (status: Product['status'] | undefined): Product['status'] => {
+    if (!status) return 'listed';
+    switch (status) {
+      case 'active':
+        return 'listed';
+      case 'listed':
+      case 'viewed':
+      case 'in_cart':
+      case 'sold':
+      case 'shipped':
+      case 'delivered':
+        return status;
+      default:
+        return 'listed';
+    }
+  };
+
+  const normalizedProducts = products.map(p => ({
+    ...p,
+    name: (p as any).title || p.name, // prefer title if available
+    status: normalizeStatus(p.status)
+  }));
+
+  // Force re-render when normalized statuses change
+  const renderKey = normalizedProducts.map(p => `${p.id}-${p.status}`).join(',');
 
   const lifecycleStages = [
     { key: 'listed', label: t('listed'), icon: Home, color: 'bg-gray-500', activeColor: 'bg-gray-600', textColor: 'text-gray-600' },
@@ -135,7 +154,7 @@ export default function ProductLifecycle() {
         <div className="flex items-center justify-between mb-6">
           <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{t('salesFunnel')}</h4>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {products.filter(p => p.status === 'sold' || p.status === 'shipped' || p.status === 'delivered').length} {t('productsSold')}
+            {normalizedProducts.filter(p => p.status === 'sold' || p.status === 'shipped' || p.status === 'delivered').length} {t('productsSold')}
           </div>
         </div>
         
@@ -144,8 +163,8 @@ export default function ProductLifecycle() {
           <div className="flex items-center justify-between mb-4">
             {lifecycleStages.map((stage, index) => {
               const Icon = stage.icon;
-              const isActive = products.some(p => p.status === stage.key);
-              const count = products.filter(p => p.status === stage.key).length;
+              const isActive = normalizedProducts.some(p => p.status === stage.key);
+              const count = normalizedProducts.filter(p => p.status === stage.key).length;
               const isLastStage = index === lifecycleStages.length - 1;
               
               return (
@@ -201,7 +220,7 @@ export default function ProductLifecycle() {
 
      {/* Product Cards */}
       <div className="space-y-4">
-        {products.slice(0, 4).map((product) => {
+        {normalizedProducts.slice(0, 4).map((product) => {
           const progressPercentage = getProgressPercentage(product.status);
           const stageIndex = getStageIndex(product.status);
           
