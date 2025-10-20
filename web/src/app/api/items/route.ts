@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 import { supabaseAdmin } from '@/lib/supabase/supabase.admin';
 
 // GET /api/items - Get all items with optional filtering
