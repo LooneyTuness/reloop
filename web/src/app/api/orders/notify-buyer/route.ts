@@ -125,14 +125,23 @@ export async function POST(req: NextRequest) {
       </div>
     `;
 
-    await sendEmail({
-      to: buyerEmail,
-      subject,
-      html,
-    });
-    return NextResponse.json({ ok: true });
+    try {
+      await sendEmail({
+        to: buyerEmail,
+        subject,
+        html,
+      });
+      return NextResponse.json({ ok: true });
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Unknown error';
+      console.warn('Email send failed (buyer) - non-blocking:', message);
+      // Soft-success so order flow is not blocked by email configuration
+      return NextResponse.json({ ok: true, warning: message });
+    }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    // Soft-fail: do not block order creation if email config is missing
+    console.warn('notify-buyer payload/processing error - non-blocking:', message);
+    return NextResponse.json({ ok: true, warning: message });
   }
 }

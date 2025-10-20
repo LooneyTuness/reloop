@@ -109,16 +109,22 @@ export async function POST(req: NextRequest) {
       </div>
     `;
 
-    await sendEmail({
-      to: sellerEmail,
-      subject,
-      html,
-    });
-    
-    return NextResponse.json({ ok: true });
+    try {
+      await sendEmail({
+        to: sellerEmail,
+        subject,
+        html,
+      });
+      return NextResponse.json({ ok: true });
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Unknown error';
+      console.warn('Email send failed (seller) - non-blocking:', message);
+      return NextResponse.json({ ok: true, warning: message });
+    }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("Error sending seller notification:", message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    // Soft-fail: do not block order creation if email config is missing
+    console.warn('notify-sellers payload/processing error - non-blocking:', message);
+    return NextResponse.json({ ok: true, warning: message });
   }
 }
