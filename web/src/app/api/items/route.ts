@@ -47,6 +47,8 @@ export async function GET(request: NextRequest) {
         )
       `)
       .eq('is_active', true)
+      // Only show items that are actually available
+      .or("and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)")
       .is('deleted_at', null)
       .order(sortBy, { ascending: sortOrder === 'asc' })
       .range(offset, offset + limit - 1);
@@ -195,6 +197,7 @@ export async function GET(request: NextRequest) {
       .from('items')
       .select('*', { count: 'exact', head: true })
       .eq('is_active', true)
+      .or("and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)")
       .is('deleted_at', null);
 
     // Apply same filters to count query

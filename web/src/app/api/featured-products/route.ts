@@ -24,6 +24,8 @@ export async function GET(request: NextRequest) {
       .from('items')
       .select('*')
       .eq('is_active', true)
+      // Only feature items that are actually available
+      .or("and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)")
       .is('deleted_at', null)
       .order('created_at', { ascending: false })
       .limit(limit);
