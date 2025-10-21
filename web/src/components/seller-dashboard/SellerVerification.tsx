@@ -72,19 +72,22 @@ export default function SellerVerification({ children }: SellerVerificationProps
           return;
         }
 
+        // Type assertion to help TypeScript understand the profile type
+        const sellerProfile = profile as SellerProfile;
+
         // Check if seller is approved
-        if (!profile.is_approved) {
+        if (!sellerProfile.is_approved) {
           setError('Your seller account is pending approval. Please wait for administrator approval or contact support.');
           return;
         }
 
         // Check if user has seller or admin role
-        if (profile.role !== 'seller' && profile.role !== 'admin') {
+        if (sellerProfile.role !== 'seller' && sellerProfile.role !== 'admin') {
           setError('You do not have permission to access the seller dashboard.');
           return;
         }
 
-        setSellerProfile(profile);
+        setSellerProfile(sellerProfile);
       } catch (err) {
         console.error('Error checking seller profile:', err);
         setError('Failed to verify seller status. Please try again later.');
