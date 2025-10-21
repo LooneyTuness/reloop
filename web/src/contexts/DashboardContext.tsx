@@ -390,52 +390,53 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     try {
       console.log('🚀 updateOrderStatus called with:', { orderId, status });
       
+      // Update order status in database first
       await supabaseDataService.updateOrderStatus(orderId, status);
       
-      // Update local state (be tolerant of id type mismatches)
+      // Update local orders state immediately
       setOrders(prev => prev.map(order => 
         String(order.id) === String(orderId) ? { ...order, status } : order
       ));
       
       // Map order status to product status for Product Lifecycle
-      // Use database-compatible status values
+      // This mapping should reflect the actual product lifecycle stages
       let productStatus: string = 'active';
       switch (status) {
         case 'pending':
+          // When order is pending, product should be marked as sold (purchased but not processed)
           productStatus = 'sold';
           break;
         case 'processing':
-          // Processing should still be considered sold (not shipped yet)
+          // When processing, product is still sold but being prepared
           productStatus = 'sold';
           break;
         case 'shipped':
+          // When shipped, product moves to shipped stage
           productStatus = 'shipped';
           break;
         case 'delivered':
+          // When delivered, product reaches final stage
           productStatus = 'delivered';
           break;
         case 'cancelled':
+          // When cancelled, product goes back to active (available for sale)
           productStatus = 'active';
           break;
         default:
+          // Default to sold for any other status
           productStatus = 'sold';
       }
       
       console.log(`📦 Mapped order status '${status}' to product status '${productStatus}'`);
       
       // Get the specific products in this order
-      console.log('🔍 Fetching order items for order:', orderId, 'type:', typeof orderId);
-      
-      // Convert orderId to string if it's a number (database might return numbers)
       const orderIdStr = String(orderId);
-      console.log('🔍 Using order ID as string:', orderIdStr);
-      
       const orderItems = await supabaseDataService.getOrderItems(orderIdStr);
       console.log('📦 Order items found:', orderItems);
       const productIdsInOrder = orderItems.map(item => String(item.item_id));
       console.log('🆔 Product IDs in order:', productIdsInOrder);
       
-      // Only update products that are actually in this order
+      // Update products in local state immediately for real-time UI updates
       if (productIdsInOrder.length > 0) {
         console.log('✅ Updating products with new status:', productStatus);
         setProducts(prev => {
@@ -453,22 +454,31 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           console.log('📊 Updated products:', updatedProducts);
           return updatedProducts;
         });
+        
+        // Update the database status for the specific products in this order (server-side admin API)
+        try {
+          const response = await fetch('/api/orders/update-items-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ itemIds: productIdsInOrder, status: productStatus })
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('API Error:', errorData);
+            throw new Error(`Failed to update product statuses: ${errorData.error || 'Unknown error'}`);
+          }
+          
+          const result = await response.json();
+          console.log('✅ Product statuses updated successfully:', result);
+        } catch (dbError) {
+          console.error('Error updating product statuses via admin API:', dbError);
+          // Don't throw here - we've already updated local state
+          // The user will see the change immediately, and it will sync on next refresh
+        }
       } else {
         console.log('⚠️ No products found in order, skipping product updates');
       }
-      
-      // Update the database status for the specific products in this order (server-side admin API)
-      try {
-        await fetch('/api/orders/update-items-status', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          // Pass explicit itemIds to avoid any ambiguity with orderId
-          body: JSON.stringify({ itemIds: productIdsInOrder, status: productStatus })
-        });
-      } catch (dbError) {
-        console.error('Error updating product statuses via admin API:', dbError);
-      }
-      
       
       // Add activity
       const newActivity: Activity = {
@@ -480,12 +490,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       };
       setActivities(prev => [newActivity, ...prev]);
       
-      // Ensure UI reflects fresh statuses (in case local state missed any items)
-      try {
-        await refreshData();
-      } catch (e) {
-        console.warn('Non-blocking: refresh after status update failed:', e);
-      }
+      // Trigger a refresh to ensure all data is in sync (non-blocking)
+      setTimeout(async () => {
+        try {
+          await refreshData();
+        } catch (e) {
+          console.warn('Non-blocking: refresh after status update failed:', e);
+        }
+      }, 1000);
       
     } catch (err) {
       console.error('❌ Error updating order status:', err);

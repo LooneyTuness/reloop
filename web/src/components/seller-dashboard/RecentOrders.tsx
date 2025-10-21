@@ -73,8 +73,14 @@ export default function RecentOrders() {
     }
   };
 
-  const handleStatusUpdate = (orderId: string, newStatus: Order['status']) => {
-    updateOrderStatus(orderId, newStatus);
+  const handleStatusUpdate = async (orderId: string, newStatus: Order['status']) => {
+    try {
+      console.log('🔄 RecentOrders: Updating order status', { orderId, newStatus });
+      await updateOrderStatus(orderId, newStatus);
+      console.log('✅ RecentOrders: Order status updated successfully');
+    } catch (error) {
+      console.error('❌ RecentOrders: Failed to update order status:', error);
+    }
   };
 
   if (isLoading) {

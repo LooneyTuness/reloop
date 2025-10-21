@@ -381,9 +381,11 @@ function OrdersContent() {
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     try {
+      console.log('🔄 Orders: Updating order status', { orderId, newStatus });
       await updateOrderStatus(orderId, newStatus);
+      console.log('✅ Orders: Order status updated successfully');
     } catch (error) {
-      console.error('Failed to update order status:', error);
+      console.error('❌ Orders: Failed to update order status:', error);
     }
   };
 

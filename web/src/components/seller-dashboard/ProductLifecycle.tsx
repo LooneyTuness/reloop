@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Package, Eye, ShoppingCart, CheckCircle, Truck, Home } from 'lucide-react';
 import { useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
@@ -14,8 +14,9 @@ interface Product {
 }
 
 export default function ProductLifecycle() {
-  const { products, isLoading } = useDashboard();
+  const { products, isLoading, orders } = useDashboard();
   const { t } = useDashboardLanguage();
+  const [lastUpdateTime, setLastUpdateTime] = useState(Date.now());
   
   // Normalize statuses to lifecycle stages to avoid mismatches (e.g., 'active' -> 'listed')
   const normalizeStatus = (status: Product['status'] | undefined): Product['status'] => {
@@ -41,8 +42,19 @@ export default function ProductLifecycle() {
     status: normalizeStatus(p.status)
   }));
 
-  // Force re-render when normalized statuses change
-  const renderKey = normalizedProducts.map(p => `${p.id}-${p.status}`).join(',');
+  // Force re-render when normalized statuses change or orders change
+  const renderKey = normalizedProducts.map(p => `${p.id}-${p.status}`).join(',') + 
+    orders.map(o => `${o.id}-${o.status}`).join(',') + lastUpdateTime;
+
+  // Listen for order changes to trigger re-render
+  useEffect(() => {
+    setLastUpdateTime(Date.now());
+  }, [orders]);
+
+  // Also listen for product changes
+  useEffect(() => {
+    setLastUpdateTime(Date.now());
+  }, [products]);
 
   const lifecycleStages = [
     { key: 'listed', label: t('listed'), icon: Home, color: 'bg-gray-500', activeColor: 'bg-gray-600', textColor: 'text-gray-600' },
