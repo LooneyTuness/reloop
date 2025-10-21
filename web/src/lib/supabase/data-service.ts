@@ -48,9 +48,6 @@ export class SupabaseDataService {
   }
 
   async createItem(item: ItemInsert): Promise<Item> {
-    console.log('SupabaseDataService.createItem called with:', item);
-    console.log('Item type check - user_id type:', typeof item.user_id, 'value:', item.user_id);
-    
     const { data, error } = await (this.supabase as any)
       .from('items')
       .insert(item)
@@ -68,7 +65,6 @@ export class SupabaseDataService {
       throw error;
     }
 
-    console.log('Item created successfully:', data);
     return data;
   }
 
@@ -141,7 +137,6 @@ export class SupabaseDataService {
 
 
       if (!allOrders || allOrders.length === 0) {
-        console.log('❌ No orders found in database');
         return [];
       }
 
@@ -157,7 +152,6 @@ export class SupabaseDataService {
 
 
       if (!allOrderItems || allOrderItems.length === 0) {
-        console.log('❌ No order items found in database');
         return [];
       }
 
@@ -192,7 +186,6 @@ export class SupabaseDataService {
 
 
       if (sellerOrderItems.length === 0) {
-        console.log('❌ No order items found for this seller');
         return [];
       }
 
@@ -200,7 +193,6 @@ export class SupabaseDataService {
       const sellerOrderIds = [...new Set(sellerOrderItems.map((item: OrderItem) => item.order_id).filter(Boolean))];
 
       if (sellerOrderIds.length === 0) {
-        console.log('❌ No valid order IDs found');
         return [];
       }
 
@@ -270,12 +262,10 @@ export class SupabaseDataService {
 
 
       if (!userOrders || userOrders.length === 0) {
-        console.log('❌ No user orders found');
         return [];
       }
 
       // Get all order items for these orders
-      console.log('🔍 Step 2: Fetching order items...');
       const orderIds = userOrders.map((order: Order) => order.id);
       const { data: orderItems, error: orderItemsError } = await (this.supabase as any)
         .from('order_items')
@@ -287,10 +277,7 @@ export class SupabaseDataService {
         throw orderItemsError;
       }
 
-      console.log('📦 Order items found:', orderItems?.length || 0);
-
       // Get all items for these order items
-      console.log('🔍 Step 3: Fetching items...');
       const itemIds = orderItems?.map((item: OrderItem) => item.item_id) || [];
       const { data: items, error: itemsError } = await (this.supabase as any)
         .from('items')
@@ -302,7 +289,6 @@ export class SupabaseDataService {
         throw itemsError;
       }
 
-      console.log('📦 Items found:', items?.length || 0);
 
       // Create items map for quick lookup
       const itemsMap = new Map();
@@ -325,8 +311,6 @@ export class SupabaseDataService {
         };
       });
 
-      console.log('✅ Final user orders with items:', ordersWithItems.length);
-      console.log('✅ Sample final user order:', ordersWithItems[0]);
 
       return ordersWithItems;
       
@@ -397,7 +381,6 @@ export class SupabaseDataService {
     }
 
     if (!simpleData || simpleData.length === 0) {
-      console.log('🔍 No order items found for order ID:', orderId);
       return [];
     }
 
@@ -438,10 +421,7 @@ export class SupabaseDataService {
   }
 
   async updateItemsStatus(itemIds: string[], status: string): Promise<void> {
-    console.log('🔧 updateItemsStatus called with:', { itemIds, status });
-    
     if (!itemIds || itemIds.length === 0) {
-      console.log('⚠️ No item IDs provided, skipping database update');
       return;
     }
     
@@ -453,13 +433,10 @@ export class SupabaseDataService {
     
     if (fetchError) {
       console.error('Error fetching current item statuses:', fetchError);
-    } else {
-      console.log('🔍 Current item statuses:', currentItems);
     }
     
     // Update each item individually to avoid potential issues with the 'in' clause
     for (const itemId of itemIds) {
-      console.log(`🔧 Updating item ${itemId} to status ${status}`);
       
       // Build update payload depending on status transition
       const updatePayload: any = { status };
@@ -481,7 +458,6 @@ export class SupabaseDataService {
         console.error('Error details:', error);
         
         // Try with a known good status to test the constraint
-        console.log(`🧪 Trying with 'active' status for item ${itemId}`);
         const { error: testError } = await (this.supabase as any)
           .from('items')
           .update({ 
@@ -491,11 +467,7 @@ export class SupabaseDataService {
           
         if (testError) {
           console.error(`Test update with 'active' also failed:`, testError);
-        } else {
-          console.log(`✅ Test update with 'active' succeeded for item ${itemId}`);
         }
-      } else {
-        console.log(`✅ Successfully updated item ${itemId} to status ${status}`);
       }
     }
   }
@@ -575,7 +547,6 @@ export class SupabaseDataService {
       // First try to get data from daily_analytics table
       return await this.getAnalyticsFromDailyTable(sellerId, timeRange);
     } catch {
-      console.log('Daily analytics table not available, using fallback method');
       // Fallback to real-time calculation
       return await this.getAnalyticsFallback(sellerId);
     }

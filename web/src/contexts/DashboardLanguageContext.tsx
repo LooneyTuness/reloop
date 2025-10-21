@@ -329,7 +329,7 @@ const dashboardTranslations = {
     quantity: "Количина",
     status: "Статус",
     active: "Активен",
-    draft: "Нацрт",
+    draft: "Драфт",
     inactive: "Неактивен",
     back: "Назад",
     

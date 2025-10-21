@@ -67,7 +67,6 @@ export default function PlaceholderImage({
   };
 
   const handleLoad = () => {
-    console.log('Image loaded successfully:', src.substring(0, 50) + '...');
     setImageLoaded(true);
   };
 

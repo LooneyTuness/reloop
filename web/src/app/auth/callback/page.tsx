@@ -82,6 +82,7 @@ export default function AuthCallbackPage() {
               console.log('Fallback URL (from URL param or localStorage):', fallbackUrl);
 
               // Determine the correct redirect URL based on user role
+              // If no fallback URL is provided, let getRedirectUrl determine based on user role
               const redirectUrl = await getRedirectUrl(sessionData.session.user.id, fallbackUrl);
               console.log('Final redirect URL based on user role:', redirectUrl);
 

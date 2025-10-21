@@ -123,7 +123,6 @@ export default function EnhancedImage({
   };
 
   const handleLoad = () => {
-    console.log('Image loaded successfully:', currentSrc?.substring(0, 50) + '...');
     setIsRefreshing(false);
   };
 

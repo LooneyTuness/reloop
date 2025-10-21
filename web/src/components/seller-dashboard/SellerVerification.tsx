@@ -10,8 +10,6 @@ interface SellerVerificationProps {
 }
 
 export default function SellerVerification({ children }: SellerVerificationProps) {
-  console.log('SellerVerification: Component rendered');
-  
   const { user, loading } = useAuth();
   const router = useRouter();
   const [isVerifying, setIsVerifying] = useState(true);
@@ -20,39 +18,30 @@ export default function SellerVerification({ children }: SellerVerificationProps
   const verificationAttempted = useRef(false);
 
   const verifySeller = useCallback(async () => {
-    console.log('SellerVerification: Starting verification for user:', user?.id, 'loading:', loading);
-    
     // Wait for authentication to complete before making any decisions
     if (loading) {
-      console.log('SellerVerification: Authentication still loading, waiting...');
       return;
     }
     
     if (!user?.id) {
-      console.log('SellerVerification: No user ID after loading complete, redirecting to sign-in');
       router.push('/sign-in');
       return;
     }
 
     if (verificationAttempted.current) {
-      console.log('SellerVerification: Verification already attempted, skipping');
       return;
     }
 
     if (isSeller) {
-      console.log('SellerVerification: Already verified as seller, skipping');
       return;
     }
 
     verificationAttempted.current = true;
     
     try {
-      console.log('SellerVerification: Fetching seller profile...');
       const sellerProfile = await supabaseDataService.getSellerProfile(user.id);
-      console.log('SellerVerification: Seller profile result:', sellerProfile);
       
       if (!sellerProfile) {
-        console.log('SellerVerification: No seller profile found');
         setError('You are not registered as a seller. Please apply to become a seller first.');
         setIsVerifying(false);
         return;
@@ -60,18 +49,13 @@ export default function SellerVerification({ children }: SellerVerificationProps
 
       const typedSellerProfile = sellerProfile as { is_approved: boolean };
       if (!typedSellerProfile.is_approved) {
-        console.log('SellerVerification: Seller profile not approved');
         setError('Your seller application is pending approval. Please wait for admin approval.');
         setIsVerifying(false);
         return;
       }
 
-      console.log('SellerVerification: Seller verification successful - allowing access');
-      console.log('SellerVerification: Setting isSeller to true and isVerifying to false');
       setIsSeller(true);
       setIsVerifying(false);
-      console.log('SellerVerification: State updated - should show dashboard now');
-      console.log('SellerVerification: Current state after update - isVerifying:', false, 'isSeller:', true);
     } catch (error) {
       console.error('SellerVerification: Error verifying seller status:', error);
       setError('Error verifying seller status. Please try again.');
@@ -80,20 +64,11 @@ export default function SellerVerification({ children }: SellerVerificationProps
   }, [user?.id, router, loading, isSeller]);
 
   useEffect(() => {
-    console.log('SellerVerification: useEffect triggered, user:', user?.id, 'loading:', loading);
     verifySeller();
   }, [verifySeller, loading, user?.id]);
 
-  // Debug state changes
-  useEffect(() => {
-    console.log('SellerVerification: State changed - isVerifying:', isVerifying, 'isSeller:', isSeller, 'error:', error);
-  }, [isVerifying, isSeller, error]);
-
-  console.log('SellerVerification: Render state - isVerifying:', isVerifying, 'isSeller:', isSeller, 'error:', error, 'loading:', loading);
-
   // Show loading state while authentication is being checked
   if (loading) {
-    console.log('SellerVerification: Showing authentication loading state');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -105,11 +80,9 @@ export default function SellerVerification({ children }: SellerVerificationProps
   }
 
   // TEMPORARY: Always show dashboard for testing
-  console.log('SellerVerification: TEMPORARILY BYPASSING ALL VERIFICATION - SHOWING DASHBOARD');
   return <>{children}</>;
 
   if (isVerifying) {
-    console.log('SellerVerification: Showing loading state');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -121,7 +94,6 @@ export default function SellerVerification({ children }: SellerVerificationProps
   }
 
   if (!isSeller) {
-    console.log('SellerVerification: Showing error state - not a seller');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
@@ -157,6 +129,5 @@ export default function SellerVerification({ children }: SellerVerificationProps
     );
   }
 
-  console.log('SellerVerification: Rendering children - dashboard should be visible');
   return <>{children}</>;
 }

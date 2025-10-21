@@ -82,10 +82,9 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       const urlParams = new URLSearchParams(window.location.search);
       const redirectUrlFromQuery = urlParams.get('redirect');
       const redirectUrlFromStorage = localStorage.getItem('auth_redirect') || '';
-      // Default to home page instead of seller dashboard
-      // The auth callback will determine the correct redirect based on user role
-      const defaultRedirect = '/';
-      const redirectUrl = redirectUrlFromQuery || redirectUrlFromStorage || defaultRedirect;
+      // Let the auth callback determine the correct redirect based on user role
+      // Don't set a default redirect here - let the callback handle it
+      const redirectUrl = redirectUrlFromQuery || redirectUrlFromStorage;
       console.log('Magic link hook - chosen redirect URL:', redirectUrl, {
         fromQuery: redirectUrlFromQuery,
         fromStorage: redirectUrlFromStorage,

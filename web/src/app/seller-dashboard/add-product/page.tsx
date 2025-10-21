@@ -39,7 +39,6 @@ function AddProductContent() {
   
   // Debug: Log when images change
   React.useEffect(() => {
-    console.log('Images state updated:', images);
   }, [images]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
