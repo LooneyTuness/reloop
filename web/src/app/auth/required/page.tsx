@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, Suspense } from 'react';
+import { Suspense } from 'react';
 import { useRouter } from 'next/navigation';
-import { SignUpForm } from '@/app/(auth)/sign-up/sign-up-form';
 import { SignInForm } from '@/app/(auth)/sign-in/sign-in-form';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 function AuthRequiredContent() {
-  const [isSignUp, setIsSignUp] = useState(true);
   const router = useRouter();
   const { t } = useLanguage();
 
@@ -16,32 +14,25 @@ function AuthRequiredContent() {
       <div className="max-w-md w-full bg-whitebg-gray-800 rounded-lg shadow-lg p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900text-white mb-2">
-            {isSignUp ? t("startSelling") : t("signIn")}
+            {t("signInRequired")}
           </h1>
           <p className="text-gray-600text-gray-400">
-            {isSignUp 
-              ? t("createAccountToStartSelling") 
-              : t("signInToContinue")}
+            {t("signInToContinue")}
           </p>
         </div>
 
-        {isSignUp ? <SignUpForm /> : <SignInForm />}
+        <SignInForm />
 
         <div className="mt-6 text-center">
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-sm text-gray-600text-gray-400 hover:text-gray-900hover:text-white"
-          >
-            {isSignUp ? (
-              <>
-                {t("alreadyHaveAccount")} <span className="text-primary font-medium">{t("signIn")}</span>
-              </>
-            ) : (
-              <>
-                {t("dontHaveAccount")} <span className="text-primary font-medium">{t("signUp")}</span>
-              </>
-            )}
-          </button>
+          <p className="text-sm text-gray-600text-gray-400">
+            {t("needAccountAccess")}{" "}
+            <a
+              href="mailto:support@vtoraraka.com"
+              className="text-primary font-medium hover:underline"
+            >
+              {t("contactSupport")}
+            </a>
+          </p>
         </div>
 
         <div className="mt-6 text-center">

@@ -9,7 +9,7 @@ const translations = {
     join: "Регистрирај се",
     Sell: "Продај",
     signOut: "Одјави се",
-    signUpOrLogin: "Регистрирај се | Најави се",
+    signInOnly: "Најави се",
     welcomeBack: "Добредојде повторно",
     saveNature: "Зачувај ја природата: Одбери претходно сакано",
 
@@ -203,7 +203,7 @@ const translations = {
     downloadReceipt: "Преземи потврда",
     noOrdersYet: "Сè уште немате направено нарачки",
     signOut: "Одјави се",
-    signUp: "Регистрирај се",
+    contactSupport: "Контактирај поддршка",
     signIn: "Најави се",
 
     // Common UI text
@@ -555,13 +555,14 @@ const translations = {
     signUpTitle: "Креирај ја твојата vtoraraka.mk сметка",
     signUpSubtitle: "Почни да продаваш претходно сакани парчиња",
     cancel: "Откажи",
-    dontHaveAccount: "Немаш сметка?",
-    signUpHere: "Регистрирај се тука",
+    needAccountAccess: "Треба ти пристап до сметка?",
+    contactSupport: "Контактирај поддршка",
     alreadyHaveAccount: "Веќе имаш сметка?",
     logInHere: "Најави се тука",
     startSelling: "Започни со продавање",
     createAccountToStartSelling: "Креирај сметка за да започнеш со продавање",
     signInToContinue: "Најави се за да продолжиш",
+    signInRequired: "Потребна е најава",
     backToHome: "Назад кон почетна",
     circularFashion: "Кружна Мода",
 
@@ -762,7 +763,7 @@ const translations = {
     join: "Join",
     Sell: "Sell",
     signOut: "Sign Out",
-    signUpOrLogin: "Sign Up | Log In",
+    signInOnly: "Sign In",
     welcomeBack: "Welcome Back",
     saveNature: "Save Nature: Choose Pre-Loved",
 
@@ -956,7 +957,7 @@ const translations = {
     downloadReceipt: "Download Receipt",
     noOrdersYet: "You haven't placed any orders yet.",
     signOut: "Sign Out",
-    signUp: "Sign Up",
+    contactSupport: "Contact Support",
     signIn: "Sign In",
 
     // Common UI text
@@ -1298,13 +1299,14 @@ const translations = {
     signUpTitle: "Create your vtoraraka.mk account",
     signUpSubtitle: "Start selling your pre-loved items",
     cancel: "Cancel",
-    dontHaveAccount: "Don't have an account?",
-    signUpHere: "Sign up here",
+    needAccountAccess: "Need account access?",
+    contactSupport: "Contact Support",
     alreadyHaveAccount: "Already have an account?",
     logInHere: "Log in here",
     startSelling: "Start Selling",
     createAccountToStartSelling: "Create an account to start selling",
     signInToContinue: "Sign in to continue",
+    signInRequired: "Sign In Required",
     backToHome: "Back to Home",
     circularFashion: "Circular Fashion",
 

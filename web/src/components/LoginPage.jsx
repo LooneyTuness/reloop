@@ -135,13 +135,13 @@ export default function LoginPage() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              {t("dontHaveAccount")}{" "}
-              <Link
-                href="/"
+              {t("needAccountAccess")}{" "}
+              <a
+                href="mailto:support@vtoraraka.com"
                 className="text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 font-medium transition-colors"
               >
-                {t("signUpHere")}
-              </Link>
+                {t("contactSupport")}
+              </a>
             </p>
           </div>
         </div>

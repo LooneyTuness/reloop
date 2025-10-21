@@ -594,21 +594,21 @@ export default function Navbar() {
               </div>
             ) : (
                   <div className="space-y-3">
-                <Link
-                  href="/sign-up"
-                      className="block w-full text-center px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-700 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-lg"
-                  onClick={() => setShowMobileMenu(false)}
-                >
-                  {t("signUp")}
-                </Link>
-                    
                     <Link
                       href="/sign-in"
-                      className="block w-full text-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300"
+                      className="block w-full text-center px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-700 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-lg"
                       onClick={() => setShowMobileMenu(false)}
                     >
                       {t("signIn")}
-                </Link>
+                    </Link>
+                    
+                    <a
+                      href="mailto:support@vtoraraka.com"
+                      className="block w-full text-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300"
+                      onClick={() => setShowMobileMenu(false)}
+                    >
+                      {t("contactSupport")}
+                    </a>
               </div>
             )}
           </div>

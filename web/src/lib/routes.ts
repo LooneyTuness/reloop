@@ -6,9 +6,7 @@ export const SIGN_IN = {
   getPath: () => '/sign-in',
 }
 
-export const SIGN_UP = {
-  getPath: () => '/sign-up',
-}
+// Sign-up removed - only magic link sign-in available
 
 export const DASHBOARD = {
   getPath: () => '/seller-dashboard',

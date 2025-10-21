@@ -35,16 +35,16 @@ function SignInContent() {
             <div className="space-y-4 sm:space-y-6">
               <SignInForm />
 
-              {/* Sign up link */}
+              {/* Contact support for account access */}
               <div className="text-center pt-2 sm:pt-4">
                 <p className="text-sm text-gray-600text-gray-400">
-                  {t("dontHaveAccount")}{" "}
-                  <Link
-                    href="/sign-up"
+                  {t("needAccountAccess")}{" "}
+                  <a
+                    href="mailto:support@vtoraraka.com"
                     className="font-semibold text-blue-600text-blue-400 hover:text-blue-700hover:text-blue-300 transition-colors duration-200"
                   >
-                    {t("join")}
-                  </Link>
+                    {t("contactSupport")}
+                  </a>
                 </p>
               </div>
             </div>

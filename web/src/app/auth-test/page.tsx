@@ -37,12 +37,12 @@ export default function AuthTest() {
             >
               Go to Sign In
             </button>
-            <button
-              onClick={() => window.location.href = '/sign-up'}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-2"
+            <a
+              href="mailto:support@vtoraraka.com"
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-2 inline-block"
             >
-              Go to Sign Up
-            </button>
+              Contact Support
+            </a>
           </div>
         </div>
       )}

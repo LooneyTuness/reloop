@@ -143,13 +143,13 @@ export default function Login() {
 
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600 font-light">
-              {t("dontHaveAccount")}{" "}
-              <Link
-                href="/"
+              {t("needAccountAccess")}{" "}
+              <a
+                href="mailto:support@vtoraraka.com"
                 className="text-black hover:text-gray-600 font-light transition-colors"
               >
-                {t("signUpHere")}
-              </Link>
+                {t("contactSupport")}
+              </a>
             </p>
           </div>
         </div>
