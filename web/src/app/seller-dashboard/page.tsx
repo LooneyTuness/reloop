@@ -32,8 +32,10 @@ function DashboardContent() {
     if (sellerProfile?.business_name) {
       return sellerProfile.business_name;
     }
-    // Fallback to demo name
-    return 'Demo';
+    if (sellerProfile?.email) {
+      return sellerProfile.email.split('@')[0]; // Use email prefix as fallback
+    }
+    return 'Seller'; // Generic fallback
   };
 
 
