@@ -256,6 +256,29 @@ const translations = {
     loginToSellerAccount: "Најави се на твојата продавачка сметка тука",
     sellerApplicationDescription:
       "Работиме со селектирани продавачи кои се усогласуваат со нашите вредности и квалитет на производи. Пополни ја формата подолу, и ќе те контактираме ако има соодветност.",
+
+    // Seller Application Form - Additional translations
+    sellerApplicationForm: "Форма за апликација за продавач",
+    personalInformation: "Лични информации",
+    businessInformation: "Бизнис информации",
+    productInformation: "Информации за производи",
+    fullNameRequired: "Име и презиме *",
+    emailAddressRequired: "E-mail адреса *",
+    homeNameOrBrand: "Име на продавница или бренд",
+    websiteSocialMedia: "Веб-сајт / Социјални мрежи",
+    tellUsAboutProducts: "Кажете ни за вашите производи *",
+    yourFullName: "Вашето име и презиме",
+    yourStoreName: "Име на вашата продавница",
+    instagramWebsiteEtc: "Instagram, веб-сајт, итн.",
+    describeProductsPlaceholder:
+      "Кратко опишете што продавате и зошто сакате да се приклучите на нашата платформа...",
+    termsAndConditions:
+      "Разбирам дека ова е апликација и не сите барања се прифатени. Се согласувам со условите за користење.",
+    submittingApplication: "Се поднесува апликацијата...",
+    submitApplication: "Поднеси апликација",
+    alreadyInvitedToSell: "Веќе сте поканети за продавање?",
+    logInToSellerAccount: "Најави се на твојата продавачка сметка тука",
+
     loadingProducts: "Се вчитуваат продукти...",
     unableToLoadProducts: "Не можам да ги вчитам продуктите",
     productsLoadError:
@@ -598,27 +621,27 @@ const translations = {
     skipForNow: "Прескокни за сега",
     continueShopping: "Продолжи со купување",
     whyCreateAccount: "Зошто да креираш сметка?",
-    trackOrderStatus: "• Следи го статусот на твојата нарачка",
-    saveShippingDetails: "• Зачувај ги деталите за достава",
-    getNotified: "• Добивај известувања за нови парчиња",
+    trackOrderStatus: "Следи го статусот на твојата нарачка",
+    saveShippingDetails: "Зачувај ги деталите за достава",
+    getNotified: "Добивај известувања за нови парчиња",
     // Auth Success Messages
     youreNowSignedIn:
-      "Сега сте најавени! Започнете ја вашата одржлива модна патување.",
+      "Сега сте најавени! Започнете го вашето патување кон одржлива мода.",
     emailConfirmed:
-      "Вашата е-пошта е успешно потврдена. Започнете ја вашата одржлива модна патување сега.",
-    readyToMakeDifference: "Готови да направите разлика",
+      "Вашата е-пошта е успешно потврдена. Започнете го вашето патување кон одржлива мода сега.",
+    readyToMakeDifference: "Спремни сте да направите разлика",
     checkYourEmail: "Провери ја твојата е-пошта",
     magicLinkSent:
       "Испративме магичен линк. Кликнете на него за да се најавите и да започнете.",
     confirmationLinkSent:
-      "Испративме потврдна врска. Кликнете на неа за да ја активирате вашата сметка и да започнете ја вашата одржлива модна патување.",
+      "Испративме потврден мејл. Проверете го вашиот мејл за да ја активирате вашата сметка и да започнете.",
     cantFindEmail: "Не можете да ја најдете е-поштата?",
     cantFindMagicLink: "Не можете да го најдете магичниот линк?",
-    checkSpamFolder: "Проверете ја папката за спам/непожелни",
+    checkSpamFolder: "Проверете ја папката за спам",
     waitFewMinutes: "Почекајте неколку минути и обидете се повторно",
     makeSureEmailCorrect: "Проверете дали е-поштата е точна",
     magicLinksExpire: "Магичните линкови истекуваат по 1 час за безбедност",
-    browseProductsMeantime: "Прегледајте производи во меѓувреме",
+    browseProductsMeantime: "Разгледајте ги производите во меѓувреме",
     alreadyConfirmedEmail: "Веќе ја потврдив мојата е-пошта",
     magicLinkFailed:
       "Неуспешно испраќање на магичниот линк. Обидете се повторно.",
@@ -986,6 +1009,29 @@ const translations = {
     loginToSellerAccount: "Log in to your seller account here",
     sellerApplicationDescription:
       "We work with selected sellers who align with our values and product quality. Fill out the form below, and we'll get in touch if it's a good fit.",
+
+    // Seller Application Form - Additional translations
+    sellerApplicationForm: "Seller Application Form",
+    personalInformation: "Personal Information",
+    businessInformation: "Business Information",
+    productInformation: "Product Information",
+    fullNameRequired: "Full Name *",
+    emailAddressRequired: "Email Address *",
+    homeNameOrBrand: "Home Name or Brand Name",
+    websiteSocialMedia: "Website / Social Media",
+    tellUsAboutProducts: "Tell us about your products *",
+    yourFullName: "Your full name",
+    yourStoreName: "Your store name",
+    instagramWebsiteEtc: "Instagram, Website, etc.",
+    describeProductsPlaceholder:
+      "Briefly describe what you sell and why you want to join our platform...",
+    termsAndConditions:
+      "I understand this is an application and not all requests are accepted. I agree to the terms and conditions.",
+    submittingApplication: "Submitting Application...",
+    submitApplication: "Submit Application",
+    alreadyInvitedToSell: "Already invited to sell?",
+    logInToSellerAccount: "Log in to your seller account here",
+
     loadingProducts: "Loading products...",
     unableToLoadProducts: "Unable to load products",
     productsLoadError:
