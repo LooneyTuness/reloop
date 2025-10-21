@@ -137,24 +137,24 @@ const RecentOrders = memo(function RecentOrders() {
             key={order.id}
             className="group p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-600"
           >
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start space-x-3 flex-1 min-w-0">
+                <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Package className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-gray-900 dark:text-white truncate">
                     {order.customer}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
                     {order.product}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 flex-shrink-0 ml-2">
                 <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 ${getStatusColor(order.status as Order['status'])}`}>
                   {getStatusIcon(order.status as Order['status'])}
-                  <span className="capitalize">{order.status}</span>
+                  <span className="capitalize hidden sm:inline">{order.status}</span>
                 </span>
                 <div className="relative group">
                   <button className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded">
@@ -189,7 +189,7 @@ const RecentOrders = memo(function RecentOrders() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-1">
                   <DollarSign className="h-4 w-4 text-gray-500 dark:text-gray-400" />
@@ -204,7 +204,7 @@ const RecentOrders = memo(function RecentOrders() {
                   </span>
                 </div>
               </div>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-mono break-all sm:break-normal">
                 {order.id}
               </span>
             </div>

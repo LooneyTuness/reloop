@@ -115,10 +115,10 @@ function DashboardContent() {
   }
 
   return (
-    <div className="px-4 sm:px-6 py-6 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8">
       {/* Dashboard Instructions Section */}
       <div className="mb-6 sm:mb-8">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 p-6 sm:p-8 lg:p-10 text-white mb-8 shadow-2xl">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 p-4 sm:p-8 lg:p-10 text-white mb-6 sm:mb-8 shadow-2xl">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
           <div className="relative z-10">
@@ -154,7 +154,7 @@ function DashboardContent() {
               
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6 sm:mt-8">
               <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/add-product')}
                 prefetchHref="/seller-dashboard/add-product"
@@ -176,14 +176,14 @@ function DashboardContent() {
                 <span className="font-semibold text-sm truncate">{t('manageOrders')}</span>
               </OptimizedButton>
               <OptimizedButton 
-                onClick={() => router.push('/seller-dashboard/analytics')}
-                prefetchHref="/seller-dashboard/analytics"
+                onClick={() => router.push('/seller-dashboard/listings')}
+                prefetchHref="/seller-dashboard/listings"
                 className="flex items-center space-x-3 bg-white/25 backdrop-blur-md rounded-full px-4 py-3 shadow-lg hover:bg-white/30 transition-all duration-200 sm:col-span-2 lg:col-span-1"
               >
                 <div className="h-6 w-6 bg-emerald-400/20 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-emerald-300 font-bold text-sm">3</span>
                 </div>
-                <span className="font-semibold text-sm truncate">{t('trackProductsThroughSalesFunnel')}</span>
+                <span className="font-semibold text-sm truncate">{t('manageListings')}</span>
               </OptimizedButton>
             </div>
           </div>
@@ -335,7 +335,7 @@ function DashboardContent() {
           </div>
 
           {/* Enhanced Quick Actions */}
-          <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg p-6 border border-orange-200 dark:border-orange-800 mb-6">
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg p-4 sm:p-6 border border-orange-200 dark:border-orange-800 mb-6">
             <div className="flex items-center mb-4">
               <div className="h-8 w-8 bg-orange-100 dark:bg-orange-800 rounded-lg flex items-center justify-center mr-3">
                 <svg className="h-4 w-4 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -344,11 +344,11 @@ function DashboardContent() {
               </div>
               <h4 className="font-semibold text-orange-800 dark:text-orange-200 text-lg">{t('quickActions')}</h4>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/listings')}
                 prefetchHref="/seller-dashboard/listings"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
+                className="group bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
               >
                 <div className="flex items-center mb-2">
                   <div className="h-6 w-6 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mr-2 group-hover:scale-110 transition-transform duration-200">
@@ -368,7 +368,7 @@ function DashboardContent() {
               <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/orders')}
                 prefetchHref="/seller-dashboard/orders"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
+                className="group bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
               >
                 <div className="flex items-center mb-2">
                   <div className="h-6 w-6 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mr-2 group-hover:scale-110 transition-transform duration-200">
@@ -388,7 +388,7 @@ function DashboardContent() {
               <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/orders')}
                 prefetchHref="/seller-dashboard/orders"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
+                className="group bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
               >
                 <div className="flex items-center mb-2">
                   <div className="h-6 w-6 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mr-2 group-hover:scale-110 transition-transform duration-200">
@@ -408,7 +408,7 @@ function DashboardContent() {
               <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/payouts')}
                 prefetchHref="/seller-dashboard/payouts"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
+                className="group bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
               >
                 <div className="flex items-center mb-2">
                   <div className="h-6 w-6 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mr-2 group-hover:scale-110 transition-transform duration-200">

@@ -59,7 +59,7 @@ const dashboardTranslations = {
     // Recent Orders
     recentOrders: "Неодамнешни нарачки",
     latestCustomerOrders: "Последни нарачки од купувачи и нивниот статус",
-    markAsProcessing: "Означи како процесирање",
+    markAsProcessing: "Означи како процесирано",
     markAsShipped: "Означи како испорачано",
     markAsDelivered: "Означи како доставено",
     viewAllOrders: "Види ги сите нарачки",
@@ -120,7 +120,7 @@ const dashboardTranslations = {
     yourPathToSuccess: "Твојот пат до успешна продажба:",
     addNewProductDescription: "Додај нов производ – Што побрзо го објавиш, побрзо ќе стигне до вистинскиот купувач.",
     manageOrdersDescription: "Управувај со нарачки – Следи ги, одговори брзо и гради доверба со секој клиент.",
-    trackProductsDescription: "Следи го текот на производите – Од објава до продажба. Оптимизирај според податоци и реакции.",
+    trackProductsDescription: "Управувај со листинзи",
     updateProducts: "Ажурирај производи",
     checkNewOrders: "Провери нови нарачки",
     sendPackages: "Испрати пратки",
@@ -224,7 +224,8 @@ const dashboardTranslations = {
     productViewsWillAppear: "Прегледите на производите ќе се појават тука кога купувачите ќе започнат да ги прегледуваат вашите листинзи. Оптимизирајте ги описите и фотографиите на производите за да привлечете повеќе посетители.",
     optimizeListings: "Оптимизирај листинзи",
     addMoreProducts: "Додај повеќе производи",
-    trackProductsThroughSalesFunnel: "Следете ги вашите производи низ продажниот ворон",
+    trackProductsThroughSalesFunnel: "Следете ги вашите производи низ продажниот процес",
+    manageListings: "Управувај со листинзи",
     
     // Quick Actions
     addNewProduct: "Додај нов продукт",
@@ -401,7 +402,6 @@ const dashboardTranslations = {
     detailedTransactionHistory: "Детална историја на трансакции",
     taxReportingTools: "Алатки за даночно пријавување",
     viewAnalytics: "Види аналитики",
-    manageListings: "Управувај со листинзи",
   },
   en: {
     // Navigation
@@ -509,7 +509,7 @@ const dashboardTranslations = {
     yourPathToSuccess: "Your path to successful sales:",
     addNewProductDescription: "Add new product – The faster you publish it, the faster it reaches the right buyer.",
     manageOrdersDescription: "Manage orders – Track them, respond quickly and build trust with every client.",
-    trackProductsDescription: "Track product flow – From publication to sale. Optimize based on data and reactions.",
+    trackProductsDescription: "Manage listings – Edit, update and optimize your products for maximum sales.",
     updateProducts: "Update products",
     checkNewOrders: "Check new orders",
     sendPackages: "Send packages",
@@ -608,6 +608,7 @@ const dashboardTranslations = {
     optimizeListings: "Optimize Listings",
     addMoreProducts: "Add More Products",
     trackProductsThroughSalesFunnel: "Track your products through the sales funnel",
+    manageListings: "Manage Listings",
     
     // Quick Actions
     
@@ -780,7 +781,6 @@ const dashboardTranslations = {
     detailedTransactionHistory: "Detailed transaction history",
     taxReportingTools: "Tax reporting tools",
     viewAnalytics: "View Analytics",
-    manageListings: "Manage Listings",
   }
 };
 
