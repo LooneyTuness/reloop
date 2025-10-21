@@ -5,10 +5,9 @@ import { useRouter } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import RecentOrders from '@/components/seller-dashboard/RecentOrders';
 import DashboardZeroState from '@/components/seller-dashboard/DashboardZeroState';
-import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
+import { useDashboard } from '@/contexts/DashboardContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
-import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 import { OptimizedButton } from '@/components/seller-dashboard/OptimizedLink';
 
 function DashboardContent() {
@@ -437,12 +436,8 @@ function DashboardContent() {
 
 export default function SellerDashboard() {
   return (
-    <DashboardProvider>
-      <DashboardLanguageProvider>
-        <SellerDashboardLayout>
-          <DashboardContent />
-        </SellerDashboardLayout>
-      </DashboardLanguageProvider>
-    </DashboardProvider>
+    <SellerDashboardLayout>
+      <DashboardContent />
+    </SellerDashboardLayout>
   );
 }

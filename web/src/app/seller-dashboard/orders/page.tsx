@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, Suspense, lazy } from 'react';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { OrdersZeroState } from '@/components/seller-dashboard/ZeroStates';
@@ -10,6 +10,8 @@ import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
+import { withLazyLoading } from '@/components/seller-dashboard/LazyPageWrapper';
+import OrdersSkeleton from '@/components/seller-dashboard/OrdersSkeleton';
 
 interface OrderItem {
   id: string;
@@ -1336,10 +1338,8 @@ function OrdersContent() {
 
 export default function OrdersPage() {
   return (
-    <DashboardProvider>
-      <DashboardLanguageProvider>
-        <OrdersContent />
-      </DashboardLanguageProvider>
-    </DashboardProvider>
+    <Suspense fallback={<OrdersSkeleton />}>
+      <OrdersContent />
+    </Suspense>
   );
 }

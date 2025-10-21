@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { ProductsZeroState } from '@/components/seller-dashboard/ZeroStates';
@@ -11,6 +11,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 import { useCategory, CategoryProvider } from '@/contexts/CategoryContext';
+import ListingsSkeleton from '@/components/seller-dashboard/ListingsSkeleton';
 
 function ListingsContent() {
   const { products, isLoading, error, updateProduct, deleteProduct, searchProducts } = useDashboard();
@@ -343,14 +344,10 @@ function ListingsContent() {
 
 export default function ListingsPage() {
   return (
-    <DashboardProvider>
-      <DashboardLanguageProvider>
-        <CategoryProvider>
-          <SellerDashboardLayout>
-            <ListingsContent />
-          </SellerDashboardLayout>
-        </CategoryProvider>
-      </DashboardLanguageProvider>
-    </DashboardProvider>
+    <SellerDashboardLayout>
+      <Suspense fallback={<ListingsSkeleton />}>
+        <ListingsContent />
+      </Suspense>
+    </SellerDashboardLayout>
   );
 }
