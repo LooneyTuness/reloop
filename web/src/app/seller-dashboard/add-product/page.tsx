@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { CategoryHierarchy, CategoryWithChildren } from '@/types/category';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
-import BrandDropdown from '@/components/BrandDropdown';
+// BrandDropdown removed - using simple text input instead
 
 function AddProductContent() {
   const router = useRouter();
@@ -233,12 +233,15 @@ function AddProductContent() {
                   <label htmlFor="brand" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     {t('brand')} *
                   </label>
-                  <BrandDropdown
+                  <input
+                    id="brand"
+                    name="brand"
+                    type="text"
                     value={formData.brand}
-                    onChange={(value) => setFormData(prev => ({ ...prev, brand: value }))}
-                    placeholder={t('brandPlaceholder')}
+                    onChange={handleInputChange}
+                    placeholder={t('brandPlaceholder') || 'Enter brand name'}
                     required
-                    className="w-full"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
