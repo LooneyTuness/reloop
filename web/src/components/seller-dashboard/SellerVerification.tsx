@@ -38,9 +38,16 @@ export default function SellerVerification({ children }: SellerVerificationProps
 
   useEffect(() => {
     const checkSellerProfile = async () => {
+      console.log('SellerVerification: Checking seller profile...', {
+        authLoading,
+        user: user?.email,
+        userId: user?.id
+      });
+
       if (authLoading) return;
       
       if (!user) {
+        console.log('SellerVerification: No user, redirecting to sign-in');
         // User not authenticated, redirect to login with return URL
         const currentPath = window.location.pathname;
         router.push(`/sign-in?returnUrl=${encodeURIComponent(currentPath)}`);
@@ -56,6 +63,11 @@ export default function SellerVerification({ children }: SellerVerificationProps
           .select('*')
           .eq('user_id', user.id)
           .single();
+
+        console.log('SellerVerification: Profile check result:', {
+          profile,
+          error: profileError
+        });
 
         if (profileError) {
           if (profileError.code === 'PGRST116') {

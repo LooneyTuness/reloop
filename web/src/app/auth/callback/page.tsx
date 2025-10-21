@@ -38,21 +38,31 @@ export default function AuthCallbackPage() {
 
         if (session?.user) {
           console.log('AuthCallback: User authenticated:', session.user.email);
+          console.log('AuthCallback: User ID:', session.user.id);
           
           // If redirecting to seller dashboard, check if user is a seller
           if (redirectUrl.includes('seller-dashboard')) {
             const { data: sellerProfile, error: profileError } = await supabase
               .from('seller_profiles')
-              .select('is_approved')
+              .select('is_approved, role')
               .eq('user_id', session.user.id)
               .single();
+
+            console.log('AuthCallback: Seller profile check:', {
+              profile: sellerProfile,
+              error: profileError
+            });
 
             if (profileError) {
               console.log('AuthCallback: No seller profile found, redirecting to home');
               router.push('/');
             } else if (sellerProfile) {
               console.log('AuthCallback: User is a seller, redirecting to dashboard');
-              router.push(redirectUrl);
+              console.log('AuthCallback: Redirecting to:', redirectUrl);
+              // Add a small delay to ensure the session is properly set
+              setTimeout(() => {
+                router.push(redirectUrl);
+              }, 100);
             } else {
               console.log('AuthCallback: User is not a seller, redirecting to home');
               router.push('/');
