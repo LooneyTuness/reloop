@@ -72,11 +72,11 @@ export async function GET(request: NextRequest) {
         
         if (profileError) {
           console.log('No seller profile found for user:', user.email)
-        } else if (sellerProfile?.is_approved) {
-          console.log('User is an approved seller, redirecting to dashboard')
+        } else if (sellerProfile) {
+          console.log('User is a seller, redirecting to dashboard (bypassing approval check)')
           next = '/seller-dashboard'
         } else {
-          console.log('User is not an approved seller')
+          console.log('User is not a seller')
         }
         
         if (redirect && next === '/') {
@@ -116,8 +116,8 @@ export async function GET(request: NextRequest) {
           .eq('user_id', user.id)
           .single()
         
-        if (sellerProfile?.is_approved) {
-          console.log('User is an approved seller, redirecting to dashboard')
+        if (sellerProfile) {
+          console.log('User is a seller, redirecting to dashboard (bypassing approval check)')
           next = '/seller-dashboard'
         } else if (redirect) {
           // Use the provided redirect URL
