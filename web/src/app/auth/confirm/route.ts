@@ -15,6 +15,12 @@ export async function GET(request: NextRequest) {
   let next = redirect || '/'
   let response = NextResponse.redirect(`${origin}${next}`)
 
+  // Add error handling for missing parameters
+  if (!token_hash && !code) {
+    console.error('No authentication parameters found');
+    return NextResponse.redirect(`${origin}/?error=Invalid authentication link`);
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -44,28 +50,40 @@ export async function GET(request: NextRequest) {
       console.log('OTP verification successful')
       
       // Get the user to check if they're a seller
-      const { data: { user } } = await supabase.auth.getUser()
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError) {
+        console.error('Error getting user after OTP verification:', userError)
+        response = NextResponse.redirect(`${origin}/?error=${encodeURIComponent('Authentication successful but user data error')}`)
+        return response
+      }
       
       if (user) {
+        console.log('User authenticated:', user.email)
+        
         // Check if user is a seller
-        const { data: sellerProfile } = await supabase
+        const { data: sellerProfile, error: profileError } = await supabase
           .from('seller_profiles')
           .select('is_approved')
           .eq('user_id', user.id)
           .single()
         
-        if (sellerProfile?.is_approved) {
+        if (profileError) {
+          console.log('No seller profile found for user:', user.email)
+        } else if (sellerProfile?.is_approved) {
           console.log('User is an approved seller, redirecting to dashboard')
           next = '/seller-dashboard'
-        } else if (redirect) {
-          // Use the provided redirect URL
-          next = redirect
         } else {
-          // Default to home page
-          next = '/'
+          console.log('User is not an approved seller')
+        }
+        
+        if (redirect && next === '/') {
+          // Use the provided redirect URL if no seller-specific redirect
+          next = redirect
         }
       }
       
+      console.log('Final redirect URL:', next)
       response = NextResponse.redirect(`${origin}${next}?confirmed=true`)
       return response
     } else {

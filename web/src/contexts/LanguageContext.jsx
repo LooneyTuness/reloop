@@ -555,7 +555,6 @@ const translations = {
     signUpTitle: "Креирај ја твојата vtoraraka.mk сметка",
     signUpSubtitle: "Почни да продаваш претходно сакани парчиња",
     cancel: "Откажи",
-    needAccountAccess: "Треба ти пристап до сметка?",
     contactSupport: "Контактирај поддршка",
     alreadyHaveAccount: "Веќе имаш сметка?",
     logInHere: "Најави се тука",
@@ -1299,7 +1298,7 @@ const translations = {
     signUpTitle: "Create your vtoraraka.mk account",
     signUpSubtitle: "Start selling your pre-loved items",
     cancel: "Cancel",
-    needAccountAccess: "Need account access?",
+
     contactSupport: "Contact Support",
     alreadyHaveAccount: "Already have an account?",
     logInHere: "Log in here",

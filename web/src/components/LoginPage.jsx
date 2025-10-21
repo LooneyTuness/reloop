@@ -132,18 +132,6 @@ export default function LoginPage() {
               {isLoading ? t("signingIn") : t("signIn")}
             </button>
           </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              {t("needAccountAccess")}{" "}
-              <a
-                href="mailto:support@vtoraraka.com"
-                className="text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 font-medium transition-colors"
-              >
-                {t("contactSupport")}
-              </a>
-            </p>
-          </div>
         </div>
       </div>
     </div>

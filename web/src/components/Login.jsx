@@ -141,17 +141,7 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600 font-light">
-              {t("needAccountAccess")}{" "}
-              <a
-                href="mailto:support@vtoraraka.com"
-                className="text-black hover:text-gray-600 font-light transition-colors"
-              >
-                {t("contactSupport")}
-              </a>
-            </p>
-          </div>
+          <div className="mt-8 text-center"></div>
         </div>
       </div>
     </div>

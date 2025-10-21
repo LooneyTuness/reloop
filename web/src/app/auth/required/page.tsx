@@ -23,17 +23,7 @@ function AuthRequiredContent() {
 
         <SignInForm />
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600text-gray-400">
-            {t("needAccountAccess")}{" "}
-            <a
-              href="mailto:support@vtoraraka.com"
-              className="text-primary font-medium hover:underline"
-            >
-              {t("contactSupport")}
-            </a>
-          </p>
-        </div>
+       
 
         <div className="mt-6 text-center">
           <button
