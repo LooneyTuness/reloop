@@ -82,8 +82,8 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       const urlParams = new URLSearchParams(window.location.search);
       const redirectUrlFromQuery = urlParams.get('redirect');
       const redirectUrlFromStorage = localStorage.getItem('auth_redirect') || '';
-      // Let the auth callback determine the correct redirect based on user role
-      // Don't set a default redirect here - let the callback handle it
+      
+      // Use redirect from query params first, then localStorage, then let callback determine
       const redirectUrl = redirectUrlFromQuery || redirectUrlFromStorage;
       console.log('Magic link hook - chosen redirect URL:', redirectUrl, {
         fromQuery: redirectUrlFromQuery,
@@ -99,9 +99,9 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       
       console.log('Magic link email redirect to:', emailRedirectTo);
       
-      // Also store in localStorage as backup
-      localStorage.setItem('auth_redirect', redirectUrl);
-      console.log('Stored redirect URL in localStorage:', redirectUrl);
+      // Store redirect URL in localStorage as backup (even if empty, so callback can determine)
+      localStorage.setItem('auth_redirect', redirectUrl || '');
+      console.log('Stored redirect URL in localStorage:', redirectUrl || '');
       
       const { error } = await supabase.auth.signInWithOtp({
         email,

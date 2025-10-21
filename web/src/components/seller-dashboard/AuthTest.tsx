@@ -45,13 +45,13 @@ export default function AuthTest() {
     try {
       console.log('Sending magic link to:', email);
       
-      // Store the current page as redirect URL
-      localStorage.setItem('auth_redirect', '/');
+      // Store the current page as redirect URL (dashboard for sellers)
+      localStorage.setItem('auth_redirect', '/seller-dashboard');
       
       const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/auth/callback`
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/auth/callback?redirect=${encodeURIComponent('/seller-dashboard')}`
         }
       });
       
@@ -69,9 +69,9 @@ export default function AuthTest() {
   };
 
   const goToSignIn = () => {
-    // Store the current page as redirect URL
-    localStorage.setItem('auth_redirect', '/');
-    router.push('/sign-in');
+    // Store the current page as redirect URL (dashboard for sellers)
+    localStorage.setItem('auth_redirect', '/seller-dashboard');
+    router.push('/sign-in?redirect=/seller-dashboard');
   };
 
   return (
