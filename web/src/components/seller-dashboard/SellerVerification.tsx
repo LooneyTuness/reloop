@@ -72,6 +72,7 @@ export default function SellerVerification({ children }: SellerVerificationProps
         if (profileError) {
           if (profileError.code === 'PGRST116') {
             // No profile found - redirect to home page
+            console.log('SellerVerification: No profile found, redirecting to home');
             router.push('/');
             return;
           }
@@ -80,6 +81,7 @@ export default function SellerVerification({ children }: SellerVerificationProps
 
         if (!profile) {
           // No profile found - redirect to home page
+          console.log('SellerVerification: No profile data, redirecting to home');
           router.push('/');
           return;
         }
@@ -87,9 +89,17 @@ export default function SellerVerification({ children }: SellerVerificationProps
         // Type assertion to help TypeScript understand the profile type
         const sellerProfile = profile as SellerProfile;
 
+        console.log('SellerVerification: Seller profile details:', {
+          isApproved: sellerProfile.is_approved,
+          role: sellerProfile.role,
+          email: sellerProfile.email,
+          fullName: sellerProfile.full_name
+        });
+
         // Check if seller is approved
         if (!sellerProfile.is_approved) {
           // Account not approved - redirect to home page
+          console.log('SellerVerification: Account not approved, redirecting to home');
           router.push('/');
           return;
         }
@@ -97,9 +107,12 @@ export default function SellerVerification({ children }: SellerVerificationProps
         // Check if user has seller or admin role
         if (sellerProfile.role !== 'seller' && sellerProfile.role !== 'admin') {
           // Wrong role - redirect to home page
+          console.log('SellerVerification: Wrong role, redirecting to home. Role:', sellerProfile.role);
           router.push('/');
           return;
         }
+
+        console.log('SellerVerification: All checks passed, setting seller profile');
 
         setSellerProfile(sellerProfile);
       } catch (err) {
