@@ -14,7 +14,7 @@ function DashboardContent() {
   const { products, isLoading, error } = useDashboard();
   const { t } = useDashboardLanguage();
   const [sellerProfile, setSellerProfile] = useState<{ id: string; business_name?: string; business_type?: string; full_name?: string; } | null>(null);
-  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileLoading] = useState(false);
 
   // Mock seller profile for demo purposes
   useEffect(() => {
@@ -42,10 +42,8 @@ function DashboardContent() {
     if (sellerProfile?.business_name) {
       return sellerProfile.business_name;
     }
-    if (user?.email) {
-      return user.email.split('@')[0].charAt(0).toUpperCase() + user.email.split('@')[0].slice(1);
-    }
-    return '';
+    // Fallback to demo name
+    return 'Demo';
   };
 
 
