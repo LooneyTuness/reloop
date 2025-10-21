@@ -32,11 +32,11 @@ export default function DashboardZeroState({ onAddProduct, onViewGuide }: Dashbo
       {/* Content */}
       <div className="max-w-sm sm:max-w-lg mx-auto mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3">
-          Welcome to your seller dashboard
+          Добредојдовте во вашиот продавачки панел
         </h2>
         <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-          You're all set up! Start building your store by adding your first product. 
-          Once you list items, you'll see orders, analytics, and earnings data here.
+          Подготвени сте! Започнете да ја градите вашата продавница со додавање на вашиот прв производ. 
+          Откако ќе ги наведете производите, ќе ги видите нарачките тука.
         </p>
       </div>
 
@@ -44,26 +44,26 @@ export default function DashboardZeroState({ onAddProduct, onViewGuide }: Dashbo
       <div className="w-full max-w-sm sm:max-w-md mx-auto mb-6 sm:mb-8">
         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 sm:p-4">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 text-left">
-            Quick start checklist:
+            Листа за брзо започнување:
           </h3>
           <div className="space-y-2 text-left">
             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <div className="w-5 h-5 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                 <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">1</span>
               </div>
-              <span className="text-xs sm:text-sm">Add your first product</span>
+              <span className="text-xs sm:text-sm">Додајте го вашиот прв производ</span>
             </div>
             <div className="flex items-center text-sm text-gray-500 dark:text-gray-500">
               <div className="w-5 h-5 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                 <span className="text-xs font-semibold text-gray-400">2</span>
               </div>
-              <span className="text-xs sm:text-sm">Set up payment methods</span>
+              <span className="text-xs sm:text-sm">Поставете методи за плаќање</span>
             </div>
             <div className="flex items-center text-sm text-gray-500 dark:text-gray-500">
               <div className="w-5 h-5 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                 <span className="text-xs font-semibold text-gray-400">3</span>
               </div>
-              <span className="text-xs sm:text-sm">Start promoting your store</span>
+              <span className="text-xs sm:text-sm">Започнете да ја промовирате вашата продавница</span>
             </div>
           </div>
         </div>
@@ -76,18 +76,11 @@ export default function DashboardZeroState({ onAddProduct, onViewGuide }: Dashbo
           className="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors w-full sm:w-auto"
         >
           <Plus className="w-4 h-4 mr-2" />
-          <span className="text-sm sm:text-base">Add Your First Product</span>
+          <span className="text-sm sm:text-base">Додајте Го Вашиот Прв Производ</span>
           <ArrowRight className="w-4 h-4 ml-2" />
         </button>
         
-        {onViewGuide && (
-          <button
-            onClick={onViewGuide}
-            className="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors w-full sm:w-auto"
-          >
-            <span className="text-sm sm:text-base">View Seller Guide</span>
-          </button>
-        )}
+
       </div>
     </div>
   );
