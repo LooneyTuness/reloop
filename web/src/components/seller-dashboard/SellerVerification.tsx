@@ -89,6 +89,8 @@ export default function SellerVerification({ children }: SellerVerificationProps
         // Type assertion to help TypeScript understand the profile type
         const sellerProfile = profile as SellerProfile;
 
+        console.log('SellerVerification: Raw profile object:', sellerProfile);
+        console.log('SellerVerification: Profile keys:', Object.keys(sellerProfile));
         console.log('SellerVerification: Seller profile details:', {
           isApproved: sellerProfile.is_approved,
           role: sellerProfile.role,
