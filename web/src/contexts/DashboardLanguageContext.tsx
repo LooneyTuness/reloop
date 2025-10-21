@@ -209,7 +209,6 @@ const dashboardTranslations = {
     // Zero State Messages
     noProductsListedYet: "Сè уште нема листирани производи",
     startBuildingStore: "Започнете со градење на вашата продавница со додавање на вашиот прв продукт. Листирајте предмети за да започнете со продавање и да достигнете купувачи.",
-    viewGuide: "Види водич",
     noRecentOrders: "Нема неодамнешни нарачки",
     ordersWillAppear: "Нарачките ќе се појават тука кога купувачите ќе започнат да ги купуваат вашите производи. Фокусирајте се на создавање одлични листинзи за да привлечете купувачи.",
     promoteProducts: "Промовирај производи",
@@ -592,7 +591,6 @@ const dashboardTranslations = {
     // Zero State Messages
     noProductsListedYet: "No products listed yet",
     startBuildingStore: "Start building your store by adding your first product. List items to begin selling and reach customers.",
-    viewGuide: "View Guide",
     noRecentOrders: "No recent orders",
     ordersWillAppear: "Orders will appear here once customers start purchasing your products. Focus on creating great listings to attract buyers.",
     promoteProducts: "Promote Products",

@@ -65,8 +65,7 @@ function DashboardContent() {
       <div className="px-6 py-8">
         <DashboardZeroState
           onAddProduct={() => router.push('/seller-dashboard/add-product')}
-          onViewGuide={() => router.push('/seller-dashboard/guide')}
-        />
+                 />
       </div>
     );
   }

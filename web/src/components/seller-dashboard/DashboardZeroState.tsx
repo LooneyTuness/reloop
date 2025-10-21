@@ -3,7 +3,6 @@ import { Package, ShoppingBag, Plus, ArrowRight } from 'lucide-react';
 
 interface DashboardZeroStateProps {
   onAddProduct: () => void;
-  onViewGuide?: () => void;
 }
 
 export default function DashboardZeroState({ onAddProduct }: DashboardZeroStateProps) {

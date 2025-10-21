@@ -1,14 +1,13 @@
 import React from 'react';
-import { Package, Plus, ShoppingBag, TrendingUp, BarChart3, Eye } from 'lucide-react';
+import { Package, ShoppingBag, TrendingUp, BarChart3, Eye } from 'lucide-react';
 import ZeroState from './ZeroState';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
 interface ProductsZeroStateProps {
   onAddProduct: () => void;
-  onViewGuide?: () => void;
 }
 
-export function ProductsZeroState({ onAddProduct, onViewGuide }: ProductsZeroStateProps) {
+export function ProductsZeroState({ onAddProduct }: ProductsZeroStateProps) {
   const { t } = useDashboardLanguage();
   
   return (
@@ -18,10 +17,6 @@ export function ProductsZeroState({ onAddProduct, onViewGuide }: ProductsZeroSta
       description={t('startBuildingStore')}
       actionLabel={t('addProduct')}
       onAction={onAddProduct}
-      secondaryAction={onViewGuide ? {
-        label: t('viewGuide'),
-        onClick: onViewGuide
-      } : undefined}
       className="min-h-[400px]"
     />
   );

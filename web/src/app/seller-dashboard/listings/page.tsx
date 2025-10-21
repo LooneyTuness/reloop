@@ -137,7 +137,7 @@ function ListingsContent() {
         </div>
         <ProductsZeroState
           onAddProduct={() => router.push('/seller-dashboard/add-product')}
-          onViewGuide={() => router.push('/seller-dashboard/guide')}
+         
         />
       </div>
     );
