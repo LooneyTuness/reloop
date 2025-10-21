@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/lib/supabase';
 
@@ -52,7 +52,7 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     if (!user) {
       setProfile(null);
       setLoading(false);
@@ -88,7 +88,7 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   const refreshProfile = async () => {
     await fetchProfile();
@@ -98,22 +98,35 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
     if (!user || !profile) return false;
 
     try {
-      const { data, error: updateError } = await supabase
+      // Filter out undefined values and create update object
+      const updateData: Record<string, string | boolean | undefined> = {};
+      
+      if (updates.full_name !== undefined) updateData.full_name = updates.full_name;
+      if (updates.business_name !== undefined) updateData.business_name = updates.business_name;
+      if (updates.business_type !== undefined) updateData.business_type = updates.business_type;
+      if (updates.phone !== undefined) updateData.phone = updates.phone;
+      if (updates.bio !== undefined) updateData.bio = updates.bio;
+      if (updates.location !== undefined) updateData.location = updates.location;
+      if (updates.website !== undefined) updateData.website = updates.website;
+      if (updates.avatar_url !== undefined) updateData.avatar_url = updates.avatar_url;
+      if (updates.tax_id !== undefined) updateData.tax_id = updates.tax_id;
+      if (updates.bank_account !== undefined) updateData.bank_account = updates.bank_account;
+      
+      updateData.updated_at = new Date().toISOString();
+
+      const { data, error: updateError } = await (supabase
         .from('seller_profiles')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
+        .update(updateData as never)
         .eq('user_id', user.id)
         .select()
-        .single();
+        .single());
 
       if (updateError) {
         console.error('Error updating seller profile:', updateError);
         return false;
       }
 
-      setProfile(data);
+      setProfile(data as SellerProfile);
       return true;
     } catch (err) {
       console.error('Error updating seller profile:', err);
@@ -123,7 +136,7 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
 
   useEffect(() => {
     fetchProfile();
-  }, [user]);
+  }, [fetchProfile]);
 
   const value = {
     profile,
