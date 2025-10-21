@@ -2,14 +2,14 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { User, Settings, LogOut } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
 
 interface ProfileDropdownProps {
   onClose: () => void;
 }
 
 export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
-  const { user, signOut } = useAuth();
+  // Mock user data for demo purposes
+  const user = { email: 'demo@seller.com', user_metadata: { full_name: 'Demo Seller' } };
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -27,12 +27,9 @@ export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
   }, [onClose]);
 
   const handleLogout = async () => {
-    try {
-      await signOut();
-      onClose();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+    // Mock logout for demo purposes
+    console.log('Logout clicked (demo mode)');
+    onClose();
   };
 
   return (

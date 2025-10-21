@@ -6,42 +6,25 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import RecentOrders from '@/components/seller-dashboard/RecentOrders';
 import DashboardZeroState from '@/components/seller-dashboard/DashboardZeroState';
 import { useDashboard } from '@/contexts/DashboardContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { OptimizedButton } from '@/components/seller-dashboard/OptimizedLink';
 
 function DashboardContent() {
   const router = useRouter();
-  const { user, loading } = useAuth();
   const { products, isLoading, error } = useDashboard();
   const { t } = useDashboardLanguage();
   const [sellerProfile, setSellerProfile] = useState<{ id: string; business_name?: string; business_type?: string; full_name?: string; } | null>(null);
-  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
 
-  // Load seller profile data
+  // Mock seller profile for demo purposes
   useEffect(() => {
-    const loadSellerProfile = async () => {
-      if (!user?.id) {
-        setProfileLoading(false);
-        return;
-      }
-
-      try {
-        setProfileLoading(true);
-        const response = await fetch(`/api/seller-profile/${user.id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setSellerProfile(data.profile);
-        }
-      } catch (error) {
-        console.error('Error loading seller profile:', error);
-      } finally {
-        setProfileLoading(false);
-      }
-    };
-
-    loadSellerProfile();
-  }, [user?.id]);
+    setSellerProfile({
+      id: 'demo-seller',
+      business_name: 'Demo Store',
+      full_name: 'Demo Seller',
+      business_type: 'retail'
+    });
+  }, []);
 
   // Personalized greeting based on time of day
   const getGreeting = () => {
@@ -67,8 +50,8 @@ function DashboardContent() {
 
 
 
-  // Show loading state while authentication is being checked
-  if (loading || profileLoading) {
+  // Show loading state while data is being loaded
+  if (profileLoading) {
     return (
       <div className="px-6 py-8">
         <div className="flex items-center justify-center h-64">

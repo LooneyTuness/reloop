@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Bell, User, X, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useAuth } from '@/contexts/AuthContext';
+// Authentication removed for seller dashboard
 import { useNotifications } from '@/contexts/NotificationContext';
 import { useProfile } from '@/contexts/ProfileContext';
 import { useSearch } from '@/contexts/SearchContext';
@@ -15,7 +15,7 @@ import ProfileDropdown from './ProfileDropdown';
 
 export default function TopBar() {
   const router = useRouter();
-  const { } = useAuth();
+  // Authentication removed for seller dashboard
   const { notifications, unreadCount, markAsRead, dismissAllNotifications } = useNotifications();
   const { avatarUrl } = useProfile();
   const { searchQuery, setSearchQuery, performSearch, clearSearch, isSearching } = useSearch();
