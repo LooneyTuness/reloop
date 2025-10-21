@@ -420,46 +420,6 @@ function DashboardContent() {
         </div>
       </div>
 
-      {/* Quick Reference Section */}
-      <div className="mt-8">
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-200 dark:border-blue-800 p-6">
-          <div className="flex items-start gap-4">
-            <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
-              <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold font-rounded text-gray-900 dark:text-white mb-2">
-                {t('quickReferenceGuide')}
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                {t('quickReferenceDescription')}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{t('essentialPages')}</h4>
-                  <ul className="space-y-1 text-gray-600 dark:text-gray-400">
-                    <li>• <strong>{t('addProduct')}:</strong> {t('addProductDescription')}</li>
-                    <li>• <strong>{t('myListings')}:</strong> {t('myListingsDescription')}</li>
-                    <li>• <strong>{t('orders')}:</strong> {t('ordersDescription')}</li>
-                    <li>• <strong>{t('settings')}:</strong> {t('settingsDescription')}</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{t('proTips')}</h4>
-                  <ul className="space-y-1 text-gray-600 dark:text-gray-400">
-                    <li>• {t('uploadMultipleHighQuality')}</li>
-                    <li>• {t('writeDetailedHonest')}</li>
-                    <li>• {t('respondQuicklyToInquiries')}</li>
-                    <li>• {t('keepProductListingsUpdated')}</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
