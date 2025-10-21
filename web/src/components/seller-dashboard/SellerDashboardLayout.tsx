@@ -15,7 +15,7 @@ export default function SellerDashboardLayout({ children }: SellerDashboardLayou
   return (
     <GlobalDashboardProvider>
       <SellerVerification>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative font-poppins">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative font-poppins overflow-x-hidden">
           {/* Sidebar */}
           <Sidebar />
           
@@ -24,7 +24,7 @@ export default function SellerDashboardLayout({ children }: SellerDashboardLayou
           
           {/* Main Content */}
           <main className="absolute left-0 lg:left-64 top-16 sm:top-20 right-0 bottom-0">
-            <div className="w-full h-full overflow-auto transition-opacity duration-200 ease-in-out">
+            <div className="w-full h-full overflow-auto overflow-x-hidden transition-opacity duration-200 ease-in-out">
               {children}
             </div>
           </main>

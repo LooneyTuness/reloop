@@ -200,7 +200,7 @@ const dashboardTranslations = {
     systemUpdate: "Системско ажурирање",
     
     // Search Panel
-    searchPlaceholder: "Пребарај производи, нарачки...",
+    searchPlaceholder: "Пребарај...",
     searchInProducts: "Пребарај во производи",
     searchInOrders: "Пребарај во нарачки",
     noResultsFound: "Нема резултати",
@@ -583,7 +583,7 @@ const dashboardTranslations = {
     systemUpdate: "System update",
     
     // Search Panel
-    searchPlaceholder: "Search products, orders...",
+    searchPlaceholder: "Search...",
     searchInProducts: "Search in Products",
     searchInOrders: "Search in Orders",
     noResultsFound: "No results found",

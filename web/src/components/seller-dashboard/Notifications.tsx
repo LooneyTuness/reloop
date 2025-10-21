@@ -83,7 +83,7 @@ export default function Notifications({ notifications, onMarkAsRead, onMarkAllAs
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-[60] overflow-hidden">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black bg-opacity-25" onClick={onClose} />
       

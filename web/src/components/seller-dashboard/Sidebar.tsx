@@ -54,7 +54,7 @@ export default function Sidebar() {
       {/* Mobile menu button */}
       <button
         onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700"
+        className="lg:hidden fixed top-3 left-3 z-30 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700"
         aria-label={isMobileMenuOpen ? t('closeMenu') : t('mobileMenu')}
       >
         {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -63,7 +63,7 @@ export default function Sidebar() {
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={toggleMobileMenu}
         />
       )}
@@ -71,9 +71,9 @@ export default function Sidebar() {
       {/* Sidebar */}
       <div className={`
         fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 
-        transform transition-transform duration-300 ease-in-out z-50
-        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0
+        transform transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? 'translate-x-0 z-50' : '-translate-x-full z-30'}
+        lg:translate-x-0 lg:z-30
       `}>
         <div className="flex flex-col h-full">
           {/* Logo */}

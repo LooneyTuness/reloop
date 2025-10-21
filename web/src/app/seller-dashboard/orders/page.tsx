@@ -1,16 +1,14 @@
 'use client';
 
-import React, { useState, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useCallback, Suspense } from 'react';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
-import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
+import { useDashboard } from '@/contexts/DashboardContext';
 import { OrdersZeroState } from '@/components/seller-dashboard/ZeroStates';
 import { Search, Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, Download, MoreVertical, CreditCard, Info, Mail, Phone, MapPin } from 'lucide-react';
 import EnhancedImage from '@/components/EnhancedImage';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
-import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
-import { withLazyLoading } from '@/components/seller-dashboard/LazyPageWrapper';
 import OrdersSkeleton from '@/components/seller-dashboard/OrdersSkeleton';
 
 interface OrderItem {
@@ -333,7 +331,7 @@ function OrdersContent() {
   if (!isLoading && orders.length === 0) {
     return (
       <SellerDashboardLayout>
-        <div className="px-6 py-8">
+        <div className="px-3 sm:px-6 py-4 sm:py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {t('orders')}
@@ -383,23 +381,18 @@ function OrdersContent() {
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     try {
-      console.log('🔄 Orders: Updating order status', { orderId, newStatus });
       await updateOrderStatus(orderId, newStatus);
-      console.log('✅ Orders: Order status updated successfully');
-    } catch (error) {
-      console.error('❌ Orders: Failed to update order status:', error);
+    } catch {
     }
   };
 
   const openImageViewer = (images: string[], title: string, startIndex: number = 0) => {
-    console.log('🖼️ Opening image viewer:', { images, title, startIndex });
     const newState = {
       isOpen: true,
       images,
       currentIndex: startIndex,
       title
     };
-    console.log('🖼️ Setting image viewer state:', newState);
     setImageViewer(newState);
   };
 
@@ -424,7 +417,7 @@ function OrdersContent() {
 
   return (
     <SellerDashboardLayout>
-      <div className="px-6 py-8">
+      <div className="px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -478,25 +471,25 @@ function OrdersContent() {
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('orderId')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">
                     {t('customer')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       {t('product')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">
                     {t('total')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('status')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">
                     {t('date')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('actions')}
                   </th>
                 </tr>
@@ -509,7 +502,7 @@ function OrdersContent() {
                       e.stopPropagation();
                     }
                   }}>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10 relative group">
                           <EnhancedImage
@@ -521,18 +514,14 @@ function OrdersContent() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              console.log('🖼️ Main order image clicked:', order.id);
                               // Get images from the first seller order item
                               const firstItem = order.seller_order_items?.[0];
-                              console.log('🖼️ First item:', firstItem);
                               if (firstItem?.items?.images) {
                                 const images = Array.isArray(firstItem.items.images) ? 
                                   firstItem.items.images : 
                                   [firstItem.items.images];
-                                console.log('🖼️ Images found:', images);
                                 openImageViewer(images, firstItem.items.title || 'Product', 0);
                               } else {
-                                console.log('🖼️ No images found for first item');
                                 // Fallback to placeholder image
                                 openImageViewer(['/api/placeholder/60/60'], order.product_name || 'Product', 0);
                               }
@@ -557,7 +546,7 @@ function OrdersContent() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-gray-500" />
@@ -572,7 +561,7 @@ function OrdersContent() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4">
                       <div className="space-y-2">
                         {order.seller_order_items?.slice(0, 2).map((item: OrderItem, index: number) => {
                           return (
@@ -595,12 +584,12 @@ function OrdersContent() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
-                        {order.total_amount.toFixed(2)} {t("currency")}
+                        {order.total_amount.toFixed(2)} MKD
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         {getStatusIcon(order.status)}
                         <span className={`ml-2 px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(order.status)}`}>
@@ -608,10 +597,10 @@ function OrdersContent() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                       {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'Unknown'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => setSelectedOrder(order)}

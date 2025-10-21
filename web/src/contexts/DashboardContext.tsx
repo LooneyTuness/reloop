@@ -108,30 +108,21 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   // Debug logging - only log when user is available (reduced logging for performance)
   useEffect(() => {
     if (user) {
-      console.log('DashboardProvider - User ID:', user.id);
     }
   }, [user]);
 
   // Function to sync product statuses with order statuses
   const syncProductStatusesWithOrders = useCallback(async (products: DashboardProduct[], orders: DashboardOrder[]) => {
-    console.log('🔄 Syncing product statuses with orders...');
-    console.log('📦 Products to sync:', products.length);
-    console.log('📦 Orders to check:', orders.length);
-    console.log('📦 Sample product:', products[0]);
-    console.log('📦 Sample order:', orders[0]);
     
     const updatedProducts = [...products];
-    let totalUpdates = 0;
     
     for (const order of orders) {
       try {
-        console.log(`🔍 Processing order ${order.id} with status: ${order.status}`);
         
         // Get order items for this order
         const orderItems = await supabaseDataService.getOrderItems(order.id);
         const productIdsInOrder = orderItems.map(item => String(item.item_id));
         
-        console.log(`📦 Order ${order.id} has ${productIdsInOrder.length} items:`, productIdsInOrder);
         
         if (productIdsInOrder.length > 0) {
           // Map order status to product status
@@ -156,7 +147,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
               productStatus = 'sold';
           }
           
-          console.log(`🔄 Order ${order.id} (${order.status}) -> Product status: ${productStatus}`);
           
           // Update products in this order
           productIdsInOrder.forEach(productId => {
@@ -164,34 +154,27 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             if (productIndex !== -1) {
               const currentStatus = updatedProducts[productIndex].status;
               if (currentStatus !== productStatus) {
-                console.log(`🔄 Updating product ${productId} (${updatedProducts[productIndex].name}) from ${currentStatus} to ${productStatus}`);
                 updatedProducts[productIndex] = {
                   ...updatedProducts[productIndex],
                   status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
                 };
-                totalUpdates++;
               } else {
-                console.log(`⏭️ Product ${productId} already has status ${productStatus}, skipping`);
               }
             } else {
-              console.log(`⚠️ Product ${productId} not found in products list`);
             }
           });
         } else {
-          console.log(`⚠️ Order ${order.id} has no items`);
         }
       } catch (error) {
         console.error(`Error syncing order ${order.id}:`, error);
       }
     }
     
-    console.log(`✅ Product status sync completed. Updated ${totalUpdates} products.`);
     return updatedProducts;
   }, []);
 
   const refreshData = useCallback(async (forceRefresh = false) => {
     if (!user?.id) {
-      console.log('No user ID available, skipping data refresh');
       setIsLoading(false);
       return;
     }
@@ -199,26 +182,20 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     // Check cache timeout
     const now = Date.now();
     if (!forceRefresh && (now - lastFetchTime) < cacheTimeout) {
-      console.log('Using cached data, skipping refresh');
       return;
     }
     
-    console.log('Refreshing dashboard data for user:', user.id);
     setIsLoading(true);
     setError(null);
     
     try {
       // Fetch all data in parallel with individual error handling
-      console.log('Fetching seller items for user:', user.id);
       const [sellerItems, sellerOrders, sellerStats] = await Promise.allSettled([
         supabaseDataService.getSellerItems(user.id),
         supabaseDataService.getSellerOrders(user.id),
         supabaseDataService.getSellerStats(user.id)
       ]);
       
-      console.log('Seller items result:', sellerItems);
-      console.log('Seller orders result:', sellerOrders);
-      console.log('Seller stats result:', sellerStats);
 
       // Handle individual results
       const items = sellerItems.status === 'fulfilled' ? sellerItems.value : [];
@@ -232,26 +209,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         avgOrderValue: 0
       };
 
-      console.log('🔍 DashboardContext - Items result:', items);
-      console.log('🔍 DashboardContext - Orders result:', orders);
-      console.log('🔍 DashboardContext - Stats result:', stats);
 
-      // Log any rejected promises
-      if (sellerItems.status === 'rejected') {
-        console.error('❌ Failed to fetch items:', sellerItems.reason);
-      }
-      if (sellerOrders.status === 'rejected') {
-        console.error('❌ Failed to fetch orders:', sellerOrders.reason);
-      }
-      if (sellerStats.status === 'rejected') {
-        console.error('❌ Failed to fetch stats:', sellerStats.reason);
-      }
+      // Handle any rejected promises silently
 
-      // Log the actual status of each promise
-      console.log('🔍 Promise statuses:');
-      console.log('🔍 Items status:', sellerItems.status);
-      console.log('🔍 Orders status:', sellerOrders.status);
-      console.log('🔍 Stats status:', sellerStats.status);
 
       // Transform items to dashboard products first
       const dashboardProducts: DashboardProduct[] = items.map(item => ({
@@ -263,31 +223,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       }));
 
       // Sync product statuses with order statuses
-      console.log('🔄 Starting product status sync...');
-      console.log('📦 Products before sync:', dashboardProducts.length);
-      console.log('📦 Orders to sync with:', orders.length);
       const syncedProducts = await syncProductStatusesWithOrders(dashboardProducts, orders);
-      console.log('✅ Product status sync completed');
-      console.log('📦 Products after sync:', syncedProducts.length);
 
       // Transform orders to dashboard orders
-      console.log('🔄 Transforming orders to dashboard orders:', orders.length);
-      console.log('🔄 User ID for filtering:', user.id);
       
-      const dashboardOrders: DashboardOrder[] = (orders as DashboardOrder[]).map((order: DashboardOrder, index: number) => {
-        console.log(`🔄 Processing order ${index + 1}:`, order.id);
-        console.log(`🔄 Order items:`, order.order_items);
+      const dashboardOrders: DashboardOrder[] = (orders as DashboardOrder[]).map((order: DashboardOrder) => {
         
         // Get ALL items from this seller for display
         const sellerOrderItems = (order.order_items as (OrderItem & { items?: Item | null })[] | undefined)?.filter((item) => {
-          console.log(`🔄 Checking item:`, item);
-          console.log(`🔄 Item user_id:`, item.items?.user_id);
-          console.log(`🔄 Current user ID:`, user.id);
-          console.log(`🔄 Match:`, item.items?.user_id === user.id);
           return item.items?.user_id === user.id;
         }) || [];
         
-        console.log(`🔄 Seller order items found:`, sellerOrderItems.length, sellerOrderItems);
         
         // Create a summary for the main display
         let productName = 'Unknown Product';
@@ -331,11 +277,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           item_count: itemCount
         };
         
-        console.log(`🔄 Transformed order:`, transformedOrder);
         return transformedOrder;
       });
       
-      console.log('✅ Final dashboard orders:', dashboardOrders.length);
 
       // Transform stats
       const dashboardStats: DashboardStats = {
@@ -395,9 +339,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
   // Test function to manually update product statuses
   const testUpdateProductStatuses = (status: string) => {
-    console.log(`🧪 Manually updating all products to status: ${status}`);
     setProducts(prev => prev.map(product => {
-      console.log(`✅ Updating product ${product.id} (${product.name}) from '${product.status}' to '${status}'`);
       return {
         ...product,
         status: status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
@@ -407,7 +349,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
   const updateOrderStatus = async (orderId: string, status: string) => {
     try {
-      console.log('🚀 updateOrderStatus called with:', { orderId, status });
       
       // Update order status in database first
       await supabaseDataService.updateOrderStatus(orderId, status);
@@ -445,23 +386,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           productStatus = 'sold';
       }
       
-      console.log(`📦 Mapped order status '${status}' to product status '${productStatus}'`);
-      
       // Get the specific products in this order
       const orderIdStr = String(orderId);
       const orderItems = await supabaseDataService.getOrderItems(orderIdStr);
-      console.log('📦 Order items found:', orderItems);
       const productIdsInOrder = orderItems.map(item => String(item.item_id));
-      console.log('🆔 Product IDs in order:', productIdsInOrder);
       
       // Update products in local state immediately for real-time UI updates
       if (productIdsInOrder.length > 0) {
-        console.log('✅ Updating products with new status:', productStatus);
         setProducts(prev => {
           const productIdsInOrderSet = new Set(productIdsInOrder.map(String));
           const updatedProducts = prev.map(product => {
             if (productIdsInOrderSet.has(String(product.id))) {
-              console.log(`🔄 Updating product ${product.id} (${product.name}) from ${product.status} to ${productStatus}`);
               return {
                 ...product,
                 status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
@@ -469,7 +404,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             }
             return product; // Keep other products unchanged
           });
-          console.log('📊 Updated products:', updatedProducts);
           return updatedProducts;
         });
         
@@ -487,15 +421,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             throw new Error(`Failed to update product statuses: ${errorData.error || 'Unknown error'}`);
           }
           
-          const result = await response.json();
-          console.log('✅ Product statuses updated successfully:', result);
+          await response.json();
         } catch (dbError) {
           console.error('Error updating product statuses via admin API:', dbError);
           // Don't throw here - we've already updated local state
           // The user will see the change immediately, and it will sync on next refresh
         }
       } else {
-        console.log('⚠️ No products found in order, skipping product updates');
       }
       
       // Add activity
@@ -525,9 +457,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     // No need to duplicate the check here
     
     try {
-      console.log('Creating product with data:', productData);
-      console.log('User ID:', user.id);
-      console.log('User email:', user.email);
       
       // Validate that user.id is a valid UUID format
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -553,15 +482,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       };
       
       // Log the exact data being sent
-      console.log('User ID type:', typeof user.id, 'value:', user.id);
-      console.log('User email type:', typeof user.email, 'value:', user.email);
-      console.log('Item data user_id type:', typeof itemData.user_id, 'value:', itemData.user_id);
       
-      
-      console.log('Final item data being sent to database:', itemData);
       
       const newProduct = await supabaseDataService.createItem(itemData as Item);
-      console.log('Product created successfully:', newProduct);
 
       // Add to local state
       const dashboardProduct: DashboardProduct = {

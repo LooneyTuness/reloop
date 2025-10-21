@@ -31,10 +31,7 @@ function DashboardContent() {
         const response = await fetch(`/api/seller-profile/${user.id}`);
         if (response.ok) {
           const data = await response.json();
-          console.log('Seller profile data:', data.profile);
           setSellerProfile(data.profile);
-        } else {
-          console.log('Failed to fetch seller profile:', response.status);
         }
       } catch (error) {
         console.error('Error loading seller profile:', error);
@@ -115,7 +112,7 @@ function DashboardContent() {
   }
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-full overflow-x-hidden">
       {/* Dashboard Instructions Section */}
       <div className="mb-6 sm:mb-8">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 p-4 sm:p-8 lg:p-10 text-white mb-6 sm:mb-8 shadow-2xl">

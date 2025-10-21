@@ -2,23 +2,20 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
-import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
+import { useDashboard } from '@/contexts/DashboardContext';
 import { ProductsZeroState } from '@/components/seller-dashboard/ZeroStates';
-import PlaceholderImage from '@/components/PlaceholderImage';
 import EnhancedImage from '@/components/EnhancedImage';
-import { Search, Filter, Plus, Edit, Trash2, Eye, MoreVertical, Package } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Eye, Package } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
-import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
-import { useCategory, CategoryProvider } from '@/contexts/CategoryContext';
 import ListingsSkeleton from '@/components/seller-dashboard/ListingsSkeleton';
 
 function ListingsContent() {
-  const { products, isLoading, error, updateProduct, deleteProduct, searchProducts } = useDashboard();
+  const { products, isLoading, error, updateProduct, deleteProduct } = useDashboard();
   const searchParams = useSearchParams();
   const router = useRouter();
   const { t } = useDashboardLanguage();
-  const { getCategoryDisplayName } = useCategory();
+  // const { getCategoryDisplayName } = useCategory();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -63,7 +60,7 @@ function ListingsContent() {
 
   useEffect(() => {
     // Filter products based on search query and status filter
-    let filtered = products.filter(product => {
+    const filtered = products.filter(product => {
       const matchesSearch = (product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
                            (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
@@ -91,20 +88,11 @@ function ListingsContent() {
     setFilteredProducts(filtered);
   }, [products, searchQuery, statusFilter, sortBy]);
 
-  const handleSearch = async (query: string) => {
-    if (query.trim()) {
-      const searchResults = await searchProducts(query);
-      setFilteredProducts(searchResults);
-    } else {
-      setFilteredProducts(products);
-    }
-  };
 
   const handleStatusUpdate = async (productId: string, newStatus: string) => {
     try {
       await updateProduct(productId, { status: newStatus });
-    } catch (error) {
-      console.error('Failed to update product status:', error);
+    } catch {
     }
   };
 
@@ -112,8 +100,7 @@ function ListingsContent() {
     if (confirm(t('confirmDeleteProduct'))) {
       try {
         await deleteProduct(productId);
-      } catch (error) {
-        console.error('Failed to delete product:', error);
+      } catch {
       }
     }
   };
@@ -157,9 +144,9 @@ function ListingsContent() {
   }
 
   return (
-      <div className="px-6 py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {t('myListings')}
@@ -225,7 +212,7 @@ function ListingsContent() {
         )}
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredProducts.map((product, index) => {
             // Simplified image handling
             let productImage = '/api/placeholder/400/400'; // Default fallback
@@ -266,12 +253,12 @@ function ListingsContent() {
                   </div>
                 </div>
                 
-                <div className="p-4">
+                <div className="p-3 sm:p-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-1 truncate">
                     {product.title || 'Untitled Product'}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    {product.category_id ? getCategoryDisplayName(product.category_id) : t('uncategorized')}
+                    {product.category_id ? product.category_id : t('uncategorized')}
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
