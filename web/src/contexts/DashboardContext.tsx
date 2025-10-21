@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabaseDataService } from '@/lib/supabase/data-service';
-import { useAuth } from '@/contexts/AuthContext';
 import { Database } from '@/lib/supabase/supabase.types';
 
 // Types based on Supabase schema
@@ -84,7 +83,8 @@ interface DashboardContextType {
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  // Mock user for demo purposes since authentication is removed
+  const user = { id: 'demo-seller-id', email: 'demo@seller.com' };
   const [orders, setOrders] = useState<DashboardOrder[]>([]);
   const [products, setProducts] = useState<DashboardProduct[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
