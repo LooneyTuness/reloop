@@ -7,11 +7,12 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
   const code = searchParams.get('code')
-  const next = '/'
+  const redirect = searchParams.get('redirect')
+  
+  console.log('Confirm route called with:', { token_hash: !!token_hash, type, code: !!code, redirect })
 
-  console.log('Confirm route called with:', { token_hash: !!token_hash, type, code: !!code })
-
-  // Create response that will redirect to home
+  // Default redirect to home, but will be updated based on user role
+  let next = redirect || '/'
   let response = NextResponse.redirect(`${origin}${next}`)
 
   const supabase = createServerClient(
@@ -41,7 +42,31 @@ export async function GET(request: NextRequest) {
 
     if (!error) {
       console.log('OTP verification successful')
-      response = NextResponse.redirect(`${origin}/?confirmed=true`)
+      
+      // Get the user to check if they're a seller
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (user) {
+        // Check if user is a seller
+        const { data: sellerProfile } = await supabase
+          .from('seller_profiles')
+          .select('is_approved')
+          .eq('user_id', user.id)
+          .single()
+        
+        if (sellerProfile?.is_approved) {
+          console.log('User is an approved seller, redirecting to dashboard')
+          next = '/seller-dashboard'
+        } else if (redirect) {
+          // Use the provided redirect URL
+          next = redirect
+        } else {
+          // Default to home page
+          next = '/'
+        }
+      }
+      
+      response = NextResponse.redirect(`${origin}${next}?confirmed=true`)
       return response
     } else {
       console.error('OTP verification error:', error)
@@ -57,7 +82,31 @@ export async function GET(request: NextRequest) {
 
     if (!error) {
       console.log('Code exchange successful')
-      response = NextResponse.redirect(`${origin}/?confirmed=true`)
+      
+      // Get the user to check if they're a seller
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (user) {
+        // Check if user is a seller
+        const { data: sellerProfile } = await supabase
+          .from('seller_profiles')
+          .select('is_approved')
+          .eq('user_id', user.id)
+          .single()
+        
+        if (sellerProfile?.is_approved) {
+          console.log('User is an approved seller, redirecting to dashboard')
+          next = '/seller-dashboard'
+        } else if (redirect) {
+          // Use the provided redirect URL
+          next = redirect
+        } else {
+          // Default to home page
+          next = '/'
+        }
+      }
+      
+      response = NextResponse.redirect(`${origin}${next}?confirmed=true`)
       return response
     } else {
       console.error('Code exchange error:', error)

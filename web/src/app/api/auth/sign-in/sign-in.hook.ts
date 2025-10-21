@@ -94,8 +94,8 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       // Use environment variable for production, fallback to window.location.origin for development
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
       const emailRedirectTo = redirectUrl 
-        ? `${baseUrl}/auth/callback?redirect=${encodeURIComponent(redirectUrl)}`
-        : `${baseUrl}/auth/callback`;
+        ? `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(redirectUrl)}`
+        : `${baseUrl}/auth/confirm`;
       
       console.log('Magic link email redirect to:', emailRedirectTo);
       

@@ -51,7 +51,7 @@ export default function AuthTest() {
       const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/auth/callback?redirect=${encodeURIComponent('/seller-dashboard')}`
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/auth/confirm?redirect=${encodeURIComponent('/seller-dashboard')}`
         }
       });
       
