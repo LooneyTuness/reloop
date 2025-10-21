@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, User, X, Eye, EyeOff } from 'lucide-react';
+import { Search, Bell, User, X, Eye, EyeOff, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-// Authentication removed for seller dashboard
+import { useAuth } from '@/contexts/AuthContext';
+import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import { useNotifications } from '@/contexts/NotificationContext';
-import { useProfile } from '@/contexts/ProfileContext';
 import { useSearch } from '@/contexts/SearchContext';
 import { useDashboardTheme } from '@/contexts/DashboardThemeContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
@@ -15,9 +15,9 @@ import ProfileDropdown from './ProfileDropdown';
 
 export default function TopBar() {
   const router = useRouter();
-  // Authentication removed for seller dashboard
+  const { user, signOut } = useAuth();
+  const { profile: sellerProfile } = useSellerProfile();
   const { notifications, unreadCount, markAsRead, dismissAllNotifications } = useNotifications();
-  const { avatarUrl } = useProfile();
   const { searchQuery, setSearchQuery, performSearch, clearSearch, isSearching } = useSearch();
   const { isDarkMode, toggleDarkMode } = useDashboardTheme();
   const { t } = useDashboardLanguage();
@@ -68,6 +68,36 @@ export default function TopBar() {
   const handleProfileClick = () => {
     console.log('Profile button clicked! Opening dropdown...');
     setShowProfileDropdown(true);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  // Get user display name and avatar
+  const getUserDisplayName = () => {
+    if (sellerProfile?.full_name) {
+      return sellerProfile.full_name.split(' ')[0];
+    }
+    if (sellerProfile?.business_name) {
+      return sellerProfile.business_name;
+    }
+    if (user?.email) {
+      return user.email.split('@')[0];
+    }
+    return 'User';
+  };
+
+  const getUserAvatar = () => {
+    if (sellerProfile?.avatar_url) {
+      return sellerProfile.avatar_url;
+    }
+    return null;
   };
 
   return (
@@ -174,12 +204,12 @@ export default function TopBar() {
                 showProfileDropdown 
                   ? 'ring-2 ring-blue-200' 
                   : 'hover:ring-2 hover:ring-gray-200'
-              } ${avatarUrl ? 'bg-white' : 'bg-gradient-to-br from-blue-500 to-orange-600'}`}
-              title="Click to open profile menu"
+              } ${getUserAvatar() ? 'bg-white' : 'bg-gradient-to-br from-blue-500 to-orange-600'}`}
+              title={`${getUserDisplayName()} - Click to open profile menu`}
             >
-              {avatarUrl ? (
+              {getUserAvatar() ? (
                 <Image
-                  src={avatarUrl}
+                  src={getUserAvatar() as string}
                   alt="Profile"
                   width={40}
                   height={40}
@@ -192,9 +222,56 @@ export default function TopBar() {
 
             {/* Profile Dropdown */}
             {showProfileDropdown && (
-              <ProfileDropdown
-                onClose={() => setShowProfileDropdown(false)}
-              />
+              <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center space-x-3">
+                    <div className="h-10 w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-orange-600">
+                      {getUserAvatar() ? (
+                        <Image
+                          src={getUserAvatar() as string}
+                          alt="Profile"
+                          width={40}
+                          height={40}
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <User className="text-white" size={20} />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        {getUserDisplayName()}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                        {sellerProfile?.email || user?.email}
+                      </p>
+                      {sellerProfile?.role && (
+                        <p className="text-xs text-blue-600 dark:text-blue-400 capitalize">
+                          {sellerProfile.role}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      router.push('/seller-dashboard/settings');
+                      setShowProfileDropdown(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Settings
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
+                  >
+                    <LogOut size={16} />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>

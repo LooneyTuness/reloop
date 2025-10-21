@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
 const getNavigationItems = (t: (key: string) => string) => [
@@ -30,7 +31,8 @@ const getNavigationItems = (t: (key: string) => string) => [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { logout } = useAuth();
+  const { signOut } = useAuth();
+  const { profile: sellerProfile } = useSellerProfile();
   const { t } = useDashboardLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
@@ -42,11 +44,22 @@ export default function Sidebar() {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.push('/');
     } catch (error) {
       console.error('Logout failed:', error);
     }
+  };
+
+  // Get user display name
+  const getUserDisplayName = () => {
+    if (sellerProfile?.full_name) {
+      return sellerProfile.full_name.split(' ')[0];
+    }
+    if (sellerProfile?.business_name) {
+      return sellerProfile.business_name;
+    }
+    return 'Seller';
   };
 
   return (
@@ -127,6 +140,30 @@ export default function Sidebar() {
               );
             })}
           </nav>
+
+          {/* User Info */}
+          <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-800">
+            <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-orange-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-medium">
+                  {getUserDisplayName().charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                  {getUserDisplayName()}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  {sellerProfile?.email || 'Seller'}
+                </p>
+                {sellerProfile?.role && (
+                  <p className="text-xs text-blue-600 dark:text-blue-400 capitalize">
+                    {sellerProfile.role}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
 
           {/* Logout */}
           <div className="px-4 py-6 border-t border-gray-200 dark:border-gray-800">

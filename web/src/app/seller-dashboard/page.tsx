@@ -1,30 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import RecentOrders from '@/components/seller-dashboard/RecentOrders';
 import DashboardZeroState from '@/components/seller-dashboard/DashboardZeroState';
 import { useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import { OptimizedButton } from '@/components/seller-dashboard/OptimizedLink';
 
 function DashboardContent() {
   const router = useRouter();
   const { products, isLoading, error } = useDashboard();
   const { t } = useDashboardLanguage();
-  const [sellerProfile, setSellerProfile] = useState<{ id: string; business_name?: string; business_type?: string; full_name?: string; } | null>(null);
-  const [profileLoading] = useState(false);
-
-  // Mock seller profile for demo purposes
-  useEffect(() => {
-    setSellerProfile({
-      id: 'demo-seller',
-      business_name: 'Demo Store',
-      full_name: 'Demo Seller',
-      business_type: 'retail'
-    });
-  }, []);
+  const { profile: sellerProfile, loading: profileLoading } = useSellerProfile();
 
   // Personalized greeting based on time of day
   const getGreeting = () => {
