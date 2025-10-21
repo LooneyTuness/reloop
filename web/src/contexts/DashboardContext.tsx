@@ -113,6 +113,83 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
+  // Function to sync product statuses with order statuses
+  const syncProductStatusesWithOrders = useCallback(async (products: DashboardProduct[], orders: DashboardOrder[]) => {
+    console.log('🔄 Syncing product statuses with orders...');
+    console.log('📦 Products to sync:', products.length);
+    console.log('📦 Orders to check:', orders.length);
+    console.log('📦 Sample product:', products[0]);
+    console.log('📦 Sample order:', orders[0]);
+    
+    const updatedProducts = [...products];
+    let totalUpdates = 0;
+    
+    for (const order of orders) {
+      try {
+        console.log(`🔍 Processing order ${order.id} with status: ${order.status}`);
+        
+        // Get order items for this order
+        const orderItems = await supabaseDataService.getOrderItems(order.id);
+        const productIdsInOrder = orderItems.map(item => String(item.item_id));
+        
+        console.log(`📦 Order ${order.id} has ${productIdsInOrder.length} items:`, productIdsInOrder);
+        
+        if (productIdsInOrder.length > 0) {
+          // Map order status to product status
+          let productStatus: string = 'active';
+          switch (order.status) {
+            case 'pending':
+              productStatus = 'sold';
+              break;
+            case 'processing':
+              productStatus = 'sold';
+              break;
+            case 'shipped':
+              productStatus = 'shipped';
+              break;
+            case 'delivered':
+              productStatus = 'delivered';
+              break;
+            case 'cancelled':
+              productStatus = 'active';
+              break;
+            default:
+              productStatus = 'sold';
+          }
+          
+          console.log(`🔄 Order ${order.id} (${order.status}) -> Product status: ${productStatus}`);
+          
+          // Update products in this order
+          productIdsInOrder.forEach(productId => {
+            const productIndex = updatedProducts.findIndex(p => String(p.id) === String(productId));
+            if (productIndex !== -1) {
+              const currentStatus = updatedProducts[productIndex].status;
+              if (currentStatus !== productStatus) {
+                console.log(`🔄 Updating product ${productId} (${updatedProducts[productIndex].name}) from ${currentStatus} to ${productStatus}`);
+                updatedProducts[productIndex] = {
+                  ...updatedProducts[productIndex],
+                  status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
+                };
+                totalUpdates++;
+              } else {
+                console.log(`⏭️ Product ${productId} already has status ${productStatus}, skipping`);
+              }
+            } else {
+              console.log(`⚠️ Product ${productId} not found in products list`);
+            }
+          });
+        } else {
+          console.log(`⚠️ Order ${order.id} has no items`);
+        }
+      } catch (error) {
+        console.error(`Error syncing order ${order.id}:`, error);
+      }
+    }
+    
+    console.log(`✅ Product status sync completed. Updated ${totalUpdates} products.`);
+    return updatedProducts;
+  }, []);
+
   const refreshData = useCallback(async () => {
     if (!user?.id) {
       console.log('No user ID available, skipping data refresh');
@@ -173,79 +250,22 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       console.log('🔍 Orders status:', sellerOrders.status);
       console.log('🔍 Stats status:', sellerStats.status);
 
-      // Derive lifecycle status overrides from orders so lifecycle follows order states
-      const orderDerivedStatusByItem: Record<string, 'sold' | 'shipped' | 'delivered' | 'listed'> = {};
-      const statusPrecedence: Record<string, number> = { listed: 0, sold: 1, shipped: 2, delivered: 3 };
-      const mapOrderToLifecycle = (orderStatus: string): 'sold' | 'shipped' | 'delivered' | 'listed' => {
-        switch (orderStatus) {
-          case 'pending':
-          case 'processing':
-            return 'sold';
-          case 'shipped':
-            return 'shipped';
-          case 'delivered':
-            return 'delivered';
-          case 'cancelled':
-            return 'listed';
-          default:
-            return 'listed';
-        }
-      };
+      // Transform items to dashboard products first
+      const dashboardProducts: DashboardProduct[] = items.map(item => ({
+        ...item,
+        name: item.title || item.name || 'Untitled',
+        views: Math.floor(Math.random() * 1000) + 100,
+        price: item.price?.toFixed(2) || '0.00',
+        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || 'active'
+      }));
 
-      try {
-        (orders as DashboardOrder[])?.forEach((ord: DashboardOrder) => {
-          const lifecycle = mapOrderToLifecycle(ord?.status || '');
-          const ordItems = (ord?.order_items as (OrderItem & { items?: Item | null })[] | undefined) || [];
-          ordItems.forEach((oi) => {
-            const rawItemId = oi?.item_id as unknown as string | number | null;
-            const itemId = rawItemId ? String(rawItemId) : '';
-            const sellerUserId = oi?.items?.user_id || null;
-            if (!itemId || sellerUserId !== user.id) return;
-            const prev = orderDerivedStatusByItem[itemId];
-            if (!prev || statusPrecedence[lifecycle] > statusPrecedence[prev]) {
-              orderDerivedStatusByItem[itemId] = lifecycle;
-            }
-          });
-        });
-      } catch (e) {
-        console.warn('Non-blocking: failed to derive lifecycle from orders', e);
-      }
-
-      // Transform items to dashboard products with order-derived overrides
-      const dashboardProducts: DashboardProduct[] = items.map(item => {
-        // Base mapping from item.status
-        let lifecycleStatus: 'listed' | 'sold' | 'shipped' | 'delivered' = 'listed';
-        switch (item.status) {
-          case 'active':
-            lifecycleStatus = 'listed';
-            break;
-          case 'sold':
-            lifecycleStatus = 'sold';
-            break;
-          case 'shipped':
-            lifecycleStatus = 'shipped';
-            break;
-          case 'delivered':
-            lifecycleStatus = 'delivered';
-            break;
-          default:
-            lifecycleStatus = 'listed';
-        }
-
-        // Override if orders indicate a more advanced lifecycle state
-        const override = orderDerivedStatusByItem[item.id];
-        if (override && statusPrecedence[override] >= statusPrecedence[lifecycleStatus]) {
-          lifecycleStatus = override;
-        }
-        
-        return {
-          ...item,
-          name: item.title,
-          views: 0,
-          price: item.price?.toFixed(2) || '0.00',
-          status: lifecycleStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
-        };
-      });
+      // Sync product statuses with order statuses
+      console.log('🔄 Starting product status sync...');
+      console.log('📦 Products before sync:', dashboardProducts.length);
+      console.log('📦 Orders to sync with:', orders.length);
+      const syncedProducts = await syncProductStatusesWithOrders(dashboardProducts, orders);
+      console.log('✅ Product status sync completed');
+      console.log('📦 Products after sync:', syncedProducts.length);
 
       // Transform orders to dashboard orders
       console.log('🔄 Transforming orders to dashboard orders:', orders.length);
@@ -348,7 +368,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
       // Fetch real view counts for products
       const productsWithViews = await Promise.all(
-        dashboardProducts.map(async (product) => {
+        syncedProducts.map(async (product) => {
           const viewCount = await supabaseDataService.getProductViewCount(product.id);
           return {
             ...product,
@@ -372,7 +392,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, syncProductStatusesWithOrders]);
 
   // Test function to manually update product statuses
   const testUpdateProductStatuses = (status: string) => {
