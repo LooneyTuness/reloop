@@ -80,6 +80,8 @@ export default function SellerVerification({ children }: SellerVerificationProps
   }
 
   // TEMPORARY: Always show dashboard for testing
+  console.log('SellerVerification: Bypassing authentication check for testing');
+  console.log('User state:', { user: user?.email, loading, isSeller, isVerifying });
   return <>{children}</>;
 
   if (isVerifying) {
