@@ -228,119 +228,72 @@ function DashboardContent() {
 
       {/* Dashboard Guide Section */}
       <div>
-        <div className="mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold font-rounded text-gray-900 dark:text-white mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold font-rounded text-gray-900 dark:text-white mb-3">
             {t('howToUseDashboard')}
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+          <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-4">
             {t('followTheseSteps')}
           </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-          {/* Step 1: Add Products */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex items-center mb-4">
-              <div className="h-8 w-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">1</span>
-              </div>
-              <h3 className="text-lg font-semibold font-rounded text-gray-900 dark:text-white">
-                {t('step1AddProducts')}
-              </h3>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+            {t('yourPathToSuccess')}
+          </h3>
+          
+          {/* New streamlined steps */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">1. {t('addProduct')}</h4>
+              <p className="text-sm text-blue-700 dark:text-blue-300">{t('addNewProductDescription')}</p>
             </div>
-            <div className="space-y-3">
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                <p className="mb-2">{t('uploadImagesSetPrices')}</p>
-                <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>{t('addNewProduct')}</li>
-                  <li>{t('uploadMultipleHighQuality')}</li>
-                  <li>{t('writeDetailedHonest')}</li>
-                  <li>{t('setCompetitivePrices')}</li>
-                  <li>{t('chooseAppropriateCategories')}</li>
-                </ul>
-              </div>
-              <button 
-                onClick={() => router.push('/seller-dashboard/add-product')}
-                className="w-full text-left p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200"
-              >
-                <div className="flex items-center">
-                  <svg className="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-{t('addNewProduct')}
-                </div>
-              </button>
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">2. {t('manageOrders')}</h4>
+              <p className="text-sm text-green-700 dark:text-green-300">{t('manageOrdersDescription')}</p>
+            </div>
+            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
+              <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">3. {t('trackProductsThroughSalesFunnel')}</h4>
+              <p className="text-sm text-purple-700 dark:text-purple-300">{t('trackProductsDescription')}</p>
             </div>
           </div>
 
-          {/* Step 2: Manage Orders */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex items-center mb-4">
-              <div className="h-8 w-8 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-green-600 dark:text-green-400 font-bold text-lg">2</span>
-              </div>
-              <h3 className="text-lg font-semibold font-rounded text-gray-900 dark:text-white">
-                {t('step3TrackOrders')}
-              </h3>
-            </div>
-            <div className="space-y-3">
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                <p className="mb-2">{t('trackCustomerPurchases')}</p>
-                <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>{t('checkOrdersPageRegularly')}</li>
-                  <li>{t('updateOrderStatus')}</li>
-                  <li>{t('communicateWithCustomers')}</li>
-                  <li>{t('trackShippingAndDelivery')}</li>
-                  <li>{t('handleReturnsIfNeeded')}</li>
-                </ul>
-              </div>
-              <button 
-                onClick={() => router.push('/seller-dashboard/orders')}
-                className="w-full text-left p-3 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors duration-200"
-              >
-                <div className="flex items-center">
-                  <svg className="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                  </svg>
-{t('viewAllOrders')}
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Step 3: Track Performance */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex items-center mb-4">
-              <div className="h-8 w-8 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-purple-600 dark:text-purple-400 font-bold text-lg">3</span>
-              </div>
-              <h3 className="text-lg font-semibold font-rounded text-gray-900 dark:text-white">
-                {t('step4UpdateSettings')}
-              </h3>
-            </div>
-            <div className="space-y-3">
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                <p className="mb-2">{t('updateProfileBusiness')}</p>
-                <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>{t('viewSalesStatistics')}</li>
-                  <li>{t('checkProductPerformance')}</li>
-                  <li>{t('monitorCustomerFeedback')}</li>
-                  <li>{t('updateProductListings')}</li>
-                  <li>{t('adjustPricingStrategies')}</li>
-                </ul>
-              </div>
+          {/* Quick Actions */}
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg p-4 border border-orange-200 dark:border-orange-800 mb-6">
+            <h4 className="font-semibold text-orange-800 dark:text-orange-200 mb-3">{t('quickActions')}</h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <button 
                 onClick={() => router.push('/seller-dashboard/listings')}
-                className="w-full text-left p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors duration-200"
+                className="flex items-center text-sm text-orange-700 dark:text-orange-300 hover:text-orange-800 dark:hover:text-orange-200 transition-colors"
               >
-                <div className="flex items-center">
-                  <svg className="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-{t('viewAllListings')}
-                </div>
+                <span className="mr-2">🔹</span>
+                {t('updateProducts')}
+              </button>
+              <button 
+                onClick={() => router.push('/seller-dashboard/orders')}
+                className="flex items-center text-sm text-orange-700 dark:text-orange-300 hover:text-orange-800 dark:hover:text-orange-200 transition-colors"
+              >
+                <span className="mr-2">🔹</span>
+                {t('checkNewOrders')}
+              </button>
+              <button 
+                onClick={() => router.push('/seller-dashboard/orders')}
+                className="flex items-center text-sm text-orange-700 dark:text-orange-300 hover:text-orange-800 dark:hover:text-orange-200 transition-colors"
+              >
+                <span className="mr-2">🔹</span>
+                {t('sendPackages')}
+              </button>
+              <button 
+                onClick={() => router.push('/seller-dashboard/payouts')}
+                className="flex items-center text-sm text-orange-700 dark:text-orange-300 hover:text-orange-800 dark:hover:text-orange-200 transition-colors"
+              >
+                <span className="mr-2">🔹</span>
+                {t('reviewEarnings')}
               </button>
             </div>
+          </div>
+
+          {/* Expert Advice */}
+          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-lg p-4 border border-indigo-200 dark:border-indigo-800">
+            <h4 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">{t('expertAdvice')}</h4>
+            <p className="text-sm text-indigo-700 dark:text-indigo-300 italic">{t('expertAdviceText')}</p>
           </div>
         </div>
       </div>
