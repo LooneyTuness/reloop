@@ -102,14 +102,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastFetchTime, setLastFetchTime] = useState<number>(0);
+  const [cacheTimeout] = useState<number>(30000); // 30 seconds cache
 
-  // Debug logging - only log when user is available
+  // Debug logging - only log when user is available (reduced logging for performance)
   useEffect(() => {
     if (user) {
-      console.log('DashboardProvider - User:', user);
       console.log('DashboardProvider - User ID:', user.id);
-    } else {
-      console.log('DashboardProvider - No user available yet');
     }
   }, [user]);
 
@@ -190,15 +189,19 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     return updatedProducts;
   }, []);
 
-  const refreshData = useCallback(async () => {
+  const refreshData = useCallback(async (forceRefresh = false) => {
     if (!user?.id) {
       console.log('No user ID available, skipping data refresh');
       setIsLoading(false);
       return;
     }
     
-    // Seller verification is handled by SellerVerification component
-    // No need to duplicate the check here
+    // Check cache timeout
+    const now = Date.now();
+    if (!forceRefresh && (now - lastFetchTime) < cacheTimeout) {
+      console.log('Using cached data, skipping refresh');
+      return;
+    }
     
     console.log('Refreshing dashboard data for user:', user.id);
     setIsLoading(true);
@@ -381,18 +384,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setOrders(dashboardOrders);
       setStats(dashboardStats);
       setActivities(recentActivities);
+      setLastFetchTime(Date.now()); // Update cache timestamp
     } catch (err) {
       console.error('Error refreshing dashboard data:', err);
-      console.error('Error details:', {
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : undefined,
-        user: user?.id
-      });
       setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, syncProductStatusesWithOrders]);
+  }, [user?.id, syncProductStatusesWithOrders, lastFetchTime, cacheTimeout]);
 
   // Test function to manually update product statuses
   const testUpdateProductStatuses = (status: string) => {

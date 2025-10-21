@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { Clock, Package, DollarSign, ShoppingBag, MoreVertical, ArrowRight } from 'lucide-react';
 import { useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
@@ -15,7 +15,7 @@ interface Order {
   productImage?: string;
 }
 
-export default function RecentOrders() {
+const RecentOrders = memo(function RecentOrders() {
   const { orders, isLoading, updateOrderStatus } = useDashboard();
   const { t } = useDashboardLanguage();
   const router = useRouter();
@@ -75,15 +75,13 @@ export default function RecentOrders() {
     }
   };
 
-  const handleStatusUpdate = async (orderId: string, newStatus: Order['status']) => {
+  const handleStatusUpdate = useCallback(async (orderId: string, newStatus: Order['status']) => {
     try {
-      console.log('🔄 RecentOrders: Updating order status', { orderId, newStatus });
       await updateOrderStatus(orderId, newStatus);
-      console.log('✅ RecentOrders: Order status updated successfully');
     } catch (error) {
       console.error('❌ RecentOrders: Failed to update order status:', error);
     }
-  };
+  }, [updateOrderStatus]);
 
   if (isLoading) {
     return (
@@ -227,4 +225,6 @@ export default function RecentOrders() {
       )}
     </div>
   );
-}
+});
+
+export default RecentOrders;

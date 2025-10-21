@@ -9,6 +9,7 @@ import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
+import { OptimizedButton } from '@/components/seller-dashboard/OptimizedLink';
 
 function DashboardContent() {
   const router = useRouter();
@@ -190,33 +191,36 @@ function DashboardContent() {
         
         {/* Quick Actions */}
         <div className="flex flex-wrap items-center gap-3">
-          <button
+          <OptimizedButton
             onClick={() => router.push('/seller-dashboard/add-product')}
+            prefetchHref="/seller-dashboard/add-product"
             className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-{t('addNewProduct')}
-          </button>
-          <button
+            {t('addNewProduct')}
+          </OptimizedButton>
+          <OptimizedButton
             onClick={() => router.push('/seller-dashboard/orders')}
+            prefetchHref="/seller-dashboard/orders"
             className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
             {t('viewAllOrders')}
-          </button>
-          <button
+          </OptimizedButton>
+          <OptimizedButton
             onClick={() => router.push('/seller-dashboard/listings')}
+            prefetchHref="/seller-dashboard/listings"
             className="px-6 py-3 bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 rounded-xl hover:bg-emerald-200 dark:hover:bg-emerald-900/30 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
             {t('viewAllListings')}
-          </button>
+          </OptimizedButton>
         </div>
       </div>
 
@@ -242,8 +246,9 @@ function DashboardContent() {
           {/* Enhanced clickable steps */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* Step 1: Add Product */}
-            <button 
+            <OptimizedButton 
               onClick={() => router.push('/seller-dashboard/add-product')}
+              prefetchHref="/seller-dashboard/add-product"
               className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:shadow-lg transition-all duration-200 text-left group"
             >
               <div className="flex items-center mb-3">
@@ -266,11 +271,12 @@ function DashboardContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </div>
-            </button>
+            </OptimizedButton>
 
             {/* Step 2: Manage Orders */}
-            <button 
+            <OptimizedButton 
               onClick={() => router.push('/seller-dashboard/orders')}
+              prefetchHref="/seller-dashboard/orders"
               className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/30 hover:shadow-lg transition-all duration-200 text-left group"
             >
               <div className="flex items-center mb-3">
@@ -293,11 +299,12 @@ function DashboardContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </div>
-            </button>
+            </OptimizedButton>
 
             {/* Step 3: Track Products */}
-            <button 
+            <OptimizedButton 
               onClick={() => router.push('/seller-dashboard/analytics')}
+              prefetchHref="/seller-dashboard/analytics"
               className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:shadow-lg transition-all duration-200 text-left group"
             >
               <div className="flex items-center mb-3">
@@ -320,7 +327,7 @@ function DashboardContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </div>
-            </button>
+            </OptimizedButton>
           </div>
 
           {/* Enhanced Quick Actions */}
@@ -334,8 +341,9 @@ function DashboardContent() {
               <h4 className="font-semibold text-orange-800 dark:text-orange-200 text-lg">{t('quickActions')}</h4>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button 
+              <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/listings')}
+                prefetchHref="/seller-dashboard/listings"
                 className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
               >
                 <div className="flex items-center mb-2">
@@ -351,10 +359,11 @@ function DashboardContent() {
                 <p className="text-xs text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300">
                   Уреди производи
                 </p>
-              </button>
+              </OptimizedButton>
               
-              <button 
+              <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/orders')}
+                prefetchHref="/seller-dashboard/orders"
                 className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
               >
                 <div className="flex items-center mb-2">
@@ -370,10 +379,11 @@ function DashboardContent() {
                 <p className="text-xs text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300">
                   Провери нарачки
                 </p>
-              </button>
+              </OptimizedButton>
               
-              <button 
+              <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/orders')}
+                prefetchHref="/seller-dashboard/orders"
                 className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
               >
                 <div className="flex items-center mb-2">
@@ -389,10 +399,11 @@ function DashboardContent() {
                 <p className="text-xs text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300">
                   Испрати пратки
                 </p>
-              </button>
+              </OptimizedButton>
               
-              <button 
+              <OptimizedButton 
                 onClick={() => router.push('/seller-dashboard/payouts')}
+                prefetchHref="/seller-dashboard/payouts"
                 className="group bg-white dark:bg-gray-800 rounded-lg p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
               >
                 <div className="flex items-center mb-2">
@@ -408,7 +419,7 @@ function DashboardContent() {
                 <p className="text-xs text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300">
                   Прегледај заработка
                 </p>
-              </button>
+              </OptimizedButton>
             </div>
           </div>
 
