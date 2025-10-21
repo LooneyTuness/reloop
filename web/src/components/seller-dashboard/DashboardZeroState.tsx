@@ -1,12 +1,12 @@
 import React from 'react';
-import { Package, ShoppingBag, TrendingUp, Plus, ArrowRight } from 'lucide-react';
+import { Package, ShoppingBag, Plus, ArrowRight } from 'lucide-react';
 
 interface DashboardZeroStateProps {
   onAddProduct: () => void;
   onViewGuide?: () => void;
 }
 
-export default function DashboardZeroState({ onAddProduct, onViewGuide }: DashboardZeroStateProps) {
+export default function DashboardZeroState({ onAddProduct }: DashboardZeroStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-8 sm:py-16 px-4 sm:px-6 text-center">
       {/* Illustration */}
