@@ -509,14 +509,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       };
       setActivities(prev => [newActivity, ...prev]);
       
-      // Trigger a refresh to ensure all data is in sync (non-blocking)
-      setTimeout(async () => {
-        try {
-          await refreshData();
-        } catch (e) {
-          console.warn('Non-blocking: refresh after status update failed:', e);
-        }
-      }, 1000);
       
     } catch (err) {
       console.error('❌ Error updating order status:', err);
@@ -598,9 +590,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       };
       setActivities(prev => [newActivity, ...prev]);
       
-      // Refresh data from database to ensure consistency
-      console.log('Refreshing data after product creation...');
-      await refreshData();
     } catch (err) {
       console.error('Error adding product:', err);
       console.error('Error details:', {

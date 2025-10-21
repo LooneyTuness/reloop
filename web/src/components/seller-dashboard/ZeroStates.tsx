@@ -1,6 +1,7 @@
 import React from 'react';
 import { Package, Plus, ShoppingBag, TrendingUp, BarChart3, Eye } from 'lucide-react';
 import ZeroState from './ZeroState';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
 interface ProductsZeroStateProps {
   onAddProduct: () => void;
@@ -8,15 +9,17 @@ interface ProductsZeroStateProps {
 }
 
 export function ProductsZeroState({ onAddProduct, onViewGuide }: ProductsZeroStateProps) {
+  const { t } = useDashboardLanguage();
+  
   return (
     <ZeroState
       icon={Package}
-      title="No products listed yet"
-      description="Start building your store by adding your first product. List items to begin selling and reach customers."
-      actionLabel="Add Product"
+      title={t('noProductsListedYet')}
+      description={t('startBuildingStore')}
+      actionLabel={t('addProduct')}
       onAction={onAddProduct}
       secondaryAction={onViewGuide ? {
-        label: "View Guide",
+        label: t('viewGuide'),
         onClick: onViewGuide
       } : undefined}
       className="min-h-[400px]"
@@ -30,15 +33,17 @@ interface OrdersZeroStateProps {
 }
 
 export function OrdersZeroState({ onViewOrders, onPromoteProducts }: OrdersZeroStateProps) {
+  const { t } = useDashboardLanguage();
+  
   return (
     <ZeroState
       icon={ShoppingBag}
-      title="No recent orders"
-      description="Orders will appear here once customers start purchasing your products. Focus on creating great listings to attract buyers."
-      actionLabel="View All Orders"
+      title={t('noRecentOrders')}
+      description={t('ordersWillAppear')}
+      actionLabel={t('viewAllOrders')}
       onAction={onViewOrders}
       secondaryAction={onPromoteProducts ? {
-        label: "Promote Products",
+        label: t('promoteProducts'),
         onClick: onPromoteProducts
       } : undefined}
       className="min-h-[300px]"
@@ -52,15 +57,17 @@ interface AnalyticsZeroStateProps {
 }
 
 export function AnalyticsZeroState({ onViewAnalytics, onAddProducts }: AnalyticsZeroStateProps) {
+  const { t } = useDashboardLanguage();
+  
   return (
     <ZeroState
       icon={BarChart3}
-      title="Analytics data coming soon"
-      description="Once you start selling, you'll see detailed analytics about your performance, sales trends, and customer insights."
-      actionLabel="View Analytics"
+      title={t('analyticsDataComingSoon')}
+      description={t('onceYouStartSelling')}
+      actionLabel={t('viewAnalytics')}
       onAction={onViewAnalytics}
       secondaryAction={onAddProducts ? {
-        label: "Add Products",
+        label: t('addProducts'),
         onClick: onAddProducts
       } : undefined}
       className="min-h-[300px]"
@@ -74,15 +81,17 @@ interface EarningsZeroStateProps {
 }
 
 export function EarningsZeroState({ onViewEarnings, onStartSelling }: EarningsZeroStateProps) {
+  const { t } = useDashboardLanguage();
+  
   return (
     <ZeroState
       icon={TrendingUp}
-      title="No earnings yet"
-      description="Your earnings will appear here once you make your first sale. Start by listing products and attracting customers."
-      actionLabel="View Earnings"
+      title={t('noEarningsYet')}
+      description={t('earningsWillAppear')}
+      actionLabel={t('viewEarnings')}
       onAction={onViewEarnings}
       secondaryAction={onStartSelling ? {
-        label: "Start Selling",
+        label: t('startSelling'),
         onClick: onStartSelling
       } : undefined}
       className="min-h-[300px]"
@@ -96,15 +105,17 @@ interface ViewsZeroStateProps {
 }
 
 export function ViewsZeroState({ onOptimizeListings, onAddMoreProducts }: ViewsZeroStateProps) {
+  const { t } = useDashboardLanguage();
+  
   return (
     <ZeroState
       icon={Eye}
-      title="No views yet"
-      description="Product views will appear here once customers start browsing your listings. Optimize your product descriptions and photos to attract more visitors."
-      actionLabel="Optimize Listings"
+      title={t('noViewsYet')}
+      description={t('productViewsWillAppear')}
+      actionLabel={t('optimizeListings')}
       onAction={onOptimizeListings}
       secondaryAction={onAddMoreProducts ? {
-        label: "Add More Products",
+        label: t('addMoreProducts'),
         onClick: onAddMoreProducts
       } : undefined}
       className="min-h-[300px]"

@@ -9,6 +9,7 @@ import { useNotifications } from '@/contexts/NotificationContext';
 import { useProfile } from '@/contexts/ProfileContext';
 import { useSearch } from '@/contexts/SearchContext';
 import { useDashboardTheme } from '@/contexts/DashboardThemeContext';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import Notifications from './Notifications';
 import ProfileDropdown from './ProfileDropdown';
 
@@ -19,6 +20,7 @@ export default function TopBar() {
   const { avatarUrl } = useProfile();
   const { searchQuery, setSearchQuery, performSearch, clearSearch, isSearching } = useSearch();
   const { isDarkMode, toggleDarkMode } = useDashboardTheme();
+  const { t } = useDashboardLanguage();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -77,7 +79,7 @@ export default function TopBar() {
             <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
             <input
               type="text"
-              placeholder="Search products, orders..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={handleSearchInputChange}
               onFocus={() => searchQuery && setShowSearchResults(true)}
@@ -118,7 +120,7 @@ export default function TopBar() {
                     >
                       <div className="flex items-center space-x-2">
                         <Search size={14} className="text-gray-400" />
-                        <span>Search in Products</span>
+                        <span>{t('searchInProducts')}</span>
                       </div>
                     </button>
                     <button
@@ -127,7 +129,7 @@ export default function TopBar() {
                     >
                       <div className="flex items-center space-x-2">
                         <Search size={14} className="text-gray-400" />
-                        <span>Search in Orders</span>
+                        <span>{t('searchInOrders')}</span>
                       </div>
                     </button>
                   </div>

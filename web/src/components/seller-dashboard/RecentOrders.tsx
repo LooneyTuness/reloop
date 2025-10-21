@@ -1,8 +1,9 @@
 import React from 'react';
-import { Clock, Package, DollarSign, ShoppingBag, MoreVertical } from 'lucide-react';
+import { Clock, Package, DollarSign, ShoppingBag, MoreVertical, ArrowRight } from 'lucide-react';
 import { useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { OrdersZeroState } from './ZeroStates';
+import { useRouter } from 'next/navigation';
 
 interface Order {
   id: string;
@@ -17,6 +18,7 @@ interface Order {
 export default function RecentOrders() {
   const { orders, isLoading, updateOrderStatus } = useDashboard();
   const { t } = useDashboardLanguage();
+  const router = useRouter();
 
   // Show zero state if no orders
   if (!isLoading && orders.length === 0) {
@@ -214,8 +216,12 @@ export default function RecentOrders() {
 
       {orders.length > 5 && (
         <div className="mt-4 text-center">
-          <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
-{t('viewAllOrders')} ({orders.length})
+          <button 
+            onClick={() => router.push('/seller-dashboard/orders')}
+            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors"
+          >
+            {t('viewAllOrders')} ({orders.length})
+            <ArrowRight className="ml-1 h-4 w-4" />
           </button>
         </div>
       )}

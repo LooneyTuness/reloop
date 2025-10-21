@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Bell, X, Check, AlertCircle, Info, ShoppingBag, Package, DollarSign } from 'lucide-react';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
 export interface Notification {
   id: string;
@@ -25,6 +26,7 @@ interface NotificationsProps {
 }
 
 export default function Notifications({ notifications, onMarkAsRead, onMarkAllAsRead, onClearAll, onClose }: NotificationsProps) {
+  const { t } = useDashboardLanguage();
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
   const getNotificationIcon = (type: string) => {
@@ -92,7 +94,7 @@ export default function Notifications({ notifications, onMarkAsRead, onMarkAllAs
           <div className="flex items-center space-x-2">
             <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Notifications
+              {t('notifications')}
             </h2>
             {unreadCount > 0 && (
               <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 font-medium">
@@ -106,7 +108,7 @@ export default function Notifications({ notifications, onMarkAsRead, onMarkAllAs
                 onClick={onClearAll}
                 className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
               >
-                Clear all
+{t('clearAll')}
               </button>
             )}
             {unreadCount > 0 && (
@@ -114,7 +116,7 @@ export default function Notifications({ notifications, onMarkAsRead, onMarkAllAs
                 onClick={onMarkAllAsRead}
                 className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
               >
-                Mark all read
+{t('markAllRead')}
               </button>
             )}
             <button
@@ -132,10 +134,10 @@ export default function Notifications({ notifications, onMarkAsRead, onMarkAllAs
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
               <Bell className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-4" />
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                No notifications
+                {t('noNotifications')}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                You're all caught up! New notifications will appear here.
+                {t('youreAllCaughtUp')}
               </p>
             </div>
           ) : (

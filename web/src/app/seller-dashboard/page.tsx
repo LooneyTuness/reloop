@@ -356,28 +356,28 @@ function DashboardContent() {
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold font-rounded text-gray-900 dark:text-white mb-2">
-                📚 Quick Reference Guide
+                {t('quickReferenceGuide')}
               </h3>
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                Need help getting started? Here are the most important things to know about your seller dashboard:
+                {t('quickReferenceDescription')}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Essential Pages:</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{t('essentialPages')}</h4>
                   <ul className="space-y-1 text-gray-600 dark:text-gray-400">
-                    <li>• <strong>Add Product:</strong> Upload images, set prices, write descriptions</li>
-                    <li>• <strong>My Listings:</strong> Edit, delete, or manage your products</li>
-                    <li>• <strong>Orders:</strong> Track customer purchases and update status</li>
-                    <li>• <strong>Settings:</strong> Update your profile and business information</li>
+                    <li>• <strong>{t('addProduct')}:</strong> {t('addProductDescription')}</li>
+                    <li>• <strong>{t('myListings')}:</strong> {t('myListingsDescription')}</li>
+                    <li>• <strong>{t('orders')}:</strong> {t('ordersDescription')}</li>
+                    <li>• <strong>{t('settings')}:</strong> {t('settingsDescription')}</li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Pro Tips:</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{t('proTips')}</h4>
                   <ul className="space-y-1 text-gray-600 dark:text-gray-400">
-                    <li>• Upload multiple high-quality product images</li>
-                    <li>• Write detailed, honest product descriptions</li>
-                    <li>• Respond quickly to customer inquiries</li>
-                    <li>• Keep your product listings updated regularly</li>
+                    <li>• {t('uploadMultipleHighQuality')}</li>
+                    <li>• {t('writeDetailedHonest')}</li>
+                    <li>• {t('respondQuicklyToInquiries')}</li>
+                    <li>• {t('keepProductListingsUpdated')}</li>
                   </ul>
                 </div>
               </div>
