@@ -18,47 +18,52 @@ export function AuthProvider({ children }) {
 
     // Check if this is a confirmation redirect
     const urlParams = new URLSearchParams(window.location.search);
-    const isConfirmed = urlParams.get('confirmed') === 'true';
+    const isConfirmed = urlParams.get("confirmed") === "true";
 
     if (isConfirmed) {
-      console.log("AuthContext: Detected confirmation redirect, refreshing session...");
+      console.log(
+        "AuthContext: Detected confirmation redirect, refreshing session..."
+      );
       // Force refresh the session when coming from a confirmation link
       // Add a small delay to ensure the session is properly set
       setTimeout(() => {
         let retryCount = 0;
         const maxRetries = 5;
-        
+
         const refreshSession = () => {
           if (retryCount >= maxRetries) {
             console.log("AuthContext: Max retries reached, giving up");
             setLoading(false);
             return;
           }
-          
+
           supabase.auth.getSession().then(({ data: { session }, error }) => {
             console.log("AuthContext: Refreshed session after confirmation:", {
               user: session?.user?.email,
               error,
               retryCount,
             });
-            
+
             if (session?.user) {
               setUser(session.user);
               setLoading(false);
-              
+
               // Clean up URL parameters after successful authentication
               const url = new URL(window.location);
-              url.searchParams.delete('confirmed');
-              window.history.replaceState({}, '', url);
+              url.searchParams.delete("confirmed");
+              window.history.replaceState({}, "", url);
             } else {
               // If no session found, try again after a short delay
               retryCount++;
-              console.log("AuthContext: No session found, retrying...", retryCount);
+              console.log(
+                "AuthContext: No session found, retrying...",
+                retryCount
+              );
               setTimeout(refreshSession, 500);
             }
           });
         };
-        
+
         refreshSession();
       }, 100);
     } else {
