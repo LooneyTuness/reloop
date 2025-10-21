@@ -22,6 +22,11 @@ export default function Navbar() {
   const { user, signOut } = useAuth();
   const { language, toggleLanguage, t } = useLanguage();
   const { cart } = useCart();
+  
+  // Debug authentication state
+  useEffect(() => {
+    console.log('Navbar: User state changed:', { user: user?.email, isLoggedIn: !!user });
+  }, [user]);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);

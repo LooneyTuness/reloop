@@ -58,6 +58,8 @@ export async function GET(request: NextRequest) {
         return response
       }
       
+      console.log('User authenticated successfully:', user?.email)
+      
       if (user) {
         console.log('User authenticated:', user.email)
         
@@ -103,6 +105,8 @@ export async function GET(request: NextRequest) {
       
       // Get the user to check if they're a seller
       const { data: { user } } = await supabase.auth.getUser()
+      
+      console.log('User authenticated via code exchange:', user?.email)
       
       if (user) {
         // Check if user is a seller

@@ -14,7 +14,13 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("AuthContext: Initializing auth state...");
+
     supabase.auth.getSession().then(({ data: { session }, error }) => {
+      console.log("AuthContext: Initial session check:", {
+        user: session?.user?.email,
+        error,
+      });
       setUser(session?.user ?? null);
       setLoading(false);
     });
@@ -22,6 +28,10 @@ export function AuthProvider({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("AuthContext: Auth state change:", {
+        event,
+        user: session?.user?.email,
+      });
       setUser(session?.user ?? null);
       setLoading(false);
     });
