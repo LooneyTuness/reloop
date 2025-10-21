@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import RecentOrders from '@/components/seller-dashboard/RecentOrders';
-import ProductLifecycle from '@/components/seller-dashboard/ProductLifecycle';
 import DashboardZeroState from '@/components/seller-dashboard/DashboardZeroState';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -223,9 +222,8 @@ function DashboardContent() {
 
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 mb-8">
         <RecentOrders />
-        <ProductLifecycle />
       </div>
 
       {/* Dashboard Guide Section */}

@@ -70,17 +70,6 @@ const dashboardTranslations = {
     shipped: "Испорачано",
     delivered: "Доставено",
     
-    // Product Lifecycle
-    productLifecycle: "Животен циклус на производите",
-    trackProductsThroughSalesFunnel: "Следете ги вашите производи низ продажниот ворон",
-    salesFunnel: "Продажен ворон",
-    productsSold: "продадени производи",
-    listed: "Откажани",
-    viewed: "Прегледани",
-    inCart: "Во кошничка",
-    sold: "Продадени",
-    progress: "Напредок",
-    viewAllProducts: "Види ги сите производи",
     
     // Settings
     sellerProfile: "Профил на продавачот",
@@ -397,17 +386,6 @@ const dashboardTranslations = {
     shipped: "Shipped",
     delivered: "Delivered",
     
-    // Product Lifecycle
-    productLifecycle: "Product Lifecycle",
-    trackProductsThroughSalesFunnel: "Track your products through the sales funnel",
-    salesFunnel: "Sales Funnel",
-    productsSold: "products sold",
-    listed: "Listed",
-    viewed: "Viewed",
-    inCart: "In Cart",
-    sold: "Sold",
-    progress: "Progress",
-    viewAllProducts: "View all products",
     
     // Settings
     sellerProfile: "Seller Profile",

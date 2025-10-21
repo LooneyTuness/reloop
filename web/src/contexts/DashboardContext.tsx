@@ -418,8 +418,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         String(order.id) === String(orderId) ? { ...order, status } : order
       ));
       
-      // Map order status to product status for Product Lifecycle
-      // This mapping should reflect the actual product lifecycle stages
+      // Map order status to product status
       let productStatus: string = 'active';
       switch (status) {
         case 'pending':
