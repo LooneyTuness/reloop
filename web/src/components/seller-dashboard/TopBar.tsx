@@ -74,7 +74,7 @@ export default function TopBar() {
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-40 shadow-sm">
       <div className="flex items-center justify-between h-full px-3 sm:px-8">
         {/* Search */}
-        <div className="flex-1 max-w-[200px] sm:max-w-lg mr-1 sm:mr-0 lg:ml-0 ml-16 relative search-container">
+        <div className="flex-1 max-w-[200px] sm:max-w-lg mr-1 sm:mr-0 lg:ml-0 ml-20 relative search-container">
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
             <input

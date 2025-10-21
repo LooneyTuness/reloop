@@ -13,7 +13,6 @@ export class SupabaseDataService {
 
   // Items/Products Management
   async getSellerItems(sellerId: string): Promise<Item[]> {
-    console.log('🔍 getSellerItems called with sellerId:', sellerId);
     
     try {
       // Use API endpoint instead of direct Supabase query to avoid RLS issues
@@ -26,7 +25,6 @@ export class SupabaseDataService {
       }
 
       const data = await response.json();
-      console.log('✅ getSellerItems success:', data.items?.length || 0, 'items found');
       return data.items || [];
     } catch (err) {
       console.error('Exception in getSellerItems:', err);
@@ -128,11 +126,9 @@ export class SupabaseDataService {
 
   // Orders Management
   async getSellerOrders(sellerId: string): Promise<Order[]> {
-    console.log('🔍 getSellerOrders called with sellerId:', sellerId);
     
     try {
       // Simple approach: Get all orders first
-      console.log('🔍 Step 1: Fetching all orders...');
       const { data: allOrders, error: allOrdersError } = await (this.supabase as any)
         .from('orders')
         .select('*')
@@ -143,8 +139,6 @@ export class SupabaseDataService {
         throw allOrdersError;
       }
 
-      console.log('📦 Total orders found:', allOrders?.length || 0);
-      console.log('📦 Sample order:', allOrders?.[0]);
 
       if (!allOrders || allOrders.length === 0) {
         console.log('❌ No orders found in database');
@@ -152,7 +146,6 @@ export class SupabaseDataService {
       }
 
       // Get all order items (without join since relationship doesn't exist)
-      console.log('🔍 Step 2: Fetching all order items...');
       const { data: allOrderItems, error: orderItemsError } = await (this.supabase as any)
         .from('order_items')
         .select('*');
@@ -162,8 +155,6 @@ export class SupabaseDataService {
         throw orderItemsError;
       }
 
-      console.log('📦 Total order items found:', allOrderItems?.length || 0);
-      console.log('📦 Sample order item:', allOrderItems?.[0]);
 
       if (!allOrderItems || allOrderItems.length === 0) {
         console.log('❌ No order items found in database');
@@ -171,7 +162,6 @@ export class SupabaseDataService {
       }
 
       // Get all items separately
-      console.log('🔍 Step 2b: Fetching all items...');
       const { data: allItems, error: itemsError } = await (this.supabase as any)
         .from('items')
         .select('id, title, price, images, user_id, size, brand, condition, category_id, old_price, description, is_active, sold_at');
@@ -181,8 +171,6 @@ export class SupabaseDataService {
         throw itemsError;
       }
 
-      console.log('📦 Total items found:', allItems?.length || 0);
-      console.log('📦 Sample item:', allItems?.[0]);
 
       // Create a map of items for quick lookup
       const itemsMap = new Map<string, Item>();
@@ -193,34 +181,23 @@ export class SupabaseDataService {
           }
         });
       }
-      console.log('📦 Items map created with', itemsMap.size, 'items');
 
       // Find order items that belong to this seller
-      console.log('🔍 Step 3: Filtering order items for seller...');
       const sellerOrderItems = (allOrderItems || []).filter((orderItem: OrderItem) => {
         if (!orderItem || !orderItem.item_id) return false;
         const item = itemsMap.get(orderItem.item_id);
         const isSellerItem = item?.user_id === sellerId;
-        console.log('🔍 Checking order item:', orderItem.id, 'item_id:', orderItem.item_id, 'item user_id:', item?.user_id, 'sellerId:', sellerId, 'match:', isSellerItem);
         return isSellerItem;
       });
 
-      console.log('📦 Seller order items found:', sellerOrderItems.length);
 
       if (sellerOrderItems.length === 0) {
         console.log('❌ No order items found for this seller');
-        console.log('🔍 Debug: All order items with their item details:', (allOrderItems || []).map((item: OrderItem) => ({
-          orderItemId: item?.id,
-          itemId: item?.item_id,
-          itemUserId: itemsMap.get(item?.item_id)?.user_id
-        })));
         return [];
       }
 
       // Get unique order IDs that contain items from this seller
-      console.log('🔍 Step 4: Getting unique order IDs...');
       const sellerOrderIds = [...new Set(sellerOrderItems.map((item: OrderItem) => item.order_id).filter(Boolean))];
-      console.log('📦 Seller order IDs:', sellerOrderIds);
 
       if (sellerOrderIds.length === 0) {
         console.log('❌ No valid order IDs found');
@@ -228,7 +205,6 @@ export class SupabaseDataService {
       }
 
       // Get the actual orders
-      console.log('🔍 Step 5: Fetching seller orders...');
       const { data: sellerOrders, error: sellerOrdersError } = await (this.supabase as any)
         .from('orders')
         .select('*')
@@ -240,11 +216,8 @@ export class SupabaseDataService {
         throw sellerOrdersError;
       }
 
-      console.log('📦 Seller orders found:', sellerOrders?.length || 0);
-      console.log('📦 Sample seller order:', sellerOrders?.[0]);
 
       // Attach order items to each order with item details
-      console.log('🔍 Step 6: Attaching order items to orders...');
       const ordersWithItems = (sellerOrders || []).map((order: Order) => {
         const orderItems = (allOrderItems || [])
           .filter((orderItem: OrderItem) => orderItem?.order_id === order?.id)
@@ -259,8 +232,6 @@ export class SupabaseDataService {
         };
       });
 
-      console.log('✅ Final orders with items:', ordersWithItems.length);
-      console.log('✅ Sample final order:', ordersWithItems[0]);
 
       return ordersWithItems;
       
@@ -283,11 +254,9 @@ export class SupabaseDataService {
 
   // Get orders for a specific buyer/user
   async getUserOrders(buyerId: string): Promise<Order[]> {
-    console.log('🔍 getUserOrders called with buyerId:', buyerId);
     
     try {
       // Get all orders where the user is the buyer
-      console.log('🔍 Step 1: Fetching user orders...');
       const { data: userOrders, error: userOrdersError } = await (this.supabase as any)
         .from('orders')
         .select('*')
@@ -299,8 +268,6 @@ export class SupabaseDataService {
         throw userOrdersError;
       }
 
-      console.log('📦 User orders found:', userOrders?.length || 0);
-      console.log('📦 Sample user order:', userOrders?.[0]);
 
       if (!userOrders || userOrders.length === 0) {
         console.log('❌ No user orders found');
@@ -416,7 +383,6 @@ export class SupabaseDataService {
   }
 
   async getOrderItems(orderId: string): Promise<{ item_id: string; id: string; user_id: string | null }[]> {
-    console.log('🔍 getOrderItems called with orderId:', orderId, 'type:', typeof orderId);
     
     // First, let's try a simple query without joins to see if the table exists and has data
     const { data: simpleData, error: simpleError } = await (this.supabase as any)
@@ -424,7 +390,6 @@ export class SupabaseDataService {
       .select('*')
       .eq('order_id', orderId);
 
-    console.log('🔍 getOrderItems - Simple query response:', { simpleData, simpleError });
 
     if (simpleError) {
       console.error('Error with simple query:', simpleError);
@@ -449,7 +414,6 @@ export class SupabaseDataService {
       `)
       .eq('order_id', orderId);
 
-    console.log('🔍 getOrderItems - Join query response:', { data, error });
 
     if (error) {
       console.error('Error with join query:', error);
@@ -459,7 +423,6 @@ export class SupabaseDataService {
         id: item.item_id, // Use item_id as the id since we can't get the joined data
         user_id: null
       }));
-      console.log('🔍 getOrderItems - Using fallback data:', transformedData);
       return transformedData;
     }
 
@@ -470,7 +433,6 @@ export class SupabaseDataService {
       user_id: item.items?.user_id || null
     }));
 
-    console.log('🔍 getOrderItems - Final transformed data:', transformedData);
     
     return transformedData;
   }

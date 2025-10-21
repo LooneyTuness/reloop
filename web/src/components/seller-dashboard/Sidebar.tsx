@@ -54,7 +54,7 @@ export default function Sidebar() {
       {/* Mobile menu button */}
       <button
         onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-3 left-3 z-30 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700"
+        className="lg:hidden fixed top-4 left-2 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-xl border-2 border-gray-300 dark:border-gray-600 hover:shadow-2xl transition-all duration-200"
         aria-label={isMobileMenuOpen ? t('closeMenu') : t('mobileMenu')}
       >
         {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -63,7 +63,7 @@ export default function Sidebar() {
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={toggleMobileMenu}
         />
       )}
