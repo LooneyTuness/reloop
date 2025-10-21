@@ -17,8 +17,8 @@ export async function GET(request: NextRequest) {
 
   // Add error handling for missing parameters
   if (!token_hash && !code) {
-    console.error('No authentication parameters found');
-    return NextResponse.redirect(`${origin}/?error=Invalid authentication link`);
+    console.error('No authentication parameters found - redirecting to home');
+    return NextResponse.redirect(`${origin}/`);
   }
 
   const supabase = createServerClient(
