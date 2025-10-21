@@ -1,172 +1,86 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createBrowserClient } from '@/lib/supabase/supabase.browser';
-import { supabaseDataService } from '@/lib/supabase/data-service';
-import { toast } from 'sonner';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function AuthCallbackPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-
-  // Helper function to determine redirect URL based on user role
-  const getRedirectUrl = async (userId: string, fallbackUrl: string | null): Promise<string> => {
-    try {
-      // Check if user is a seller
-      const isSeller = await supabaseDataService.isUserSeller(userId);
-      
-      if (isSeller) {
-        console.log('User is a seller, redirecting to seller dashboard');
-        return '/seller-dashboard';
-      } else {
-        console.log('User is a buyer, redirecting to home page');
-        return '/';
-      }
-    } catch (error) {
-      console.error('Error checking user role:', error);
-      // Fallback to provided URL or home page
-      return fallbackUrl || '/';
-    }
-  };
 
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        console.log('Auth callback page loaded');
-        console.log('Current URL:', window.location.href);
-        console.log('URL hash:', window.location.hash);
-        console.log('URL search:', window.location.search);
+        console.log('AuthCallback: Handling auth callback...');
+        
+        // Get the redirect URL from query params
+        const redirectUrl = searchParams.get('redirect') || '/';
+        console.log('AuthCallback: Redirect URL:', redirectUrl);
+        
+        // Get the session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        console.log('AuthCallback: Session check:', {
+          hasSession: !!session,
+          userEmail: session?.user?.email,
+          error: sessionError
+        });
 
-        // Create Supabase client
-        const supabase = createBrowserClient();
-
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const hashParams = new URLSearchParams(window.location.hash.slice(1));
-        const code = urlParams.get('code');
-        const error = urlParams.get('error');
-        const errorDescription = urlParams.get('error_description');
-        const typeQuery = urlParams.get('type');
-        const typeHash = hashParams.get('type');
-        const type = typeHash || typeQuery; // Prefer hash type, Supabase uses hash for magic links
-        const redirectParam = urlParams.get('redirect');
-
-        console.log('Processing callback with code:', !!code, 'type:', type);
-        console.log('Redirect parameter from URL:', redirectParam);
-        console.log('Full URL:', window.location.href);
-        console.log('All URL params:', Object.fromEntries(urlParams.entries()));
-        console.log('All HASH params:', Object.fromEntries(hashParams.entries()));
-
-        // Handle OAuth errors
-        if (error) {
-          console.error('OAuth error:', error, errorDescription);
-          setError(errorDescription || error);
+        if (sessionError) {
+          console.error('AuthCallback: Session error:', sessionError);
+          setError('Authentication error');
           setLoading(false);
           return;
         }
 
-        // Handle magic link authentication (Supabase uses hash tokens, no code)
-        if (type === 'magiclink') {
-          console.log('Processing magic link authentication');
+        if (session?.user) {
+          console.log('AuthCallback: User authenticated:', session.user.email);
+          
+          // If redirecting to seller dashboard, check if user is a seller
+          if (redirectUrl.includes('seller-dashboard')) {
+            const { data: sellerProfile, error: profileError } = await supabase
+              .from('seller_profiles')
+              .select('is_approved')
+              .eq('user_id', session.user.id)
+              .single();
 
-          // Wait briefly for Supabase to process the URL hash and set the session
-          for (let i = 0; i < 6; i++) {
-            const { data: sessionData } = await supabase.auth.getSession();
-            if (sessionData.session) {
-              console.log('Magic link authentication successful');
-
-              // Check for redirect URL from URL params first, then localStorage
-              const fallbackUrl = redirectParam || localStorage.getItem('auth_redirect');
-              console.log('Fallback URL (from URL param or localStorage):', fallbackUrl);
-
-              // Determine the correct redirect URL based on user role
-              // If no fallback URL is provided or it's empty, let getRedirectUrl determine based on user role
-              const redirectUrl = await getRedirectUrl(sessionData.session.user.id, fallbackUrl || null);
-              console.log('Final redirect URL based on user role:', redirectUrl);
-
-              toast.success("Welcome! You're now signed in.", {
-                duration: 5000,
-              });
-
-              console.log('Redirecting to:', redirectUrl);
-              localStorage.removeItem('auth_redirect');
+            if (profileError) {
+              console.log('AuthCallback: No seller profile found, redirecting to home');
+              router.push('/');
+            } else if (sellerProfile) {
+              console.log('AuthCallback: User is a seller, redirecting to dashboard');
               router.push(redirectUrl);
-              setLoading(false);
-              return;
+            } else {
+              console.log('AuthCallback: User is not a seller, redirecting to home');
+              router.push('/');
             }
-            await new Promise(r => setTimeout(r, 300));
+          } else {
+            // For other redirects, just go to the specified URL
+            console.log('AuthCallback: Redirecting to:', redirectUrl);
+            router.push(redirectUrl);
           }
-
-          console.warn('Magic link: no session found after waiting');
+        } else {
+          console.log('AuthCallback: No session found, redirecting to home');
+          router.push('/');
         }
-
-        // Handle email confirmations (signup)
-        if (type === 'signup' || type === 'recovery') {
-          console.log('Email confirmation link clicked');
-          
-          // For new users, redirect to home page (they're buyers by default)
-          const fallbackUrl = redirectParam || localStorage.getItem('auth_redirect');
-          console.log('Fallback URL after email confirmation (from URL param or localStorage):', fallbackUrl);
-          
-          toast.success("Your email has been confirmed! You can now sign in.", {
-            duration: 5000,
-          });
-          
-          // New users are buyers by default, so redirect to home page
-          const redirectUrl = fallbackUrl || '/';
-          console.log('Redirecting new user to:', redirectUrl);
-          localStorage.removeItem('auth_redirect');
-          router.push(redirectUrl);
-          setLoading(false);
-          return;
-        }
-
-        // If we have a code but no type, still try to exchange the code (email link variant)
-        if (code) {
-          console.log('Type not provided but code present - waiting for session (detectSessionInUrl)');
-          // detectSessionInUrl=true should process the code automatically; poll for session
-          for (let i = 0; i < 10; i++) {
-            const { data: sessionData } = await supabase.auth.getSession();
-            if (sessionData.session) {
-              const fallbackUrl = redirectParam || localStorage.getItem('auth_redirect');
-              const redirectUrl = await getRedirectUrl(sessionData.session.user.id, fallbackUrl);
-              console.log('Session detected via auto handling. Redirecting to:', redirectUrl);
-              localStorage.removeItem('auth_redirect');
-              router.push(redirectUrl);
-              setLoading(false);
-              return;
-            }
-            await new Promise(r => setTimeout(r, 300));
-          }
-          console.warn('No session detected after waiting; falling back to home');
-        }
-
-        // Fallback - redirect to home page (buyers by default)
-        console.log('No specific type detected, redirecting to home page');
-        router.push('/');
-        setLoading(false);
-
       } catch (err) {
-        console.error('Unexpected error in auth callback:', err);
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        console.error('AuthCallback: Error:', err);
+        setError('Authentication failed');
         setLoading(false);
       }
     };
 
     handleAuthCallback();
-  }, [router]);
+  }, [router, searchParams]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="w-full max-w-md space-y-6 px-6 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <div className="space-y-2">
-            <p className="text-lg font-medium text-gray-900">Processing authentication...</p>
-            <p className="text-sm text-gray-500">Please wait a moment</p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <LoadingSpinner size="lg" text="Completing authentication..." />
         </div>
       </div>
     );
@@ -174,45 +88,31 @@ export default function AuthCallbackPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="w-full max-w-md space-y-6 px-6 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
+          <div className="mb-4">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/20">
+              <svg className="h-6 w-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
           </div>
-          
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">Authentication Error</h1>
-            <p className="text-lg text-gray-600">
-              There was an error processing your authentication.
-            </p>
-          </div>
-          
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
-            <p className="text-sm text-red-700">
-              <strong>Error:</strong> {error}
-            </p>
-          </div>
-          
-          <div className="space-y-3">
-            <button
-              onClick={() => router.push('/sign-in')}
-              className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
-            >
-              Try Again
-            </button>
-            <button
-              onClick={() => router.push('/')}
-              className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm transition-colors"
-            >
-              Go to Homepage
-            </button>
-          </div>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+            Authentication Error
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            {error}
+          </p>
+          <button
+            onClick={() => router.push('/')}
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Go Home
+          </button>
         </div>
       </div>
     );
   }
 
-  return null; // This should not render as we redirect
+  return null;
 }

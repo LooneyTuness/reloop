@@ -60,6 +60,15 @@ export async function GET(request: NextRequest) {
       }
       
       console.log('User authenticated successfully:', user?.email)
+      console.log('User ID:', user?.id)
+      
+      // Check if we have a session
+      const { data: { session } } = await supabase.auth.getSession()
+      console.log('Session after OTP verification:', {
+        hasSession: !!session,
+        userEmail: session?.user?.email,
+        userId: session?.user?.id
+      })
       
       if (user) {
         console.log('User authenticated:', user.email)
@@ -87,7 +96,8 @@ export async function GET(request: NextRequest) {
       }
       
       console.log('Final redirect URL:', next)
-      return NextResponse.redirect(`${origin}${next}?confirmed=true`)
+      // Redirect to client-side callback to handle session establishment
+      return NextResponse.redirect(`${origin}/auth/callback?redirect=${encodeURIComponent(next)}`)
     } else {
       console.error('OTP verification error:', error)
       return NextResponse.redirect(`${origin}/?error=${encodeURIComponent(error.message)}`)
@@ -106,6 +116,15 @@ export async function GET(request: NextRequest) {
       const { data: { user } } = await supabase.auth.getUser()
       
       console.log('User authenticated via code exchange:', user?.email)
+      console.log('User ID:', user?.id)
+      
+      // Check if we have a session
+      const { data: { session } } = await supabase.auth.getSession()
+      console.log('Session after code exchange:', {
+        hasSession: !!session,
+        userEmail: session?.user?.email,
+        userId: session?.user?.id
+      })
       
       if (user) {
         // Check if user is a seller
@@ -127,7 +146,8 @@ export async function GET(request: NextRequest) {
         }
       }
       
-      return NextResponse.redirect(`${origin}${next}?confirmed=true`)
+      // Redirect to client-side callback to handle session establishment
+      return NextResponse.redirect(`${origin}/auth/callback?redirect=${encodeURIComponent(next)}`)
     } else {
       console.error('Code exchange error:', error)
       return NextResponse.redirect(`${origin}/?error=${encodeURIComponent(error.message)}`)
