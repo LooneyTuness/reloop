@@ -162,7 +162,6 @@ const dashboardTranslations = {
     quickReferenceSettings: "Подесувања - Конфигурирајте го вашиот профил и претпочитанија",
     quickReferenceSupport: "Поддршка - Достигнете до нашата екипа за помош",
     quickReferenceDocumentation: "Документација - Прочитајте ги нашите водичи и туторијали",
-    essentialPages: "Основни страници:",
     addProductDescription: "Додај продукт - Прикачи слики, постави цени, напиши описи",
     myListingsDescription: "Мои листинзи - Уреди, избриши или управувај со производите",
     ordersDescription: "Нарачки - Следи ги купувањата на купувачите и ажурирај го статусот",
@@ -194,15 +193,12 @@ const dashboardTranslations = {
     // Zero State Messages
     noProductsListedYet: "Сè уште нема листирани производи",
     startBuildingStore: "Започнете со градење на вашата продавница со додавање на вашиот прв продукт. Листирајте предмети за да започнете со продавање и да достигнете купувачи.",
-    addProduct: "Додај продукт",
     viewGuide: "Види водич",
     noRecentOrders: "Нема неодамнешни нарачки",
     ordersWillAppear: "Нарачките ќе се појават тука кога купувачите ќе започнат да ги купуваат вашите производи. Фокусирајте се на создавање одлични листинзи за да привлечете купувачи.",
-    viewAllOrders: "Види ги сите нарачки",
     promoteProducts: "Промовирај производи",
     analyticsDataComingSoon: "Аналитички податоци наскоро",
     onceYouStartSelling: "Кога ќе започнете со продавање, ќе видите детални аналитики за вашите перформанси, трендови на продажба и увид за купувачите.",
-    viewAnalytics: "Види аналитики",
     addProducts: "Додај производи",
     noEarningsYet: "Сè уште нема заработка",
     earningsWillAppear: "Вашата заработка ќе се појави тука кога ќе ја направите вашата прва продажба. Започнете со листирање производи и привлекување купувачи.",
@@ -224,7 +220,6 @@ const dashboardTranslations = {
     noOrdersYet: "Сè уште нема нарачки",
     noProductsYet: "Сè уште нема производи",
     getStartedByAdding: "Започнете со додавање на вашиот прв продукт",
-    startSelling: "Започни со продавање",
     
     // Common Actions
     viewAll: "Види ги сите",
@@ -534,7 +529,6 @@ const dashboardTranslations = {
     quickReferenceSettings: "Settings - Configure your profile and preferences",
     quickReferenceSupport: "Support - Reach out to our team for help",
     quickReferenceDocumentation: "Documentation - Read our guides and tutorials",
-    essentialPages: "Essential Pages:",
     addProductDescription: "Add Product - Upload images, set prices, write descriptions",
     myListingsDescription: "My Listings - Edit, delete, or manage your products",
     ordersDescription: "Orders - Track customer purchases and update status",
@@ -566,15 +560,12 @@ const dashboardTranslations = {
     // Zero State Messages
     noProductsListedYet: "No products listed yet",
     startBuildingStore: "Start building your store by adding your first product. List items to begin selling and reach customers.",
-    addProduct: "Add Product",
     viewGuide: "View Guide",
     noRecentOrders: "No recent orders",
     ordersWillAppear: "Orders will appear here once customers start purchasing your products. Focus on creating great listings to attract buyers.",
-    viewAllOrders: "View All Orders",
     promoteProducts: "Promote Products",
     analyticsDataComingSoon: "Analytics data coming soon",
     onceYouStartSelling: "Once you start selling, you'll see detailed analytics about your performance, sales trends, and customer insights.",
-    viewAnalytics: "View Analytics",
     addProducts: "Add Products",
     noEarningsYet: "No earnings yet",
     earningsWillAppear: "Your earnings will appear here once you make your first sale. Start by listing products and attracting customers.",
@@ -592,7 +583,6 @@ const dashboardTranslations = {
     noOrdersYet: "No orders yet",
     noProductsYet: "No products yet",
     getStartedByAdding: "Get started by adding your first product",
-    startSelling: "Start Selling",
     
     // Common Actions
     viewAll: "View All",
