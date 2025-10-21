@@ -1,6 +1,7 @@
 import { type EmailOtpType } from '@supabase/supabase-js'
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
@@ -11,32 +12,33 @@ export async function GET(request: NextRequest) {
   
   console.log('Confirm route called with:', { token_hash: !!token_hash, type, code: !!code, redirect })
 
-  // Default redirect to home, but will be updated based on user role
-  let next = redirect || '/'
-  let response = NextResponse.redirect(`${origin}${next}`)
-
   // Add error handling for missing parameters
   if (!token_hash && !code) {
     console.error('No authentication parameters found - redirecting to home');
     return NextResponse.redirect(`${origin}/`);
   }
 
+  const cookieStore = cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll()
+        get(name: string) {
+          return cookieStore.get(name)?.value
         },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options)
-          })
+        set(name: string, value: string, options: Record<string, unknown>) {
+          cookieStore.set({ name, value, ...options })
+        },
+        remove(name: string, options: Record<string, unknown>) {
+          cookieStore.set({ name, value: '', ...options })
         },
       },
     }
   )
+
+  // Default redirect to home, but will be updated based on user role
+  let next = redirect || '/'
 
   // Handle OTP-based confirmation (token_hash + type)
   if (token_hash && type) {
@@ -54,8 +56,7 @@ export async function GET(request: NextRequest) {
       
       if (userError) {
         console.error('Error getting user after OTP verification:', userError)
-        response = NextResponse.redirect(`${origin}/?error=${encodeURIComponent('Authentication successful but user data error')}`)
-        return response
+        return NextResponse.redirect(`${origin}/?error=${encodeURIComponent('Authentication successful but user data error')}`)
       }
       
       console.log('User authenticated successfully:', user?.email)
@@ -86,12 +87,10 @@ export async function GET(request: NextRequest) {
       }
       
       console.log('Final redirect URL:', next)
-      response = NextResponse.redirect(`${origin}${next}?confirmed=true`)
-      return response
+      return NextResponse.redirect(`${origin}${next}?confirmed=true`)
     } else {
       console.error('OTP verification error:', error)
-      response = NextResponse.redirect(`${origin}/?error=${encodeURIComponent(error.message)}`)
-      return response
+      return NextResponse.redirect(`${origin}/?error=${encodeURIComponent(error.message)}`)
     }
   }
 
@@ -128,17 +127,14 @@ export async function GET(request: NextRequest) {
         }
       }
       
-      response = NextResponse.redirect(`${origin}${next}?confirmed=true`)
-      return response
+      return NextResponse.redirect(`${origin}${next}?confirmed=true`)
     } else {
       console.error('Code exchange error:', error)
-      response = NextResponse.redirect(`${origin}/?error=${encodeURIComponent(error.message)}`)
-      return response
+      return NextResponse.redirect(`${origin}/?error=${encodeURIComponent(error.message)}`)
     }
   }
 
   // No valid confirmation parameters found
   console.error('No valid confirmation parameters')
-  response = NextResponse.redirect(`${origin}/?error=${encodeURIComponent('Invalid confirmation link')}`)
-  return response
+  return NextResponse.redirect(`${origin}/?error=${encodeURIComponent('Invalid confirmation link')}`)
 }
