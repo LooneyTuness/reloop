@@ -4,6 +4,7 @@ import React from 'react';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { EarningsZeroState } from '@/components/seller-dashboard/ZeroStates';
+import BackButton from '@/components/seller-dashboard/BackButton';
 import { useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
@@ -18,6 +19,7 @@ function PayoutsContent() {
     return (
       <div className="px-6 py-8">
         <div className="mb-8">
+          <BackButton className="mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {t('payouts')}
           </h1>
@@ -36,6 +38,7 @@ function PayoutsContent() {
   return (
     <div className="px-3 sm:px-6 py-4 sm:py-8">
       <div className="mb-8">
+        <BackButton className="mb-4" />
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           {t('payouts')}
         </h1>

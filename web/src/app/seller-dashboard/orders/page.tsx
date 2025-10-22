@@ -424,7 +424,7 @@ function OrdersContent() {
 
   return (
     <SellerDashboardLayout>
-      <div className="w-full py-4 sm:py-8 max-w-none -mx-3 sm:-mx-6 lg:mx-0">
+      <div className="w-full py-4 sm:py-8 max-w-none">
         {/* Header */}
         <div className="px-3 sm:px-6 mb-8">
           <BackButton className="mb-4" />
@@ -474,7 +474,7 @@ function OrdersContent() {
         )}
 
         {/* Orders Table */}
-        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden -mx-3 sm:-mx-6 lg:mx-0">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">

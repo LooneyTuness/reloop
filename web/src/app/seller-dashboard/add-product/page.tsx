@@ -102,10 +102,10 @@ function AddProductContent() {
 
   return (
     <div className="px-3 sm:px-6 py-4 sm:py-8">
-        <div className="flex items-center mb-8">
+        <div className="mb-8">
           <button
             onClick={() => router.back()}
-            className="mr-4 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"
+            className="mb-4 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"
           >
             <ArrowLeft size={20} className="mr-2" />
             {t('back')}
