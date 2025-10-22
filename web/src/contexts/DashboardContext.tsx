@@ -191,8 +191,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return;
     }
     
-    // Only show loading spinner on first load
-    if (!hasCache) {
+    // Only show loading spinner on first load (when we have no data)
+    if (!hasCache && products.length === 0 && orders.length === 0) {
       setIsLoading(true);
     }
     setIsFetching(true);
@@ -336,7 +336,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       setIsFetching(false);
     }
-  }, [user, profileLoading, syncProductStatusesWithOrders, lastFetchTime, cacheTimeout, isFetching]);
+  }, [user, profileLoading, syncProductStatusesWithOrders, lastFetchTime, cacheTimeout, isFetching, products.length, orders.length]);
 
   // Test function to manually update product statuses
   const testUpdateProductStatuses = (status: string) => {

@@ -32,21 +32,24 @@ export default function AdminSellerApplications() {
 
   const fetchApplications = async () => {
     try {
-      console.log('Fetching applications...');
+      console.time('fetchApplications');
+      console.log('🔄 Fetching applications...');
+      
       const response = await fetch('/api/admin/seller-applications');
-      console.log('Response status:', response.status);
+      console.log('✅ Response status:', response.status);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('API Response:', data);
+        console.log('✅ Received applications:', data.applications?.length || 0);
         setApplications(data.applications || []);
       } else {
         const errorText = await response.text();
-        console.error('Failed to fetch applications:', response.status, errorText);
+        console.error('❌ Failed to fetch applications:', response.status, errorText);
       }
     } catch (error) {
-      console.error('Error fetching applications:', error);
+      console.error('❌ Error fetching applications:', error);
     } finally {
+      console.timeEnd('fetchApplications');
       setLoading(false);
     }
   };
@@ -153,7 +156,7 @@ export default function AdminSellerApplications() {
             </div>
           </div>
 
-          {applications.length === 0 ? (
+          {!loading && applications.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 text-lg mb-4">📋</div>
               <h3 className="text-xl font-medium text-gray-900 mb-2">
@@ -163,7 +166,7 @@ export default function AdminSellerApplications() {
                 There are currently no seller applications to review.
               </p>
             </div>
-          ) : (
+          ) : !loading ? (
             <div className="space-y-6">
               {applications.map((application) => (
                 <div
@@ -258,7 +261,7 @@ export default function AdminSellerApplications() {
                 </div>
               ))}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

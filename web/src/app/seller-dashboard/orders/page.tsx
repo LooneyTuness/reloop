@@ -347,8 +347,8 @@ const OrdersContent = React.memo(function OrdersContent() {
     });
   }, [orders, searchQuery, statusFilter]);
 
-  // Show loading state only on initial load
-  if (isLoading && orders.length === 0) {
+  // Show loading state while data is being fetched
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -356,8 +356,8 @@ const OrdersContent = React.memo(function OrdersContent() {
     );
   }
 
-  // Show zero state if no orders
-  if (orders.length === 0) {
+  // Show zero state if no orders (only after loading is complete)
+  if (!isLoading && orders.length === 0) {
     return (
       <div className="px-3 sm:px-6 py-4 sm:py-8">
         <div className="mb-8">

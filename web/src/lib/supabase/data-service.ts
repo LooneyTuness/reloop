@@ -120,66 +120,81 @@ export class SupabaseDataService {
     }
   }
 
-  // Orders Management - HIGHLY OPTIMIZED VERSION with single query
+  // Orders Management - OPTIMIZED VERSION (simplified for reliability)
   async getSellerOrders(sellerId: string, limit: number = 100): Promise<Order[]> {
     try {
-      // Use a single optimized query with joins using RPC or view
-      // First, fetch orders with order_items that belong to this seller in ONE query
+      console.time('getSellerOrders');
+      
+      // Step 1: Get seller's item IDs (fast with index: idx_items_user_id_created_at)
+      const { data: sellerItems, error: itemsError } = await (this.supabase as any)
+        .from('items')
+        .select('id')
+        .eq('user_id', sellerId);
+
+      if (itemsError) {
+        console.error('Error fetching seller items:', itemsError);
+        return [];
+      }
+
+      if (!sellerItems || sellerItems.length === 0) {
+        console.timeEnd('getSellerOrders');
+        return [];
+      }
+
+      const itemIds = sellerItems.map((item: { id: string }) => item.id);
+      console.log(`Found ${itemIds.length} seller items`);
+
+      // Step 2: Get order_items for seller's products (fast with index: idx_order_items_item_id)
+      const { data: orderItems, error: orderItemsError } = await (this.supabase as any)
+        .from('order_items')
+        .select('*, items(*)')
+        .in('item_id', itemIds);
+
+      if (orderItemsError) {
+        console.error('Error fetching order items:', orderItemsError);
+        return [];
+      }
+
+      if (!orderItems || orderItems.length === 0) {
+        console.timeEnd('getSellerOrders');
+        return [];
+      }
+
+      // Step 3: Get unique order IDs
+      const orderIds = [...new Set(orderItems.map((item: { order_id: string }) => item.order_id))];
+      console.log(`Found ${orderIds.length} orders`);
+
+      // Step 4: Fetch orders (fast with index: idx_orders_created_at)
       const { data: orders, error: ordersError } = await (this.supabase as any)
         .from('orders')
-        .select(`
-          *,
-          order_items!inner(
-            *,
-            items!inner(
-              id, title, price, images, user_id, size, brand, condition, category_id
-            )
-          )
-        `)
-        .eq('order_items.items.user_id', sellerId)
+        .select('*')
+        .in('id', orderIds)
         .order('created_at', { ascending: false })
         .limit(limit);
 
       if (ordersError) {
-        console.error('Error fetching seller orders:', ordersError);
+        console.error('Error fetching orders:', ordersError);
         return [];
       }
 
-      if (!orders || orders.length === 0) {
-        return [];
-      }
-
-      // Group order_items by order since the join creates duplicate order rows
-      const ordersMap = new Map<string, any>();
-      
-      orders.forEach((row: any) => {
-        const orderId = row.id;
-        
-        if (!ordersMap.has(orderId)) {
-          // First time seeing this order
-          ordersMap.set(orderId, {
-            ...row,
-            order_items: []
-          });
+      // Step 5: Attach order_items to their orders
+      const orderItemsByOrderId = new Map();
+      orderItems.forEach((item: any) => {
+        if (!orderItemsByOrderId.has(item.order_id)) {
+          orderItemsByOrderId.set(item.order_id, []);
         }
-        
-        // Add the order_item to this order
-        const order = ordersMap.get(orderId);
-        
-        // Only add if this order_item belongs to the seller
-        if (row.order_items?.items?.user_id === sellerId) {
-          // Check if we already added this order_item (avoid duplicates)
-          const existingItem = order.order_items.find(
-            (oi: any) => oi.id === row.order_items.id
-          );
-          
-          if (!existingItem) {
-            order.order_items.push(row.order_items);
-          }
-        }
+        orderItemsByOrderId.get(item.order_id).push(item);
       });
 
-      return Array.from(ordersMap.values());
+      const ordersWithItems = (orders || []).map((order: Order) => ({
+        ...order,
+        order_items: orderItemsByOrderId.get(order.id) || []
+      }));
+
+      console.timeEnd('getSellerOrders');
+      console.log(`Returning ${ordersWithItems.length} orders`);
+      
+      return ordersWithItems;
     } catch (error) {
       console.error('Error in getSellerOrders:', error);
       return [];

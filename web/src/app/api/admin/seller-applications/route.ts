@@ -4,6 +4,8 @@ import { sendEmail } from "@/lib/email";
 
 export async function GET() {
   try {
+    console.time('GET /api/admin/seller-applications');
+    
     if (!supabaseAdmin) {
       return NextResponse.json(
         { error: "Admin service not available" },
@@ -11,6 +13,8 @@ export async function GET() {
       );
     }
 
+    console.log('📊 Fetching seller applications...');
+    
     // Optimized query with limited fields and index usage
     const { data: applications, error } = await supabaseAdmin
       .from("seller_applications")
@@ -19,12 +23,16 @@ export async function GET() {
       .limit(200); // Reasonable limit for admin panel
 
     if (error) {
-      console.error("Error fetching seller applications:", error);
+      console.error("❌ Error fetching seller applications:", error);
+      console.timeEnd('GET /api/admin/seller-applications');
       return NextResponse.json(
         { error: "Failed to fetch applications" },
         { status: 500 }
       );
     }
+
+    console.log(`✅ Found ${applications?.length || 0} applications`);
+    console.timeEnd('GET /api/admin/seller-applications');
 
     // Return with caching headers (10 seconds cache)
     const response = NextResponse.json({ applications });
@@ -32,7 +40,8 @@ export async function GET() {
     
     return response;
   } catch (error) {
-    console.error("Error in GET seller applications:", error);
+    console.error("❌ Error in GET seller applications:", error);
+    console.timeEnd('GET /api/admin/seller-applications');
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
