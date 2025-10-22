@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   BarChart3, 
@@ -145,14 +146,26 @@ export default function Sidebar() {
           {/* User Info */}
           <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-800">
             <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-200 dark:bg-gray-700'
+              <div className={`h-8 w-8 rounded-full flex items-center justify-center overflow-hidden relative ${
+                sellerProfile?.avatar_url ? 'bg-gray-100 dark:bg-gray-800' : showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}>
-                <span className={`text-sm font-medium ${
-                  showAvatarGradient ? 'text-white' : 'text-gray-400 dark:text-gray-500'
-                }`}>
-                  {getUserDisplayName().charAt(0).toUpperCase()}
-                </span>
+                {sellerProfile?.avatar_url ? (
+                  <Image
+                    key={sellerProfile.avatar_url}
+                    src={sellerProfile.avatar_url}
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    unoptimized
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                ) : (
+                  <span className={`text-sm font-medium ${
+                    showAvatarGradient ? 'text-white' : 'text-gray-400 dark:text-gray-500'
+                  }`}>
+                    {getUserDisplayName().charAt(0).toUpperCase()}
+                  </span>
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">

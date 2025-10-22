@@ -81,7 +81,7 @@ const dashboardTranslations = {
     
     // Settings
     sellerProfile: "Профил на продавачот",
-    manageSellerProfile: "Управувајте со вашиот профил на продавачот и бизнис информации",
+    manageSellerProfile: "Управувајте со вашиот профил и бизнис информации",
     profilePicture: "Слика на профилот",
     clickCameraIcon: "Кликнете на иконата на камерата за да прикачите нова слика",
     personalInformation: "Лични информации",

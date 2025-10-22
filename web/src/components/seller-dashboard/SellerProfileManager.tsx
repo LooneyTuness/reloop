@@ -83,11 +83,11 @@ export default function SellerProfileManager() {
       }
     } catch (error) {
       console.error('Error loading profile:', error);
-      setError('Failed to load profile');
+      setError(t('failedToLoadProfile'));
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, user?.email]);
+  }, [user?.id, user?.email, t]);
 
   useEffect(() => {
     if (user?.id) {
@@ -124,16 +124,16 @@ export default function SellerProfileManager() {
       
       if (success) {
         setProfile(prev => prev ? { ...prev, ...formData } : null);
-        setSuccess('Profile updated successfully!');
+        setSuccess(t('profileUpdatedSuccessfully'));
         
         // Refresh the profile context to ensure consistency
         await refreshProfile();
       } else {
-        setError('Failed to update profile');
+        setError(t('failedToUpdateProfile'));
       }
     } catch (error) {
       console.error('Error saving profile:', error);
-      setError('Failed to update profile');
+      setError(t('failedToUpdateProfile'));
     } finally {
       setIsSaving(false);
     }
@@ -145,13 +145,13 @@ export default function SellerProfileManager() {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file');
+      setError(t('pleaseSelectValidImage'));
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setError('Image size must be less than 5MB');
+      setError(t('imageSizeMustBeLess'));
       return;
     }
 
@@ -190,7 +190,7 @@ export default function SellerProfileManager() {
       if (success) {
         setProfile(prev => prev ? { ...prev, avatar_url: cacheBustedUrl } : null);
         updateAvatar(cacheBustedUrl);
-        setSuccess('Profile picture updated!');
+        setSuccess(t('profilePictureUpdated'));
         
         // Increment avatar key to force re-render
         setAvatarKey(prev => prev + 1);
@@ -201,11 +201,11 @@ export default function SellerProfileManager() {
         // Reload profile to get the latest data
         await loadProfile();
       } else {
-        setError('Failed to update profile');
+        setError(t('failedToUpdateProfile'));
       }
     } catch (error) {
       console.error('Error uploading cropped image:', error);
-      setError('Failed to update profile picture');
+      setError(t('failedToUpdateProfilePicture'));
     } finally {
       setIsUploadingImage(false);
     }
