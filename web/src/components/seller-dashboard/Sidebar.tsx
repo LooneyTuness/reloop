@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
@@ -51,7 +51,7 @@ export default function Sidebar() {
   };
 
   // Get user display name
-  const getUserDisplayName = () => {
+  const getUserDisplayName = useCallback(() => {
     if (sellerProfile?.full_name) {
       return sellerProfile.full_name.split(' ')[0];
     }
@@ -59,25 +59,27 @@ export default function Sidebar() {
       return sellerProfile.business_name;
     }
     return 'Seller';
-  };
+  }, [sellerProfile?.full_name, sellerProfile?.business_name]);
 
-  const getUserAvatar = () => {
+  const getUserAvatar = useCallback(() => {
     if (sellerProfile?.avatar_url) {
       return sellerProfile.avatar_url;
     }
     return null;
-  };
+  }, [sellerProfile?.avatar_url]);
 
 
   // Debug avatar URL and profile data
   React.useEffect(() => {
     console.log('Sidebar - Full profile data:', sellerProfile);
+    console.log('Sidebar - getUserAvatar():', getUserAvatar());
+    console.log('Sidebar - getUserDisplayName():', getUserDisplayName());
     if (sellerProfile?.avatar_url) {
       console.log('Sidebar - Avatar URL:', sellerProfile.avatar_url);
     } else {
       console.log('Sidebar - No avatar URL found');
     }
-  }, [sellerProfile]);
+  }, [sellerProfile, getUserAvatar, getUserDisplayName]);
 
   return (
     <>
@@ -159,9 +161,7 @@ export default function Sidebar() {
           {/* User Info */}
           <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-800">
             <div className="flex items-center space-x-3 px-3 py-3 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800 dark:to-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
-              <div className={`h-10 w-10 rounded-full flex items-center justify-center relative flex-shrink-0 ${
-                getUserAvatar() ? 'bg-gray-100 dark:bg-gray-800 overflow-hidden' : 'bg-gradient-to-br from-blue-500 to-orange-600'
-              }`}>
+              <div className="h-10 w-10 rounded-full flex items-center justify-center relative flex-shrink-0 bg-gradient-to-br from-blue-500 to-orange-600">
                 {getUserAvatar() ? (
                   <Image
                     key={getUserAvatar()}
