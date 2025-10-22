@@ -347,22 +347,20 @@ function OrdersContent() {
   // Show zero state if no orders
   if (orders.length === 0) {
     return (
-      <SellerDashboardLayout>
-        <div className="px-3 sm:px-6 py-4 sm:py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              {t('orders')}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              {t('manageCustomerOrders')}
-            </p>
-          </div>
-          <OrdersZeroState
-            onViewOrders={() => router.push('/seller-dashboard/orders')}
-            onPromoteProducts={() => router.push('/seller-dashboard/listings')}
-          />
+      <div className="px-3 sm:px-6 py-4 sm:py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            {t('orders')}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t('manageCustomerOrders')}
+          </p>
         </div>
-      </SellerDashboardLayout>
+        <OrdersZeroState
+          onViewOrders={() => router.push('/seller-dashboard/orders')}
+          onPromoteProducts={() => router.push('/seller-dashboard/listings')}
+        />
+      </div>
     );
   }
 
@@ -423,18 +421,17 @@ function OrdersContent() {
   };
 
   return (
-    <SellerDashboardLayout>
-      <div className="w-full py-4 sm:py-8 max-w-none">
-        {/* Header */}
-        <div className="px-3 sm:px-6 mb-8">
-          <BackButton className="mb-4" />
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {t('orders')}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            {t('manageAndTrackOrders')} • {orders.length} {t('ordersCount')} • {(orders as ExtendedOrder[]).reduce((sum, order) => sum + (order.item_count || 0), 0)} {t('itemsSold')}
-          </p>
-        </div>
+    <div className="w-full py-4 sm:py-8 max-w-none">
+      {/* Header */}
+      <div className="px-3 sm:px-6 mb-8">
+        <BackButton className="mb-4" />
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {t('orders')}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400">
+          {t('manageAndTrackOrders')} • {orders.length} {t('ordersCount')} • {(orders as ExtendedOrder[]).reduce((sum, order) => sum + (order.item_count || 0), 0)} {t('itemsSold')}
+        </p>
+      </div>
 
         {/* Filters and Search */}
         <div className="px-3 sm:px-6 flex flex-col sm:flex-row gap-4 mb-6">
@@ -1328,8 +1325,7 @@ function OrdersContent() {
             </div>
           </div>
         )}
-      </div>
-    </SellerDashboardLayout>
+    </div>
   );
 }
 
