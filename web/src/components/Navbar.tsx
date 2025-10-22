@@ -53,7 +53,8 @@ export default function Navbar() {
           .single();
 
         if (!error && data) {
-          setIsApprovedSeller(data.is_approved === true && (data.role === 'seller' || data.role === 'admin'));
+          const profile = data as { is_approved: boolean; role: string };
+          setIsApprovedSeller(profile.is_approved === true && (profile.role === 'seller' || profile.role === 'admin'));
         } else {
           setIsApprovedSeller(false);
         }
