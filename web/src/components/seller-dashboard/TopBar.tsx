@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, Bell, User, X, Eye, EyeOff, LogOut } from 'lucide-react';
+import { Search, Bell, X, Eye, EyeOff, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
@@ -15,7 +15,7 @@ import Notifications from './Notifications';
 export default function TopBar() {
   const router = useRouter();
   const { user, signOut } = useAuth();
-  const { profile: sellerProfile, loading: profileLoading } = useSellerProfile();
+  const { profile: sellerProfile } = useSellerProfile();
   const { notifications, unreadCount, markAsRead, dismissAllNotifications } = useNotifications();
   const { searchQuery, setSearchQuery, performSearch, clearSearch, isSearching } = useSearch();
   const { isDarkMode, toggleDarkMode } = useDashboardTheme();
@@ -23,7 +23,6 @@ export default function TopBar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const [avatarLoaded, setAvatarLoaded] = useState(false);
 
   // Close search results and profile dropdown when clicking outside
   useEffect(() => {
@@ -85,7 +84,7 @@ export default function TopBar() {
   // Reset avatar loaded state when avatar URL changes
   useEffect(() => {
     if (sellerProfile?.avatar_url) {
-      setAvatarLoaded(false);
+      console.log('TopBar - Avatar URL changed:', sellerProfile.avatar_url);
     }
   }, [sellerProfile?.avatar_url]);
 
@@ -110,7 +109,6 @@ export default function TopBar() {
     return null;
   }, [sellerProfile?.avatar_url]);
 
-  const showAvatarGradient = !profileLoading && !getUserAvatar();
 
   // Debug avatar URL
   React.useEffect(() => {
@@ -222,7 +220,7 @@ export default function TopBar() {
             <button
               onClick={handleProfileClick}
               className={`h-7 w-7 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden ${
-                showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-100 dark:bg-gray-800'
+                getUserAvatar() ? 'bg-gray-100 dark:bg-gray-800' : 'bg-gradient-to-br from-blue-500 to-orange-600'
               } ${
                 showProfileDropdown 
                   ? 'ring-2 ring-blue-200' 
@@ -231,31 +229,23 @@ export default function TopBar() {
               title={`${getUserDisplayName()} - Click to open profile menu`}
             >
               {getUserAvatar() ? (
-                <>
-                  <Image
-                    key={getUserAvatar()}
-                    src={getUserAvatar() as string}
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    unoptimized={true}
-                    onLoad={() => setAvatarLoaded(true)}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      setAvatarLoaded(false);
-                    }}
-                    className="w-full h-full object-cover rounded-full"
-                    priority
-                  />
-                  {!avatarLoaded && (
-                    <User className="text-gray-400 dark:text-gray-600" size={16} style={{ position: 'absolute' }} />
-                  )}
-                </>
-              ) : showAvatarGradient ? (
-                <User className="text-white" size={16} />
+                <Image
+                  key={getUserAvatar()}
+                  src={getUserAvatar() as string}
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  unoptimized={true}
+                  onError={() => {
+                    console.error('Error loading main avatar:', getUserAvatar());
+                  }}
+                  className="w-full h-full object-cover rounded-full"
+                  priority
+                />
               ) : (
-                <User className="text-gray-400 dark:text-gray-600" size={16} />
+                <span className="text-white text-sm font-semibold">
+                  {getUserDisplayName().charAt(0).toUpperCase()}
+                </span>
               )}
             </button>
 
@@ -265,7 +255,7 @@ export default function TopBar() {
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-3">
                     <div className={`h-10 w-10 rounded-full flex items-center justify-center overflow-hidden relative ${
-                      getUserAvatar() ? 'bg-gray-100 dark:bg-gray-800' : showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-200 dark:bg-gray-700'
+                      getUserAvatar() ? 'bg-gray-100 dark:bg-gray-800' : 'bg-gradient-to-br from-blue-500 to-orange-600'
                     }`}>
                       {getUserAvatar() ? (
                         <Image
@@ -276,24 +266,25 @@ export default function TopBar() {
                           height={40}
                           unoptimized={true}
                           className="w-full h-full object-cover rounded-full"
+                          onError={() => {
+                            console.error('Error loading avatar in dropdown:', getUserAvatar());
+                          }}
                         />
-                      ) : showAvatarGradient ? (
+                      ) : (
                         <span className="text-white text-sm font-semibold">
                           {getUserDisplayName().charAt(0).toUpperCase()}
                         </span>
-                      ) : (
-                        <User className="text-gray-400 dark:text-gray-600" size={20} />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                         {getUserDisplayName()}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-1">
                         {sellerProfile?.email || user?.email}
                       </p>
                       {sellerProfile?.role && (
-                        <p className="text-xs text-blue-600 dark:text-blue-400">
+                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium mt-1">
                           {t(sellerProfile.role)}
                         </p>
                       )}
