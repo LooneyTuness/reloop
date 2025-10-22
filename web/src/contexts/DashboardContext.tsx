@@ -167,6 +167,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const refreshData = useCallback(async (forceRefresh = false) => {
+    console.log('🔄 refreshData called, forceRefresh:', forceRefresh);
+    
     // Don't set loading to false if profile is still loading
     if (!user?.id && !profileLoading) {
       setIsLoading(false);
@@ -181,6 +183,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     
     // Prevent multiple simultaneous fetches
     if (isFetching) {
+      console.log('⏭️  Already fetching, skipping');
       return;
     }
     
@@ -188,24 +191,30 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     const now = Date.now();
     const hasCache = lastFetchTime > 0;
     if (!forceRefresh && hasCache && (now - lastFetchTime) < cacheTimeout) {
+      console.log('📦 Using cached data');
       return;
     }
     
     // Only show loading spinner on first load (when we have no data)
-    if (!hasCache && products.length === 0 && orders.length === 0) {
+    const productsLen = products.length;
+    const ordersLen = orders.length;
+    if (!hasCache && productsLen === 0 && ordersLen === 0) {
       setIsLoading(true);
     }
     setIsFetching(true);
     setError(null);
     
     try {
+      console.time('⏱️ Total data fetch');
+      
       // Fetch all data in parallel with individual error handling
+      console.time('  API calls');
       const [sellerItems, sellerOrders, sellerStats] = await Promise.allSettled([
         supabaseDataService.getSellerItems(user!.id),
         supabaseDataService.getSellerOrders(user!.id),
         supabaseDataService.getSellerStats(user!.id)
       ]);
-      
+      console.timeEnd('  API calls');
 
       // Handle individual results
       const items = sellerItems.status === 'fulfilled' ? sellerItems.value : [];
@@ -219,11 +228,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         avgOrderValue: 0
       };
 
-
-      // Handle any rejected promises silently
-
+      console.log(`📊 Fetched: ${items.length} items, ${orders.length} orders`);
 
       // Transform items to dashboard products first (optimized)
+      console.time('  Transform items');
       const dashboardProducts: DashboardProduct[] = items.map(item => ({
         ...item,
         name: item.title || item.name || 'Untitled',
@@ -231,11 +239,15 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         price: item.price?.toFixed(2) || '0.00',
         status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden') || 'active'
       }));
+      console.timeEnd('  Transform items');
 
       // Sync product statuses with order statuses (now synchronous)
+      console.time('  Sync statuses');
       const syncedProducts = syncProductStatusesWithOrders(dashboardProducts, orders);
+      console.timeEnd('  Sync statuses');
 
       // Transform orders to dashboard orders
+      console.time('  Transform orders');
       
       const dashboardOrders: DashboardOrder[] = (orders as DashboardOrder[]).map((order: DashboardOrder) => {
         
@@ -289,9 +301,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         
         return transformedOrder;
       });
-      
+      console.timeEnd('  Transform orders');
 
       // Transform stats
+      console.time('  Transform stats');
       const dashboardStats: DashboardStats = {
         totalListings: stats.totalItems,
         activeListings: stats.activeItems,
@@ -304,8 +317,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         totalViews: (stats as { totalViews?: number }).totalViews || 0,
         viewsLast30Days: (stats as { viewsLast30Days?: number }).viewsLast30Days || 0
       };
+      console.timeEnd('  Transform stats');
 
       // Generate activities from recent data
+      console.time('  Generate activities');
       const recentActivities: Activity[] = [
         ...dashboardOrders.slice(0, 3).map(order => ({
           id: `order-${order.id}`,
@@ -322,13 +337,19 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           status: 'completed' as const
         }))
       ];
+      console.timeEnd('  Generate activities');
 
       // Use products with random view counts for now (can be optimized later with batch API)
+      console.time('  Update state');
       setProducts(syncedProducts);
       setOrders(dashboardOrders);
       setStats(dashboardStats);
       setActivities(recentActivities);
       setLastFetchTime(Date.now()); // Update cache timestamp
+      console.timeEnd('  Update state');
+      
+      console.timeEnd('⏱️ Total data fetch');
+      console.log('✅ Dashboard data refresh complete');
     } catch (err) {
       console.error('Error refreshing dashboard data:', err);
       setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
@@ -336,7 +357,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       setIsFetching(false);
     }
-  }, [user, profileLoading, syncProductStatusesWithOrders, lastFetchTime, cacheTimeout, isFetching, products.length, orders.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, profileLoading, syncProductStatusesWithOrders]);
+  // Note: Minimal dependencies to prevent infinite loops
+  // lastFetchTime, cacheTimeout, isFetching, products, orders, user are intentionally omitted
 
   // Test function to manually update product statuses
   const testUpdateProductStatuses = (status: string) => {
@@ -590,14 +614,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    if (user?.id) {
+    if (user?.id && !profileLoading) {
+      console.log('🚀 Initial data load for user:', user.id);
       refreshData();
     } else if (!profileLoading) {
       // Only set loading to false if profile loading is complete
       setIsLoading(false);
       setError(null);
     }
-  }, [user?.id, profileLoading, refreshData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, profileLoading]);
+  // refreshData intentionally omitted to prevent infinite loops
 
   const value: DashboardContextType = {
     orders,
