@@ -472,7 +472,7 @@ function OrdersContent() {
         )}
 
         {/* Orders Table */}
-        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden -mx-3 sm:-mx-6">
+        <div className="w-screen bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden -ml-3 sm:-ml-6 lg:ml-0">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
