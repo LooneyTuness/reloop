@@ -289,6 +289,7 @@ export default function SellerProfileManager() {
                     </div>
                   ) : profile?.avatar_url ? (
                     <Image
+                      key={profile.avatar_url}
                       src={profile.avatar_url}
                       alt="Profile"
                       width={128}

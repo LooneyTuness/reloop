@@ -10,7 +10,6 @@ import EnhancedImage from '@/components/EnhancedImage';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
-import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import OrdersSkeleton from '@/components/seller-dashboard/OrdersSkeleton';
 
 interface OrderItem {
@@ -85,9 +84,8 @@ interface ExtendedOrder {
   seller_order_items?: OrderItem[];
 }
 
-function OrdersContent() {
+const OrdersContent = React.memo(function OrdersContent() {
   const { orders, updateOrderStatus, isLoading, error } = useDashboard();
-  const { loading: profileLoading } = useSellerProfile();
   const router = useRouter();
   const { t } = useDashboardLanguage();
   const [searchQuery, setSearchQuery] = useState('');
@@ -336,7 +334,21 @@ function OrdersContent() {
     return `#${orderId.substring(0, 6).toUpperCase()}`;
   };
 
-  if (profileLoading || isLoading) {
+  // Memoize filtered orders to avoid expensive recalculations (must be before conditionals)
+  const filteredOrders = React.useMemo(() => {
+    const searchLower = searchQuery.toLowerCase();
+    return (orders as ExtendedOrder[]).filter(order => {
+      const matchesSearch = !searchQuery ||
+        (order.customer_name && String(order.customer_name).toLowerCase().includes(searchLower)) ||
+        (order.product_name && String(order.product_name).toLowerCase().includes(searchLower)) ||
+        (order.id && String(order.id).toLowerCase().includes(searchLower));
+      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [orders, searchQuery, statusFilter]);
+
+  // Show loading state only on initial load
+  if (isLoading && orders.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -363,14 +375,6 @@ function OrdersContent() {
       </div>
     );
   }
-
-  const filteredOrders = (orders as ExtendedOrder[]).filter(order => {
-    const matchesSearch = (order.customer_name && String(order.customer_name).toLowerCase().includes(searchQuery.toLowerCase())) ||
-                         (order.product_name && String(order.product_name).toLowerCase().includes(searchQuery.toLowerCase())) ||
-                         (order.id && String(order.id).toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -1327,7 +1331,7 @@ function OrdersContent() {
         )}
     </div>
   );
-}
+});
 
 export default function OrdersPage() {
   return (

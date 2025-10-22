@@ -57,9 +57,9 @@ const dashboardTranslations = {
     thisMonth: "овој месец",
     
     // Greetings
-    goodMorning: "Добро утро",
-    goodAfternoon: "Добар ден",
-    goodEvening: "Добра вечер",
+    goodMorning: "Здраво",
+    goodAfternoon: "Здраво",
+    goodEvening: "Здраво",
     welcomeBack: "Добредојде назад",
     manageYourStore: "Управувајте со вашата продавница",
     
@@ -405,9 +405,8 @@ const dashboardTranslations = {
     manageEarnings: "Управувај со заработката",
     paymentSettings: "Подесувања за плаќање",
     payoutsComingSoon: "Исплатите доаѓаат наскоро",
-    workingOnPayoutSystem: "Работиме напорно за да ви донесеме сеопфатен систем за управување со исплати.",
-    trackEarningsManagePayments: "Ќе можете да ја следите заработката, да управувате со начините на плаќање и да побарате исплати.",
-    whatsComing: "Што доаѓа:",
+    workingOnPayoutSystem: "Работиме на целосно нов систем кој ќе ви овозможи целосна контрола и транспарентност врз вашите приходи. Без повеќе неизвесности - сè што ви е потребно за управување со исплати ќе биде на едно место.",
+    whatsComing: "Што следи:",
     realTimeEarningsTracking: "Следење на заработката во реално време",
     multiplePaymentMethods: "Повеќе начини на плаќање",
     automatedPayoutScheduling: "Автоматско закажување на исплати",
@@ -458,9 +457,9 @@ const dashboardTranslations = {
     thisMonth: "this month",
     
     // Greetings
-    goodMorning: "Good morning",
-    goodAfternoon: "Good afternoon",
-    goodEvening: "Good evening",
+    goodMorning: "Hello",
+    goodAfternoon: "Hello",
+    goodEvening: "Hello",
     welcomeBack: "Welcome back",
     manageYourStore: "Manage your store",
     
@@ -796,14 +795,12 @@ const dashboardTranslations = {
     manageEarnings: "Manage your earnings and payment settings",
     paymentSettings: "Payment settings",
     payoutsComingSoon: "Payouts Coming Soon",
-    workingOnPayoutSystem: "We're working hard to bring you a comprehensive payout management system.",
-    trackEarningsManagePayments: "You'll be able to track your earnings, manage payment methods, and request payouts.",
+    workingOnPayoutSystem: "We're working on a completely new system that will give you full control and transparency over your income. No more uncertainties - everything you need to manage payouts will be in one place.",
     whatsComing: "What's Coming:",
     realTimeEarningsTracking: "Real-time earnings tracking",
     multiplePaymentMethods: "Multiple payment methods",
     automatedPayoutScheduling: "Automated payout scheduling",
     detailedTransactionHistory: "Detailed transaction history",
-    taxReportingTools: "Tax reporting tools",
   }
 };
 

@@ -10,7 +10,7 @@ import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import { OptimizedButton } from '@/components/seller-dashboard/OptimizedLink';
 
-function DashboardContent() {
+const DashboardContent = React.memo(function DashboardContent() {
   const router = useRouter();
   const { products, isLoading, error } = useDashboard();
   const { t } = useDashboardLanguage();
@@ -40,8 +40,8 @@ function DashboardContent() {
 
 
 
-  // Show loading state while profile or dashboard data is being loaded
-  if (profileLoading || isLoading) {
+  // Show loading state only on initial load
+  if (isLoading && products.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -393,7 +393,7 @@ function DashboardContent() {
 
     </div>
   );
-}
+});
 
 export default function SellerDashboard() {
   return (

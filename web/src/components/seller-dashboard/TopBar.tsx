@@ -11,7 +11,6 @@ import { useSearch } from '@/contexts/SearchContext';
 import { useDashboardTheme } from '@/contexts/DashboardThemeContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import Notifications from './Notifications';
-import ProfileDropdown from './ProfileDropdown';
 
 export default function TopBar() {
   const router = useRouter();
@@ -212,6 +211,7 @@ export default function TopBar() {
             >
               {getUserAvatar() ? (
                 <Image
+                  key={getUserAvatar()}
                   src={getUserAvatar() as string}
                   alt="Profile"
                   width={40}
@@ -231,6 +231,7 @@ export default function TopBar() {
                     <div className="h-10 w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-orange-600">
                       {getUserAvatar() ? (
                         <Image
+                          key={getUserAvatar()}
                           src={getUserAvatar() as string}
                           alt="Profile"
                           width={40}

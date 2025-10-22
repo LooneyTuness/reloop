@@ -59,8 +59,7 @@ function PayoutsContent() {
             {t('payoutsComingSoon')}
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-            {t('workingOnPayoutSystem')} 
-            {t('trackEarningsManagePayments')}
+            {t('workingOnPayoutSystem')}
           </p>
           <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
             <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
@@ -71,7 +70,6 @@ function PayoutsContent() {
               <li>• {t('multiplePaymentMethods')}</li>
               <li>• {t('automatedPayoutScheduling')}</li>
               <li>• {t('detailedTransactionHistory')}</li>
-              <li>• {t('taxReportingTools')}</li>
             </ul>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

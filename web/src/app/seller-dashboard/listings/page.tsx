@@ -9,12 +9,10 @@ import BackButton from '@/components/seller-dashboard/BackButton';
 import { Search, Plus, Edit, Trash2, Package } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
-import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import ListingsSkeleton from '@/components/seller-dashboard/ListingsSkeleton';
 
-function ListingsContent() {
+const ListingsContent = React.memo(function ListingsContent() {
   const { products, isLoading, error, updateProduct, deleteProduct } = useDashboard();
-  const { loading: profileLoading } = useSellerProfile();
   const searchParams = useSearchParams();
   const router = useRouter();
   const { t } = useDashboardLanguage();
@@ -22,7 +20,6 @@ function ListingsContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
-  const [filteredProducts, setFilteredProducts] = useState(products);
 
   // Handle browser extension errors
   useEffect(() => {
@@ -61,17 +58,20 @@ function ListingsContent() {
     }
   }, [searchParams]);
 
-  useEffect(() => {
+  // Memoize filtered and sorted products to avoid expensive recalculations
+  const filteredProducts = React.useMemo(() => {
     // Filter products based on search query and status filter
+    const searchLower = searchQuery.toLowerCase();
     const filtered = products.filter(product => {
-      const matchesSearch = (product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                           (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      const matchesSearch = !searchQuery || 
+        (product.title && product.title.toLowerCase().includes(searchLower)) ||
+        (product.description && product.description.toLowerCase().includes(searchLower));
       const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
 
     // Sort products
-    filtered.sort((a, b) => {
+    return filtered.sort((a, b) => {
       switch (sortBy) {
         case 'newest':
           return new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime();
@@ -87,8 +87,6 @@ function ListingsContent() {
           return 0;
       }
     });
-
-    setFilteredProducts(filtered);
   }, [products, searchQuery, statusFilter, sortBy]);
 
 
@@ -129,7 +127,8 @@ function ListingsContent() {
     }
   };
 
-  if (profileLoading || isLoading) {
+  // Show loading state only on initial load
+  if (isLoading && products.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -339,7 +338,7 @@ function ListingsContent() {
         )}
       </div>
   );
-}
+});
 
 export default function ListingsPage() {
   return (

@@ -117,58 +117,53 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [lastFetchTime, setLastFetchTime] = useState<number>(0);
   const [cacheTimeout] = useState<number>(30000); // 30 seconds cache
+  const [isFetching, setIsFetching] = useState(false); // Track if a fetch is in progress
 
 
   // Function to sync product statuses with order statuses
-  const syncProductStatusesWithOrders = useCallback(async (products: DashboardProduct[], orders: DashboardOrder[]) => {
-    const updatedProducts = [...products];
+  // Optimized: Not async, uses Map for O(1) lookups
+  const syncProductStatusesWithOrders = useCallback((products: DashboardProduct[], orders: DashboardOrder[]) => {
+    // Create a map for fast product lookup
+    const productMap = new Map(products.map(p => [String(p.id), p]));
     
     // Process orders that already have order_items data
     for (const order of orders) {
       if (order.seller_order_items && order.seller_order_items.length > 0) {
-        const productIdsInOrder = order.seller_order_items.map((item: OrderItem) => String(item.item_id));
+        // Map order status to product status once
+        let productStatus: string = 'active';
+        switch (order.status) {
+          case 'pending':
+          case 'processing':
+            productStatus = 'sold';
+            break;
+          case 'shipped':
+            productStatus = 'shipped';
+            break;
+          case 'delivered':
+            productStatus = 'delivered';
+            break;
+          case 'cancelled':
+            productStatus = 'active';
+            break;
+          default:
+            productStatus = 'sold';
+        }
         
-        if (productIdsInOrder.length > 0) {
-          // Map order status to product status
-          let productStatus: string = 'active';
-          switch (order.status) {
-            case 'pending':
-              productStatus = 'sold';
-              break;
-            case 'processing':
-              productStatus = 'sold';
-              break;
-            case 'shipped':
-              productStatus = 'shipped';
-              break;
-            case 'delivered':
-              productStatus = 'delivered';
-              break;
-            case 'cancelled':
-              productStatus = 'active';
-              break;
-            default:
-              productStatus = 'sold';
+        // Update products in this order
+        for (const item of order.seller_order_items) {
+          const productId = String(item.item_id);
+          const product = productMap.get(productId);
+          if (product && product.status !== productStatus) {
+            productMap.set(productId, {
+              ...product,
+              status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden'
+            });
           }
-          
-          // Update products in this order
-          productIdsInOrder.forEach((productId: string) => {
-            const productIndex = updatedProducts.findIndex(p => String(p.id) === String(productId));
-            if (productIndex !== -1) {
-              const currentStatus = updatedProducts[productIndex].status;
-              if (currentStatus !== productStatus) {
-                updatedProducts[productIndex] = {
-                  ...updatedProducts[productIndex],
-                  status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden'
-                };
-              }
-            }
-          });
         }
       }
     }
     
-    return updatedProducts;
+    return Array.from(productMap.values());
   }, []);
 
   const refreshData = useCallback(async (forceRefresh = false) => {
@@ -184,13 +179,23 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return;
     }
     
-    // Check cache timeout
-    const now = Date.now();
-    if (!forceRefresh && (now - lastFetchTime) < cacheTimeout) {
+    // Prevent multiple simultaneous fetches
+    if (isFetching) {
       return;
     }
     
-    setIsLoading(true);
+    // Check cache timeout - only show loading for first fetch or forced refresh
+    const now = Date.now();
+    const hasCache = lastFetchTime > 0;
+    if (!forceRefresh && hasCache && (now - lastFetchTime) < cacheTimeout) {
+      return;
+    }
+    
+    // Only show loading spinner on first load
+    if (!hasCache) {
+      setIsLoading(true);
+    }
+    setIsFetching(true);
     setError(null);
     
     try {
@@ -218,7 +223,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       // Handle any rejected promises silently
 
 
-      // Transform items to dashboard products first
+      // Transform items to dashboard products first (optimized)
       const dashboardProducts: DashboardProduct[] = items.map(item => ({
         ...item,
         name: item.title || item.name || 'Untitled',
@@ -227,8 +232,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden') || 'active'
       }));
 
-      // Sync product statuses with order statuses
-      const syncedProducts = await syncProductStatusesWithOrders(dashboardProducts, orders);
+      // Sync product statuses with order statuses (now synchronous)
+      const syncedProducts = syncProductStatusesWithOrders(dashboardProducts, orders);
 
       // Transform orders to dashboard orders
       
@@ -329,8 +334,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
     } finally {
       setIsLoading(false);
+      setIsFetching(false);
     }
-  }, [user, profileLoading, syncProductStatusesWithOrders, lastFetchTime, cacheTimeout]);
+  }, [user, profileLoading, syncProductStatusesWithOrders, lastFetchTime, cacheTimeout, isFetching]);
 
   // Test function to manually update product statuses
   const testUpdateProductStatuses = (status: string) => {
