@@ -151,7 +151,7 @@ function ListingsContent() {
   }
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
+    <div className="px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
           <div>

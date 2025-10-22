@@ -417,7 +417,7 @@ function OrdersContent() {
 
   return (
     <SellerDashboardLayout>
-      <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
+      <div className="px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">

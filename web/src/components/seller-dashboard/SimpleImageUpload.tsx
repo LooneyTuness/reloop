@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { Upload, X } from 'lucide-react';
 import { imageStorageService } from '@/lib/supabase/image-storage';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 
 interface SimpleImageUploadProps {
   images: string[];
@@ -111,7 +112,7 @@ export default function SimpleImageUpload({
 
       {/* Upload Area */}
       {canAddMore && (
-        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6">
           <input
             ref={fileInputRef}
             type="file"
@@ -123,7 +124,7 @@ export default function SimpleImageUpload({
           />
           
           <div className="space-y-2">
-            <div className="flex justify-center">
+            <div className="flex">
               <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-full">
                 {isUploading ? (
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
@@ -160,9 +161,11 @@ export default function SimpleImageUpload({
           {images.map((image, index) => (
             <div key={index} className="relative group">
               <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
-                <img
+                <Image
                   src={image}
                   alt={`Product image ${index + 1}`}
+                  width={200}
+                  height={200}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -188,8 +191,10 @@ export default function SimpleImageUpload({
 
       {/* Empty state when no images */}
       {images.length === 0 && (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          <Upload size={48} className="mx-auto mb-2 opacity-50" />
+        <div className="py-8 text-gray-500 dark:text-gray-400">
+          <div className="flex items-center mb-2">
+            <Upload size={48} className="opacity-50" />
+          </div>
           <p>No images uploaded yet</p>
           {required && (
             <p className="text-sm text-red-500 mt-1">At least one image is required</p>

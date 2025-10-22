@@ -41,6 +41,7 @@ export default function SellerProfileManager() {
   const [success, setSuccess] = useState<string | null>(null);
   const [showCropModal, setShowCropModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -144,6 +145,7 @@ export default function SellerProfileManager() {
   const handleCropComplete = async (croppedImageBlob: Blob) => {
     if (!user?.id) return;
 
+    setIsUploadingImage(true);
     try {
       // Convert blob to file
       const file = new File([croppedImageBlob], 'profile-picture.jpg', {
@@ -162,9 +164,14 @@ export default function SellerProfileManager() {
       setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
       updateAvatar(imageUrl);
       setSuccess('Profile picture updated!');
+      
+      // Reload profile to ensure consistency
+      await loadProfile();
     } catch (error) {
       console.error('Error uploading cropped image:', error);
       setError('Failed to update profile picture');
+    } finally {
+      setIsUploadingImage(false);
     }
   };
 
@@ -177,7 +184,7 @@ export default function SellerProfileManager() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           {t('sellerProfile')}
@@ -207,10 +214,14 @@ export default function SellerProfileManager() {
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               {t('profilePicture')}
             </h2>
-            <div className="text-center">
+            <div>
               <div className="relative inline-block">
-                <div className="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mx-auto mb-4">
-                  {profile?.avatar_url ? (
+                <div className="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mb-4 relative">
+                  {isUploadingImage ? (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    </div>
+                  ) : profile?.avatar_url ? (
                     <Image
                       src={profile.avatar_url}
                       alt="Profile"
@@ -224,13 +235,18 @@ export default function SellerProfileManager() {
                     </div>
                   )}
                 </div>
-                <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors">
+                <label className={`absolute bottom-0 right-0 p-2 rounded-full transition-colors ${
+                  isUploadingImage 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-blue-600 text-white cursor-pointer hover:bg-blue-700'
+                }`}>
                   <Camera size={16} />
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="hidden"
+                    disabled={isUploadingImage}
                   />
                 </label>
               </div>

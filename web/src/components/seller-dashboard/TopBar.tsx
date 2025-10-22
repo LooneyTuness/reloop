@@ -25,12 +25,15 @@ export default function TopBar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
 
-  // Close search results when clicking outside
+  // Close search results and profile dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
       if (!target.closest('.search-container')) {
         setShowSearchResults(false);
+      }
+      if (!target.closest('.profile-dropdown-container')) {
+        setShowProfileDropdown(false);
       }
     };
 
@@ -197,7 +200,7 @@ export default function TopBar() {
           </button>
 
           {/* User avatar */}
-          <div className="relative flex items-center flex-shrink-0">
+          <div className="relative flex items-center flex-shrink-0 profile-dropdown-container">
             <button
               onClick={handleProfileClick}
               className={`h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden ${

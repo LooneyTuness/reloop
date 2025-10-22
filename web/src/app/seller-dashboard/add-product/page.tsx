@@ -101,7 +101,7 @@ function AddProductContent() {
   };
 
   return (
-    <div className="px-6 py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8">
         <div className="flex items-center mb-8">
           <button
             onClick={() => router.back()}

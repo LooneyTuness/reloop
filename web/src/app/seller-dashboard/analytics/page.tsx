@@ -19,7 +19,7 @@ function AnalyticsContent() {
   }, [router]);
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
+    <div className="px-3 sm:px-6 py-4 sm:py-8">
       <div className="max-w-2xl mx-auto text-center">
         {/* Header */}
         <div className="mb-8">
