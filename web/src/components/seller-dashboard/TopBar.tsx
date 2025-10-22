@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, Bell, X, Eye, EyeOff, LogOut } from 'lucide-react';
+import { Search, Bell, X, Eye, EyeOff, LogOut, Menu } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,6 +23,7 @@ export default function TopBar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Close search results and profile dropdown when clicking outside
   useEffect(() => {
@@ -102,6 +103,11 @@ export default function TopBar() {
     return 'User';
   };
 
+  const getUserInitial = () => {
+    const name = getUserDisplayName();
+    return name.charAt(0).toUpperCase();
+  };
+
   const getUserAvatar = useCallback(() => {
     if (sellerProfile?.avatar_url) {
       return sellerProfile.avatar_url;
@@ -122,11 +128,40 @@ export default function TopBar() {
     }
   }, [sellerProfile, getUserAvatar]);
 
+  // Listen for mobile menu state changes
+  React.useEffect(() => {
+    const handleMobileMenuToggle = () => {
+      setIsMobileMenuOpen(prev => !prev);
+    };
+
+    window.addEventListener('toggleMobileMenu', handleMobileMenuToggle);
+    return () => {
+      window.removeEventListener('toggleMobileMenu', handleMobileMenuToggle);
+    };
+  }, []);
+
   return (
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 shadow-md">
       <div className="flex items-center justify-between h-full px-2 sm:px-8 gap-1 sm:gap-4">
-        {/* Search */}
-        <div className="flex-1 max-w-[140px] sm:max-w-lg relative search-container ml-12 lg:ml-0">
+        {/* Mobile hamburger menu + Search */}
+        <div className="flex items-center gap-3 flex-1">
+          {/* Mobile hamburger menu */}
+          {!isMobileMenuOpen && (
+            <button
+              onClick={() => {
+                // This will be handled by the Sidebar component
+                const event = new CustomEvent('toggleMobileMenu');
+                window.dispatchEvent(event);
+              }}
+              className="lg:hidden p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
+              aria-label={t('mobileMenu')}
+            >
+              <Menu size={18} />
+            </button>
+          )}
+          
+          {/* Search */}
+          <div className="flex-1 max-w-[140px] sm:max-w-lg relative search-container">
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-2.5 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
             <input
@@ -189,6 +224,7 @@ export default function TopBar() {
               )}
             </div>
           )}
+          </div>
         </div>
 
         {/* Right side */}
@@ -230,7 +266,7 @@ export default function TopBar() {
               title={`${getUserDisplayName()} - Click to open profile menu`}
             >
               <span className="text-white text-sm font-semibold">
-                {getUserDisplayName().charAt(0).toUpperCase()}
+                {getUserInitial()}
               </span>
               {getUserAvatar() && (
                 <Image
@@ -256,7 +292,7 @@ export default function TopBar() {
                   <div className="flex items-center space-x-3">
                     <div className="h-10 w-10 rounded-full flex items-center justify-center overflow-hidden relative bg-gradient-to-br from-blue-500 to-orange-600">
                       <span className="text-white text-sm font-semibold">
-                        {getUserDisplayName().charAt(0).toUpperCase()}
+                        {getUserInitial()}
                       </span>
                       {getUserAvatar() && (
                         <Image

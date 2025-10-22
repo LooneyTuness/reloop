@@ -32,6 +32,9 @@ const dashboardTranslations = {
     back: "Назад",
     backToDashboard: "Назад кон контролната табла",
     
+    // Common messages
+    pleaseWait: "Ве молиме почекајте...",
+    
     // Save states
     saved: "Зачувано",
     
@@ -462,6 +465,9 @@ const dashboardTranslations = {
     // Back button
     back: "Back",
     backToDashboard: "Back to Dashboard",
+    
+    // Common messages
+    pleaseWait: "Please wait...",
     
     // Save states
     saved: "Saved",

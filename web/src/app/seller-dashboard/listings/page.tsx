@@ -300,7 +300,7 @@ const ListingsContent = React.memo(function ListingsContent() {
                       className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     >
                       <option value="active">{t('statusAvailable')}</option>
-                      <option value="hidden">{t('statusHidden')}</option>
+                      <option value="inactive">{t('statusHidden')}</option>
                       <option value="sold">{t('statusSold')}</option>
                       <option value="draft">{t('statusDraft')}</option>
                     </select>

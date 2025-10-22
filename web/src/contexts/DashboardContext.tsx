@@ -37,7 +37,7 @@ interface DashboardProduct extends Omit<Item, 'price'> {
   name?: string;
   views?: number;
   price?: string;
-  status?: 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden';
+  status?: 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive';
   category?: string;
   categories?: {
     id: string;
@@ -156,7 +156,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           if (product && product.status !== productStatus) {
             productMap.set(productId, {
               ...product,
-              status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden'
+              status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
             });
           }
         }
@@ -237,7 +237,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         name: item.title || item.name || 'Untitled',
         views: Math.floor(Math.random() * 1000) + 100,
         price: item.price?.toFixed(2) || '0.00',
-        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden') || 'active'
+        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || 'active'
       }));
       console.timeEnd('  Transform items');
 
@@ -367,7 +367,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     setProducts(prev => prev.map(product => {
       return {
         ...product,
-        status: status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden'
+        status: status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
       };
     }));
   };
@@ -424,7 +424,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             if (productIdsInOrderSet.has(String(product.id))) {
               return {
                 ...product,
-                status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden'
+                status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
               };
             }
             return product; // Keep other products unchanged
@@ -561,7 +561,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           ...product, 
           ...updatedProduct,
           price: updatedProduct.price ? updatedProduct.price.toFixed(2) : product.price,
-          status: (updatedProduct.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden') || product.status
+          status: (updatedProduct.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || product.status
         } : product
       ));
     } catch (err) {
@@ -598,7 +598,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         ...item,
         views: Math.floor(Math.random() * 1000) + 100,
         price: item.price?.toFixed(2) || '0.00',
-        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden') || 'active'
+        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || 'active'
       }));
     } catch (err) {
       console.error('Error searching products:', err);

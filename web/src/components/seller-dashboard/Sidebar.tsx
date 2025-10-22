@@ -11,8 +11,7 @@ import {
   ShoppingBag, 
   CreditCard, 
   Settings, 
-  LogOut,
-  Menu
+  LogOut
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSellerProfile } from '@/contexts/SellerProfileContext';
@@ -36,6 +35,18 @@ export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const navigationItems = getNavigationItems(t);
+
+  // Listen for custom toggle event from TopBar
+  React.useEffect(() => {
+    const handleToggleMobileMenu = () => {
+      setIsMobileMenuOpen(prev => !prev);
+    };
+
+    window.addEventListener('toggleMobileMenu', handleToggleMobileMenu);
+    return () => {
+      window.removeEventListener('toggleMobileMenu', handleToggleMobileMenu);
+    };
+  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -61,6 +72,11 @@ export default function Sidebar() {
     return 'Seller';
   }, [sellerProfile?.full_name, sellerProfile?.business_name]);
 
+  const getUserInitial = useCallback(() => {
+    const name = getUserDisplayName();
+    return name.charAt(0).toUpperCase();
+  }, [getUserDisplayName]);
+
   const getUserAvatar = useCallback(() => {
     if (sellerProfile?.avatar_url) {
       return sellerProfile.avatar_url;
@@ -74,23 +90,17 @@ export default function Sidebar() {
     console.log('Sidebar - Full profile data:', sellerProfile);
     console.log('Sidebar - getUserAvatar():', getUserAvatar());
     console.log('Sidebar - getUserDisplayName():', getUserDisplayName());
+    console.log('Sidebar - getUserInitial():', getUserInitial());
     if (sellerProfile?.avatar_url) {
       console.log('Sidebar - Avatar URL:', sellerProfile.avatar_url);
     } else {
       console.log('Sidebar - No avatar URL found');
     }
-  }, [sellerProfile, getUserAvatar, getUserDisplayName]);
+  }, [sellerProfile, getUserAvatar, getUserDisplayName, getUserInitial]);
 
   return (
     <>
-      {/* Mobile menu button */}
-      <button
-        onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-4 left-2 z-[60] p-2 rounded-lg bg-white dark:bg-gray-800 shadow-xl border-2 border-gray-300 dark:border-gray-600 hover:shadow-2xl transition-all duration-200"
-        aria-label={t('mobileMenu')}
-      >
-        <Menu size={18} />
-      </button>
+      {/* Mobile menu button - moved to TopBar */}
 
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
@@ -163,7 +173,7 @@ export default function Sidebar() {
             <div className="flex items-center space-x-3 px-3 py-3 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800 dark:to-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
               <div className="h-10 w-10 rounded-full flex items-center justify-center relative flex-shrink-0 bg-gradient-to-br from-blue-500 to-orange-600">
                 <span className="text-white text-sm font-semibold">
-                  {getUserDisplayName().charAt(0).toUpperCase()}
+                  {getUserInitial()}
                 </span>
                 {getUserAvatar() && (
                   <Image

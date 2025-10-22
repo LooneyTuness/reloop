@@ -7,7 +7,8 @@ import SimpleImageUpload from '@/components/seller-dashboard/SimpleImageUpload';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { CategoryProvider } from '@/contexts/CategoryContext';
 import CategorySelector from '@/components/category/CategorySelector';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
+import BackButton from '@/components/seller-dashboard/BackButton';
 import { toast } from 'sonner';
 import { CategoryWithChildren } from '@/types/category';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
@@ -102,13 +103,7 @@ function AddProductContent() {
   return (
     <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl">
         <div className="mb-8">
-          <button
-            onClick={() => router.back()}
-            className="mb-6 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center gap-2 hover:gap-3 transition-all group rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-            {t('back')}
-          </button>
+          <BackButton className="mb-6" onClick={() => router.back()} />
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {t('addNewProduct')}
