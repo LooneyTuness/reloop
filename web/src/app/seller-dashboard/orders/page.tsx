@@ -484,7 +484,7 @@ const OrdersContent = React.memo(function OrdersContent() {
 
         {/* Filters and Search */}
         <div className="px-3 sm:px-6 flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="flex-1">
+          <div className="flex-1 max-w-md">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
@@ -500,7 +500,7 @@ const OrdersContent = React.memo(function OrdersContent() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium text-sm"
+              className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium text-sm"
             >
               <option value="all">{t('allOrders')}</option>
               <option value="pending">{t('pending')}</option>
@@ -769,7 +769,7 @@ const OrdersContent = React.memo(function OrdersContent() {
 
         {/* Order Details Modal */}
         {selectedOrder && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
             <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6 pt-8">
                 <div className="flex items-center justify-between mb-6">
@@ -806,7 +806,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                         {getStatusIcon(selectedOrder.status)}
                     <div>
                           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            Order Status
+                            {t('orderStatus')}
                           </h3>
                           <span className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(selectedOrder.status)}`}>
                             {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}
@@ -814,7 +814,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                     </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-order-total">Order Total</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-order-total">{t('orderTotal')}</p>
                         <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 print-currency">
                           {selectedOrder.total_amount?.toFixed(2) || '0.00'} {t("currency")}
                         </p>
@@ -823,7 +823,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                     
                     {/* Status Timeline */}
                     <div className="mt-4">
-                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Order Timeline</h4>
+                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('orderTimeline')}</h4>
                       <div className="flex items-center space-x-4">
                         {['pending', 'processing', 'shipped', 'delivered'].map((status, index) => {
                           const isActive = selectedOrder.status === status;
@@ -870,13 +870,13 @@ const OrdersContent = React.memo(function OrdersContent() {
                     <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                         <User className="w-5 h-5" />
-                        Order Information
+{t('orderInformation')}
                       </h3>
                       <div className="space-y-3">
                         <div className="flex items-center gap-3">
                           <User className="w-4 h-4 text-gray-500" />
                     <div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Order ID</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{t('orderId')}</p>
                             <p className="font-medium text-gray-900 dark:text-white font-mono">
                               #{selectedOrder.id}
                             </p>
@@ -885,7 +885,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                         <div className="flex items-center gap-3">
                           <Calendar className="w-4 h-4 text-gray-500" />
                           <div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Order Date</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{t('orderDate')}</p>
                             <p className="font-medium text-gray-900 dark:text-white">
                               {selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleString() : 'Unknown'}
                             </p>
@@ -894,7 +894,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                         <div className="flex items-center gap-3">
                           <CreditCard className="w-4 h-4 text-gray-500" />
                           <div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Payment Method</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{t('paymentMethod')}</p>
                             <p className="font-medium text-gray-900 dark:text-white capitalize">
                               {selectedOrder.payment_method || 'Unknown'}
                             </p>
@@ -904,7 +904,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                           <div className="flex items-center gap-3">
                             <Clock className="w-4 h-4 text-gray-500" />
                     <div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">Last Updated</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">{t('lastUpdated')}</p>
                               <p className="font-medium text-gray-900 dark:text-white">
                                 {new Date(selectedOrder.updated_at).toLocaleString()}
                               </p>
@@ -917,29 +917,29 @@ const OrdersContent = React.memo(function OrdersContent() {
                     <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 print-mk-order-details">
                         <Package className="w-5 h-5" />
-                        Order Summary
+{t('orderSummary')}
                       </h3>
                       <div className="space-y-3">
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400 print-mk-order-id">Order ID:</span>
+                          <span className="text-gray-600 dark:text-gray-400 print-mk-order-id">{t('orderId')}:</span>
                           <span className="font-mono text-sm text-gray-900 dark:text-white">
                             {generateOrderNumber(selectedOrder.id)}
                           </span>
                       </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400 print-mk-items">Items Count:</span>
+                          <span className="text-gray-600 dark:text-gray-400 print-mk-items">{t('itemsCount')}:</span>
                           <span className="font-medium text-gray-900 dark:text-white">
                             {selectedOrder.item_count || 0} <span className="print-mk-items">items</span>
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400 print-mk-items">Items:</span>
+                          <span className="text-gray-600 dark:text-gray-400 print-mk-items">{t('items')}:</span>
                           <span className="font-medium text-gray-900 dark:text-white">
                             {selectedOrder.seller_order_items?.length || selectedOrder.order_items?.length || 0} <span className="print-mk-items">items</span>
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400 print-mk-payment-method">Payment Method:</span>
+                          <span className="text-gray-600 dark:text-gray-400 print-mk-payment-method">{t('paymentMethod')}:</span>
                           <span className="font-medium text-gray-900 dark:text-white flex items-center gap-1">
                             <CreditCard className="w-4 h-4" />
                             {selectedOrder.payment_method || 'Unknown'}
@@ -962,14 +962,14 @@ const OrdersContent = React.memo(function OrdersContent() {
                     <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 print-mk-customer-info">
               <User className="w-5 h-5" />
-              Customer Information
+{t('customerInformation')}
             </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {selectedOrder.full_name && (
                           <div className="flex items-center gap-3">
                             <User className="w-4 h-4 text-gray-500" />
                     <div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-full-name">Full Name</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-full-name">{t('fullName')}</p>
                               <p className="font-medium text-gray-900 dark:text-white">
                                 {selectedOrder.full_name}
                               </p>
@@ -980,7 +980,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                           <div className="flex items-center gap-3">
                             <Mail className="w-4 h-4 text-gray-500" />
                     <div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-email">Email</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-email">{t('email')}</p>
                               <p className="font-medium text-gray-900 dark:text-white">
                                 {selectedOrder.email}
                               </p>
@@ -991,7 +991,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                           <div className="flex items-center gap-3">
                             <Phone className="w-4 h-4 text-gray-500" />
                             <div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-phone">Phone</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-phone">{t('phone')}</p>
                               <p className="font-medium text-gray-900 dark:text-white">
                                 {selectedOrder.phone}
                               </p>
@@ -1007,14 +1007,14 @@ const OrdersContent = React.memo(function OrdersContent() {
                     <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 print-mk-shipping-address">
               <MapPin className="w-5 h-5" />
-              Shipping Address
+{t('shippingAddress')}
             </h3>
                       <div className="space-y-2">
                         {selectedOrder.address_line1 && (
                           <div className="flex items-start gap-3">
                             <MapPin className="w-4 h-4 text-gray-500 mt-1" />
                   <div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-address">Address</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-address">{t('address')}</p>
                               <p className="font-medium text-gray-900 dark:text-white">
                                 {selectedOrder.address_line1}
                               </p>
@@ -1030,7 +1030,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                           <div className="flex items-center gap-3">
                             <MapPin className="w-4 h-4 text-gray-500" />
                             <div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-city-postal">City & Postal Code</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 print-mk-city-postal">{t('cityPostalCode')}</p>
                               <p className="font-medium text-gray-900 dark:text-white">
                                 {[selectedOrder.city, selectedOrder.postal_code].filter(Boolean).join(', ') || 'Not provided'}
                               </p>
@@ -1058,7 +1058,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2 print-mk-products">
                       <Package className="w-5 h-5" />
-                      Products in this Order ({selectedOrder.seller_order_items?.length || selectedOrder.order_items?.length || 0} <span className="print-mk-items">items</span>)
+{t('productsInThisOrder')} ({selectedOrder.seller_order_items?.length || selectedOrder.order_items?.length || 0} <span className="print-mk-items">{t('items')}</span>)
                     </h3>
                     <div className="space-y-6">
                       {(selectedOrder.seller_order_items || selectedOrder.order_items || []).map((orderItem: OrderItem, index: number) => {
@@ -1303,7 +1303,7 @@ const OrdersContent = React.memo(function OrdersContent() {
 
         {/* Image Viewer Modal */}
         {imageViewer.isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-75">
             <div className="relative max-w-4xl max-h-[90vh] w-full mx-4">
               {/* Close button */}
               <button
