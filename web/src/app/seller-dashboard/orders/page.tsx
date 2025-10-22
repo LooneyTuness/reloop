@@ -417,7 +417,7 @@ function OrdersContent() {
 
   return (
     <SellerDashboardLayout>
-      <div className="py-4 sm:py-8">
+      <div className="w-full py-4 sm:py-8">
         {/* Header */}
         <div className="px-3 sm:px-6 mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -466,7 +466,7 @@ function OrdersContent() {
         )}
 
         {/* Orders Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mx-0 px-0">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
