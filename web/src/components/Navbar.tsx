@@ -98,6 +98,7 @@ export default function Navbar() {
       .from("items")
       .select("id,title,description,images")
       .eq("is_active", true)
+      .neq('status', 'sold')
       .or(`title.ilike.${like},description.ilike.${like}`)
       .order("created_at", { ascending: false })
       .limit(6);
@@ -114,6 +115,7 @@ export default function Navbar() {
       .from("items")
       .select("id,title,description,images")
       .eq("is_active", true)
+      .neq('status', 'sold')
       .or(`title.ilike.${like},description.ilike.${like}`)
       .order("created_at", { ascending: false })
       .limit(6);

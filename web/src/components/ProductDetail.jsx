@@ -49,6 +49,7 @@ export default function ProductDetail() {
           .select("*")
           .eq("id", id)
           .eq("is_active", true)
+          .neq('status', 'sold')
           .single();
 
         if (error) {

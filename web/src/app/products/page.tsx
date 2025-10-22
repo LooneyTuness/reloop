@@ -20,6 +20,7 @@ export default async function ProductsPage({
     .from("items" as any)
     .select("*")
     .or("and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)")
+    .neq('status', 'sold')
     .is("deleted_at", null)
     .order("created_at", { ascending: false });
 

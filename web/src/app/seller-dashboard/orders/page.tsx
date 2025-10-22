@@ -192,7 +192,7 @@ function OrdersContent() {
       
       pdf.setFontSize(12);
       pdf.setFont('helvetica', 'normal');
-      yPosition = addText(`${translations.orderId}: ${order.id}`, margin, yPosition + 5);
+      yPosition = addText(`${translations.orderId}: ${generateOrderNumber(order.id)}`, margin, yPosition + 5);
       yPosition = addText(`${translations.orderDate}: ${order.created_at ? new Date(order.created_at).toLocaleDateString() : translations.unknown}`, margin, yPosition);
       yPosition = addText(`${translations.status}: ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}`, margin, yPosition);
       
@@ -298,7 +298,7 @@ function OrdersContent() {
       pdf.text(new Date().toLocaleString(), margin + 30, pdf.internal.pageSize.getHeight() - 20);
 
       // Save the PDF
-      pdf.save(`order-${order.id}-${new Date().toISOString().split('T')[0]}.pdf`);
+      pdf.save(`order-${generateOrderNumber(order.id)}-${new Date().toISOString().split('T')[0]}.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert(translations.errorGeneratingPDF);
@@ -326,6 +326,12 @@ function OrdersContent() {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [imageViewer.isOpen, nextImage, prevImage]);
+
+  // Generate a user-friendly order number from UUID
+  const generateOrderNumber = (orderId: string) => {
+    // Take the first 6 characters and make them uppercase
+    return `#${orderId.substring(0, 6).toUpperCase()}`;
+  };
 
   // Show zero state if no orders
   if (!isLoading && orders.length === 0) {
@@ -538,7 +544,7 @@ function OrdersContent() {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {order.id}
+                            {generateOrderNumber(order.id)}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
                             {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'Unknown date'}
@@ -726,7 +732,7 @@ function OrdersContent() {
                     Order Details
                   </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      <span className="print-mk-order-id">Order #</span>{selectedOrder.id} • <span className="print-mk-order-date">Date: </span>{selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : 'Unknown date'}
+                      <span className="print-mk-order-id">Order #</span>{generateOrderNumber(selectedOrder.id)} • <span className="print-mk-order-date">Date: </span>{selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : 'Unknown date'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -871,8 +877,8 @@ function OrdersContent() {
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400 print-mk-order-id">Order ID:</span>
                           <span className="font-mono text-sm text-gray-900 dark:text-white">
-                            {selectedOrder.id}
-                        </span>
+                            {generateOrderNumber(selectedOrder.id)}
+                          </span>
                       </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400 print-mk-items">Items Count:</span>

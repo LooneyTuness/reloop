@@ -88,6 +88,7 @@ export async function GET(
       .in('category_id', categoryIds)
       .eq('is_active', true)
       .is('deleted_at', null)
+      .neq('status', 'sold')
       .order(sortBy, { ascending: sortOrder === 'asc' })
       .range(offset, offset + limit - 1);
 
@@ -158,7 +159,8 @@ export async function GET(
       .select('*', { count: 'exact', head: true })
       .in('category_id', categoryIds)
       .eq('is_active', true)
-      .is('deleted_at', null);
+      .is('deleted_at', null)
+      .neq('status', 'sold');
 
     // Apply same filters for count
     if (minPrice) {

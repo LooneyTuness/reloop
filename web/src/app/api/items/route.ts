@@ -47,8 +47,9 @@ export async function GET(request: NextRequest) {
         )
       `)
       .eq('is_active', true)
-      // Show all active items that aren't deleted
+      // Show all active items that aren't deleted and aren't sold
       .is('deleted_at', null)
+      .neq('status', 'sold')
       .order(sortBy, { ascending: sortOrder === 'asc' })
       .range(offset, offset + limit - 1);
 
@@ -196,7 +197,8 @@ export async function GET(request: NextRequest) {
       .from('items')
       .select('*', { count: 'exact', head: true })
       .eq('is_active', true)
-      .is('deleted_at', null);
+      .is('deleted_at', null)
+      .neq('status', 'sold');
 
     // Apply same filters to count query
     if (minPrice) {

@@ -24,8 +24,9 @@ export async function GET(request: NextRequest) {
       .from('items')
       .select('*')
       .eq('is_active', true)
-      // Show all active items that aren't deleted
+      // Show all active items that aren't deleted and aren't sold
       .is('deleted_at', null)
+      .neq('status', 'sold')
       .order('created_at', { ascending: false })
       .limit(limit);
 

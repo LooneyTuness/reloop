@@ -53,13 +53,14 @@ export default function Products({
 
   const fetchItems = useCallback(async () => {
     try {
-      // Use a comprehensive query that handles both filtering systems
+      // Use a comprehensive query that handles both filtering systems and excludes sold items
       const { data, error } = await supabase
         .from("items")
         .select("*")
         .or(
           "and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)"
         )
+        .neq('status', 'sold')
         .is("deleted_at", null)
         .order("created_at", { ascending: false });
 
