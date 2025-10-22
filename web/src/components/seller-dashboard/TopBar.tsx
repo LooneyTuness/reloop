@@ -15,7 +15,7 @@ import Notifications from './Notifications';
 export default function TopBar() {
   const router = useRouter();
   const { user, signOut } = useAuth();
-  const { profile: sellerProfile } = useSellerProfile();
+  const { profile: sellerProfile, loading: profileLoading } = useSellerProfile();
   const { notifications, unreadCount, markAsRead, dismissAllNotifications } = useNotifications();
   const { searchQuery, setSearchQuery, performSearch, clearSearch, isSearching } = useSearch();
   const { isDarkMode, toggleDarkMode } = useDashboardTheme();
@@ -23,6 +23,7 @@ export default function TopBar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
 
   // Close search results and profile dropdown when clicking outside
   useEffect(() => {
@@ -81,6 +82,13 @@ export default function TopBar() {
     }
   };
 
+  // Reset avatar loaded state when avatar URL changes
+  useEffect(() => {
+    if (sellerProfile?.avatar_url) {
+      setAvatarLoaded(false);
+    }
+  }, [sellerProfile?.avatar_url]);
+
   // Get user display name and avatar
   const getUserDisplayName = () => {
     if (sellerProfile?.full_name) {
@@ -101,6 +109,8 @@ export default function TopBar() {
     }
     return null;
   };
+
+  const showAvatarGradient = !profileLoading && !getUserAvatar();
 
   return (
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 shadow-md">
@@ -202,7 +212,9 @@ export default function TopBar() {
           <div className="relative flex items-center flex-shrink-0 profile-dropdown-container">
             <button
               onClick={handleProfileClick}
-              className={`h-7 w-7 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden bg-gradient-to-br from-blue-500 to-orange-600 ${
+              className={`h-7 w-7 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden ${
+                showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-100 dark:bg-gray-800'
+              } ${
                 showProfileDropdown 
                   ? 'ring-2 ring-blue-200' 
                   : 'hover:ring-2 hover:ring-gray-200'
@@ -218,23 +230,22 @@ export default function TopBar() {
                     width={40}
                     height={40}
                     unoptimized={true}
+                    onLoad={() => setAvatarLoaded(true)}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
-                      const parent = target.parentElement;
-                      if (parent) {
-                        const fallbackIcon = parent.querySelector('.fallback-icon');
-                        if (fallbackIcon) {
-                          (fallbackIcon as HTMLElement).style.display = 'block';
-                        }
-                      }
+                      setAvatarLoaded(false);
                     }}
                     className="w-full h-full object-cover rounded-full"
                   />
-                  <User className="text-white fallback-icon" size={16} style={{ display: 'none', position: 'absolute' }} />
+                  {!avatarLoaded && (
+                    <User className="text-gray-400 dark:text-gray-600" size={16} style={{ position: 'absolute' }} />
+                  )}
                 </>
-              ) : (
+              ) : showAvatarGradient ? (
                 <User className="text-white" size={16} />
+              ) : (
+                <User className="text-gray-400 dark:text-gray-600" size={16} />
               )}
             </button>
 
@@ -243,7 +254,9 @@ export default function TopBar() {
               <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-orange-600 overflow-hidden relative">
+                    <div className={`h-10 w-10 rounded-full flex items-center justify-center overflow-hidden relative ${
+                      showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-100 dark:bg-gray-800'
+                    }`}>
                       {getUserAvatar() ? (
                         <>
                           <Image
@@ -256,20 +269,17 @@ export default function TopBar() {
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
                               target.style.display = 'none';
-                              const parent = target.parentElement;
-                              if (parent) {
-                                const fallbackIcon = parent.querySelector('.fallback-icon-dropdown');
-                                if (fallbackIcon) {
-                                  (fallbackIcon as HTMLElement).style.display = 'block';
-                                }
-                              }
                             }}
                             className="w-full h-full object-cover rounded-full"
                           />
-                          <User className="text-white fallback-icon-dropdown" size={20} style={{ display: 'none', position: 'absolute' }} />
+                          {!avatarLoaded && (
+                            <User className="text-gray-400 dark:text-gray-600" size={20} style={{ position: 'absolute' }} />
+                          )}
                         </>
-                      ) : (
+                      ) : showAvatarGradient ? (
                         <User className="text-white" size={20} />
+                      ) : (
+                        <User className="text-gray-400 dark:text-gray-600" size={20} />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">

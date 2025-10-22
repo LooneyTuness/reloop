@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
@@ -14,7 +14,6 @@ import {
   Menu,
   X
 } from 'lucide-react';
-import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
@@ -32,7 +31,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useAuth();
-  const { profile: sellerProfile } = useSellerProfile();
+  const { profile: sellerProfile, loading: profileLoading } = useSellerProfile();
   const { t } = useDashboardLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
@@ -62,12 +61,14 @@ export default function Sidebar() {
     return 'Seller';
   };
 
+  const showAvatarGradient = !profileLoading && sellerProfile;
+
   return (
     <>
       {/* Mobile menu button */}
       <button
         onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-4 left-2 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-xl border-2 border-gray-300 dark:border-gray-600 hover:shadow-2xl transition-all duration-200"
+        className="lg:hidden fixed top-4 left-2 z-[60] p-2 rounded-lg bg-white dark:bg-gray-800 shadow-xl border-2 border-gray-300 dark:border-gray-600 hover:shadow-2xl transition-all duration-200"
         aria-label={isMobileMenuOpen ? t('closeMenu') : t('mobileMenu')}
       >
         {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -76,7 +77,7 @@ export default function Sidebar() {
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-[55]"
           onClick={toggleMobileMenu}
         />
       )}
@@ -84,8 +85,8 @@ export default function Sidebar() {
       {/* Sidebar */}
       <div className={`
         fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 
-        transform transition-transform duration-300 ease-in-out
-        ${isMobileMenuOpen ? 'translate-x-0 z-50' : '-translate-x-full z-30'}
+        transform transition-transform duration-300 ease-in-out overflow-y-auto
+        ${isMobileMenuOpen ? 'translate-x-0 z-[58]' : '-translate-x-full z-30'}
         lg:translate-x-0 lg:z-30
       `}>
         <div className="flex flex-col h-full">
@@ -144,8 +145,12 @@ export default function Sidebar() {
           {/* User Info */}
           <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-800">
             <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-orange-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
+              <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
+                showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-200 dark:bg-gray-700'
+              }`}>
+                <span className={`text-sm font-medium ${
+                  showAvatarGradient ? 'text-white' : 'text-gray-400 dark:text-gray-500'
+                }`}>
                   {getUserDisplayName().charAt(0).toUpperCase()}
                 </span>
               </div>
