@@ -106,7 +106,7 @@ export default function TopBar() {
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-40 shadow-sm">
       <div className="flex items-center justify-between h-full px-3 sm:px-8">
         {/* Search */}
-        <div className="flex-1 max-w-[200px] sm:max-w-lg mr-1 sm:mr-0 lg:ml-0 ml-20 relative search-container">
+        <div className="flex-1 max-w-[150px] sm:max-w-lg mr-2 sm:mr-0 lg:ml-0 ml-0 relative search-container">
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
             <input
@@ -216,7 +216,12 @@ export default function TopBar() {
                   alt="Profile"
                   width={40}
                   height={40}
-                  className="w-full h-full object-cover"
+                  unoptimized={true}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                  className="w-full h-full object-cover rounded-full"
                 />
               ) : (
                 <User className="text-white" size={16} />
@@ -228,7 +233,7 @@ export default function TopBar() {
               <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-orange-600">
+                    <div className="h-10 w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-orange-600 overflow-hidden">
                       {getUserAvatar() ? (
                         <Image
                           key={getUserAvatar()}
@@ -236,6 +241,11 @@ export default function TopBar() {
                           alt="Profile"
                           width={40}
                           height={40}
+                          unoptimized={true}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
                           className="w-full h-full object-cover rounded-full"
                         />
                       ) : (

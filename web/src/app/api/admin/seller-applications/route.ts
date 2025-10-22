@@ -253,7 +253,7 @@ export async function PUT(req: NextRequest) {
             <h2 style="color: #059669; font-size: 24px; margin-bottom: 20px;">🎉 Congratulations! You're Approved!</h2>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-              Здраво ${application.full_name},
+              Здраво ${application.full_name}
             </p>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
