@@ -197,6 +197,7 @@ const translations = {
     language: "Јазик",
     loggedInUser: "Најавен корисник",
     myOrders: "Мои нарачки",
+    dashboard: "Продавачки панел",
     viewYourOrderHistory:
       "Погледајте ја вашата историја на нарачки и следете ги вашите купувања",
     viewDetails: "Погледај детали",
@@ -951,6 +952,7 @@ const translations = {
     language: "Language",
     loggedInUser: "Logged in user",
     myOrders: "My Orders",
+    dashboard: "Dashboard",
     viewYourOrderHistory: "View your order history and track your purchases",
     viewDetails: "View Details",
     downloadReceipt: "Download Receipt",

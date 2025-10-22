@@ -35,6 +35,36 @@ export default function Navbar() {
   const [mobileSearchTerm, setMobileSearchTerm] = useState("");
   const [mobileSuggestions, setMobileSuggestions] = useState<Suggestion[]>([]);
   const [showMobileSuggestions, setShowMobileSuggestions] = useState(false);
+  const [isApprovedSeller, setIsApprovedSeller] = useState(false);
+
+  // Check if user is an approved seller
+  useEffect(() => {
+    const checkSellerStatus = async () => {
+      if (!user) {
+        setIsApprovedSeller(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('seller_profiles')
+          .select('is_approved, role')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!error && data) {
+          setIsApprovedSeller(data.is_approved === true && (data.role === 'seller' || data.role === 'admin'));
+        } else {
+          setIsApprovedSeller(false);
+        }
+      } catch (err) {
+        console.error('Error checking seller status:', err);
+        setIsApprovedSeller(false);
+      }
+    };
+
+    checkSellerStatus();
+  }, [user]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -302,6 +332,13 @@ export default function Navbar() {
                         onClick={() => setShowUserMenu(false)}
                       >
                         {t("myOrders")}
+                      </Link>
+                      <Link
+                        href={isApprovedSeller ? "/seller-dashboard" : "/seller-application"}
+                        className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        {t("dashboard")}
                       </Link>
                       <button
                         onClick={() => {
@@ -589,6 +626,14 @@ export default function Navbar() {
                   >
                         <Package size={20} />
                         <span>{t("myOrders")}</span>
+                  </Link>
+                  <Link
+                    href={isApprovedSeller ? "/seller-dashboard" : "/seller-application"}
+                        className="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 rounded-xl transition-all duration-200"
+                    onClick={() => setShowMobileMenu(false)}
+                  >
+                        <Package size={20} />
+                        <span>{t("dashboard")}</span>
                   </Link>
                       
                   <button
