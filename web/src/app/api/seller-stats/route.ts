@@ -3,6 +3,18 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 import { supabaseAdmin } from '@/lib/supabase/supabase.admin';
 
+interface ItemData {
+  id: string;
+  status?: string;
+}
+
+interface OrderItemData {
+  order_id: string;
+  quantity: number;
+  price: number;
+  item_id: string;
+}
+
 // GET /api/seller-stats - Get optimized stats for a seller
 export async function GET(request: NextRequest) {
   try {
@@ -26,47 +38,56 @@ export async function GET(request: NextRequest) {
 
     // Execute all queries in parallel for maximum performance
     const [
-      itemCounts,
-      orderStats
+      itemsByStatus,
+      sellerItemIds,
+      orderItems
     ] = await Promise.all([
-      // Get item counts (very fast with indexes)
+      // Get items with status (for counting)
       supabase
         .from('items')
-        .select('status', { count: 'exact' })
+        .select('id, status')
         .eq('user_id', sellerId),
       
-      // Get order stats with aggregation
+      // Get seller's item IDs for order filtering
       supabase
-        .rpc('get_seller_order_stats', { seller_id: sellerId })
-        .single()
+        .from('items')
+        .select('id')
+        .eq('user_id', sellerId),
+      
+      // Get order items (limited to last 6 months for performance)
+      supabase
+        .from('order_items')
+        .select('order_id, quantity, price, item_id')
+        .gte('created_at', new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString())
     ]);
 
-    // Calculate item stats from count query
-    const totalItems = itemCounts.count || 0;
-    
-    // Get detailed item counts by status (if needed)
-    const { data: itemsByStatus } = await supabase
-      .from('items')
-      .select('status')
-      .eq('user_id', sellerId);
-    
-    const activeItems = itemsByStatus?.filter(i => i.status === 'active').length || 0;
-    const soldItems = itemsByStatus?.filter(i => i.status === 'sold').length || 0;
+    // Calculate item stats
+    const items = itemsByStatus.data || [];
+    const totalItems = items.length;
+    const activeItems = items.filter(i => i.status === 'active').length;
+    const soldItems = items.filter(i => i.status === 'sold').length;
 
-    // Use RPC results if available, otherwise fallback to 0
-    const stats = orderStats.data || {
-      total_revenue: 0,
-      total_orders: 0,
-      avg_order_value: 0
-    };
+    // Calculate revenue stats
+    const sellerIds = new Set((sellerItemIds.data || []).map((item: ItemData) => item.id));
+    const sellerOrderItems = (orderItems.data || []).filter((oi: OrderItemData) => 
+      sellerIds.has(oi.item_id)
+    );
+
+    const totalRevenue = sellerOrderItems.reduce((sum: number, item: OrderItemData) => 
+      sum + (item.quantity * item.price), 0
+    );
+
+    const uniqueOrders = new Set(sellerOrderItems.map((item: OrderItemData) => item.order_id));
+    const totalOrders = uniqueOrders.size;
+    const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
     const response = NextResponse.json({
       totalItems,
       activeItems,
       soldItems,
-      totalRevenue: stats.total_revenue || 0,
-      totalOrders: stats.total_orders || 0,
-      avgOrderValue: stats.avg_order_value || 0,
+      totalRevenue,
+      totalOrders,
+      avgOrderValue,
       totalViews: 0, // Can be added later with view tracking
       viewsLast30Days: 0
     });
