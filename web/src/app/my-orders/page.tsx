@@ -4,10 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SupabaseDataService } from '@/lib/supabase/data-service';
-import { Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, Download, MoreVertical, CreditCard, Info, Mail, Phone, MapPin, ShoppingBag } from 'lucide-react';
-import EnhancedImage from '@/components/EnhancedImage';
+import { Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ShoppingBag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import jsPDF from 'jspdf';
 
 interface OrderItem {
   id: string;
@@ -77,7 +75,6 @@ export default function MyOrdersPage() {
   const router = useRouter();
   const [orders, setOrders] = useState<UserOrder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<UserOrder | null>(null);
   const [imageViewer, setImageViewer] = useState<{
     isOpen: boolean;
@@ -99,13 +96,11 @@ export default function MyOrdersPage() {
 
     try {
       setIsLoading(true);
-      setError(null);
       const dataService = new SupabaseDataService();
       const userOrders = await dataService.getUserOrders(user.id);
       setOrders(userOrders);
     } catch (err) {
       console.error('Error fetching user orders:', err);
-      setError('Failed to load orders');
     } finally {
       setIsLoading(false);
     }
@@ -129,39 +124,6 @@ export default function MyOrdersPage() {
     }));
   }, []);
 
-  const generatePDF = useCallback((order: UserOrder) => {
-    const doc = new jsPDF();
-    
-    // Header
-    doc.setFontSize(20);
-    doc.text('Order Receipt', 20, 20);
-    
-    // Order details
-    doc.setFontSize(12);
-    doc.text(`Order ID: ${order.id}`, 20, 40);
-    doc.text(`Date: ${order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}`, 20, 50);
-    doc.text(`Status: ${order.status}`, 20, 60);
-    doc.text(`Total: ${order.total_amount.toLocaleString()} MKD`, 20, 70);
-    
-    // Items
-    let yPosition = 90;
-    doc.text('Items:', 20, yPosition);
-    yPosition += 10;
-    
-    order.order_items?.forEach((item, index) => {
-      if (yPosition > 250) {
-        doc.addPage();
-        yPosition = 20;
-      }
-      
-      doc.text(`${index + 1}. ${item.items?.title || 'Unknown Item'}`, 30, yPosition);
-      doc.text(`   Quantity: ${item.quantity}`, 30, yPosition + 5);
-      doc.text(`   Price: ${item.price.toLocaleString()} MKD`, 30, yPosition + 10);
-      yPosition += 20;
-    });
-    
-    doc.save(`order-${order.id}.pdf`);
-  }, []);
 
   // Keyboard navigation for image viewer
   useEffect(() => {
@@ -336,7 +298,7 @@ export default function MyOrdersPage() {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                        Order #{order.id}
+                        {t('order') || 'Нарачка'} #{order.id.substring(0, 8).toUpperCase()}
                       </h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'Unknown date'}
@@ -346,7 +308,7 @@ export default function MyOrdersPage() {
                   <div className="flex items-center gap-4">
                     <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2 ${getStatusColor(order.status)}`}>
                       {getStatusIcon(order.status)}
-                      {order.status}
+                      {t(order.status) || order.status}
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-gray-900 dark:text-white">
@@ -395,20 +357,13 @@ export default function MyOrdersPage() {
                 </div>
 
                 {/* Order Actions */}
-                <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col sm:flex-row gap-3 mt-6">
                   <button
                     onClick={() => setSelectedOrder(order)}
                     className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200"
                   >
                     <Eye size={16} />
                     {t('viewDetails') || 'View Details'}
-                  </button>
-                  <button
-                    onClick={() => generatePDF(order)}
-                    className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200"
-                  >
-                    <Download size={16} />
-                    {t('downloadReceipt') || 'Download Receipt'}
                   </button>
                 </div>
               </div>
@@ -418,12 +373,12 @@ export default function MyOrdersPage() {
 
         {/* Order Details Modal */}
         {selectedOrder && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 pt-24 z-50">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                    Order Details #{selectedOrder.id}
+                    {t('orderDetails') || 'Детали за нарачката'} #{selectedOrder.id.substring(0, 8).toUpperCase()}
                   </h2>
                   <button
                     onClick={() => setSelectedOrder(null)}
@@ -439,16 +394,16 @@ export default function MyOrdersPage() {
                 <div className="flex items-center gap-4">
                   <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2 ${getStatusColor(selectedOrder.status)}`}>
                     {getStatusIcon(selectedOrder.status)}
-                    {selectedOrder.status}
+                    {t(selectedOrder.status) || selectedOrder.status}
                   </div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Ordered on {selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : 'Unknown date'}
+                    {t('orderedOn') || 'Нарачано на'} {selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : t('unknownDate') || 'Непознат датум'}
                   </div>
                 </div>
 
                 {/* Shipping Address */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Shipping Address</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('shippingAddress') || 'Адреса за испорака'}</h3>
                   <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
                     <p className="font-medium text-gray-900 dark:text-white">{selectedOrder.full_name}</p>
                     <p className="text-gray-600 dark:text-gray-400">{selectedOrder.address_line1}</p>
@@ -464,7 +419,7 @@ export default function MyOrdersPage() {
 
                 {/* Order Items */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Items</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('items') || 'Производи'}</h3>
                   <div className="space-y-3">
                     {selectedOrder.order_items?.map((item, index) => (
                       <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
@@ -478,7 +433,7 @@ export default function MyOrdersPage() {
                             {item.items?.title || 'Unknown Item'}
                           </h4>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Quantity: {item.quantity} × {item.price.toLocaleString()} {t('currency') || 'MKD'}
+                            {t('quantity') || 'Количина'}: {item.quantity} × {item.price.toLocaleString()} {t('currency') || 'MKD'}
                           </p>
                         </div>
                         <div className="text-right">
@@ -492,9 +447,9 @@ export default function MyOrdersPage() {
                 </div>
 
                 {/* Order Summary */}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                <div className="pt-6">
                   <div className="flex justify-between items-center text-lg font-bold text-gray-900 dark:text-white">
-                    <span>Total</span>
+                    <span>{t('total') || 'Вкупно'}</span>
                     <span>{selectedOrder.total_amount.toLocaleString()} {t('currency') || 'MKD'}</span>
                   </div>
                 </div>
