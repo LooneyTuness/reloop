@@ -20,6 +20,8 @@ interface DashboardOrder extends Order {
   amount?: string;
   date?: string;
   order_items?: OrderItem[];
+  seller_order_items?: OrderItem[];
+  item_count?: number;
   // Address fields
   full_name?: string;
   email?: string;
@@ -113,24 +115,15 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [lastFetchTime, setLastFetchTime] = useState<number>(0);
   const [cacheTimeout] = useState<number>(30000); // 30 seconds cache
 
-  // Debug logging - only log when user is available (reduced logging for performance)
-  useEffect(() => {
-    if (user) {
-    }
-  }, [user]);
 
   // Function to sync product statuses with order statuses
   const syncProductStatusesWithOrders = useCallback(async (products: DashboardProduct[], orders: DashboardOrder[]) => {
-    
     const updatedProducts = [...products];
     
+    // Process orders that already have order_items data
     for (const order of orders) {
-      try {
-        
-        // Get order items for this order
-        const orderItems = await supabaseDataService.getOrderItems(order.id);
-        const productIdsInOrder = orderItems.map(item => String(item.item_id));
-        
+      if (order.seller_order_items && order.seller_order_items.length > 0) {
+        const productIdsInOrder = order.seller_order_items.map((item: OrderItem) => String(item.item_id));
         
         if (productIdsInOrder.length > 0) {
           // Map order status to product status
@@ -155,9 +148,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
               productStatus = 'sold';
           }
           
-          
           // Update products in this order
-          productIdsInOrder.forEach(productId => {
+          productIdsInOrder.forEach((productId: string) => {
             const productIndex = updatedProducts.findIndex(p => String(p.id) === String(productId));
             if (productIndex !== -1) {
               const currentStatus = updatedProducts[productIndex].status;
@@ -166,15 +158,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                   ...updatedProducts[productIndex],
                   status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
                 };
-              } else {
               }
-            } else {
             }
           });
-        } else {
         }
-      } catch (error) {
-        console.error(`Error syncing order ${order.id}:`, error);
       }
     }
     
@@ -321,18 +308,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         }))
       ];
 
-      // Fetch real view counts for products
-      const productsWithViews = await Promise.all(
-        syncedProducts.map(async (product) => {
-          const viewCount = await supabaseDataService.getProductViewCount(product.id);
-          return {
-            ...product,
-            views: viewCount
-          };
-        })
-      );
-
-      setProducts(productsWithViews);
+      // Use products with random view counts for now (can be optimized later with batch API)
+      setProducts(syncedProducts);
       setOrders(dashboardOrders);
       setStats(dashboardStats);
       setActivities(recentActivities);

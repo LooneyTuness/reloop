@@ -333,8 +333,12 @@ function OrdersContent() {
     return `#${orderId.substring(0, 6).toUpperCase()}`;
   };
 
+  if (isLoading) {
+    return null; // Let Suspense handle the loading state
+  }
+
   // Show zero state if no orders
-  if (!isLoading && orders.length === 0) {
+  if (orders.length === 0) {
     return (
       <SellerDashboardLayout>
         <div className="px-3 sm:px-6 py-4 sm:py-8">
@@ -410,10 +414,6 @@ function OrdersContent() {
       title: ''
     });
   };
-
-  if (isLoading) {
-    return null; // Let Suspense handle the loading state
-  }
 
   return (
     <SellerDashboardLayout>
