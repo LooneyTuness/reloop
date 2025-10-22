@@ -162,7 +162,10 @@ export default function Sidebar() {
           <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-800">
             <div className="flex items-center space-x-3 px-3 py-3 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800 dark:to-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
               <div className="h-10 w-10 rounded-full flex items-center justify-center relative flex-shrink-0 bg-gradient-to-br from-blue-500 to-orange-600">
-                {getUserAvatar() ? (
+                <span className="text-white text-sm font-semibold">
+                  {getUserDisplayName().charAt(0).toUpperCase()}
+                </span>
+                {getUserAvatar() && (
                   <Image
                     key={getUserAvatar()}
                     src={getUserAvatar() as string}
@@ -170,15 +173,11 @@ export default function Sidebar() {
                     width={40}
                     height={40}
                     unoptimized
-                    className="w-full h-full object-cover rounded-full"
+                    className="w-full h-full object-cover rounded-full absolute inset-0"
                     onError={() => {
                       console.error('Error loading avatar in sidebar:', getUserAvatar());
                     }}
                   />
-                ) : (
-                  <span className="text-white text-sm font-semibold">
-                    {getUserDisplayName().charAt(0).toUpperCase()}
-                  </span>
                 )}
               </div>
               <div className="flex-1 min-w-0">

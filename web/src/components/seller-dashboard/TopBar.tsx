@@ -222,16 +222,17 @@ export default function TopBar() {
           <div className="relative flex items-center flex-shrink-0 profile-dropdown-container">
             <button
               onClick={handleProfileClick}
-              className={`h-7 w-7 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden ${
-                getUserAvatar() ? 'bg-gray-100 dark:bg-gray-800' : 'bg-gradient-to-br from-blue-500 to-orange-600'
-              } ${
+              className={`h-7 w-7 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden bg-gradient-to-br from-blue-500 to-orange-600 ${
                 showProfileDropdown 
                   ? 'ring-2 ring-blue-200' 
                   : 'hover:ring-2 hover:ring-gray-200'
               }`}
               title={`${getUserDisplayName()} - Click to open profile menu`}
             >
-              {getUserAvatar() ? (
+              <span className="text-white text-sm font-semibold">
+                {getUserDisplayName().charAt(0).toUpperCase()}
+              </span>
+              {getUserAvatar() && (
                 <Image
                   key={getUserAvatar()}
                   src={getUserAvatar() as string}
@@ -242,13 +243,9 @@ export default function TopBar() {
                   onError={() => {
                     console.error('Error loading main avatar:', getUserAvatar());
                   }}
-                  className="w-full h-full object-cover rounded-full"
+                  className="w-full h-full object-cover rounded-full absolute inset-0"
                   priority
                 />
-              ) : (
-                <span className="text-white text-sm font-semibold">
-                  {getUserDisplayName().charAt(0).toUpperCase()}
-                </span>
               )}
             </button>
 
@@ -257,10 +254,11 @@ export default function TopBar() {
               <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-3">
-                    <div className={`h-10 w-10 rounded-full flex items-center justify-center overflow-hidden relative ${
-                      getUserAvatar() ? 'bg-gray-100 dark:bg-gray-800' : 'bg-gradient-to-br from-blue-500 to-orange-600'
-                    }`}>
-                      {getUserAvatar() ? (
+                    <div className="h-10 w-10 rounded-full flex items-center justify-center overflow-hidden relative bg-gradient-to-br from-blue-500 to-orange-600">
+                      <span className="text-white text-sm font-semibold">
+                        {getUserDisplayName().charAt(0).toUpperCase()}
+                      </span>
+                      {getUserAvatar() && (
                         <Image
                           key={`${getUserAvatar()}-dropdown`}
                           src={getUserAvatar() as string}
@@ -268,15 +266,11 @@ export default function TopBar() {
                           width={40}
                           height={40}
                           unoptimized={true}
-                          className="w-full h-full object-cover rounded-full"
+                          className="w-full h-full object-cover rounded-full absolute inset-0"
                           onError={() => {
                             console.error('Error loading avatar in dropdown:', getUserAvatar());
                           }}
                         />
-                      ) : (
-                        <span className="text-white text-sm font-semibold">
-                          {getUserDisplayName().charAt(0).toUpperCase()}
-                        </span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
