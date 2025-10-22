@@ -67,7 +67,9 @@ export async function GET(request: NextRequest) {
       .select('brand')
       .eq('is_active', true)
       .is('deleted_at', null)
-      .neq('status', 'sold');
+      .neq('status', 'sold')
+      .neq('status', 'hidden')
+      .neq('status', 'draft');
 
     // Apply category filter if specified
     if (categoryIds.length > 0) {

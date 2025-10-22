@@ -99,6 +99,8 @@ export default function Navbar() {
       .select("id,title,description,images")
       .eq("is_active", true)
       .neq('status', 'sold')
+      .neq('status', 'hidden')
+      .neq('status', 'draft')
       .or(`title.ilike.${like},description.ilike.${like}`)
       .order("created_at", { ascending: false })
       .limit(6);
@@ -116,6 +118,8 @@ export default function Navbar() {
       .select("id,title,description,images")
       .eq("is_active", true)
       .neq('status', 'sold')
+      .neq('status', 'hidden')
+      .neq('status', 'draft')
       .or(`title.ilike.${like},description.ilike.${like}`)
       .order("created_at", { ascending: false })
       .limit(6);

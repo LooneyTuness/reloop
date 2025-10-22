@@ -60,7 +60,9 @@ export default function Products({
         .or(
           "and(status.eq.active,quantity.gt.0),and(is_active.eq.true,status.is.null)"
         )
-        .neq('status', 'sold')
+        .neq("status", "sold")
+        .neq("status", "hidden")
+        .neq("status", "draft")
         .is("deleted_at", null)
         .order("created_at", { ascending: false });
 

@@ -89,6 +89,8 @@ export async function GET(
       .eq('is_active', true)
       .is('deleted_at', null)
       .neq('status', 'sold')
+      .neq('status', 'hidden')
+      .neq('status', 'draft')
       .order(sortBy, { ascending: sortOrder === 'asc' })
       .range(offset, offset + limit - 1);
 
