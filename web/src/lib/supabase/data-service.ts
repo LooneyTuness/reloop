@@ -293,6 +293,38 @@ export class SupabaseDataService {
     }
   }
 
+  // Delete an order
+  async deleteOrder(orderId: string): Promise<void> {
+    try {
+      // First delete all order items
+      const { error: orderItemsError } = await (this.supabase as any)
+        .from('order_items')
+        .delete()
+        .eq('order_id', orderId);
+
+      if (orderItemsError) {
+        console.error('❌ Error deleting order items:', orderItemsError);
+        throw orderItemsError;
+      }
+
+      // Then delete the order
+      const { error: orderError } = await (this.supabase as any)
+        .from('orders')
+        .delete()
+        .eq('id', orderId);
+
+      if (orderError) {
+        console.error('❌ Error deleting order:', orderError);
+        throw orderError;
+      }
+
+      console.log('✅ Order deleted successfully');
+    } catch (error) {
+      console.error('❌ Error in deleteOrder:', error);
+      throw error;
+    }
+  }
+
   async getOrderById(orderId: string): Promise<Order | null> {
     const { data, error } = await (this.supabase as any)
       .from('orders')

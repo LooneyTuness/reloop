@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SupabaseDataService } from '@/lib/supabase/data-service';
-import { Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ShoppingBag } from 'lucide-react';
+import { Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ShoppingBag, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface OrderItem {
@@ -76,6 +76,7 @@ export default function MyOrdersPage() {
   const [orders, setOrders] = useState<UserOrder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<UserOrder | null>(null);
+  const [deletingOrderId, setDeletingOrderId] = useState<string | null>(null);
   const [imageViewer, setImageViewer] = useState<{
     isOpen: boolean;
     images: string[];
@@ -105,6 +106,29 @@ export default function MyOrdersPage() {
       setIsLoading(false);
     }
   }, [user?.id]);
+
+  const deleteOrder = useCallback(async (orderId: string) => {
+    if (!user?.id) return;
+
+    try {
+      setDeletingOrderId(orderId);
+      const dataService = new SupabaseDataService();
+      await dataService.deleteOrder(orderId);
+      
+      // Remove the order from the local state
+      setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
+      
+      // Close modal if the deleted order was selected
+      if (selectedOrder?.id === orderId) {
+        setSelectedOrder(null);
+      }
+    } catch (err) {
+      console.error('Error deleting order:', err);
+      alert(t('errorDeletingOrder') || 'Error deleting order. Please try again.');
+    } finally {
+      setDeletingOrderId(null);
+    }
+  }, [user?.id, selectedOrder?.id, t]);
 
   useEffect(() => {
     fetchOrders();
@@ -349,8 +373,8 @@ export default function MyOrdersPage() {
                         </h4>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                           {item.items?.brand && `${item.items.brand} • `}
-                          {item.items?.size && `Size ${item.items.size} • `}
-                          {item.items?.condition}
+                          {item.items?.size && `${t(`size${item.items.size}`) || item.items.size} • `}
+                          {item.items?.condition && t(item.items.condition) || item.items?.condition}
                         </p>
                       </div>
                       <div className="text-right">
@@ -378,6 +402,18 @@ export default function MyOrdersPage() {
                   >
                     <Eye size={16} />
                     {t('viewDetails') || 'View Details'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (window.confirm(t('confirmDeleteOrder') || 'Are you sure you want to delete this order?')) {
+                        deleteOrder(order.id);
+                      }
+                    }}
+                    disabled={deletingOrderId === order.id}
+                    className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Trash2 size={16} />
+                    {deletingOrderId === order.id ? (t('deleting') || 'Deleting...') : (t('deleteOrder') || 'Delete Order')}
                   </button>
                 </div>
               </div>
@@ -457,6 +493,11 @@ export default function MyOrdersPage() {
                           </h4>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
                             {t('quantity') || 'Количина'}: {item.quantity} × {item.price.toLocaleString()} {t('currency') || 'MKD'}
+                          </p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {item.items?.brand && `${item.items.brand} • `}
+                            {item.items?.size && `${t(`size${item.items.size}`) || item.items.size} • `}
+                            {item.items?.condition && t(item.items.condition) || item.items?.condition}
                           </p>
                         </div>
                         <div className="text-right">
