@@ -18,6 +18,8 @@ interface OrderItemData {
 // GET /api/seller-stats - Get optimized stats for a seller
 export async function GET(request: NextRequest) {
   try {
+    console.time('GET /api/seller-stats');
+    
     if (!supabaseAdmin) {
       return NextResponse.json(
         { error: "Admin service not available" },
@@ -36,6 +38,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    console.log(`📊 Fetching stats for seller: ${sellerId}`);
+
+    const start = performance.now();
+    
     // Execute all queries in parallel for maximum performance
     const [
       itemsByStatus,
@@ -61,6 +67,8 @@ export async function GET(request: NextRequest) {
         .gte('created_at', new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString())
     ]);
 
+    console.log(`  Parallel queries: ${(performance.now() - start).toFixed(0)}ms`);
+
     // Calculate item stats
     const items = itemsByStatus.data || [];
     const totalItems = items.length;
@@ -81,6 +89,9 @@ export async function GET(request: NextRequest) {
     const totalOrders = uniqueOrders.size;
     const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
+    console.log(`✅ Stats calculated: ${totalItems} items, ${totalOrders} orders, ${totalRevenue.toFixed(2)} MKD revenue`);
+    console.timeEnd('GET /api/seller-stats');
+
     const response = NextResponse.json({
       totalItems,
       activeItems,
@@ -97,7 +108,8 @@ export async function GET(request: NextRequest) {
     
     return response;
   } catch (error) {
-    console.error('Error in seller-stats API:', error);
+    console.error('❌ Error in seller-stats API:', error);
+    console.timeEnd('GET /api/seller-stats');
     // Return zero stats instead of error for better UX
     return NextResponse.json({
       totalItems: 0,

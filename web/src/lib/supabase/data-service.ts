@@ -14,6 +14,8 @@ export class SupabaseDataService {
   // Items/Products Management
   async getSellerItems(sellerId: string, limit: number = 100, offset: number = 0): Promise<Item[]> {
     try {
+      console.time('getSellerItems');
+      
       // Use API endpoint with pagination
       const url = `/api/seller-items?sellerId=${encodeURIComponent(sellerId)}&limit=${limit}&offset=${offset}`;
       const response = await fetch(url);
@@ -21,13 +23,16 @@ export class SupabaseDataService {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('API error fetching seller items:', errorData);
+        console.timeEnd('getSellerItems');
         return [];
       }
 
       const data = await response.json();
+      console.timeEnd('getSellerItems');
       return data.items || [];
     } catch (err) {
       console.error('Exception in getSellerItems:', err);
+      console.timeEnd('getSellerItems');
       return [];
     }
   }
@@ -745,7 +750,7 @@ export class SupabaseDataService {
     return { current, previous, changes };
   }
 
-  // Analytics and Statistics - OPTIMIZED VERSION
+  // Analytics and Statistics - OPTIMIZED VERSION (uses API endpoint)
   async getSellerStats(sellerId: string): Promise<{
     totalItems: number;
     activeItems: number;
@@ -757,56 +762,31 @@ export class SupabaseDataService {
     viewsLast30Days: number;
   }> {
     try {
-      // Parallel fetching for better performance
-      const [itemsResult, orderItemsResult, viewStats] = await Promise.all([
-        // Get all items with counts in one query
-        (this.supabase as any)
-          .from('items')
-          .select('id, status')
-          .eq('user_id', sellerId),
-        
-        // Get order items for revenue calculation
-        (this.supabase as any)
-          .from('order_items')
-          .select('order_id, quantity, price, item_id')
-          .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()),
-        
-        // Get view stats
-        this.getSellerViewStats(sellerId)
-      ]);
+      console.time('getSellerStats');
+      
+      // Use API endpoint for better performance
+      const url = `/api/seller-stats?sellerId=${encodeURIComponent(sellerId)}`;
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('API error fetching seller stats:', errorData);
+        console.timeEnd('getSellerStats');
+        return {
+          totalItems: 0,
+          activeItems: 0,
+          soldItems: 0,
+          totalRevenue: 0,
+          totalOrders: 0,
+          avgOrderValue: 0,
+          totalViews: 0,
+          viewsLast30Days: 0
+        };
+      }
 
-      // Process items data
-      const items = itemsResult.data || [];
-      const totalItems = items.length;
-      const activeItems = items.filter((item: { status: string }) => item.status === 'active').length;
-      const soldItems = items.filter((item: { status: string }) => item.status === 'sold').length;
-
-      // Get seller's item IDs
-      const sellerItemIds = new Set(items.map((item: { id: string }) => item.id));
-
-      // Calculate revenue from seller's items only
-      const sellerOrderItems = (orderItemsResult.data || []).filter((item: { item_id: string }) => 
-        sellerItemIds.has(item.item_id)
-      );
-
-      const totalRevenue = sellerOrderItems.reduce((sum: number, item: { quantity: number; price: number }) => 
-        sum + (item.quantity * item.price), 0
-      );
-
-      const uniqueOrders = new Set(sellerOrderItems.map((item: { order_id: string }) => item.order_id));
-      const totalOrders = uniqueOrders.size;
-      const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
-      return {
-        totalItems,
-        activeItems,
-        soldItems,
-        totalRevenue,
-        totalOrders,
-        avgOrderValue,
-        totalViews: viewStats.totalViews,
-        viewsLast30Days: viewStats.viewsLast30Days
-      };
+      const data = await response.json();
+      console.timeEnd('getSellerStats');
+      return data;
     } catch (error) {
       console.error('Error in getSellerStats:', error);
       return {
