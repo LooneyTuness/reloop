@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Search, Bell, User, X, Eye, EyeOff, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -103,14 +103,23 @@ export default function TopBar() {
     return 'User';
   };
 
-  const getUserAvatar = () => {
+  const getUserAvatar = useCallback(() => {
     if (sellerProfile?.avatar_url) {
       return sellerProfile.avatar_url;
     }
     return null;
-  };
+  }, [sellerProfile?.avatar_url]);
 
   const showAvatarGradient = !profileLoading && !getUserAvatar();
+
+  // Debug avatar URL
+  React.useEffect(() => {
+    if (sellerProfile?.avatar_url) {
+      console.log('TopBar - Avatar URL:', sellerProfile.avatar_url);
+      const avatarUrl = getUserAvatar();
+      console.log('TopBar - getUserAvatar():', avatarUrl);
+    }
+  }, [sellerProfile?.avatar_url, getUserAvatar]);
 
   return (
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 shadow-md">
@@ -256,29 +265,22 @@ export default function TopBar() {
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-3">
                     <div className={`h-10 w-10 rounded-full flex items-center justify-center overflow-hidden relative ${
-                      showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-100 dark:bg-gray-800'
+                      getUserAvatar() ? 'bg-gray-100 dark:bg-gray-800' : showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-200 dark:bg-gray-700'
                     }`}>
                       {getUserAvatar() ? (
-                        <>
-                          <Image
-                            key={`${getUserAvatar()}-dropdown`}
-                            src={getUserAvatar() as string}
-                            alt="Profile"
-                            width={40}
-                            height={40}
-                            unoptimized={true}
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                            }}
-                            className="w-full h-full object-cover rounded-full"
-                          />
-                          {!avatarLoaded && (
-                            <User className="text-gray-400 dark:text-gray-600" size={20} style={{ position: 'absolute' }} />
-                          )}
-                        </>
+                        <Image
+                          key={`${getUserAvatar()}-dropdown`}
+                          src={getUserAvatar() as string}
+                          alt="Profile"
+                          width={40}
+                          height={40}
+                          unoptimized={true}
+                          className="w-full h-full object-cover rounded-full"
+                        />
                       ) : showAvatarGradient ? (
-                        <User className="text-white" size={20} />
+                        <span className="text-white text-sm font-semibold">
+                          {getUserDisplayName().charAt(0).toUpperCase()}
+                        </span>
                       ) : (
                         <User className="text-gray-400 dark:text-gray-600" size={20} />
                       )}

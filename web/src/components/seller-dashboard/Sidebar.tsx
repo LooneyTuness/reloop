@@ -64,6 +64,13 @@ export default function Sidebar() {
 
   const showAvatarGradient = !profileLoading && sellerProfile;
 
+  // Debug avatar URL
+  React.useEffect(() => {
+    if (sellerProfile?.avatar_url) {
+      console.log('Sidebar - Avatar URL:', sellerProfile.avatar_url);
+    }
+  }, [sellerProfile?.avatar_url]);
+
   return (
     <>
       {/* Mobile menu button */}
@@ -93,7 +100,7 @@ export default function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center h-20 px-5 border-b border-gray-200 dark:border-gray-800">
-            <Link href="/seller-dashboard" className="flex items-center space-x-3 hover:scale-105 transition-all duration-300 group" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/" className="flex items-center space-x-3 hover:scale-105 transition-all duration-300 group" onClick={() => setIsMobileMenuOpen(false)}>
               <div className="relative">
                 <div className="h-9 w-9 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300">
                   <span className="text-white font-bold text-base">V</span>
@@ -144,8 +151,8 @@ export default function Sidebar() {
           {/* User Info */}
           <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-800">
             <div className="flex items-center space-x-3 px-3 py-3 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800 dark:to-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
-              <div className={`h-10 w-10 rounded-full flex items-center justify-center overflow-hidden relative flex-shrink-0 ${
-                sellerProfile?.avatar_url ? 'bg-gray-100 dark:bg-gray-800' : showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-200 dark:bg-gray-700'
+              <div className={`h-10 w-10 rounded-full flex items-center justify-center relative flex-shrink-0 ${
+                sellerProfile?.avatar_url ? 'bg-gray-100 dark:bg-gray-800 overflow-hidden' : showAvatarGradient ? 'bg-gradient-to-br from-blue-500 to-orange-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}>
                 {sellerProfile?.avatar_url ? (
                   <Image
@@ -156,6 +163,9 @@ export default function Sidebar() {
                     height={40}
                     unoptimized
                     className="w-full h-full object-cover rounded-full"
+                    onError={() => {
+                      console.error('Error loading avatar in sidebar:', sellerProfile.avatar_url);
+                    }}
                   />
                 ) : (
                   <span className={`text-sm font-semibold ${
