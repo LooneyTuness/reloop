@@ -14,6 +14,9 @@ interface SearchResult {
   description?: string;
   url: string;
   date?: string;
+  price?: string;
+  status?: string;
+  image?: string[] | null;
 }
 
 function SearchContent() {
@@ -24,12 +27,6 @@ function SearchContent() {
   const [isSearching, setIsSearching] = useState(false);
 
   const query = searchParams.get('q') || '';
-
-  useEffect(() => {
-    if (query) {
-      handleSearch(query);
-    }
-  }, [query, handleSearch]);
 
   const handleSearch = useCallback(async (searchTerm: string) => {
     if (!searchTerm.trim()) return;
@@ -48,8 +45,8 @@ function SearchContent() {
         )
         .map(product => ({
           id: product.id,
-          type: 'product',
-          title: product.name,
+          type: 'product' as const,
+          title: product.name || 'Untitled Product',
           description: product.description || 'No description available',
           price: product.price,
           status: product.status,
@@ -64,7 +61,7 @@ function SearchContent() {
         )
         .map(activity => ({
           id: activity.id,
-          type: 'activity',
+          type: 'activity' as const,
           title: activity.message,
           description: activity.timestamp,
           status: activity.status,
@@ -79,6 +76,12 @@ function SearchContent() {
       setIsSearching(false);
     }
   }, [products, activities]);
+
+  useEffect(() => {
+    if (query) {
+      handleSearch(query);
+    }
+  }, [query, handleSearch]);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
