@@ -24,6 +24,10 @@ const dashboardTranslations = {
     settings: "Подесувања",
     logout: "Одјави се",
     
+    // Back button
+    back: "Назад",
+    backToDashboard: "Назад кон контролната табла",
+    
     // Sidebar specific
     sellerDashboard: "Продавачки панел",
     navigation: "Навигација",
@@ -406,7 +410,7 @@ const dashboardTranslations = {
     automatedPayoutScheduling: "Автоматско закажување на исплати",
     detailedTransactionHistory: "Детална историја на трансакции",
     taxReportingTools: "Алатки за даночно пријавување",
-    viewAnalytics: "Види аналитики",
+
   },
   en: {
     // Navigation
@@ -417,6 +421,10 @@ const dashboardTranslations = {
     payouts: "Payouts",
     settings: "Settings",
     logout: "Logout",
+    
+    // Back button
+    back: "Back",
+    backToDashboard: "Back to Dashboard",
     
     // Sidebar specific
     sellerDashboard: "Seller Dashboard",
@@ -790,7 +798,6 @@ const dashboardTranslations = {
     automatedPayoutScheduling: "Automated payout scheduling",
     detailedTransactionHistory: "Detailed transaction history",
     taxReportingTools: "Tax reporting tools",
-    viewAnalytics: "View Analytics",
   }
 };
 

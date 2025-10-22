@@ -73,12 +73,6 @@ function PayoutsContent() {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
-              onClick={() => router.push('/seller-dashboard/analytics')}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              {t('viewAnalytics')}
-            </button>
-            <button
               onClick={() => router.push('/seller-dashboard/listings')}
               className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
             >

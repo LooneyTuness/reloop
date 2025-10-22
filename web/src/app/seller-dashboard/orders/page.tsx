@@ -4,6 +4,7 @@ import React, { useState, useCallback, Suspense } from 'react';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import { useDashboard } from '@/contexts/DashboardContext';
 import { OrdersZeroState } from '@/components/seller-dashboard/ZeroStates';
+import BackButton from '@/components/seller-dashboard/BackButton';
 import { Search, Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, Download, MoreVertical, CreditCard, Info, Mail, Phone, MapPin } from 'lucide-react';
 import EnhancedImage from '@/components/EnhancedImage';
 import { useRouter } from 'next/navigation';
@@ -423,9 +424,10 @@ function OrdersContent() {
 
   return (
     <SellerDashboardLayout>
-      <div className="w-full py-4 sm:py-8 max-w-none">
+      <div className="w-full py-4 sm:py-8 max-w-none -mx-3 sm:-mx-6 lg:mx-0">
         {/* Header */}
         <div className="px-3 sm:px-6 mb-8">
+          <BackButton className="mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {t('orders')}
           </h1>
@@ -472,7 +474,7 @@ function OrdersContent() {
         )}
 
         {/* Orders Table */}
-        <div className="w-screen bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden -ml-3 sm:-ml-6 lg:ml-0">
+        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">

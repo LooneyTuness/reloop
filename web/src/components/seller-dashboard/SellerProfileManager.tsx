@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { supabaseDataService } from '@/lib/supabase/data-service';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
+import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import { imageStorageService } from '@/lib/supabase/image-storage';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { User, Mail, Phone, MapPin, Globe, Save, Camera } from 'lucide-react';
@@ -33,6 +34,7 @@ interface SellerProfile {
 export default function SellerProfileManager() {
   const { user } = useAuth();
   const { updateAvatar } = useProfile();
+  const { updateProfile: updateSellerProfile, refreshProfile } = useSellerProfile();
   const { t } = useDashboardLanguage();
   const [profile, setProfile] = useState<SellerProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -106,9 +108,18 @@ export default function SellerProfileManager() {
     setSuccess(null);
 
     try {
-      const updatedProfile = await supabaseDataService.updateSellerProfile(user.id, formData);
-      setProfile(updatedProfile as SellerProfile);
-      setSuccess('Profile updated successfully!');
+      // Update profile using SellerProfileContext to ensure UI updates
+      const success = await updateSellerProfile(formData);
+      
+      if (success) {
+        setProfile(prev => prev ? { ...prev, ...formData } : null);
+        setSuccess('Profile updated successfully!');
+        
+        // Refresh the profile context to ensure consistency
+        await refreshProfile();
+      } else {
+        setError('Failed to update profile');
+      }
     } catch (error) {
       console.error('Error saving profile:', error);
       setError('Failed to update profile');
@@ -159,15 +170,19 @@ export default function SellerProfileManager() {
         user.id
       );
       
-      // Update profile in database
-      await supabaseDataService.updateSellerProfile(user.id, { avatar_url: imageUrl });
+      // Update profile using SellerProfileContext to ensure UI updates
+      const success = await updateSellerProfile({ avatar_url: imageUrl });
       
-      setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
-      updateAvatar(imageUrl);
-      setSuccess('Profile picture updated!');
-      
-      // Reload profile to ensure consistency
-      await loadProfile();
+      if (success) {
+        setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
+        updateAvatar(imageUrl);
+        setSuccess('Profile picture updated!');
+        
+        // Refresh the profile context to ensure consistency
+        await refreshProfile();
+      } else {
+        setError('Failed to update profile');
+      }
     } catch (error) {
       console.error('Error uploading cropped image:', error);
       setError('Failed to update profile picture');

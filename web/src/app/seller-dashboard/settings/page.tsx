@@ -5,6 +5,7 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
+import BackButton from '@/components/seller-dashboard/BackButton';
 import { User } from 'lucide-react';
 import SellerProfileManager from '@/components/seller-dashboard/SellerProfileManager';
 

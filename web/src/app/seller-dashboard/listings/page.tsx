@@ -5,6 +5,7 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import { useDashboard } from '@/contexts/DashboardContext';
 import { ProductsZeroState } from '@/components/seller-dashboard/ZeroStates';
 import EnhancedImage from '@/components/EnhancedImage';
+import BackButton from '@/components/seller-dashboard/BackButton';
 import { Search, Plus, Edit, Trash2, Package } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
@@ -159,22 +160,25 @@ function ListingsContent() {
   return (
     <div className="px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              {t('myListings')}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              {t('manageProductInventory')}
-            </p>
+        <div className="mb-6">
+          <BackButton className="mb-4" />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                {t('myListings')}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400">
+                {t('manageProductInventory')}
+              </p>
+            </div>
+            <button 
+              onClick={() => router.push('/seller-dashboard/add-product')}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus size={20} className="mr-2" />
+              {t('addProduct')}
+            </button>
           </div>
-          <button 
-            onClick={() => router.push('/seller-dashboard/add-product')}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus size={20} className="mr-2" />
-            {t('addProduct')}
-          </button>
         </div>
 
         {/* Filters and Search */}

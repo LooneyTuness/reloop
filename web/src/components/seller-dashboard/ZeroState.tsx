@@ -18,8 +18,6 @@ export default function ZeroState({
   icon: Icon,
   title,
   description,
-  actionLabel,
-  onAction,
   secondaryAction,
   className = ''
 }: ZeroStateProps) {
@@ -43,12 +41,6 @@ export default function ZeroState({
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center w-full">
-          <button
-            onClick={onAction}
-            className="inline-flex items-center justify-center px-4 py-2.5 sm:py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors w-full sm:w-auto"
-          >
-            {actionLabel}
-          </button>
           
           {secondaryAction && (
             <button
