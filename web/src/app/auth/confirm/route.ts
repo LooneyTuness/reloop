@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       
       console.log('Final redirect URL:', next)
       // Redirect to client-side callback to handle session establishment
-      return NextResponse.redirect(`${origin}/auth/callback?redirect=${encodeURIComponent(next)}`)
+      return NextResponse.redirect(`${origin}/auth/callback?redirect=${encodeURIComponent(next)}&confirmed=true`)
     } else {
       console.error('OTP verification error:', error)
       return NextResponse.redirect(`${origin}/?error=${encodeURIComponent(error.message)}`)

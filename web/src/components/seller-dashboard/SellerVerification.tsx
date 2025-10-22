@@ -41,13 +41,18 @@ export default function SellerVerification({ children }: SellerVerificationProps
       console.log('SellerVerification: Checking seller profile...', {
         authLoading,
         user: user?.email,
-        userId: user?.id
+        userId: user?.id,
+        hasUser: !!user
       });
 
-      if (authLoading) return;
+      // Wait for auth to finish loading
+      if (authLoading) {
+        console.log('SellerVerification: Auth still loading, waiting...');
+        return;
+      }
       
       if (!user) {
-        console.log('SellerVerification: No user, redirecting to sign-in');
+        console.log('SellerVerification: No user found after auth loading complete, redirecting to sign-in');
         // User not authenticated, redirect to login with return URL
         const currentPath = window.location.pathname;
         router.push(`/sign-in?returnUrl=${encodeURIComponent(currentPath)}`);
@@ -91,6 +96,7 @@ export default function SellerVerification({ children }: SellerVerificationProps
 
         console.log('SellerVerification: Raw profile object:', sellerProfile);
         console.log('SellerVerification: Profile keys:', Object.keys(sellerProfile));
+        console.log('SellerVerification: is_approved value from DB:', sellerProfile.is_approved, 'type:', typeof sellerProfile.is_approved);
         console.log('SellerVerification: Seller profile details:', {
           isApproved: sellerProfile.is_approved,
           role: sellerProfile.role,
@@ -98,12 +104,11 @@ export default function SellerVerification({ children }: SellerVerificationProps
           fullName: sellerProfile.full_name
         });
 
-        // Check if seller is approved
+        // Note: We allow access to dashboard even if not approved yet
+        // This allows sellers to complete their profile and manage their listings
+        // while waiting for approval
         if (!sellerProfile.is_approved) {
-          // Account not approved - redirect to home page
-          console.log('SellerVerification: Account not approved, redirecting to home');
-          router.push('/');
-          return;
+          console.log('SellerVerification: Account not approved yet, but allowing dashboard access');
         }
 
         // Check if user has seller or admin role

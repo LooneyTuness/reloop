@@ -94,9 +94,21 @@ export function AuthProvider({ children }) {
       console.log("AuthContext: Auth state change:", {
         event,
         user: session?.user?.email,
+        hasSession: !!session,
       });
-      setUser(session?.user ?? null);
-      setLoading(false);
+
+      // Handle different auth events
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+        setLoading(false);
+      } else {
+        // For other events, update user state
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();

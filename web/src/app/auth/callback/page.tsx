@@ -20,20 +20,45 @@ export default function AuthCallbackPage() {
         const redirectUrl = searchParams.get('redirect') || '/';
         console.log('AuthCallback: Redirect URL:', redirectUrl);
         
-        // Get the session
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        // Get the session - force refresh if this is a confirmation redirect
+        const isConfirmed = searchParams.get('confirmed') === 'true';
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        let session = initialSession;
         
         console.log('AuthCallback: Session check:', {
           hasSession: !!session,
           userEmail: session?.user?.email,
-          error: sessionError
+          error
         });
 
-        if (sessionError) {
-          console.error('AuthCallback: Session error:', sessionError);
+        if (error) {
+          console.error('AuthCallback: Session error:', error);
           setError('Authentication error');
           setLoading(false);
           return;
+        }
+
+        // If no session but this is a confirmed redirect, try to refresh the session
+        if (!session && isConfirmed) {
+          console.log('AuthCallback: No session found but confirmed redirect, refreshing...');
+          const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession();
+          
+          if (refreshError) {
+            console.error('AuthCallback: Session refresh error:', refreshError);
+            setError('Authentication failed');
+            setLoading(false);
+            return;
+          }
+          
+          if (refreshedSession?.user) {
+            console.log('AuthCallback: Session refreshed successfully:', refreshedSession.user.email);
+            // Use the refreshed session
+            session = refreshedSession;
+          } else {
+            console.log('AuthCallback: Still no session after refresh, redirecting to home');
+            router.push('/');
+            return;
+          }
         }
 
         if (session?.user) {
