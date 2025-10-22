@@ -120,102 +120,66 @@ export class SupabaseDataService {
     }
   }
 
-  // Orders Management
+  // Orders Management - OPTIMIZED VERSION
   async getSellerOrders(sellerId: string): Promise<Order[]> {
-    
     try {
-      // Simple approach: Get all orders first
-      const { data: allOrders, error: allOrdersError } = await (this.supabase as any)
-        .from('orders')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (allOrdersError) {
-        console.error('❌ Error fetching all orders:', allOrdersError);
-        throw allOrdersError;
-      }
-
-
-      if (!allOrders || allOrders.length === 0) {
-        return [];
-      }
-
-      // Get all order items (without join since relationship doesn't exist)
-      const { data: allOrderItems, error: orderItemsError } = await (this.supabase as any)
-        .from('order_items')
-        .select('*');
-
-      if (orderItemsError) {
-        console.error('❌ Error fetching order items:', orderItemsError);
-        throw orderItemsError;
-      }
-
-
-      if (!allOrderItems || allOrderItems.length === 0) {
-        return [];
-      }
-
-      // Get all items separately
-      const { data: allItems, error: itemsError } = await (this.supabase as any)
+      // Step 1: Get seller's item IDs efficiently (only IDs, no full item data)
+      const { data: sellerItemIds, error: itemsError } = await (this.supabase as any)
         .from('items')
-        .select('id, title, price, images, user_id, size, brand, condition, category_id, old_price, description, is_active, sold_at');
+        .select('id')
+        .eq('user_id', sellerId);
 
-      if (itemsError) {
-        console.error('❌ Error fetching items:', itemsError);
-        throw itemsError;
-      }
-
-
-      // Create a map of items for quick lookup
-      const itemsMap = new Map<string, Item>();
-      if (allItems) {
-        allItems.forEach((item: Item) => {
-          if (item && item.id) {
-            itemsMap.set(item.id, item);
-          }
-        });
-      }
-
-      // Find order items that belong to this seller
-      const sellerOrderItems = (allOrderItems || []).filter((orderItem: OrderItem) => {
-        if (!orderItem || !orderItem.item_id) return false;
-        const item = itemsMap.get(orderItem.item_id);
-        const isSellerItem = item?.user_id === sellerId;
-        return isSellerItem;
-      });
-
-
-      if (sellerOrderItems.length === 0) {
+      if (itemsError || !sellerItemIds || sellerItemIds.length === 0) {
         return [];
       }
 
-      // Get unique order IDs that contain items from this seller
-      const sellerOrderIds = [...new Set(sellerOrderItems.map((item: OrderItem) => item.order_id).filter(Boolean))];
+      const itemIds = sellerItemIds.map((item: { id: string }) => item.id);
 
-      if (sellerOrderIds.length === 0) {
+      // Step 2: Get order_items that contain seller's products
+      const { data: sellerOrderItems, error: orderItemsError } = await (this.supabase as any)
+        .from('order_items')
+        .select('*')
+        .in('item_id', itemIds);
+
+      if (orderItemsError || !sellerOrderItems || sellerOrderItems.length === 0) {
         return [];
       }
 
-      // Get the actual orders
-      const { data: sellerOrders, error: sellerOrdersError } = await (this.supabase as any)
+      // Step 3: Get unique order IDs
+      const orderIds = [...new Set(sellerOrderItems.map((item: OrderItem) => item.order_id))];
+
+      // Step 4: Fetch orders and their items in ONE query
+      const { data: orders, error: ordersError } = await (this.supabase as any)
         .from('orders')
         .select('*')
-        .in('id', sellerOrderIds)
+        .in('id', orderIds)
         .order('created_at', { ascending: false });
 
-      if (sellerOrdersError) {
-        console.error('❌ Error fetching seller orders:', sellerOrdersError);
-        throw sellerOrdersError;
+      if (ordersError || !orders) {
+        return [];
       }
 
+      // Step 5: Get item details only for items in these orders
+      const orderItemIds = sellerOrderItems.map((item: OrderItem) => item.item_id);
+      const { data: items, error: itemDetailsError } = await (this.supabase as any)
+        .from('items')
+        .select('id, title, price, images, user_id, size, brand, condition, category_id')
+        .in('id', orderItemIds);
 
-      // Attach order items to each order with item details
-      const ordersWithItems = (sellerOrders || []).map((order: Order) => {
-        const orderItems = (allOrderItems || [])
-          .filter((orderItem: OrderItem) => orderItem?.order_id === order?.id)
+      if (itemDetailsError) {
+        console.error('Error fetching item details:', itemDetailsError);
+      }
+
+      // Step 6: Create lookup map for fast access
+      const itemsMap = new Map(items?.map((item: Item) => [item.id, item]) || []);
+
+      // Step 7: Attach order items to orders
+      const ordersWithItems = orders.map((order: Order) => {
+        const orderItems = sellerOrderItems
+          .filter((orderItem: OrderItem) => orderItem.order_id === order.id)
           .map((orderItem: OrderItem) => ({
             ...orderItem,
-            items: orderItem?.item_id ? itemsMap.get(orderItem.item_id) || null : null
+            items: itemsMap.get(orderItem.item_id) || null
           }));
         
         return {
@@ -224,11 +188,9 @@ export class SupabaseDataService {
         };
       });
 
-
       return ordersWithItems;
-      
     } catch (error) {
-      console.error('❌ Error in getSellerOrders:', error);
+      console.error('Error in getSellerOrders:', error);
       return [];
     }
   }
@@ -777,7 +739,7 @@ export class SupabaseDataService {
     return { current, previous, changes };
   }
 
-  // Analytics and Statistics
+  // Analytics and Statistics - OPTIMIZED VERSION
   async getSellerStats(sellerId: string): Promise<{
     totalItems: number;
     activeItems: number;
@@ -788,82 +750,70 @@ export class SupabaseDataService {
     totalViews: number;
     viewsLast30Days: number;
   }> {
-    // Get total items
-    const { count: totalItems } = await (this.supabase as any)
-      .from('items')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', sellerId);
+    try {
+      // Parallel fetching for better performance
+      const [itemsResult, orderItemsResult, viewStats] = await Promise.all([
+        // Get all items with counts in one query
+        (this.supabase as any)
+          .from('items')
+          .select('id, status')
+          .eq('user_id', sellerId),
+        
+        // Get order items for revenue calculation
+        (this.supabase as any)
+          .from('order_items')
+          .select('order_id, quantity, price, item_id')
+          .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()),
+        
+        // Get view stats
+        this.getSellerViewStats(sellerId)
+      ]);
 
-    // Get active items
-    const { count: activeItems } = await (this.supabase as any)
-      .from('items')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', sellerId)
-      .eq('status', 'active');
+      // Process items data
+      const items = itemsResult.data || [];
+      const totalItems = items.length;
+      const activeItems = items.filter((item: { status: string }) => item.status === 'active').length;
+      const soldItems = items.filter((item: { status: string }) => item.status === 'sold').length;
 
-    // Get sold items
-    const { count: soldItems } = await (this.supabase as any)
-      .from('items')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', sellerId)
-      .eq('status', 'sold');
+      // Get seller's item IDs
+      const sellerItemIds = new Set(items.map((item: { id: string }) => item.id));
 
-    // Get seller's items to find orders containing them
-    const { data: sellerItems } = await (this.supabase as any)
-      .from('items')
-      .select('id')
-      .eq('user_id', sellerId);
+      // Calculate revenue from seller's items only
+      const sellerOrderItems = (orderItemsResult.data || []).filter((item: { item_id: string }) => 
+        sellerItemIds.has(item.item_id)
+      );
 
-    const sellerItemIds = sellerItems?.map((item: Item) => item.id) || [];
+      const totalRevenue = sellerOrderItems.reduce((sum: number, item: { quantity: number; price: number }) => 
+        sum + (item.quantity * item.price), 0
+      );
 
-    // Get orders that contain seller's items
-    let totalRevenue = 0;
-    let totalOrders = 0;
-    let avgOrderValue = 0;
+      const uniqueOrders = new Set(sellerOrderItems.map((item: { order_id: string }) => item.order_id));
+      const totalOrders = uniqueOrders.size;
+      const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    if (sellerItemIds.length > 0) {
-      // Get order items for seller's products
-      const { data: orderItems } = await (this.supabase as any)
-        .from('order_items')
-        .select(`
-          order_id,
-          quantity,
-          price,
-          orders!inner(
-            id,
-            total_amount,
-            created_at
-          )
-        `)
-        .in('item_id', sellerItemIds)
-        .gte('orders.created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
-
-      if (orderItems) {
-        // Calculate revenue from seller's items
-        totalRevenue = orderItems.reduce((sum: number, orderItem: { quantity: number; price: number }) => {
-          return sum + (orderItem.quantity * orderItem.price);
-        }, 0);
-
-        // Get unique orders
-        const uniqueOrders = new Set(orderItems.map((item: { order_id: string }) => item.order_id));
-        totalOrders = uniqueOrders.size;
-        avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-      }
+      return {
+        totalItems,
+        activeItems,
+        soldItems,
+        totalRevenue,
+        totalOrders,
+        avgOrderValue,
+        totalViews: viewStats.totalViews,
+        viewsLast30Days: viewStats.viewsLast30Days
+      };
+    } catch (error) {
+      console.error('Error in getSellerStats:', error);
+      return {
+        totalItems: 0,
+        activeItems: 0,
+        soldItems: 0,
+        totalRevenue: 0,
+        totalOrders: 0,
+        avgOrderValue: 0,
+        totalViews: 0,
+        viewsLast30Days: 0
+      };
     }
-
-    // Get view statistics
-    const viewStats = await this.getSellerViewStats(sellerId);
-
-    return {
-      totalItems: totalItems || 0,
-      activeItems: activeItems || 0,
-      soldItems: soldItems || 0,
-      totalRevenue,
-      totalOrders,
-      avgOrderValue,
-      totalViews: viewStats.totalViews,
-      viewsLast30Days: viewStats.viewsLast30Days
-    };
   }
 
   async getSellerAnalytics(sellerId: string, timeRange: string = '30d'): Promise<{
