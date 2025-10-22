@@ -228,8 +228,10 @@ function EditProductContent() {
 
 export default function EditProductPage() {
   return (
-    <DashboardProvider>
-      <EditProductContent />
-    </DashboardProvider>
+    <SellerDashboardLayout>
+      <DashboardProvider>
+        <EditProductContent />
+      </DashboardProvider>
+    </SellerDashboardLayout>
   );
 }

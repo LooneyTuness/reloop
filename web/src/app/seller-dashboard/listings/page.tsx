@@ -258,7 +258,7 @@ function ListingsContent() {
                     {product.title || 'Untitled Product'}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    {product.category_id ? product.category_id : t('uncategorized')}
+                    {product.categories?.name || t('uncategorized')}
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-lg font-bold text-gray-900 dark:text-white">

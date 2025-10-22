@@ -1327,8 +1327,10 @@ function OrdersContent() {
 
 export default function OrdersPage() {
   return (
-    <Suspense fallback={<OrdersSkeleton />}>
-      <OrdersContent />
-    </Suspense>
+    <SellerDashboardLayout>
+      <Suspense fallback={<OrdersSkeleton />}>
+        <OrdersContent />
+      </Suspense>
+    </SellerDashboardLayout>
   );
 }

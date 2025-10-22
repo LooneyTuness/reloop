@@ -114,8 +114,10 @@ function AnalyticsContent() {
 
 export default function Analytics() {
   return (
-    <DashboardProvider>
-      <AnalyticsContent />
-    </DashboardProvider>
+    <SellerDashboardLayout>
+      <DashboardProvider>
+        <AnalyticsContent />
+      </DashboardProvider>
+    </SellerDashboardLayout>
   );
 }

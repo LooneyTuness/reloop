@@ -36,6 +36,12 @@ interface DashboardProduct extends Omit<Item, 'price'> {
   views?: number;
   price?: string;
   status?: 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive';
+  category?: string;
+  categories?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
 }
 
 interface DashboardStats {

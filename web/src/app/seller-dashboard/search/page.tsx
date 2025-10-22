@@ -1,19 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
-import { useSearch } from '@/contexts/SearchContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
-import { Search, Package, ShoppingBag, Eye, Calendar } from 'lucide-react';
+import { Search, Package, Eye } from 'lucide-react';
+
+interface SearchResult {
+  id: string;
+  type: 'product' | 'activity';
+  title: string;
+  description?: string;
+  url: string;
+  date?: string;
+}
 
 function SearchContent() {
   const searchParams = useSearchParams();
-  const { products, activities, isLoading } = useDashboard();
-  const { searchQuery, performSearch } = useSearch();
+  const { products, activities } = useDashboard();
   const { t } = useDashboardLanguage();
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
   const query = searchParams.get('q') || '';
@@ -22,9 +29,9 @@ function SearchContent() {
     if (query) {
       handleSearch(query);
     }
-  }, [query]);
+  }, [query, handleSearch]);
 
-  const handleSearch = async (searchTerm: string) => {
+  const handleSearch = useCallback(async (searchTerm: string) => {
     if (!searchTerm.trim()) return;
 
     setIsSearching(true);
@@ -71,7 +78,7 @@ function SearchContent() {
     } finally {
       setIsSearching(false);
     }
-  };
+  }, [products, activities]);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -196,11 +203,11 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <DashboardProvider>
-      <SellerDashboardLayout>
+    <SellerDashboardLayout>
+      <DashboardProvider>
         <SearchContent />
-      </SellerDashboardLayout>
-    </DashboardProvider>
+      </DashboardProvider>
+    </SellerDashboardLayout>
   );
 }
 

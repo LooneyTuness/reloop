@@ -315,14 +315,14 @@ function AddProductContent() {
 
 export default function AddProductPage() {
   return (
-    <DashboardProvider>
-      <CategoryProvider>
-        <DashboardLanguageProvider>
-          <SellerDashboardLayout>
+    <SellerDashboardLayout>
+      <DashboardProvider>
+        <CategoryProvider>
+          <DashboardLanguageProvider>
             <AddProductContent />
-          </SellerDashboardLayout>
-        </DashboardLanguageProvider>
-      </CategoryProvider>
-    </DashboardProvider>
+          </DashboardLanguageProvider>
+        </CategoryProvider>
+      </DashboardProvider>
+    </SellerDashboardLayout>
   );
 }

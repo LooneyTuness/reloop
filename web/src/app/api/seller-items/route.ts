@@ -28,7 +28,14 @@ export async function GET(request: NextRequest) {
 
     const { data: items, error } = await supabase
       .from('items')
-      .select('*')
+      .select(`
+        *,
+        categories (
+          id,
+          name,
+          slug
+        )
+      `)
       .eq('user_id', sellerId)
       .order('created_at', { ascending: false });
 

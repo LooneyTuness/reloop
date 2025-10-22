@@ -153,9 +153,11 @@ export default function Sidebar() {
                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                   {getUserDisplayName()}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {sellerProfile?.email || 'Seller'}
-                </p>
+                {sellerProfile?.email && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    {sellerProfile.email}
+                  </p>
+                )}
                 {sellerProfile?.role && (
                   <p className="text-xs text-blue-600 dark:text-blue-400 capitalize">
                     {sellerProfile.role}
