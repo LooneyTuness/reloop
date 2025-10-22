@@ -322,13 +322,22 @@ export default function MyOrdersPage() {
               {/* Order Items */}
               <div className="p-6">
                 <div className="space-y-4">
-                  {order.order_items?.map((item, index) => (
+                  {order.order_items && order.order_items.length > 0 ? order.order_items.map((item, index) => (
                     <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                       <div className="relative">
                         <img
-                          src={Array.isArray(item.items?.images) ? item.items.images[0] : item.items?.images || '/placeholder.svg'}
+                          src={
+                            item.items?.images && Array.isArray(item.items.images) && item.items.images.length > 0
+                              ? item.items.images[0]
+                              : item.items?.images && typeof item.items.images === 'string'
+                              ? item.items.images
+                              : '/placeholder.svg'
+                          }
                           alt={item.items?.title || 'Item'}
                           className="w-16 h-16 object-cover rounded-lg"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder.svg';
+                          }}
                         />
                         <div className="absolute -top-2 -right-2 bg-brand-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                           {item.quantity}
@@ -353,7 +362,12 @@ export default function MyOrdersPage() {
                         </p>
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                      <Package className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                      <p>{t('noItemsInOrder') || 'No items found in this order'}</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Order Actions */}
@@ -424,9 +438,18 @@ export default function MyOrdersPage() {
                     {selectedOrder.order_items?.map((item, index) => (
                       <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                         <img
-                          src={Array.isArray(item.items?.images) ? item.items.images[0] : item.items?.images || '/placeholder.svg'}
+                          src={
+                            item.items?.images && Array.isArray(item.items.images) && item.items.images.length > 0
+                              ? item.items.images[0]
+                              : item.items?.images && typeof item.items.images === 'string'
+                              ? item.items.images
+                              : '/placeholder.svg'
+                          }
                           alt={item.items?.title || 'Item'}
                           className="w-16 h-16 object-cover rounded-lg"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder.svg';
+                          }}
                         />
                         <div className="flex-1">
                           <h4 className="font-medium text-gray-900 dark:text-white">
