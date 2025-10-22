@@ -28,6 +28,9 @@ const dashboardTranslations = {
     back: "Назад",
     backToDashboard: "Назад кон контролната табла",
     
+    // Save states
+    saved: "Зачувано",
+    
     // Sidebar specific
     sellerDashboard: "Продавачки панел",
     navigation: "Навигација",
@@ -425,6 +428,9 @@ const dashboardTranslations = {
     // Back button
     back: "Back",
     backToDashboard: "Back to Dashboard",
+    
+    // Save states
+    saved: "Saved",
     
     // Sidebar specific
     sellerDashboard: "Seller Dashboard",
