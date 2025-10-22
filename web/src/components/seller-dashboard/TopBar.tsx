@@ -110,14 +110,17 @@ export default function TopBar() {
   }, [sellerProfile?.avatar_url]);
 
 
-  // Debug avatar URL
+  // Debug avatar URL and profile data
   React.useEffect(() => {
+    console.log('TopBar - Full profile data:', sellerProfile);
     if (sellerProfile?.avatar_url) {
       console.log('TopBar - Avatar URL:', sellerProfile.avatar_url);
       const avatarUrl = getUserAvatar();
       console.log('TopBar - getUserAvatar():', avatarUrl);
+    } else {
+      console.log('TopBar - No avatar URL found');
     }
-  }, [sellerProfile?.avatar_url, getUserAvatar]);
+  }, [sellerProfile, getUserAvatar]);
 
   return (
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 shadow-md">

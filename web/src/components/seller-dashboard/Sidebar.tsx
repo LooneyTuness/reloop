@@ -12,8 +12,7 @@ import {
   CreditCard, 
   Settings, 
   LogOut,
-  Menu,
-  X
+  Menu
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSellerProfile } from '@/contexts/SellerProfileContext';
@@ -62,13 +61,23 @@ export default function Sidebar() {
     return 'Seller';
   };
 
+  const getUserAvatar = () => {
+    if (sellerProfile?.avatar_url) {
+      return sellerProfile.avatar_url;
+    }
+    return null;
+  };
 
-  // Debug avatar URL
+
+  // Debug avatar URL and profile data
   React.useEffect(() => {
+    console.log('Sidebar - Full profile data:', sellerProfile);
     if (sellerProfile?.avatar_url) {
       console.log('Sidebar - Avatar URL:', sellerProfile.avatar_url);
+    } else {
+      console.log('Sidebar - No avatar URL found');
     }
-  }, [sellerProfile?.avatar_url]);
+  }, [sellerProfile]);
 
   return (
     <>
@@ -76,9 +85,9 @@ export default function Sidebar() {
       <button
         onClick={toggleMobileMenu}
         className="lg:hidden fixed top-4 left-2 z-[60] p-2 rounded-lg bg-white dark:bg-gray-800 shadow-xl border-2 border-gray-300 dark:border-gray-600 hover:shadow-2xl transition-all duration-200"
-        aria-label={isMobileMenuOpen ? t('closeMenu') : t('mobileMenu')}
+        aria-label={t('mobileMenu')}
       >
-        {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+        <Menu size={18} />
       </button>
 
       {/* Mobile overlay */}
@@ -151,19 +160,19 @@ export default function Sidebar() {
           <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-800">
             <div className="flex items-center space-x-3 px-3 py-3 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800 dark:to-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
               <div className={`h-10 w-10 rounded-full flex items-center justify-center relative flex-shrink-0 ${
-                sellerProfile?.avatar_url ? 'bg-gray-100 dark:bg-gray-800 overflow-hidden' : 'bg-gradient-to-br from-blue-500 to-orange-600'
+                getUserAvatar() ? 'bg-gray-100 dark:bg-gray-800 overflow-hidden' : 'bg-gradient-to-br from-blue-500 to-orange-600'
               }`}>
-                {sellerProfile?.avatar_url ? (
+                {getUserAvatar() ? (
                   <Image
-                    key={sellerProfile.avatar_url}
-                    src={sellerProfile.avatar_url}
+                    key={getUserAvatar()}
+                    src={getUserAvatar() as string}
                     alt="Profile"
                     width={40}
                     height={40}
                     unoptimized
                     className="w-full h-full object-cover rounded-full"
                     onError={() => {
-                      console.error('Error loading avatar in sidebar:', sellerProfile.avatar_url);
+                      console.error('Error loading avatar in sidebar:', getUserAvatar());
                     }}
                   />
                 ) : (
