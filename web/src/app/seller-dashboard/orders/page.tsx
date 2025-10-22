@@ -9,6 +9,7 @@ import EnhancedImage from '@/components/EnhancedImage';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import OrdersSkeleton from '@/components/seller-dashboard/OrdersSkeleton';
 
 interface OrderItem {
@@ -85,6 +86,7 @@ interface ExtendedOrder {
 
 function OrdersContent() {
   const { orders, updateOrderStatus, isLoading, error } = useDashboard();
+  const { loading: profileLoading } = useSellerProfile();
   const router = useRouter();
   const { t } = useDashboardLanguage();
   const [searchQuery, setSearchQuery] = useState('');
@@ -333,8 +335,12 @@ function OrdersContent() {
     return `#${orderId.substring(0, 6).toUpperCase()}`;
   };
 
-  if (isLoading) {
-    return null; // Let Suspense handle the loading state
+  if (profileLoading || isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   // Show zero state if no orders
@@ -466,7 +472,7 @@ function OrdersContent() {
         )}
 
         {/* Orders Table */}
-        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden mx-0 px-0">
+        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden -mx-3 sm:-mx-6">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">

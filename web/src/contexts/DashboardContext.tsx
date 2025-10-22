@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { supabaseDataService } from '@/lib/supabase/data-service';
 import { Database } from '@/lib/supabase/supabase.types';
 import { useSellerProfile } from './SellerProfileContext';
@@ -93,8 +93,11 @@ const DashboardContext = createContext<DashboardContextType | undefined>(undefin
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
   // Get the real seller profile from context
-  const { profile: sellerProfile } = useSellerProfile();
-  const user = sellerProfile ? { id: sellerProfile.user_id, email: sellerProfile.email } : null;
+  const { profile: sellerProfile, loading: profileLoading } = useSellerProfile();
+  const user = useMemo(() => 
+    sellerProfile ? { id: sellerProfile.user_id, email: sellerProfile.email } : null,
+    [sellerProfile]
+  );
   const [orders, setOrders] = useState<DashboardOrder[]>([]);
   const [products, setProducts] = useState<DashboardProduct[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
@@ -169,8 +172,15 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const refreshData = useCallback(async (forceRefresh = false) => {
-    if (!user?.id) {
+    // Don't set loading to false if profile is still loading
+    if (!user?.id && !profileLoading) {
       setIsLoading(false);
+      return;
+    }
+    
+    // If profile is still loading, keep loading state true
+    if (profileLoading) {
+      setIsLoading(true);
       return;
     }
     
@@ -186,9 +196,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     try {
       // Fetch all data in parallel with individual error handling
       const [sellerItems, sellerOrders, sellerStats] = await Promise.allSettled([
-        supabaseDataService.getSellerItems(user.id),
-        supabaseDataService.getSellerOrders(user.id),
-        supabaseDataService.getSellerStats(user.id)
+        supabaseDataService.getSellerItems(user!.id),
+        supabaseDataService.getSellerOrders(user!.id),
+        supabaseDataService.getSellerStats(user!.id)
       ]);
       
 
@@ -226,7 +236,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         
         // Get ALL items from this seller for display
         const sellerOrderItems = (order.order_items as (OrderItem & { items?: Item | null })[] | undefined)?.filter((item) => {
-          return item.items?.user_id === user.id;
+          return item.items?.user_id === user!.id;
         }) || [];
         
         
@@ -320,7 +330,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, syncProductStatusesWithOrders, lastFetchTime, cacheTimeout]);
+  }, [user, profileLoading, syncProductStatusesWithOrders, lastFetchTime, cacheTimeout]);
 
   // Test function to manually update product statuses
   const testUpdateProductStatuses = (status: string) => {
@@ -576,11 +586,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (user?.id) {
       refreshData();
-    } else {
+    } else if (!profileLoading) {
+      // Only set loading to false if profile loading is complete
       setIsLoading(false);
       setError(null);
     }
-  }, [user?.id, refreshData]);
+  }, [user?.id, profileLoading, refreshData]);
 
   const value: DashboardContextType = {
     orders,

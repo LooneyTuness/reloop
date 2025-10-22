@@ -8,10 +8,12 @@ import EnhancedImage from '@/components/EnhancedImage';
 import { Search, Plus, Edit, Trash2, Package } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
+import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import ListingsSkeleton from '@/components/seller-dashboard/ListingsSkeleton';
 
 function ListingsContent() {
   const { products, isLoading, error, updateProduct, deleteProduct } = useDashboard();
+  const { loading: profileLoading } = useSellerProfile();
   const searchParams = useSearchParams();
   const router = useRouter();
   const { t } = useDashboardLanguage();
@@ -126,7 +128,7 @@ function ListingsContent() {
     }
   };
 
-  if (isLoading) {
+  if (profileLoading || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
