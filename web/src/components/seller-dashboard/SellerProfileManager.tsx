@@ -161,6 +161,7 @@ export default function SellerProfileManager() {
       
       // Update profile in database
       await supabaseDataService.updateSellerProfile(user.id, { avatar_url: imageUrl });
+      
       setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
       updateAvatar(imageUrl);
       setSuccess('Profile picture updated!');

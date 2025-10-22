@@ -37,28 +37,22 @@ export default function SellerVerification({ children }: SellerVerificationProps
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
-    const checkSellerProfile = async () => {
-      console.log('SellerVerification: Checking seller profile...', {
-        authLoading,
-        user: user?.email,
-        userId: user?.id,
-        hasUser: !!user
-      });
-
-      // Wait for auth to finish loading
-      if (authLoading) {
-        console.log('SellerVerification: Auth still loading, waiting...');
-        return;
-      }
-      
-      if (!user) {
-        console.log('SellerVerification: No user found after auth loading complete, redirecting to sign-in');
+    // Only run if we have a user and auth is not loading
+    if (authLoading || !user) {
+      if (!authLoading && !user) {
         // User not authenticated, redirect to login with return URL
         const currentPath = window.location.pathname;
         router.push(`/sign-in?returnUrl=${encodeURIComponent(currentPath)}`);
-        return;
       }
+      return;
+    }
 
+    // If we already have a seller profile, don't check again
+    if (sellerProfile) {
+      return;
+    }
+
+    const checkSellerProfile = async () => {
       setProfileLoading(true);
 
       try {
@@ -69,15 +63,9 @@ export default function SellerVerification({ children }: SellerVerificationProps
           .eq('user_id', user.id)
           .single();
 
-        console.log('SellerVerification: Profile check result:', {
-          profile,
-          error: profileError
-        });
-
         if (profileError) {
           if (profileError.code === 'PGRST116') {
             // No profile found - redirect to home page
-            console.log('SellerVerification: No profile found, redirecting to home');
             router.push('/');
             return;
           }
@@ -86,7 +74,6 @@ export default function SellerVerification({ children }: SellerVerificationProps
 
         if (!profile) {
           // No profile found - redirect to home page
-          console.log('SellerVerification: No profile data, redirecting to home');
           router.push('/');
           return;
         }
@@ -94,32 +81,12 @@ export default function SellerVerification({ children }: SellerVerificationProps
         // Type assertion to help TypeScript understand the profile type
         const sellerProfile = profile as SellerProfile;
 
-        console.log('SellerVerification: Raw profile object:', sellerProfile);
-        console.log('SellerVerification: Profile keys:', Object.keys(sellerProfile));
-        console.log('SellerVerification: is_approved value from DB:', sellerProfile.is_approved, 'type:', typeof sellerProfile.is_approved);
-        console.log('SellerVerification: Seller profile details:', {
-          isApproved: sellerProfile.is_approved,
-          role: sellerProfile.role,
-          email: sellerProfile.email,
-          fullName: sellerProfile.full_name
-        });
-
-        // Note: We allow access to dashboard even if not approved yet
-        // This allows sellers to complete their profile and manage their listings
-        // while waiting for approval
-        if (!sellerProfile.is_approved) {
-          console.log('SellerVerification: Account not approved yet, but allowing dashboard access');
-        }
-
         // Check if user has seller or admin role
         if (sellerProfile.role !== 'seller' && sellerProfile.role !== 'admin') {
           // Wrong role - redirect to home page
-          console.log('SellerVerification: Wrong role, redirecting to home. Role:', sellerProfile.role);
           router.push('/');
           return;
         }
-
-        console.log('SellerVerification: All checks passed, setting seller profile');
 
         setSellerProfile(sellerProfile);
       } catch (err) {
@@ -132,7 +99,7 @@ export default function SellerVerification({ children }: SellerVerificationProps
     };
 
     checkSellerProfile();
-  }, [user, authLoading, router]);
+  }, [user?.id, authLoading, router, sellerProfile]);
 
   // Show loading state while checking authentication
   if (authLoading || profileLoading) {

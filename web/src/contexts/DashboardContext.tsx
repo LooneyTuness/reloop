@@ -600,7 +600,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     if (user?.id) {
       refreshData();
     } else {
-      console.log('No user authenticated, setting loading to false');
       setIsLoading(false);
       setError(null);
     }

@@ -14,8 +14,6 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("AuthContext: Initializing auth state...");
-
     // Always try to get the session first
     const initializeAuth = async () => {
       try {
@@ -23,11 +21,6 @@ export function AuthProvider({ children }) {
           data: { session },
           error,
         } = await supabase.auth.getSession();
-        console.log("AuthContext: Initial session check:", {
-          user: session?.user?.email,
-          error,
-          hasSession: !!session,
-        });
 
         if (session?.user) {
           setUser(session.user);
@@ -46,20 +39,12 @@ export function AuthProvider({ children }) {
           const isConfirmed = urlParams.get("confirmed") === "true";
 
           if (isConfirmed) {
-            console.log(
-              "AuthContext: Confirmation redirect detected, retrying session..."
-            );
             // Wait a bit and try again
             setTimeout(async () => {
               const {
                 data: { session: retrySession },
                 error: retryError,
               } = await supabase.auth.getSession();
-              console.log("AuthContext: Retry session check:", {
-                user: retrySession?.user?.email,
-                error: retryError,
-                hasSession: !!retrySession,
-              });
 
               if (retrySession?.user) {
                 setUser(retrySession.user);
@@ -91,12 +76,6 @@ export function AuthProvider({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("AuthContext: Auth state change:", {
-        event,
-        user: session?.user?.email,
-        hasSession: !!session,
-      });
-
       // Handle different auth events
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
         setUser(session?.user ?? null);
