@@ -103,7 +103,7 @@ export default function TopBar() {
   };
 
   return (
-    <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-40 shadow-sm">
+    <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 shadow-md">
       <div className="flex items-center justify-between h-full px-2 sm:px-8 gap-1 sm:gap-4">
         {/* Search */}
         <div className="flex-1 max-w-[120px] sm:max-w-lg relative search-container">

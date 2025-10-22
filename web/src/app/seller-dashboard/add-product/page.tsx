@@ -100,7 +100,7 @@ function AddProductContent() {
   };
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl mx-auto">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl">
         <div className="mb-8">
           <button
             onClick={() => router.back()}
@@ -132,8 +132,8 @@ function AddProductContent() {
 
           {/* Product Details Section */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-              📝 {t('productDetails') || 'Product Details'}
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              {t('productDetails') || 'Product Details'}
             </h2>
             <div className="space-y-6">
               <div>
@@ -170,7 +170,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="price" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
-                    💰 {t('priceMKD')} <span className="text-red-500">*</span>
+                    {t('priceMKD')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="price"
@@ -187,7 +187,7 @@ function AddProductContent() {
 
                 <div>
                   <label className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
-                    📂 {t('category')} <span className="text-red-500">*</span>
+                    {t('category')} <span className="text-red-500">*</span>
                   </label>
                   <CategorySelector
                     onCategorySelect={handleCategorySelect}
@@ -202,7 +202,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="condition" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
-                    ✨ {t('condition')}
+                    {t('condition')}
                   </label>
                   <select
                     id="condition"
@@ -211,16 +211,16 @@ function AddProductContent() {
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
                   >
-                    <option value="excellent">⭐ {t('excellent')}</option>
-                    <option value="good">👍 {t('good')}</option>
-                    <option value="fair">👌 {t('fair')}</option>
-                    <option value="poor">⚠️ {t('poor')}</option>
+                    <option value="excellent">{t('excellent')}</option>
+                    <option value="good">{t('good')}</option>
+                    <option value="fair">{t('fair')}</option>
+                    <option value="poor">{t('poor')}</option>
                   </select>
                 </div>
 
                 <div>
                   <label htmlFor="size" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
-                    📏 {t('size')}
+                    {t('size')}
                   </label>
                   <input
                     id="size"
@@ -237,7 +237,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="brand" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
-                    🏷️ {t('brand')} <span className="text-red-500">*</span>
+                    {t('brand')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="brand"
@@ -253,7 +253,7 @@ function AddProductContent() {
 
                 <div>
                   <label htmlFor="quantity" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
-                    🔢 {t('quantity')}
+                    {t('quantity')}
                   </label>
                   <input
                     id="quantity"
@@ -270,7 +270,7 @@ function AddProductContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="status" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
-                    📊 {t('status')}
+                    {t('status')}
                   </label>
                   <select
                     id="status"
@@ -279,9 +279,9 @@ function AddProductContent() {
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
                   >
-                    <option value="active">✅ {t('active')}</option>
-                    <option value="draft">📝 {t('draft')}</option>
-                    <option value="inactive">⏸️ {t('inactive')}</option>
+                    <option value="active">{t('active')}</option>
+                    <option value="draft">{t('draft')}</option>
+                    <option value="inactive">{t('inactive')}</option>
                   </select>
                 </div>
               </div>

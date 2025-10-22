@@ -25,7 +25,7 @@ export default function SellerDashboardLayout({ children }: SellerDashboardLayou
             <TopBar />
             
             {/* Main Content */}
-            <main className="absolute left-0 lg:left-64 top-16 sm:top-20 right-0 bottom-0">
+            <main className="absolute left-0 lg:left-64 top-16 sm:top-20 right-0 bottom-0 z-10">
               <div className="w-full h-full overflow-auto overflow-x-hidden transition-opacity duration-200 ease-in-out">
                 {children}
               </div>

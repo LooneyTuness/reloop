@@ -306,6 +306,7 @@ const dashboardTranslations = {
     
     // Add Product page
     createNewProductListing: "Создај нов листинг на продукт",
+    productDetails: "Детали за производот",
     enterProductName: "Внеси име на продукт",
     describeYourProduct: "Опиши го твојот продукт",
     productImages: "Слики на производот",
@@ -316,11 +317,12 @@ const dashboardTranslations = {
     noImagesUploadedYet: "Сè уште нема прикачени слики",
     atLeastOneImageRequired: "Потребна е најмалку една слика",
     priceMKD: "Цена (МКД)",
+    category: "Категорија",
     selectCategory: "Избери категорија за твојот продукт",
     excellent: "Одлично",
     good: "Добро",
     fair: "Пристојно",
-    poor: "Слабо",
+    poor: "Со мали траги",
     sizePlaceholder: "на пр. M, L, XL, 42",
     brandPlaceholder: "на пр. Nike, Zara, Calvin Klein, Друго",
     creating: "Се објавува...",
@@ -708,6 +710,7 @@ const dashboardTranslations = {
     
     // Add Product page
     createNewProductListing: "Create a new product listing",
+    productDetails: "Product Details",
     enterProductName: "Enter product name",
     describeYourProduct: "Describe your product",
     productImages: "Product Images",
@@ -718,6 +721,7 @@ const dashboardTranslations = {
     noImagesUploadedYet: "No images uploaded yet",
     atLeastOneImageRequired: "At least one image is required",
     priceMKD: "Price (MKD)",
+    category: "Category",
     selectCategory: "Select a category for your product",
     excellent: "Excellent",
     good: "Good",
