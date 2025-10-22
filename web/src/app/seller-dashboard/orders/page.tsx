@@ -5,10 +5,9 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import { useDashboard } from '@/contexts/DashboardContext';
 import { OrdersZeroState } from '@/components/seller-dashboard/ZeroStates';
 import BackButton from '@/components/seller-dashboard/BackButton';
-import { Search, Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, Download, MoreVertical, CreditCard, Info, Mail, Phone, MapPin } from 'lucide-react';
+import { Search, Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ZoomIn, ChevronLeft, ChevronRight, User, Calendar, CreditCard, Info, Mail, Phone, MapPin } from 'lucide-react';
 import EnhancedImage from '@/components/EnhancedImage';
 import { useRouter } from 'next/navigation';
-import jsPDF from 'jspdf';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import OrdersSkeleton from '@/components/seller-dashboard/OrdersSkeleton';
 
@@ -117,239 +116,7 @@ const OrdersContent = React.memo(function OrdersContent() {
     }));
   }, []);
 
-  // Function to transliterate Cyrillic text to Latin for PDF generation
-  const transliterateText = (text: string): string => {
-    if (!text) return '';
-    
-    const cyrillicToLatin: { [key: string]: string } = {
-      'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ж': 'zh', 'з': 'z',
-      'и': 'i', 'ј': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p',
-      'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch',
-      'ш': 'sh', 'щ': 'sht', 'ъ': 'a', 'ь': 'y', 'ю': 'yu', 'я': 'ya', 'ѕ': 'dz',
-      'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ж': 'Zh', 'З': 'Z',
-      'И': 'I', 'Ј': 'J', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'N', 'О': 'O', 'П': 'P',
-      'Р': 'R', 'С': 'S', 'Т': 'T', 'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'C', 'Ч': 'Ch',
-      'Ш': 'Sh', 'Щ': 'Sht', 'Ъ': 'A', 'Ь': 'Y', 'Ю': 'Yu', 'Я': 'Ya', 'Ѕ': 'Dz'
-    };
-    
-    // First transliterate Cyrillic characters
-    let result = text.replace(/[а-яА-ЯѕЅ]/g, (char) => cyrillicToLatin[char] || char);
-    
-    // Handle specific problematic characters that might appear
-    result = result.replace(/[^\x00-\x7F]/g, (char) => {
-      // Log the problematic character for debugging
-      console.log('Problematic character in PDF:', char, 'Code:', char.charCodeAt(0));
-      return '?';
-    });
-    
-    // Handle specific known problematic characters
-    result = result.replace(/[^\x20-\x7E]/g, '?');
-    
-    // Clean up any double spaces or other formatting issues
-    result = result.replace(/\s+/g, ' ').trim();
-    
-    return result;
-  };
 
-  const generatePDF = useCallback((order: ExtendedOrder) => {
-    // Get all translations upfront to ensure they're available
-    const translations = {
-      orderDetails: t('orderDetails'),
-      orderId: t('orderId'),
-      orderDate: t('orderDate'),
-      status: t('status'),
-      customerInformation: t('customerInformation'),
-      fullName: t('fullName'),
-      email: t('email'),
-      phone: t('phone'),
-      shippingAddress: t('shippingAddress'),
-      address: t('address'),
-      cityPostalCode: t('cityPostalCode'),
-      orderNotes: t('orderNotes'),
-      productsInThisOrder: t('productsInThisOrder'),
-      unknownProduct: t('unknownProduct'),
-      quantity: t('quantity'),
-      unitPrice: t('unitPrice'),
-      totalPrice: t('totalPrice'),
-      size: t('size'),
-      brand: t('brand'),
-      condition: t('condition'),
-      orderSummary: t('orderSummary'),
-      numberOfItems: t('numberOfItems'),
-      paymentMethod: t('paymentMethod'),
-      totalAmount: t('totalAmount'),
-      generatedOn: t('generatedOn'),
-      unknown: t('unknown'),
-      errorGeneratingPDF: t('errorGeneratingPDF')
-    };
-
-    try {
-      const pdf = new jsPDF();
-      
-      // Set font to helvetica (default) - we'll handle Cyrillic by using transliterated text
-      pdf.setFont('helvetica');
-      
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const margin = 20;
-      let yPosition = 20;
-
-      // Helper function to add text with word wrap and transliteration
-      const addText = (text: string, x: number, y: number, options: { align?: string } = {}) => {
-        try {
-          const maxWidth = pageWidth - x - margin;
-          const transliteratedText = transliterateText(text);
-          
-          // Debug logging for problematic text
-          if (text !== transliteratedText) {
-            console.log('Transliterated text:', text, '->', transliteratedText);
-          }
-          
-          const lines = pdf.splitTextToSize(transliteratedText, maxWidth);
-          pdf.text(lines, x, y, options);
-          return y + (lines.length * 6);
-        } catch (error) {
-          console.error('Error adding text to PDF:', error);
-          // Fallback: add text without word wrap
-          pdf.text(transliterateText(text), x, y, options);
-          return y + 6;
-        }
-      };
-
-      // Helper function to add a line
-      const addLine = (y: number) => {
-        pdf.setLineWidth(0.5);
-        pdf.line(margin, y, pageWidth - margin, y);
-        return y + 10;
-      };
-
-      // Helper function to check if we need a new page
-      const checkNewPage = (currentY: number) => {
-        if (currentY > 250) {
-          pdf.addPage();
-          return 20;
-        }
-        return currentY;
-      };
-
-      // Order Details
-      pdf.setFontSize(20);
-      pdf.setFont('helvetica', 'bold');
-      yPosition = addText(translations.orderDetails, margin, yPosition);
-      
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'normal');
-      yPosition = addText(`${translations.orderId}: ${generateOrderNumber(order.id)}`, margin, yPosition + 5);
-      yPosition = addText(`${translations.orderDate}: ${order.created_at ? new Date(order.created_at).toLocaleDateString() : translations.unknown}`, margin, yPosition);
-      yPosition = addText(`${translations.status}: ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}`, margin, yPosition);
-      
-      yPosition = addLine(yPosition + 5);
-
-      // Customer Information
-      if (order.full_name || order.email || order.phone) {
-        pdf.setFontSize(14);
-        pdf.setFont('helvetica', 'bold');
-        yPosition = addText(translations.customerInformation, margin, yPosition);
-        
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'normal');
-        if (order.full_name) yPosition = addText(`${translations.fullName}: ${order.full_name}`, margin, yPosition);
-        if (order.email) yPosition = addText(`${translations.email}: ${order.email}`, margin, yPosition);
-        if (order.phone) yPosition = addText(`${translations.phone}: ${order.phone}`, margin, yPosition);
-        
-        yPosition = addLine(yPosition + 5);
-      }
-
-      // Shipping Address
-      if (order.address_line1 || order.city || order.postal_code) {
-        pdf.setFontSize(14);
-        pdf.setFont('helvetica', 'bold');
-        yPosition = addText(translations.shippingAddress, margin, yPosition);
-        
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'normal');
-        if (order.address_line1) yPosition = addText(`${translations.address}: ${order.address_line1}`, margin, yPosition);
-        if (order.address_line2) yPosition = addText(order.address_line2, margin, yPosition);
-        if (order.city || order.postal_code) {
-          yPosition = addText(`${translations.cityPostalCode}: ${[order.city, order.postal_code].filter(Boolean).join(', ')}`, margin, yPosition);
-        }
-        
-        yPosition = addLine(yPosition + 5);
-      }
-
-      // Order Notes
-      if (order.notes) {
-        pdf.setFontSize(14);
-        pdf.setFont('helvetica', 'bold');
-        yPosition = addText(translations.orderNotes, margin, yPosition);
-        
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'normal');
-        yPosition = addText(order.notes, margin, yPosition);
-        
-        yPosition = addLine(yPosition + 5);
-      }
-
-      // Products
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'bold');
-      yPosition = addText(translations.productsInThisOrder, margin, yPosition);
-      
-      pdf.setFontSize(10);
-      pdf.setFont('helvetica', 'normal');
-      
-      const orderItems = order.seller_order_items || order.order_items || [];
-      orderItems.forEach((item: OrderItem, index: number) => {
-        yPosition = checkNewPage(yPosition);
-        
-        yPosition = addText(`${index + 1}. ${item.items?.title || translations.unknownProduct}`, margin, yPosition);
-        yPosition = addText(`   ${translations.quantity}: ${item.quantity}`, margin + 10, yPosition);
-        yPosition = addText(`   ${translations.unitPrice}: ${item.price?.toFixed(2)} ${t("currency")}`, margin + 10, yPosition);
-        yPosition = addText(`   ${translations.totalPrice}: ${(item.quantity * item.price)?.toFixed(2)} ${t("currency")}`, margin + 10, yPosition);
-        
-        if (item.items?.size) yPosition = addText(`   ${translations.size}: ${item.items.size}`, margin + 10, yPosition);
-        if (item.items?.brand) yPosition = addText(`   ${translations.brand}: ${item.items.brand}`, margin + 10, yPosition);
-        if (item.items?.condition) yPosition = addText(`   ${translations.condition}: ${item.items.condition}`, margin + 10, yPosition);
-        if (item.items?.category_id) yPosition = addText(`   Category ID: ${item.items.category_id}`, margin + 10, yPosition);
-        
-        yPosition += 5;
-      });
-
-      yPosition = addLine(yPosition + 5);
-
-      // Order Summary
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'bold');
-      yPosition = addText(translations.orderSummary, margin, yPosition);
-      
-      pdf.setFontSize(10);
-      pdf.setFont('helvetica', 'normal');
-      yPosition = addText(`${translations.numberOfItems}: ${orderItems.length}`, margin, yPosition);
-      yPosition = addText(`${translations.paymentMethod}: ${order.payment_method || translations.unknown}`, margin, yPosition);
-
-      // Calculate total amount
-      const totalAmount = orderItems.reduce((sum: number, item: OrderItem) => sum + (item.quantity * item.price), 0);
-
-      // Add total amount in bottom right
-      const totalY = pdf.internal.pageSize.getHeight() - 40;
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor(0, 0, 0);
-      pdf.text(`${translations.totalAmount}: ${totalAmount.toFixed(2)} ${t("currency")}`, pageWidth - 80, totalY);
-
-      // Footer
-      pdf.setFontSize(8);
-      pdf.setFont('helvetica', 'normal');
-      pdf.setTextColor(100, 100, 100);
-      pdf.text(`${translations.generatedOn}:`, margin, pdf.internal.pageSize.getHeight() - 20);
-      pdf.text(new Date().toLocaleString(), margin + 30, pdf.internal.pageSize.getHeight() - 20);
-
-      // Save the PDF
-      pdf.save(`order-${generateOrderNumber(order.id)}-${new Date().toISOString().split('T')[0]}.pdf`);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert(translations.errorGeneratingPDF);
-    }
-  }, [t]);
 
   // Keyboard navigation for image viewer
   React.useEffect(() => {
@@ -548,7 +315,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody>
                 {filteredOrders.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50" onClick={(e) => {
                     // Prevent row click from interfering with image clicks
@@ -592,7 +359,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {generateOrderNumber(order.id)}
+                            {order.customer_name || 'Customer'} - {order.product_name || 'Product'}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
                             {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'Unknown date'}
@@ -663,20 +430,6 @@ const OrdersContent = React.memo(function OrdersContent() {
                         >
                           <Eye size={16} />
                         </button>
-                        <div className="relative group">
-                          <button className="p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                            <MoreVertical size={16} />
-                          </button>
-                          <div className="absolute right-0 top-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                              onClick={() => generatePDF(order as ExtendedOrder)}
-                              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            >
-                              <Download className="w-4 h-4" />
-                              {t('downloadConfirmation')}
-                            </button>
-                          </div>
-                        </div>
                         <select
                           value={order.status}
                           onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
@@ -778,17 +531,10 @@ const OrdersContent = React.memo(function OrdersContent() {
                     {t('orderDetails')}
                   </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      <span className="print-mk-order-id">{t('orderNumber')} #</span>{generateOrderNumber(selectedOrder.id)} • <span className="print-mk-order-date">{t('orderDate')}: </span>{selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : 'Unknown date'}
+                      <span className="print-mk-order-id">{t('orderNumber')} #</span>{selectedOrder.customer_name || 'Customer'} • <span className="print-mk-order-date">{t('orderDate')}: </span>{selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : 'Unknown date'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => generatePDF(selectedOrder)}
-                      className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                      title="Download PDF"
-                    >
-                      <Download className="w-5 h-5" />
-                    </button>
                   <button
                     onClick={() => setSelectedOrder(null)}
                       className="no-print p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"

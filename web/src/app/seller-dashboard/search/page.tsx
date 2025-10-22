@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
-import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
+import { useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { Search, Package, Eye } from 'lucide-react';
 
@@ -214,9 +214,7 @@ function SearchContent() {
 export default function SearchPage() {
   return (
     <SellerDashboardLayout>
-      <DashboardProvider>
-        <SearchContent />
-      </DashboardProvider>
+      <SearchContent />
     </SellerDashboardLayout>
   );
 }

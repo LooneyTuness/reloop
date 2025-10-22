@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
-import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
+import { useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
-import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 import BackButton from '@/components/seller-dashboard/BackButton';
 import { User } from 'lucide-react';
 import SellerProfileManager from '@/components/seller-dashboard/SellerProfileManager';
@@ -75,11 +74,7 @@ function SettingsContent() {
 export default function SettingsPage() {
   return (
     <SellerDashboardLayout>
-      <DashboardProvider>
-        <DashboardLanguageProvider>
-          <SettingsContent />
-        </DashboardLanguageProvider>
-      </DashboardProvider>
+      <SettingsContent />
     </SellerDashboardLayout>
   );
 }
