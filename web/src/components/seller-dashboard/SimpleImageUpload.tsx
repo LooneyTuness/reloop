@@ -5,6 +5,7 @@ import { Upload, X } from 'lucide-react';
 import { imageStorageService } from '@/lib/supabase/image-storage';
 import { useAuth } from '@/contexts/AuthContext';
 import Image from 'next/image';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
 interface SimpleImageUploadProps {
   images: string[];
@@ -21,6 +22,7 @@ export default function SimpleImageUpload({
 }: SimpleImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
+  const { t } = useDashboardLanguage();
   const [isUploading, setIsUploading] = useState(false);
 
   const handleFileSelect = async (files: FileList | null) => {
@@ -102,17 +104,17 @@ export default function SimpleImageUpload({
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Product Images {required && <span className="text-red-500">*</span>}
+        <label className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+          {t('productImages')} {required && <span className="text-red-500">*</span>}
         </label>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Upload up to {maxImages} images. Click to select files.
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          {t('uploadUpToImages').replace('{count}', maxImages.toString())}
         </p>
       </div>
 
       {/* Upload Area */}
       {canAddMore && (
-        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6">
+        <div className="border-2 border-dashed border-blue-300 dark:border-blue-600 rounded-xl p-8 hover:border-blue-500 dark:hover:border-blue-400 transition-all bg-blue-50/30 dark:bg-blue-900/10">
           <input
             ref={fileInputRef}
             type="file"
@@ -123,17 +125,15 @@ export default function SimpleImageUpload({
             disabled={isUploading}
           />
           
-          <div className="space-y-2">
-            <div className="flex">
-              <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-full">
-                {isUploading ? (
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                ) : (
-                  <Upload size={24} className="text-gray-400" />
-                )}
-              </div>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+              {isUploading ? (
+                <div className="animate-spin rounded-full h-8 w-8 border-3 border-blue-600 border-t-transparent"></div>
+              ) : (
+                <Upload size={32} className="text-blue-600 dark:text-blue-400" />
+              )}
             </div>
-            <div>
+            <div className="text-center">
               <button
                 type="button"
                 onClick={() => {
@@ -143,30 +143,31 @@ export default function SimpleImageUpload({
                   }
                 }}
                 disabled={isUploading}
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {isUploading ? 'Uploading...' : 'Click to upload'}
+                {isUploading ? t('uploading') : t('clickToUpload')}
               </button>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                {t('pngJpgGifUpTo5MB')}
+              </p>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              PNG, JPG, GIF up to 5MB each
-            </p>
           </div>
         </div>
       )}
 
       {/* Image Preview Grid */}
       {images.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {images.map((image, index) => (
             <div key={index} className="relative group">
-              <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+              <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 ring-2 ring-gray-200 dark:ring-gray-600 hover:ring-blue-500 dark:hover:ring-blue-400 transition-all">
                 <Image
                   src={image}
                   alt={`Product image ${index + 1}`}
                   width={200}
                   height={200}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  unoptimized={true}
                 />
               </div>
               
@@ -174,14 +175,14 @@ export default function SimpleImageUpload({
               <button
                 type="button"
                 onClick={() => removeImage(index)}
-                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                className="absolute -top-2 -right-2 p-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 hover:scale-110 transition-all opacity-0 group-hover:opacity-100"
                 title="Remove image"
               >
-                <X size={12} />
+                <X size={14} />
               </button>
               
               {/* Image number badge */}
-              <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+              <div className="absolute top-2 left-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-md">
                 {index + 1}
               </div>
             </div>
@@ -191,13 +192,15 @@ export default function SimpleImageUpload({
 
       {/* Empty state when no images */}
       {images.length === 0 && (
-        <div className="py-8 text-gray-500 dark:text-gray-400">
-          <div className="flex items-center mb-2">
-            <Upload size={48} className="opacity-50" />
+        <div className="py-12 text-center bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+          <div className="flex justify-center mb-3">
+            <Upload size={56} className="text-gray-400 dark:text-gray-500" />
           </div>
-          <p>No images uploaded yet</p>
+          <p className="text-gray-600 dark:text-gray-400 font-medium">{t('noImagesUploadedYet')}</p>
           {required && (
-            <p className="text-sm text-red-500 mt-1">At least one image is required</p>
+            <p className="text-sm text-red-500 dark:text-red-400 mt-2 font-medium">
+              ⚠️ {t('atLeastOneImageRequired')}
+            </p>
           )}
         </div>
       )}

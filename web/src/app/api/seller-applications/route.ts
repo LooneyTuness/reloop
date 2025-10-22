@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
           <h2 style="color: #1f2937; font-size: 24px; margin-bottom: 20px;">Thank you for applying!</h2>
           
           <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-            Hello ${fullName},
+            Hello ${fullName}
           </p>
           
           <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">

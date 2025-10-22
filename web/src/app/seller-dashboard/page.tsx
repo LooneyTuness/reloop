@@ -92,7 +92,7 @@ const DashboardContent = React.memo(function DashboardContent() {
                         {getGreeting()}
                         {getUserName() && (
                           <>
-                            , <span className="inline-flex items-baseline gap-2">
+                            {' '}<span className="inline-flex items-baseline gap-2">
                               {getUserName()}!
                               <span className="text-3xl sm:text-4xl lg:text-5xl leading-none animate-pulse">👋</span>
                             </span>

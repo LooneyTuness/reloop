@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import SimpleImageUpload from '@/components/seller-dashboard/SimpleImageUpload';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
-import { CategoryProvider, useCategory } from '@/contexts/CategoryContext';
+import { CategoryProvider } from '@/contexts/CategoryContext';
 import CategorySelector from '@/components/category/CategorySelector';
 import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { CategoryHierarchy, CategoryWithChildren } from '@/types/category';
+import { CategoryWithChildren } from '@/types/category';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 // BrandDropdown removed - using simple text input instead
@@ -17,7 +17,6 @@ import DashboardLanguageProvider from '@/contexts/DashboardLanguageContext';
 function AddProductContent() {
   const router = useRouter();
   const { addNewProduct } = useDashboard();
-  const { getCategoryById } = useCategory();
   const { t } = useDashboardLanguage();
   const [isLoading, setIsLoading] = useState(false);
   
@@ -101,28 +100,28 @@ function AddProductContent() {
   };
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl mx-auto">
         <div className="mb-8">
           <button
             onClick={() => router.back()}
-            className="mb-4 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"
+            className="mb-6 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center gap-2 hover:gap-3 transition-all group rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <ArrowLeft size={20} className="mr-2" />
+            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
             {t('back')}
           </button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               {t('addNewProduct')}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               {t('createNewProductListing')}
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           {/* Image Upload Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border-2 border-blue-100 dark:border-blue-900 p-8">
             <SimpleImageUpload
               images={images}
               onImagesChange={setImages}
@@ -131,11 +130,15 @@ function AddProductContent() {
             />
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <div className="space-y-4">
+          {/* Product Details Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              📝 {t('productDetails') || 'Product Details'}
+            </h2>
+            <div className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('productName')} *
+                <label htmlFor="name" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('productName')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="name"
@@ -145,12 +148,12 @@ function AddProductContent() {
                   onChange={handleInputChange}
                   placeholder={t('enterProductName')}
                   required
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="description" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                   {t('description')}
                 </label>
                 <textarea
@@ -159,15 +162,15 @@ function AddProductContent() {
                   value={formData.description}
                   onChange={handleInputChange}
                   placeholder={t('describeYourProduct')}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={5}
+                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('priceMKD')} *
+                  <label htmlFor="price" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+                    💰 {t('priceMKD')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="price"
@@ -178,11 +181,14 @@ function AddProductContent() {
                     onChange={handleInputChange}
                     placeholder="0.00"
                     required
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
                 <div>
+                  <label className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+                    📂 {t('category')} <span className="text-red-500">*</span>
+                  </label>
                   <CategorySelector
                     onCategorySelect={handleCategorySelect}
                     selectedCategory={selectedCategory}
@@ -193,28 +199,28 @@ function AddProductContent() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="condition" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('condition')}
+                  <label htmlFor="condition" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+                    ✨ {t('condition')}
                   </label>
                   <select
                     id="condition"
                     name="condition"
                     value={formData.condition}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
                   >
-                    <option value="excellent">{t('excellent')}</option>
-                    <option value="good">{t('good')}</option>
-                    <option value="fair">{t('fair')}</option>
-                    <option value="poor">{t('poor')}</option>
+                    <option value="excellent">⭐ {t('excellent')}</option>
+                    <option value="good">👍 {t('good')}</option>
+                    <option value="fair">👌 {t('fair')}</option>
+                    <option value="poor">⚠️ {t('poor')}</option>
                   </select>
                 </div>
 
                 <div>
-                  <label htmlFor="size" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('size')}
+                  <label htmlFor="size" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+                    📏 {t('size')}
                   </label>
                   <input
                     id="size"
@@ -223,15 +229,15 @@ function AddProductContent() {
                     value={formData.size}
                     onChange={handleInputChange}
                     placeholder={t('sizePlaceholder')}
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="brand" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('brand')} *
+                  <label htmlFor="brand" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+                    🏷️ {t('brand')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="brand"
@@ -241,13 +247,13 @@ function AddProductContent() {
                     onChange={handleInputChange}
                     placeholder={t('brandPlaceholder') || 'Enter brand name'}
                     required
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('quantity')}
+                  <label htmlFor="quantity" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+                    🔢 {t('quantity')}
                   </label>
                   <input
                     id="quantity"
@@ -256,62 +262,63 @@ function AddProductContent() {
                     min="1"
                     value={formData.quantity}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('status')}
+                  <label htmlFor="status" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+                    📊 {t('status')}
                   </label>
                   <select
                     id="status"
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
                   >
-                    <option value="active">{t('active')}</option>
-                    <option value="draft">{t('draft')}</option>
-                    <option value="inactive">{t('inactive')}</option>
+                    <option value="active">✅ {t('active')}</option>
+                    <option value="draft">📝 {t('draft')}</option>
+                    <option value="inactive">⏸️ {t('inactive')}</option>
                   </select>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4">
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-4 pb-8">
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="px-8 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-all hover:scale-105"
             >
               {t('cancel')}
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center"
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 transition-all hover:scale-105 shadow-lg"
             >
               {isLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-3 border-white border-t-transparent"></div>
                   {t('creating')}
                 </>
               ) : (
                 <>
-                  <Save size={20} className="mr-2" />
+                  <Save size={20} />
                   {t('createProduct')}
                 </>
               )}
             </button>
-        </div>
-      </form>
-    </div>
-  );
-}
+          </div>
+        </form>
+      </div>
+    );
+  }
 
 export default function AddProductPage() {
   return (

@@ -297,7 +297,7 @@ export async function PUT(req: NextRequest) {
             <h2 style="color: #dc2626; font-size: 24px; margin-bottom: 20px;">Seller Application Update</h2>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-              Hello ${application.full_name},
+              Hello ${application.full_name}
             </p>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">

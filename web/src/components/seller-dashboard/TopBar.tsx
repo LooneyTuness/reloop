@@ -202,27 +202,37 @@ export default function TopBar() {
           <div className="relative flex items-center flex-shrink-0 profile-dropdown-container">
             <button
               onClick={handleProfileClick}
-              className={`h-7 w-7 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden ${
+              className={`h-7 w-7 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden bg-gradient-to-br from-blue-500 to-orange-600 ${
                 showProfileDropdown 
                   ? 'ring-2 ring-blue-200' 
                   : 'hover:ring-2 hover:ring-gray-200'
-              } ${getUserAvatar() ? 'bg-white' : 'bg-gradient-to-br from-blue-500 to-orange-600'}`}
+              }`}
               title={`${getUserDisplayName()} - Click to open profile menu`}
             >
               {getUserAvatar() ? (
-                <Image
-                  key={getUserAvatar()}
-                  src={getUserAvatar() as string}
-                  alt="Profile"
-                  width={40}
-                  height={40}
-                  unoptimized={true}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                  }}
-                  className="w-full h-full object-cover rounded-full"
-                />
+                <>
+                  <Image
+                    key={getUserAvatar()}
+                    src={getUserAvatar() as string}
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    unoptimized={true}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        const fallbackIcon = parent.querySelector('.fallback-icon');
+                        if (fallbackIcon) {
+                          (fallbackIcon as HTMLElement).style.display = 'block';
+                        }
+                      }
+                    }}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                  <User className="text-white fallback-icon" size={16} style={{ display: 'none', position: 'absolute' }} />
+                </>
               ) : (
                 <User className="text-white" size={16} />
               )}
@@ -233,21 +243,31 @@ export default function TopBar() {
               <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-orange-600 overflow-hidden">
+                    <div className="h-10 w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-orange-600 overflow-hidden relative">
                       {getUserAvatar() ? (
-                        <Image
-                          key={getUserAvatar()}
-                          src={getUserAvatar() as string}
-                          alt="Profile"
-                          width={40}
-                          height={40}
-                          unoptimized={true}
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                          }}
-                          className="w-full h-full object-cover rounded-full"
-                        />
+                        <>
+                          <Image
+                            key={getUserAvatar()}
+                            src={getUserAvatar() as string}
+                            alt="Profile"
+                            width={40}
+                            height={40}
+                            unoptimized={true}
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                const fallbackIcon = parent.querySelector('.fallback-icon-dropdown');
+                                if (fallbackIcon) {
+                                  (fallbackIcon as HTMLElement).style.display = 'block';
+                                }
+                              }
+                            }}
+                            className="w-full h-full object-cover rounded-full"
+                          />
+                          <User className="text-white fallback-icon-dropdown" size={20} style={{ display: 'none', position: 'absolute' }} />
+                        </>
                       ) : (
                         <User className="text-white" size={20} />
                       )}

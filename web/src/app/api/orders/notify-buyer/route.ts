@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
             ${isMacedonian ? 'Ви благодариме за вашата нарачка!' : 'Thank you for your order!'}
           </h2>
           <p style="color: #374151; margin: 0 0 10px 0;">
-            ${isMacedonian ? 'Здраво' : 'Hello'} ${buyerName},
+            ${isMacedonian ? 'Здраво' : 'Hello'} ${buyerName}
           </p>
           <p style="color: #374151; margin: 0;">
             ${isMacedonian ? 'Вашата нарачка е успешно примена и ќе биде обработена наскоро.' : 'Your order has been successfully received and will be processed shortly.'}
