@@ -5,7 +5,7 @@ import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboard
 import { useDashboard } from '@/contexts/DashboardContext';
 import { ProductsZeroState } from '@/components/seller-dashboard/ZeroStates';
 import EnhancedImage from '@/components/EnhancedImage';
-import { Search, Plus, Edit, Trash2, Eye, Package } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Package } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import ListingsSkeleton from '@/components/seller-dashboard/ListingsSkeleton';
@@ -295,7 +295,7 @@ function ListingsContent() {
                       className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     >
                       <option value="active">{t('statusAvailable')}</option>
-                      <option value="inactive">{t('statusHidden')}</option>
+                      <option value="hidden">{t('statusHidden')}</option>
                       <option value="sold">{t('statusSold')}</option>
                       <option value="draft">{t('statusDraft')}</option>
                     </select>

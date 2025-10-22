@@ -417,9 +417,9 @@ function OrdersContent() {
 
   return (
     <SellerDashboardLayout>
-      <div className="px-3 sm:px-6 py-4 sm:py-8">
+      <div className="py-4 sm:py-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="px-3 sm:px-6 mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {t('orders')}
           </h1>
@@ -429,7 +429,7 @@ function OrdersContent() {
         </div>
 
         {/* Filters and Search */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="px-3 sm:px-6 flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -460,7 +460,7 @@ function OrdersContent() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <div className="px-3 sm:px-6 mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
             <p className="text-red-800 dark:text-red-200">{error}</p>
           </div>
         )}
@@ -644,7 +644,7 @@ function OrdersContent() {
         </div>
 
         {filteredOrders.length === 0 && (
-          <div className="text-center py-12">
+          <div className="px-3 sm:px-6 text-center py-12">
             <div className="text-gray-400 dark:text-gray-500 mb-4">
               <Package size={48} className="mx-auto" />
             </div>

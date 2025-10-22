@@ -37,7 +37,7 @@ interface DashboardProduct extends Omit<Item, 'price'> {
   name?: string;
   views?: number;
   price?: string;
-  status?: 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive';
+  status?: 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden';
   category?: string;
   categories?: {
     id: string;
@@ -156,7 +156,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
               if (currentStatus !== productStatus) {
                 updatedProducts[productIndex] = {
                   ...updatedProducts[productIndex],
-                  status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
+                  status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden'
                 };
               }
             }
@@ -214,7 +214,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         name: item.title || item.name || 'Untitled',
         views: Math.floor(Math.random() * 1000) + 100,
         price: item.price?.toFixed(2) || '0.00',
-        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || 'active'
+        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden') || 'active'
       }));
 
       // Sync product statuses with order statuses
@@ -327,7 +327,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     setProducts(prev => prev.map(product => {
       return {
         ...product,
-        status: status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
+        status: status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden'
       };
     }));
   };
@@ -384,7 +384,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             if (productIdsInOrderSet.has(String(product.id))) {
               return {
                 ...product,
-                status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive'
+                status: productStatus as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden'
               };
             }
             return product; // Keep other products unchanged
@@ -521,7 +521,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           ...product, 
           ...updatedProduct,
           price: updatedProduct.price ? updatedProduct.price.toFixed(2) : product.price,
-          status: (updatedProduct.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || product.status
+          status: (updatedProduct.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden') || product.status
         } : product
       ));
     } catch (err) {
@@ -558,7 +558,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         ...item,
         views: Math.floor(Math.random() * 1000) + 100,
         price: item.price?.toFixed(2) || '0.00',
-        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'inactive') || 'active'
+        status: (item.status as 'listed' | 'viewed' | 'in_cart' | 'sold' | 'shipped' | 'delivered' | 'active' | 'draft' | 'hidden') || 'active'
       }));
     } catch (err) {
       console.error('Error searching products:', err);
