@@ -106,7 +106,7 @@ function SearchContent() {
   };
 
   return (
-    <div className="px-6 py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Search Results
@@ -117,9 +117,8 @@ function SearchContent() {
       </div>
 
       {isSearching ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-blue-600"></div>
-          <span className="ml-3 text-gray-600 dark:text-gray-400">Searching...</span>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
       ) : searchResults.length > 0 ? (
         <div className="space-y-4">
@@ -159,9 +158,17 @@ function SearchContent() {
                             ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
                             : result.status === 'sold'
                             ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
+                            : result.status === 'draft'
+                            ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                            : result.status === 'inactive'
+                            ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300'
                             : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                         }`}>
-                          {result.status}
+                          {result.status === 'active' ? t('statusAvailable') :
+                           result.status === 'sold' ? t('statusSold') :
+                           result.status === 'draft' ? t('statusDraft') :
+                           result.status === 'inactive' ? t('statusHidden') :
+                           result.status}
                         </span>
                       )}
                     </div>

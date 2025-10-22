@@ -111,16 +111,23 @@ function ListingsContent() {
       case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
       case 'sold': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
       case 'draft': return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+      case 'inactive': return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'active': return t('statusAvailable');
+      case 'sold': return t('statusSold');
+      case 'draft': return t('statusDraft');
+      case 'inactive': return t('statusHidden');
+      default: return status;
+    }
+  };
+
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return null; // Let Suspense handle the loading state
   }
 
   // Show zero state if no products
@@ -144,7 +151,7 @@ function ListingsContent() {
   }
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
           <div>
@@ -185,10 +192,10 @@ function ListingsContent() {
               className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">{t('allStatus')}</option>
-              <option value="active">{t('active')}</option>
-              <option value="pending">{t('pending')}</option>
-              <option value="sold">{t('sold')}</option>
-              <option value="draft">{t('draft')}</option>
+              <option value="active">{t('statusAvailable')}</option>
+              <option value="inactive">{t('statusHidden')}</option>
+              <option value="sold">{t('statusSold')}</option>
+              <option value="draft">{t('statusDraft')}</option>
             </select>
             <select
               value={sortBy}
@@ -243,13 +250,8 @@ function ListingsContent() {
                   />
                   <div className="absolute top-2 right-2">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(product.status || 'active')}`}>
-                      {product.status || 'active'}
+                      {getStatusLabel(product.status || 'active')}
                     </span>
-                  </div>
-                  <div className="absolute top-2 left-2">
-                    <button className="p-1 bg-white/80 dark:bg-gray-800/80 rounded-full hover:bg-white dark:hover:bg-gray-800 transition-colors">
-                      <Eye size={16} />
-                    </button>
                   </div>
                 </div>
                 
@@ -288,10 +290,10 @@ function ListingsContent() {
                       onChange={(e) => handleStatusUpdate(product.id, e.target.value)}
                       className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     >
-                      <option value="active">{t('active')}</option>
-                      <option value="inactive">{t('inactive')}</option>
-                      <option value="sold">{t('sold')}</option>
-                      <option value="draft">{t('draft')}</option>
+                      <option value="active">{t('statusAvailable')}</option>
+                      <option value="inactive">{t('statusHidden')}</option>
+                      <option value="sold">{t('statusSold')}</option>
+                      <option value="draft">{t('statusDraft')}</option>
                     </select>
                   </div>
                 </div>

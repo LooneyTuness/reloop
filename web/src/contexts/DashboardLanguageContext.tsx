@@ -282,7 +282,6 @@ const dashboardTranslations = {
     productListings: "Листинзи на производи",
     manageProductInventory: "Управувај со инвентарот на производите",
     searchProducts: "Пребарај производи...",
-    allStatus: "Сите статуси",
     newestFirst: "Најнови први",
     oldestFirst: "Најстари први",
     priceHighToLow: "Цена: Висока до ниска",
@@ -327,10 +326,17 @@ const dashboardTranslations = {
     request: "Побарај",
     quantity: "Количина",
     status: "Статус",
-    active: "Активен",
+    active: "Достапен",
     draft: "Драфт",
-    inactive: "Неактивен",
-    back: "Назад",
+    inactive: "Скриен",
+    sold: "Продаден",
+    
+    // User-friendly status labels
+    statusAvailable: "Достапен",
+    statusDraft: "Драфт",
+    statusHidden: "Скриен", 
+    statusSold: "Продаден",
+    allStatus: "Сите статуси",
     
     // Category selector labels
     mainCategory: "Главна категорија",
@@ -660,7 +666,6 @@ const dashboardTranslations = {
     productListings: "Product Listings",
     manageProductInventory: "Manage your product inventory and listings",
     searchProducts: "Search products...",
-    allStatus: "All Status",
     newestFirst: "Newest First",
     oldestFirst: "Oldest First",
     priceHighToLow: "Price: High to Low",
@@ -705,10 +710,17 @@ const dashboardTranslations = {
     request: "Request",
     quantity: "Quantity",
     status: "Status",
-    active: "Active",
+    active: "Available",
     draft: "Draft",
-    inactive: "Inactive",
-    back: "Back",
+    inactive: "Hidden",
+    sold: "Sold",
+    
+    // User-friendly status labels
+    statusAvailable: "Available",
+    statusDraft: "Draft",
+    statusHidden: "Hidden", 
+    statusSold: "Sold",
+    allStatus: "All Status",
     
     // Category selector labels
     mainCategory: "Main Category",

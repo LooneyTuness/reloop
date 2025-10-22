@@ -43,10 +43,8 @@ function DashboardContent() {
   // Show loading state while data is being loaded
   if (profileLoading) {
     return (
-      <div className="px-6 py-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-blue-600 opacity-60"></div>
-        </div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -65,10 +63,8 @@ function DashboardContent() {
 
   if (isLoading) {
     return (
-      <div className="px-6 py-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -84,7 +80,7 @@ function DashboardContent() {
   }
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-full overflow-x-hidden">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
       {/* Dashboard Instructions Section */}
       <div className="mb-6 sm:mb-8">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 p-4 sm:p-8 lg:p-10 text-white mb-6 sm:mb-8 shadow-2xl">

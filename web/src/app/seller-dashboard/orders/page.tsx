@@ -412,18 +412,12 @@ function OrdersContent() {
   };
 
   if (isLoading) {
-    return (
-      <SellerDashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      </SellerDashboardLayout>
-    );
+    return null; // Let Suspense handle the loading state
   }
 
   return (
     <SellerDashboardLayout>
-      <div className="px-3 sm:px-6 py-4 sm:py-8">
+      <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
