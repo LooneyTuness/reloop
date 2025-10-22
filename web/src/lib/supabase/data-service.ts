@@ -12,11 +12,11 @@ export class SupabaseDataService {
   private supabase = createBrowserClient();
 
   // Items/Products Management
-  async getSellerItems(sellerId: string): Promise<Item[]> {
-    
+  async getSellerItems(sellerId: string, limit: number = 100, offset: number = 0): Promise<Item[]> {
     try {
-      // Use API endpoint instead of direct Supabase query to avoid RLS issues
-      const response = await fetch(`/api/seller-items?sellerId=${encodeURIComponent(sellerId)}`);
+      // Use API endpoint with pagination
+      const url = `/api/seller-items?sellerId=${encodeURIComponent(sellerId)}&limit=${limit}&offset=${offset}`;
+      const response = await fetch(url);
       
       if (!response.ok) {
         const errorData = await response.json();
@@ -120,75 +120,66 @@ export class SupabaseDataService {
     }
   }
 
-  // Orders Management - OPTIMIZED VERSION
-  async getSellerOrders(sellerId: string): Promise<Order[]> {
+  // Orders Management - HIGHLY OPTIMIZED VERSION with single query
+  async getSellerOrders(sellerId: string, limit: number = 100): Promise<Order[]> {
     try {
-      // Step 1: Get seller's item IDs efficiently (only IDs, no full item data)
-      const { data: sellerItemIds, error: itemsError } = await (this.supabase as any)
-        .from('items')
-        .select('id')
-        .eq('user_id', sellerId);
-
-      if (itemsError || !sellerItemIds || sellerItemIds.length === 0) {
-        return [];
-      }
-
-      const itemIds = sellerItemIds.map((item: { id: string }) => item.id);
-
-      // Step 2: Get order_items that contain seller's products
-      const { data: sellerOrderItems, error: orderItemsError } = await (this.supabase as any)
-        .from('order_items')
-        .select('*')
-        .in('item_id', itemIds);
-
-      if (orderItemsError || !sellerOrderItems || sellerOrderItems.length === 0) {
-        return [];
-      }
-
-      // Step 3: Get unique order IDs
-      const orderIds = [...new Set(sellerOrderItems.map((item: OrderItem) => item.order_id))];
-
-      // Step 4: Fetch orders and their items in ONE query
+      // Use a single optimized query with joins using RPC or view
+      // First, fetch orders with order_items that belong to this seller in ONE query
       const { data: orders, error: ordersError } = await (this.supabase as any)
         .from('orders')
-        .select('*')
-        .in('id', orderIds)
-        .order('created_at', { ascending: false });
+        .select(`
+          *,
+          order_items!inner(
+            *,
+            items!inner(
+              id, title, price, images, user_id, size, brand, condition, category_id
+            )
+          )
+        `)
+        .eq('order_items.items.user_id', sellerId)
+        .order('created_at', { ascending: false })
+        .limit(limit);
 
-      if (ordersError || !orders) {
+      if (ordersError) {
+        console.error('Error fetching seller orders:', ordersError);
         return [];
       }
 
-      // Step 5: Get item details only for items in these orders
-      const orderItemIds = sellerOrderItems.map((item: OrderItem) => item.item_id);
-      const { data: items, error: itemDetailsError } = await (this.supabase as any)
-        .from('items')
-        .select('id, title, price, images, user_id, size, brand, condition, category_id')
-        .in('id', orderItemIds);
-
-      if (itemDetailsError) {
-        console.error('Error fetching item details:', itemDetailsError);
+      if (!orders || orders.length === 0) {
+        return [];
       }
 
-      // Step 6: Create lookup map for fast access
-      const itemsMap = new Map(items?.map((item: Item) => [item.id, item]) || []);
-
-      // Step 7: Attach order items to orders
-      const ordersWithItems = orders.map((order: Order) => {
-        const orderItems = sellerOrderItems
-          .filter((orderItem: OrderItem) => orderItem.order_id === order.id)
-          .map((orderItem: OrderItem) => ({
-            ...orderItem,
-            items: itemsMap.get(orderItem.item_id) || null
-          }));
+      // Group order_items by order since the join creates duplicate order rows
+      const ordersMap = new Map<string, any>();
+      
+      orders.forEach((row: any) => {
+        const orderId = row.id;
         
-        return {
-          ...order,
-          order_items: orderItems
-        };
+        if (!ordersMap.has(orderId)) {
+          // First time seeing this order
+          ordersMap.set(orderId, {
+            ...row,
+            order_items: []
+          });
+        }
+        
+        // Add the order_item to this order
+        const order = ordersMap.get(orderId);
+        
+        // Only add if this order_item belongs to the seller
+        if (row.order_items?.items?.user_id === sellerId) {
+          // Check if we already added this order_item (avoid duplicates)
+          const existingItem = order.order_items.find(
+            (oi: any) => oi.id === row.order_items.id
+          );
+          
+          if (!existingItem) {
+            order.order_items.push(row.order_items);
+          }
+        }
       });
 
-      return ordersWithItems;
+      return Array.from(ordersMap.values());
     } catch (error) {
       console.error('Error in getSellerOrders:', error);
       return [];

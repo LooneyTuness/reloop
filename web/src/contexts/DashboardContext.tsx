@@ -116,7 +116,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastFetchTime, setLastFetchTime] = useState<number>(0);
-  const [cacheTimeout] = useState<number>(30000); // 30 seconds cache
+  const [cacheTimeout] = useState<number>(10000); // 10 seconds cache (reduced for faster updates)
   const [isFetching, setIsFetching] = useState(false); // Track if a fetch is in progress
 
 

@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
             ${isMacedonian ? '🎉 Нова нарачка!' : '🎉 New Order!'}
           </h2>
           <p style="color: #374151; margin: 0 0 10px 0;">
-            ${isMacedonian ? 'Здраво,' : 'Hello,'}
+            ${isMacedonian ? 'Здраво' : 'Hello'}
           </p>
           <p style="color: #374151; margin: 0;">
             ${isMacedonian 

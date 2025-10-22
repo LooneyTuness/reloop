@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/supabase.admin";
 import { sendEmail } from "@/lib/email";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     if (!supabaseAdmin) {
       return NextResponse.json(
@@ -11,11 +11,12 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Get all seller applications (not just pending)
+    // Optimized query with limited fields and index usage
     const { data: applications, error } = await supabaseAdmin
       .from("seller_applications")
-      .select("*")
-      .order("created_at", { ascending: false });
+      .select("id, full_name, email, store_name, website_social, product_description, status, created_at, updated_at, reviewed_at, notes")
+      .order("created_at", { ascending: false })
+      .limit(200); // Reasonable limit for admin panel
 
     if (error) {
       console.error("Error fetching seller applications:", error);
@@ -25,7 +26,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ applications });
+    // Return with caching headers (10 seconds cache)
+    const response = NextResponse.json({ applications });
+    response.headers.set('Cache-Control', 'private, max-age=10, stale-while-revalidate=20');
+    
+    return response;
   } catch (error) {
     console.error("Error in GET seller applications:", error);
     return NextResponse.json(
