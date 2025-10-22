@@ -198,8 +198,8 @@ export default function SimpleImageUpload({
           </div>
           <p className="text-gray-600 dark:text-gray-400 font-medium">{t('noImagesUploadedYet')}</p>
           {required && (
-            <p className="text-sm text-red-500 dark:text-red-400 mt-2 font-medium">
-              ⚠️ {t('atLeastOneImageRequired')}
+            <p className="text-sm text-red-500 dark:text-red-400 mt-2 font-small">
+              {t('atLeastOneImageRequired')}
             </p>
           )}
         </div>

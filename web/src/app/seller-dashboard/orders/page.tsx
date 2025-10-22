@@ -457,12 +457,12 @@ const OrdersContent = React.memo(function OrdersContent() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium text-sm"
             >
-              <option value="all">📋 {t('allOrders')}</option>
-              <option value="pending">🕐 {t('pending')}</option>
-              <option value="processing">📦 {t('processing')}</option>
-              <option value="shipped">🚚 {t('shipped')}</option>
-              <option value="delivered">✅ {t('delivered')}</option>
-              <option value="cancelled">❌ {t('cancelled')}</option>
+              <option value="all">{t('allOrders')}</option>
+              <option value="pending">{t('pending')}</option>
+              <option value="processing">{t('processing')}</option>
+              <option value="shipped">{t('shipped')}</option>
+              <option value="delivered">{t('delivered')}</option>
+              <option value="cancelled">{t('cancelled')}</option>
             </select>
           </div>
         </div>
@@ -658,12 +658,12 @@ const OrdersContent = React.memo(function OrdersContent() {
               <Package size={48} className="mx-auto" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No orders found
+              {t('noOrdersFound')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
               {searchQuery || statusFilter !== 'all' 
-                ? 'Try adjusting your search or filter criteria'
-                : 'You don\'t have any orders yet'
+                ? t('tryAdjustingFilters')
+                : t('noOrdersYetMessage')
               }
             </p>
           </div>

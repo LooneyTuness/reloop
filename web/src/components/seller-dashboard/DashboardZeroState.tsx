@@ -1,11 +1,14 @@
 import React from 'react';
 import { Package, ShoppingBag, Plus, ArrowRight } from 'lucide-react';
+import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
 interface DashboardZeroStateProps {
   onAddProduct: () => void;
 }
 
 export default function DashboardZeroState({ onAddProduct }: DashboardZeroStateProps) {
+  const { t } = useDashboardLanguage();
+  
   return (
     <div className="flex flex-col items-center justify-center py-8 sm:py-16 px-4 sm:px-6 text-center">
       {/* Illustration */}
@@ -31,11 +34,10 @@ export default function DashboardZeroState({ onAddProduct }: DashboardZeroStateP
       {/* Content */}
       <div className="max-w-sm sm:max-w-lg mx-auto mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3">
-          Добредојдовте во вашиот продавачки панел
+          {t('welcomeToSellerDashboard')}
         </h2>
         <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-          Подготвени сте! Започнете да ја градите вашата продавница со додавање на вашиот прв производ. 
-          Откако ќе ги наведете производите, ќе ги видите нарачките тука.
+          {t('readyToStart')}
         </p>
       </div>
 
@@ -43,26 +45,26 @@ export default function DashboardZeroState({ onAddProduct }: DashboardZeroStateP
       <div className="w-full max-w-sm sm:max-w-md mx-auto mb-6 sm:mb-8">
         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 sm:p-4">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 text-left">
-            Листа за брзо започнување:
+            {t('quickStartChecklist')}
           </h3>
           <div className="space-y-2 text-left">
             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <div className="w-5 h-5 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                 <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">1</span>
               </div>
-              <span className="text-xs sm:text-sm">Додајте го вашиот прв производ</span>
+              <span className="text-xs sm:text-sm">{t('addFirstProduct')}</span>
             </div>
             <div className="flex items-center text-sm text-gray-500 dark:text-gray-500">
               <div className="w-5 h-5 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                 <span className="text-xs font-semibold text-gray-400">2</span>
               </div>
-              <span className="text-xs sm:text-sm">Поставете методи за плаќање</span>
+              <span className="text-xs sm:text-sm">{t('setupPaymentMethods')}</span>
             </div>
             <div className="flex items-center text-sm text-gray-500 dark:text-gray-500">
               <div className="w-5 h-5 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                 <span className="text-xs font-semibold text-gray-400">3</span>
               </div>
-              <span className="text-xs sm:text-sm">Започнете да ја промовирате вашата продавница</span>
+              <span className="text-xs sm:text-sm">{t('promoteYourStore')}</span>
             </div>
           </div>
         </div>
@@ -75,7 +77,7 @@ export default function DashboardZeroState({ onAddProduct }: DashboardZeroStateP
           className="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors w-full sm:w-auto"
         >
           <Plus className="w-4 h-4 mr-2" />
-          <span className="text-sm sm:text-base">Додајте Го Вашиот Прв Производ</span>
+          <span className="text-sm sm:text-base">{t('addYourFirstProduct')}</span>
           <ArrowRight className="w-4 h-4 ml-2" />
         </button>
         

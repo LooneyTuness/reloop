@@ -24,6 +24,10 @@ const dashboardTranslations = {
     settings: "Подесувања",
     logout: "Одјави се",
     
+    // Roles
+    seller: "Продавач",
+    admin: "Администратор",
+    
     // Back button
     back: "Назад",
     backToDashboard: "Назад кон контролната табла",
@@ -73,10 +77,10 @@ const dashboardTranslations = {
     
     // Order Status
     pending: "Нерешени",
-    processing: "Процесирање",
-    shipped: "Испорачано",
-    delivered: "Доставено",
-    cancelled: "Откажано",
+    processing: "Процесирани",
+    shipped: "Испорачани",
+    delivered: "Доставени",
+    cancelled: "Откажани",
     
     
     // Settings
@@ -166,7 +170,7 @@ const dashboardTranslations = {
     setCompetitivePrices: "Постави конкурентни цени",
     chooseAppropriateCategories: "Избери соодветни категории",
     checkOrdersPageRegularly: "Проверувај ја страницата за нарачки редовно",
-    updateOrderStatus: "Ажурирај го статусот на нарачката (Процесирање → Испорачано → Доставено)",
+    updateOrderStatus: "Ажурирај го статусот на нарачката (Процесирано → Испорачано → Доставено)",
     communicateWithCustomers: "Комуницирај со купувачите",
     trackShippingAndDelivery: "Следи ја испораката и доставката",
     handleReturnsIfNeeded: "Управувај со враќањата ако е потребно",
@@ -240,6 +244,20 @@ const dashboardTranslations = {
     manageOrders: "Управувај со нарачки",
     updateProfile: "Ажурирај профил",
     
+    // Dashboard Zero State
+    welcomeToSellerDashboard: "Добредојдовте во вашиот продавачки панел",
+    readyToStart: "Подготвени сте! Започнете да ја градите вашата продавница со додавање на вашиот прв производ. Откако ќе ги наведете производите, ќе ги видите нарачките тука.",
+    quickStartChecklist: "Листа за брзо започнување:",
+    addFirstProduct: "Додајте го вашиот прв производ",
+    setupPaymentMethods: "Поставете методи за плаќање",
+    promoteYourStore: "Започнете да ја промовирате вашата продавница",
+    addYourFirstProduct: "Додајте Го Вашиот Прв Производ",
+    
+    // Orders Empty State
+    noOrdersFound: "Не се пронајдени нарачки",
+    tryAdjustingFilters: "Обидете се да ги прилагодите критериумите за пребарување или филтер",
+    noOrdersYetMessage: "Сè уште немате нарачки",
+    
     // Zero States
     noOrdersYet: "Сè уште нема нарачки",
     noProductsYet: "Сè уште нема производи",
@@ -299,7 +317,6 @@ const dashboardTranslations = {
     editProduct: "Уреди продукт",
     noProductsFound: "Не се пронајдени производи",
     tryAdjustingSearch: "Обиди се да ги прилагодиш критериумите за пребарување",
-    addYourFirstProduct: "Додај го твојот прв продукт",
     views: "прегледи",
     uncategorized: "Без категорија",
     confirmDeleteProduct: "Дали сте сигурни дека сакате да го избришете овој продукт?",
@@ -437,6 +454,10 @@ const dashboardTranslations = {
     payouts: "Payouts",
     settings: "Settings",
     logout: "Logout",
+    
+    // Roles
+    seller: "Seller",
+    admin: "Admin",
     
     // Back button
     back: "Back",
@@ -643,6 +664,24 @@ const dashboardTranslations = {
     manageListings: "Manage Listings",
     
     // Quick Actions
+    addNewProduct: "Add New Product",
+    viewAllListings: "View All Listings",
+    manageOrders: "Manage Orders",
+    updateProfile: "Update Profile",
+    
+    // Dashboard Zero State
+    welcomeToSellerDashboard: "Welcome to your Seller Dashboard",
+    readyToStart: "You're all set! Start building your store by adding your first product. Once you list products, you'll see orders come in here.",
+    quickStartChecklist: "Quick Start Checklist:",
+    addFirstProduct: "Add your first product",
+    setupPaymentMethods: "Set up payment methods",
+    promoteYourStore: "Start promoting your store",
+    addYourFirstProduct: "Add Your First Product",
+    
+    // Orders Empty State
+    noOrdersFound: "No orders found",
+    tryAdjustingFilters: "Try adjusting your search or filter criteria",
+    noOrdersYetMessage: "You don't have any orders yet",
     
     // Zero States
     noOrdersYet: "No orders yet",
@@ -703,7 +742,6 @@ const dashboardTranslations = {
     editProduct: "Edit Product",
     noProductsFound: "No products found",
     tryAdjustingSearch: "Try adjusting your search or filter criteria",
-    addYourFirstProduct: "Add Your First Product",
     views: "views",
     uncategorized: "Uncategorized",
     confirmDeleteProduct: "Are you sure you want to delete this product?",
