@@ -44,6 +44,7 @@ export default function SellerProfileManager() {
   const [showCropModal, setShowCropModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [avatarKey, setAvatarKey] = useState(0);
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -180,16 +181,25 @@ export default function SellerProfileManager() {
         user.id
       );
       
+      // Add cache busting parameter to force image refresh
+      const cacheBustedUrl = `${imageUrl}?t=${Date.now()}`;
+      
       // Update profile using SellerProfileContext to ensure UI updates
       const success = await updateSellerProfile({ avatar_url: imageUrl });
       
       if (success) {
-        setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
-        updateAvatar(imageUrl);
+        setProfile(prev => prev ? { ...prev, avatar_url: cacheBustedUrl } : null);
+        updateAvatar(cacheBustedUrl);
         setSuccess('Profile picture updated!');
+        
+        // Increment avatar key to force re-render
+        setAvatarKey(prev => prev + 1);
         
         // Refresh the profile context to ensure consistency
         await refreshProfile();
+        
+        // Reload profile to get the latest data
+        await loadProfile();
       } else {
         setError('Failed to update profile');
       }
@@ -289,12 +299,16 @@ export default function SellerProfileManager() {
                     </div>
                   ) : profile?.avatar_url ? (
                     <Image
-                      key={profile.avatar_url}
+                      key={`avatar-${avatarKey}`}
                       src={profile.avatar_url}
                       alt="Profile"
                       width={128}
                       height={128}
+                      unoptimized
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.error('Error loading profile image:', e);
+                      }}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -302,12 +316,12 @@ export default function SellerProfileManager() {
                     </div>
                   )}
                 </div>
-                <label className={`absolute bottom-0 right-0 p-2 rounded-full transition-colors ${
+                <label className={`absolute bottom-0 right-0 p-3 sm:p-2 rounded-full transition-colors shadow-lg z-10 ${
                   isUploadingImage 
                     ? 'bg-gray-400 cursor-not-allowed' 
-                    : 'bg-blue-600 text-white cursor-pointer hover:bg-blue-700'
+                    : 'bg-blue-600 text-white cursor-pointer hover:bg-blue-700 active:scale-95'
                 }`}>
-                  <Camera size={16} />
+                  <Camera size={18} className="sm:w-4 sm:h-4" />
                   <input
                     type="file"
                     accept="image/*"

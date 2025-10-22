@@ -116,7 +116,7 @@ export default function TopBar() {
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 shadow-md">
       <div className="flex items-center justify-between h-full px-2 sm:px-8 gap-1 sm:gap-4">
         {/* Search */}
-        <div className="flex-1 max-w-[120px] sm:max-w-lg relative search-container">
+        <div className="flex-1 max-w-[120px] sm:max-w-lg relative search-container ml-12 lg:ml-0">
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={12} />
             <input
@@ -237,6 +237,7 @@ export default function TopBar() {
                       setAvatarLoaded(false);
                     }}
                     className="w-full h-full object-cover rounded-full"
+                    priority
                   />
                   {!avatarLoaded && (
                     <User className="text-gray-400 dark:text-gray-600" size={16} style={{ position: 'absolute' }} />
@@ -260,7 +261,7 @@ export default function TopBar() {
                       {getUserAvatar() ? (
                         <>
                           <Image
-                            key={getUserAvatar()}
+                            key={`${getUserAvatar()}-dropdown`}
                             src={getUserAvatar() as string}
                             alt="Profile"
                             width={40}
