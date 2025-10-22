@@ -104,18 +104,18 @@ export default function TopBar() {
 
   return (
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-40 shadow-sm">
-      <div className="flex items-center justify-between h-full px-3 sm:px-8">
+      <div className="flex items-center justify-between h-full px-2 sm:px-8 gap-1 sm:gap-4">
         {/* Search */}
-        <div className="flex-1 max-w-[150px] sm:max-w-lg mr-2 sm:mr-0 lg:ml-0 ml-0 relative search-container">
+        <div className="flex-1 max-w-[120px] sm:max-w-lg relative search-container">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+            <Search className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={12} />
             <input
               type="text"
               placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={handleSearchInputChange}
               onFocus={() => searchQuery && setShowSearchResults(true)}
-              className="w-full pl-8 sm:pl-12 pr-8 sm:pr-12 py-2 sm:py-3 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs sm:text-base"
+              className="w-full pl-7 sm:pl-12 pr-7 sm:pr-12 py-1.5 sm:py-3 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs sm:text-base"
             />
             {searchQuery && (
               <button
@@ -127,7 +127,7 @@ export default function TopBar() {
                 }}
                 className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               >
-                <X size={14} />
+                <X size={12} />
               </button>
             )}
           </form>
@@ -172,25 +172,25 @@ export default function TopBar() {
         </div>
 
         {/* Right side */}
-        <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+        <div className="flex items-center space-x-1 sm:space-x-4 flex-shrink-0">
           {/* Dark mode toggle */}
           <button
             onClick={toggleDarkMode}
-            className="p-1.5 sm:p-3 rounded-lg sm:rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:scale-105 flex-shrink-0"
+            className="p-1 sm:p-3 rounded-lg sm:rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:scale-105 flex-shrink-0"
           >
             {isDarkMode ? (
-              <Eye className="text-gray-600 dark:text-gray-400" size={16} />
+              <Eye className="text-gray-600 dark:text-gray-400" size={14} />
             ) : (
-              <EyeOff className="text-gray-600 dark:text-gray-400" size={16} />
+              <EyeOff className="text-gray-600 dark:text-gray-400" size={14} />
             )}
           </button>
 
           {/* Notifications */}
           <button 
             onClick={() => setShowNotifications(true)}
-            className="relative p-1.5 sm:p-3 rounded-lg sm:rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:scale-105 flex-shrink-0"
+            className="relative p-1 sm:p-3 rounded-lg sm:rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:scale-105 flex-shrink-0"
           >
-            <Bell className="text-gray-600 dark:text-gray-400" size={16} />
+            <Bell className="text-gray-600 dark:text-gray-400" size={14} />
             {unreadCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 h-3 w-3 sm:h-5 sm:w-5 bg-red-500 text-white text-[10px] sm:text-xs rounded-full flex items-center justify-center font-bold">
                 {unreadCount > 9 ? '9+' : unreadCount}
@@ -202,7 +202,7 @@ export default function TopBar() {
           <div className="relative flex items-center flex-shrink-0 profile-dropdown-container">
             <button
               onClick={handleProfileClick}
-              className={`h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden ${
+              className={`h-7 w-7 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden ${
                 showProfileDropdown 
                   ? 'ring-2 ring-blue-200' 
                   : 'hover:ring-2 hover:ring-gray-200'

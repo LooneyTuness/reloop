@@ -76,6 +76,7 @@ const dashboardTranslations = {
     processing: "Процесирање",
     shipped: "Испорачано",
     delivered: "Доставено",
+    cancelled: "Откажано",
     
     
     // Settings
@@ -476,6 +477,7 @@ const dashboardTranslations = {
     processing: "Processing",
     shipped: "Shipped",
     delivered: "Delivered",
+    cancelled: "Cancelled",
     
     
     // Settings

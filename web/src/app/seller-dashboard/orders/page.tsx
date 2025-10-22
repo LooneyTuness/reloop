@@ -433,7 +433,7 @@ const OrdersContent = React.memo(function OrdersContent() {
           {t('orders')}
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          {t('manageAndTrackOrders')} • {orders.length} {t('ordersCount')} • {(orders as ExtendedOrder[]).reduce((sum, order) => sum + (order.item_count || 0), 0)} {t('itemsSold')}
+          {t('manageAndTrackOrders')}
         </p>
       </div>
 
@@ -455,14 +455,14 @@ const OrdersContent = React.memo(function OrdersContent() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium text-sm"
             >
-              <option value="all">{t('allOrders')}</option>
-              <option value="pending">{t('pending')}</option>
-              <option value="processing">{t('processing')}</option>
-              <option value="shipped">{t('shipped')}</option>
-              <option value="delivered">{t('delivered')}</option>
-              <option value="cancelled">{t('cancelled')}</option>
+              <option value="all">📋 {t('allOrders')}</option>
+              <option value="pending">🕐 {t('pending')}</option>
+              <option value="processing">📦 {t('processing')}</option>
+              <option value="shipped">🚚 {t('shipped')}</option>
+              <option value="delivered">✅ {t('delivered')}</option>
+              <option value="cancelled">❌ {t('cancelled')}</option>
             </select>
           </div>
         </div>
@@ -475,30 +475,30 @@ const OrdersContent = React.memo(function OrdersContent() {
         )}
 
         {/* Orders Table */}
-        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden -mx-3 sm:-mx-6 lg:mx-0">
+        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden mx-0 sm:mx-0 lg:mx-0 rounded-lg">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="pl-6 pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('orderId')}
                   </th>
-                  <th className="pl-6 pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">
                     {t('customer')}
                   </th>
-                  <th className="pl-6 pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       {t('product')}
                   </th>
-                  <th className="pl-6 pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">
                     {t('total')}
                   </th>
-                  <th className="pl-6 pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('status')}
                   </th>
-                  <th className="pl-6 pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">
                     {t('date')}
                   </th>
-                  <th className="pl-6 pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('actions')}
                   </th>
                 </tr>
@@ -511,7 +511,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                       e.stopPropagation();
                     }
                   }}>
-                    <td className="pl-6 pr-6 py-4 whitespace-nowrap">
+                    <td className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10 relative group">
                           <EnhancedImage
@@ -555,7 +555,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                         </div>
                       </div>
                     </td>
-                    <td className="pl-6 pr-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                    <td className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 whitespace-nowrap hidden sm:table-cell">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-gray-500" />
@@ -570,7 +570,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                         </div>
                       </div>
                     </td>
-                    <td className="pl-6 pr-6 py-4">
+                    <td className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4">
                       <div className="space-y-2">
                         {order.seller_order_items?.slice(0, 2).map((item: OrderItem, index: number) => {
                           return (
@@ -593,23 +593,23 @@ const OrdersContent = React.memo(function OrdersContent() {
                         )}
                       </div>
                     </td>
-                    <td className="pl-6 pr-6 py-4 whitespace-nowrap hidden md:table-cell">
+                    <td className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 whitespace-nowrap hidden md:table-cell">
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         {order.total_amount.toFixed(2)} MKD
                       </div>
                     </td>
-                    <td className="pl-6 pr-6 py-4 whitespace-nowrap">
+                    <td className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         {getStatusIcon(order.status)}
-                        <span className={`ml-2 px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(order.status)}`}>
-                          {order.status}
+                        <span className={`ml-2 px-3 py-1.5 text-xs font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                          {t(order.status as 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled')}
                         </span>
                       </div>
                     </td>
-                    <td className="pl-6 pr-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
+                    <td className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                       {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'Unknown'}
                     </td>
-                    <td className="pl-6 pr-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => setSelectedOrder(order)}
@@ -635,13 +635,13 @@ const OrdersContent = React.memo(function OrdersContent() {
                         <select
                           value={order.status}
                           onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
-                          className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="text-xs px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium"
                         >
-                          <option value="pending">Pending</option>
-                          <option value="processing">Processing</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
-                          <option value="cancelled">Cancelled</option>
+                          <option value="pending" className="py-2">🕐 {t('pending')}</option>
+                          <option value="processing" className="py-2">📦 {t('processing')}</option>
+                          <option value="shipped" className="py-2">🚚 {t('shipped')}</option>
+                          <option value="delivered" className="py-2">✅ {t('delivered')}</option>
+                          <option value="cancelled" className="py-2">❌ {t('cancelled')}</option>
                         </select>
                       </div>
                     </td>
