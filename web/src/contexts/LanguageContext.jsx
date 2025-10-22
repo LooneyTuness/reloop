@@ -199,9 +199,9 @@ const translations = {
     myOrders: "Мои нарачки",
     dashboard: "Продавачки панел",
     viewYourOrderHistory:
-      "Погледајте ја вашата историја на нарачки и следете ги вашите купувања",
-    viewDetails: "Погледај детали",
-    downloadReceipt: "Преземи потврда",
+      "Прегледај ја твојата историја на нарачки и следи ги твоите купувања",
+    viewDetails: "Погледни детали",
+    downloadReceipt: "Превземи потврда",
     noOrdersYet: "Сè уште немате направено нарачки",
     signOut: "Одјави се",
     contactSupport: "Контактирај поддршка",

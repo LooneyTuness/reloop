@@ -409,15 +409,26 @@ const dashboardTranslations = {
     allOrders: "Сите нарачки",
     orderId: "ID на нарачка",
     customer: "Купувач",
+    
+    // Order page header
+    ordersPageTitle: "Мои нарачки",
+    ordersPageDescription: "Прегледајте ја вашата историја на нарачки и следете ги вашите купувања",
+    
+    // Order details
+    orderNumber: "Нарачка",
+    orderDate: "Датум на нарачка",
+    orderStatus: "Статус на нарачка",
+    orderTotal: "Вкупна сума",
+    viewOrderDetails: "Прегледај детали",
+    downloadConfirmation: "Превземи потврда",
     product: "Производ",
     total: "Вкупно",
     date: "Датум",
     actions: "Акции",
     viewDetails: "Види детали",
     updateStatus: "Ажурирај статус",
-    downloadInvoice: "Преземи фактура",
+    downloadInvoice: "Превземи фактура",
     orderDetails: "Детали за нарачката",
-    orderDate: "Датум на нарачката",
     customerInformation: "Информации за купувачот",
     shippingAddress: "Адреса за испорака",
     orderNotes: "Белешки за нарачката",

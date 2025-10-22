@@ -117,6 +117,22 @@ const OrdersContent = React.memo(function OrdersContent() {
     }));
   }, []);
 
+  // Function to transliterate Cyrillic text to Latin for PDF generation
+  const transliterateText = (text: string): string => {
+    const cyrillicToLatin: { [key: string]: string } = {
+      'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ж': 'zh', 'з': 'z',
+      'и': 'i', 'ј': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p',
+      'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch',
+      'ш': 'sh', 'щ': 'sht', 'ъ': 'a', 'ь': 'y', 'ю': 'yu', 'я': 'ya',
+      'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ж': 'Zh', 'З': 'Z',
+      'И': 'I', 'Ј': 'J', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'N', 'О': 'O', 'П': 'P',
+      'Р': 'R', 'С': 'S', 'Т': 'T', 'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'C', 'Ч': 'Ch',
+      'Ш': 'Sh', 'Щ': 'Sht', 'Ъ': 'A', 'Ь': 'Y', 'Ю': 'Yu', 'Я': 'Ya'
+    };
+    
+    return text.replace(/[а-яА-Я]/g, (char) => cyrillicToLatin[char] || char);
+  };
+
   const generatePDF = useCallback((order: ExtendedOrder) => {
     // Get all translations upfront to ensure they're available
     const translations = {
@@ -151,21 +167,26 @@ const OrdersContent = React.memo(function OrdersContent() {
 
     try {
       const pdf = new jsPDF();
+      
+      // Set font to helvetica (default) - we'll handle Cyrillic by using transliterated text
+      pdf.setFont('helvetica');
+      
       const pageWidth = pdf.internal.pageSize.getWidth();
       const margin = 20;
       let yPosition = 20;
 
-      // Helper function to add text with word wrap
+      // Helper function to add text with word wrap and transliteration
       const addText = (text: string, x: number, y: number, options: { align?: string } = {}) => {
         try {
           const maxWidth = pageWidth - x - margin;
-          const lines = pdf.splitTextToSize(text, maxWidth);
+          const transliteratedText = transliterateText(text);
+          const lines = pdf.splitTextToSize(transliteratedText, maxWidth);
           pdf.text(lines, x, y, options);
           return y + (lines.length * 6);
         } catch (error) {
           console.error('Error adding text to PDF:', error);
           // Fallback: add text without word wrap
-          pdf.text(text, x, y, options);
+          pdf.text(transliterateText(text), x, y, options);
           return y + 6;
         }
       };
@@ -430,10 +451,10 @@ const OrdersContent = React.memo(function OrdersContent() {
       <div className="px-3 sm:px-6 mb-8">
         <BackButton className="mb-4" />
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          {t('orders')}
+          {t('ordersPageTitle')}
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          {t('manageAndTrackOrders')}
+          {t('ordersPageDescription')}
         </p>
       </div>
 
@@ -614,7 +635,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                         <button
                           onClick={() => setSelectedOrder(order)}
                           className="p-2 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                          title="View Details"
+                          title={t('viewOrderDetails')}
                         >
                           <Eye size={16} />
                         </button>
@@ -628,7 +649,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                               className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                             >
                               <Download className="w-4 h-4" />
-                              Download PDF
+                              {t('downloadConfirmation')}
                             </button>
                           </div>
                         </div>
@@ -726,16 +747,14 @@ const OrdersContent = React.memo(function OrdersContent() {
         {selectedOrder && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                
-                
+              <div className="p-6 pt-8">
                 <div className="flex items-center justify-between mb-6">
                   <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white print-mk-order-details">
-                    Order Details
+                    {t('orderDetails')}
                   </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      <span className="print-mk-order-id">Order #</span>{generateOrderNumber(selectedOrder.id)} • <span className="print-mk-order-date">Date: </span>{selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : 'Unknown date'}
+                      <span className="print-mk-order-id">{t('orderNumber')} #</span>{generateOrderNumber(selectedOrder.id)} • <span className="print-mk-order-date">{t('orderDate')}: </span>{selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : 'Unknown date'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -903,7 +922,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                           </span>
                         </div>
                         <div className="flex justify-between border-t border-gray-200 dark:border-gray-600 pt-3">
-                          <span className="text-lg font-semibold text-gray-900 dark:text-white print-mk-order-total">Order Total:</span>
+                          <span className="text-lg font-semibold text-gray-900 dark:text-white print-mk-order-total">{t('orderTotal')}:</span>
                           <span className="text-lg font-bold text-blue-600 dark:text-blue-400 print-currency">
                             {(selectedOrder.seller_order_items || selectedOrder.order_items || [])
                               .reduce((sum: number, item: OrderItem) => sum + (item.quantity * item.price), 0)
