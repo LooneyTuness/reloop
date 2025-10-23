@@ -27,7 +27,7 @@ export default function LaunchPage() {
           }}
         >
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/80"></div>
+          <div className="absolute inset-0 bg-black/70"></div>
           
           <div className="glitch-container text-center lg:text-left relative z-10">
             <div className="glitch-text">
@@ -57,7 +57,7 @@ export default function LaunchPage() {
             {/* Call to action */}
             <div className="space-y-5 sm:space-y-6">
               <p className="text-lg sm:text-xl leading-relaxed font-medium">
-                Во меѓувреме, време е да го освежите плакарот.
+              Сега е идеално време да ја изградите вашата продавница! Прикачете ги вашите најкул парчиња и бидете подготвени за старт!
               </p>
               
               {/* Dashboard access button with arrow */}

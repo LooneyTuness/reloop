@@ -16,97 +16,124 @@ function SignInContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50bg-gray-900 relative">
+    <>
+      <style jsx global>{`
+        html, body {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          overflow-x: hidden;
+        }
+        #__next {
+          height: 100%;
+        }
+      `}</style>
+      <div 
+        className="h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/albert-vincent-wu-DekwzONAHbg-unsplash.jpg')",
+          minHeight: '100dvh' // Dynamic viewport height for mobile
+        }}
+      >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/70"></div>
+      
       {/* Back Button */}
       <button
         onClick={handleBackClick}
-        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center space-x-2 text-white hover:text-gray-300 transition-colors duration-200"
       >
         <ArrowLeft className="h-5 w-5" />
         <span className="text-sm font-medium">{t("back")}</span>
       </button>
 
-      {/* Main Content - Account for navbar height */}
-      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-20 sm:pt-24">
+      {/* Main Content - Full height layout */}
+      <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="w-full max-w-md">
-          {/* Professional Card - matching dashboard style */}
-          <div className="bg-whitebg-gray-800 rounded-xl border border-gray-200border-gray-700 shadow-lg p-6 sm:p-8">
-            {/* Logo */}
-            <div className="text-center mb-6 sm:mb-8">
-              <VtorarakaLogo size="lg" className="mx-auto" />
+          {/* Professional Card - matching image design */}
+          <div className="bg-black/90 rounded-2xl border border-gray-600/30 shadow-2xl p-6 sm:p-8">
+            {/* Logo and Brand */}
+            <div className="flex items-center space-x-3 mb-8">
+              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">V</span>
+              </div>
+              <span className="text-gray-300 text-lg font-medium">vtoraraka</span>
             </div>
 
             {/* Main heading and subheading */}
-            <div className="text-center space-y-2 sm:space-y-3 mb-6 sm:mb-8">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900text-white">
+            <div className="text-center space-y-3 mb-8">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">
                 {t("welcomeBack")}
               </h1>
-              <p className="text-sm sm:text-base text-gray-600text-gray-400">
+              <p className="text-sm sm:text-base text-white leading-relaxed">
                 {t("continueJourney")}
               </p>
             </div>
 
             {/* Authentication form */}
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-6">
               <SignInForm />
-
             </div>
           </div>
 
-          {/* Trust Indicators - matching dashboard style */}
-          <div className="mt-4 sm:mt-6 text-center">
-            <div className="flex items-center justify-center space-x-2 sm:space-x-3 text-xs">
-              <div className="flex items-center space-x-1.5 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-whitebg-gray-800 rounded-lg border border-gray-200border-gray-700">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex items-center justify-center">
-                  <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-600text-gray-400 font-medium text-xs sm:text-sm">{t("secure")}</span>
+          {/* Trust Indicators - matching image design */}
+          <div className="mt-6 sm:mt-8">
+            <div className="flex items-center justify-center space-x-3 sm:space-x-4">
+              <div className="flex items-center space-x-2 px-3 py-2 bg-black/50 rounded-lg border border-gray-600/30">
+                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-white font-medium text-sm">{t("secure")}</span>
               </div>
-              <div className="flex items-center space-x-1.5 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-whitebg-gray-800 rounded-lg border border-gray-200border-gray-700">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                  <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-600text-gray-400 font-medium text-xs sm:text-sm">{t("private")}</span>
+              <div className="flex items-center space-x-2 px-3 py-2 bg-black/50 rounded-lg border border-gray-600/30">
+                <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-white font-medium text-sm">{t("private")}</span>
               </div>
-              <div className="flex items-center space-x-1.5 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-whitebg-gray-800 rounded-lg border border-gray-200border-gray-700">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-purple-500 rounded-full flex items-center justify-center">
-                  <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-600text-gray-400 font-medium text-xs sm:text-sm">{t("fast")}</span>
+              <div className="flex items-center space-x-2 px-3 py-2 bg-black/50 rounded-lg border border-gray-600/30 w-fit">
+                <svg className="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                </svg>
+                <span className="text-white font-medium text-sm">{t("fast")}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 }
 
 export default function SignIn() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50bg-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-20 sm:pt-24">
-        <div className="w-full max-w-md">
-          <div className="bg-whitebg-gray-800 rounded-xl border border-gray-200border-gray-700 shadow-lg p-6 sm:p-8">
-            <div className="text-center mb-6 sm:mb-8">
-              <VtorarakaLogo size="lg" className="mx-auto" />
-            </div>
-            <div className="text-center space-y-2 sm:space-y-3 mb-6 sm:mb-8">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900text-white">
-                Loading...
-              </h1>
-              <p className="text-sm sm:text-base text-gray-600text-gray-400">
-                Please wait a moment
-              </p>
-            </div>
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div 
+        className="h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/albert-vincent-wu-DekwzONAHbg-unsplash.jpg')",
+          minHeight: '100dvh' // Dynamic viewport height for mobile
+        }}
+      >
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="w-full max-w-md">
+            <div className="bg-black/90 rounded-2xl border border-gray-600/30 shadow-2xl p-6 sm:p-8">
+              <div className="text-center mb-6 sm:mb-8">
+                <VtorarakaLogo size="lg" className="mx-auto" />
+              </div>
+              <div className="text-center space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+                  Loading...
+                </h1>
+                <p className="text-sm sm:text-base text-gray-300">
+                  Please wait a moment
+                </p>
+              </div>
+              <div className="flex justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              </div>
             </div>
           </div>
         </div>
