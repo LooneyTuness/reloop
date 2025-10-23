@@ -20,13 +20,21 @@ export default function LaunchPage() {
       {/* Main content */}
       <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Left side - Launching soon with glitch effect */}
-        <div className="flex-1 flex items-center justify-center p-6 sm:p-8 lg:p-12 min-h-[40vh] sm:min-h-[50vh] lg:min-h-screen">
-          <div className="glitch-container text-center lg:text-left">
+        <div 
+          className="flex-1 flex items-center justify-center p-6 sm:p-8 lg:p-12 min-h-[40vh] sm:min-h-[50vh] lg:min-h-screen relative bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('/images/albert-vincent-wu-DekwzONAHbg-unsplash.jpg')"
+          }}
+        >
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/80"></div>
+          
+          <div className="glitch-container text-center lg:text-left relative z-10">
             <div className="glitch-text">
               <div className="glitch-word text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold leading-tight">
                 Launching
               </div>
-              <div className="glitch-word text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold leading-tight mt-1 sm:mt-2 lg:mt-4">
+              <div className="glitch-word text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold leading-tight mt-1 sm:mt-2 lg:mt-4">
                 soon
               </div>
             </div>
