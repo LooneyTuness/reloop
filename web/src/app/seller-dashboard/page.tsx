@@ -88,19 +88,22 @@ const DashboardContent = React.memo(function DashboardContent() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="mb-3">
-                    <div className="flex items-baseline gap-2 flex-wrap">
-                      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-rounded leading-tight">
+                    <div className="glitch-container">
+                      <div 
+                        className="glitch-word text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight"
+                        data-text={`${getGreeting()}${getUserName() ? ` ${getUserName()}!` : '!'}`}
+                      >
                         {getGreeting()}
                         {getUserName() && (
                           <>
                             {' '}<span className="inline-flex items-baseline gap-2">
                               {getUserName()}!
-                              <span className="text-3xl sm:text-4xl lg:text-5xl leading-none animate-pulse">👋</span>
+                              <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-none animate-pulse">👋</span>
                             </span>
                           </>
                         )}
                         {!getUserName() && '!'}
-                      </h1>
+                      </div>
                     </div>
                   </div>
                   <p className="text-blue-100 text-lg sm:text-xl font-medium leading-relaxed">
@@ -235,8 +238,74 @@ const DashboardContent = React.memo(function DashboardContent() {
 
 export default function SellerDashboard() {
   return (
-    <SellerDashboardLayout>
-      <DashboardContent />
-    </SellerDashboardLayout>
+    <>
+      <SellerDashboardLayout>
+        <DashboardContent />
+      </SellerDashboardLayout>
+      
+      {/* Glitch effect styles */}
+      <style jsx>{`
+        .glitch-container {
+          position: relative;
+        }
+        
+        .glitch-word {
+          position: relative;
+          color: white;
+          font-family: 'Inter', sans-serif;
+          text-transform: uppercase;
+          letter-spacing: -0.02em;
+          word-break: break-word;
+        }
+        
+        .glitch-word::before,
+        .glitch-word::after {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+        
+        .glitch-word::before {
+          animation: glitch-1 0.5s infinite;
+          color: #ff0000;
+          z-index: -1;
+        }
+        
+        .glitch-word::after {
+          animation: glitch-2 0.5s infinite;
+          color: #00ff00;
+          z-index: -2;
+        }
+        
+        @keyframes glitch-1 {
+          0%, 14%, 15%, 49%, 50%, 99%, 100% {
+            transform: translate(0);
+          }
+          15%, 49% {
+            transform: translate(-2px, 2px);
+          }
+        }
+        
+        @keyframes glitch-2 {
+          0%, 20%, 21%, 62%, 63%, 99%, 100% {
+            transform: translate(0);
+          }
+          21%, 62% {
+            transform: translate(2px, -2px);
+          }
+        }
+        
+        .glitch-word:hover::before {
+          animation: glitch-1 0.1s infinite;
+        }
+        
+        .glitch-word:hover::after {
+          animation: glitch-2 0.1s infinite;
+        }
+      `}</style>
+    </>
   );
 }

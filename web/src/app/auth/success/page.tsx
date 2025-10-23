@@ -155,96 +155,107 @@ function AuthSuccessContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="w-full max-w-md space-y-8 px-6">
-        {user ? (
-          <div className="text-center space-y-6">
-            {/* Success Icon */}
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
+    <div 
+      className="h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
+      style={{
+        backgroundImage: "url('/images/albert-vincent-wu-DekwzONAHbg-unsplash.jpg')",
+        minHeight: '100dvh'
+      }}
+    >
+      <div className="absolute inset-0 bg-black/70"></div>
+      <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-16">
+        <div className="w-full max-w-sm sm:max-w-md">
+          <div className="bg-black/90 rounded-2xl border border-gray-600/30 shadow-2xl p-4 sm:p-8">
+            {user ? (
+              <div className="text-center space-y-4 sm:space-y-6">
+                {/* Success Icon */}
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 mt-1 sm:mt-2">
+                  <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
 
-            {/* Success Message */}
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold text-gray-900">
-                {t("welcomeToVtoraraka")}!
-              </h1>
-              <p className="text-lg text-gray-600">
-                {fromMagicLink 
-                  ? t("youreNowSignedIn")
-                  : t("emailConfirmed")}
-              </p>
-            </div>
+                {/* Success Message */}
+                <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white leading-tight">
+                    {t("welcomeToVtoraraka")}!
+                  </h1>
+                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed px-1">
+                    {fromMagicLink 
+                      ? t("youreNowSignedIn")
+                      : t("emailConfirmed")}
+                  </p>
+                </div>
 
-            {/* Action Button */}
-            <button
-              onClick={() => router.push('/')}
-              className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
-            >
-              {t("startShopping")}
-            </button>
+                {/* Action Button */}
+                <button
+                  onClick={() => router.push('/')}
+                  className="w-full h-10 sm:h-12 bg-white hover:bg-gray-100 text-black font-semibold text-sm sm:text-base rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  {t("startShopping")}
+                </button>
 
-            {/* Playful annotation */}
-            <div className="text-center">
-              <p className="text-sm text-green-600 font-medium">
-                {t("readyToMakeDifference")}
-                <span className="ml-1">♻️</span>
-              </p>
-            </div>
+                {/* Playful annotation */}
+                <div className="text-center pt-1 sm:pt-2 pb-1 sm:pb-2">
+                  <p className="text-xs sm:text-sm text-green-400 font-medium">
+                    {t("readyToMakeDifference")}
+                    <span className="ml-1 text-sm sm:text-base">♻️</span>
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center space-y-4 sm:space-y-6">
+                {/* Email Icon */}
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 mt-1 sm:mt-2">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+
+                {/* Email Confirmation Message */}
+                <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white leading-tight">
+                    {t("checkYourEmail")}
+                  </h1>
+                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed px-1">
+                    {fromMagicLink 
+                      ? t("magicLinkSent")
+                      : t("confirmationLinkSent")}
+                  </p>
+                </div>
+                
+                {/* Help Section */}
+                <div className="bg-gray-800/50 border border-gray-600/30 rounded-lg p-3 sm:p-4 text-left mb-4 sm:mb-6">
+                  <p className="text-xs sm:text-sm text-gray-300 mb-2 font-medium">
+                    {fromMagicLink ? t("cantFindMagicLink") : t("cantFindEmail")}
+                  </p>
+                  <ul className="text-xs text-gray-400 space-y-1 list-disc list-inside">
+                    <li>{t("checkSpamFolder")}</li>
+                    <li>{t("waitFewMinutes")}</li>
+                    <li>{t("makeSureEmailCorrect")}</li>
+                    {fromMagicLink && <li>{t("magicLinksExpire")}</li>}
+                  </ul>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="space-y-2 sm:space-y-3 pb-1 sm:pb-2">
+                  <button
+                    onClick={() => router.push('/')}
+                    className="w-full h-10 sm:h-12 bg-white hover:bg-gray-100 text-black font-semibold text-sm sm:text-base rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    {t("browseProductsMeantime")}
+                  </button>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="w-full text-gray-300 hover:text-white py-1 sm:py-2 text-xs sm:text-sm transition-colors"
+                  >
+                    {t("alreadyConfirmedEmail")}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="text-center space-y-6">
-            {/* Email Icon */}
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-
-            {/* Email Confirmation Message */}
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold text-gray-900">
-                {t("checkYourEmail")}
-              </h1>
-              <p className="text-lg text-gray-600">
-                {fromMagicLink 
-                  ? t("magicLinkSent")
-                  : t("confirmationLinkSent")}
-              </p>
-            </div>
-            
-            {/* Help Section */}
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-left">
-              <p className="text-sm text-gray-700 mb-2 font-medium">
-                {fromMagicLink ? t("cantFindMagicLink") : t("cantFindEmail")}
-              </p>
-              <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                <li>{t("checkSpamFolder")}</li>
-                <li>{t("waitFewMinutes")}</li>
-                <li>{t("makeSureEmailCorrect")}</li>
-                {fromMagicLink && <li>{t("magicLinksExpire")}</li>}
-              </ul>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              <button
-                onClick={() => router.push('/')}
-                className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
-              >
-                {t("browseProductsMeantime")}
-              </button>
-              <button
-                onClick={() => window.location.reload()}
-                className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm transition-colors"
-              >
-                {t("alreadyConfirmedEmail")}
-              </button>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
