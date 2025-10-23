@@ -12,7 +12,7 @@ function SignInContent() {
   const router = useRouter();
 
   const handleBackClick = () => {
-    router.back();
+    router.push('/');
   };
 
   return (
@@ -41,7 +41,7 @@ function SignInContent() {
       {/* Back Button */}
       <button
         onClick={handleBackClick}
-        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center space-x-2 text-white hover:text-gray-300 transition-colors duration-200"
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50 flex items-center space-x-2 text-white hover:text-gray-300 transition-colors duration-200 bg-black/20 backdrop-blur-sm rounded-lg px-3 py-2 hover:bg-black/40"
       >
         <ArrowLeft className="h-5 w-5" />
         <span className="text-sm font-medium">{t("back")}</span>
@@ -113,7 +113,7 @@ export default function SignIn() {
         className="h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
         style={{
           backgroundImage: "url('/images/albert-vincent-wu-DekwzONAHbg-unsplash.jpg')",
-          minHeight: '100dvh' // Dynamic viewport height for mobile
+          minHeight: '100dvh', // Dynamic viewport height for mobile
         }}
       >
         <div className="absolute inset-0 bg-black/70"></div>
