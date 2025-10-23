@@ -79,18 +79,12 @@ function CatalogContent() {
       // First try to find by slug
       let category = getCategoryBySlug(categorySlug);
       
-      // If not found by slug, try to find by name (for cases like "shoes")
+      // If not found by slug, try to find by name
       if (!category) {
-        // Special handling for "shoes" - show both women's and men's shoes
-        if (categorySlug.toLowerCase() === 'shoes') {
-          // Find women-shoes category as the primary category
-          category = categories.find(c => c.slug === 'women-shoes');
-        } else {
-          category = categories.find(c => 
-            c.name.toLowerCase() === categorySlug.toLowerCase() ||
-            c.name.toLowerCase().includes(categorySlug.toLowerCase())
-          );
-        }
+        category = categories.find(c => 
+          c.name.toLowerCase() === categorySlug.toLowerCase() ||
+          c.name.toLowerCase().includes(categorySlug.toLowerCase())
+        );
       }
       
       setSelectedCategory(category?.id || null);

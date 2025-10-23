@@ -316,8 +316,6 @@ const translations = {
     discoverCompleteCollection: "Откриј ја целата колекција",
 
     // Main Categories
-    shoes: "Обувки",
-    shoesDesc: "Обувки за секоја прилика",
     home: "Дом",
     homeDesc: "Домашен декор и мебел",
     electronics: "Електроника",
@@ -1095,8 +1093,6 @@ const translations = {
     discoverCompleteCollection: "Discover our complete collection",
 
     // Main Categories
-    shoes: "Shoes",
-    shoesDesc: "Shoes for every occasion",
     home: "Home",
     homeDesc: "Home decor and furniture",
     electronics: "Electronics",
