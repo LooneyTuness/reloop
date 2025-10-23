@@ -101,7 +101,7 @@ function AddProductContent() {
   };
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl mx-auto">
         <div className="mb-8">
           <BackButton className="mb-6" onClick={() => router.back()} />
           <div className="mb-8 text-center">

@@ -285,7 +285,7 @@ export default function SellerProfileManager() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Profile Picture */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 lg:order-1">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               {t('profilePicture')}
@@ -339,7 +339,7 @@ export default function SellerProfileManager() {
         </div>
 
         {/* Profile Form */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 lg:order-2">
           <form onSubmit={handleSaveProfile} className="space-y-6">
             {/* Personal Information */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">

@@ -325,7 +325,7 @@ const dashboardTranslations = {
     confirmDeleteProduct: "Дали сте сигурни дека сакате да го избришете овој производ?",
     
     // Add Product page
-    createNewProductListing: "Создај нова објава на производ",
+    createNewProductListing: "Креирај нова објава на производ",
     productDetails: "Детали за производот",
     enterProductName: "Внеси име на производ",
     describeYourProduct: "Опиши го твојот производ",
