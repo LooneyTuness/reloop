@@ -1,16 +1,31 @@
 "use client";
 
-import Link from "next/link";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense } from "react";
+import { useRouter } from "next/navigation";
 import { SignInForm } from "@/app/(auth)/sign-in/sign-in-form";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { VtorarakaLogo } from "@/components/icons";
+import { ArrowLeft } from "lucide-react";
 
 function SignInContent() {
   const { t } = useLanguage();
+  const router = useRouter();
+
+  const handleBackClick = () => {
+    router.push('/');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50bg-gray-900 relative">
+      {/* Back Button */}
+      <button
+        onClick={handleBackClick}
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+      >
+        <ArrowLeft className="h-5 w-5" />
+        <span className="text-sm font-medium">{t("back")}</span>
+      </button>
+
       {/* Main Content - Account for navbar height */}
       <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-20 sm:pt-24">
         <div className="w-full max-w-md">
