@@ -72,7 +72,46 @@ export default function SellerApplicationPage() {
   const isFormValid = formData.fullName && formData.email && formData.productDescription && formData.understandsApplication;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 pb-6 sm:pt-24 sm:pb-8 lg:py-12 px-4 sm:px-6 lg:px-8">
+    <>
+      <style jsx global>{`
+        html, body {
+          background-color: rgb(249 250 251);
+          overscroll-behavior: none;
+        }
+        @media (prefers-color-scheme: dark) {
+          html, body {
+            background-color: rgb(17 24 39);
+          }
+        }
+        .dark html, .dark body {
+          background-color: rgb(17 24 39);
+        }
+        
+        /* Fix overscroll area on mobile */
+        body {
+          overscroll-behavior-y: none;
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Ensure the overscroll area matches the page background */
+        html {
+          background-color: rgb(249 250 251);
+        }
+        @media (prefers-color-scheme: dark) {
+          html {
+            background-color: rgb(17 24 39);
+          }
+        }
+        .dark html {
+          background-color: rgb(17 24 39);
+        }
+        
+        /* Prevent bounce effect on iOS */
+        * {
+          -webkit-overflow-scrolling: touch;
+        }
+      `}</style>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-28 pb-6 sm:pt-32 sm:pb-8 lg:pt-36 lg:pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Page Header */}
         <div className="mb-6 sm:mb-8 lg:mb-10">
@@ -269,5 +308,6 @@ export default function SellerApplicationPage() {
         </Card>
       </div>
     </div>
+    </>
   );
 }
