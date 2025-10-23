@@ -105,7 +105,7 @@ export default function Sidebar() {
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-[55]"
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-[75]"
           onClick={toggleMobileMenu}
         />
       )}
@@ -114,7 +114,7 @@ export default function Sidebar() {
       <div className={`
         fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 
         transform transition-transform duration-300 ease-in-out overflow-y-auto
-        ${isMobileMenuOpen ? 'translate-x-0 z-[60]' : '-translate-x-full z-30'}
+        ${isMobileMenuOpen ? 'translate-x-0 z-[80]' : '-translate-x-full z-30'}
         lg:translate-x-0 lg:z-30
       `}>
         <div className="flex flex-col h-full">

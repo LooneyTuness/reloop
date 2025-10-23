@@ -141,7 +141,7 @@ export default function TopBar() {
   }, []);
 
   return (
-    <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 shadow-md">
+    <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-[70] shadow-md">
       <div className="flex items-center justify-between h-full px-2 sm:px-8 gap-1 sm:gap-4">
         {/* Mobile hamburger menu + Search */}
         <div className="flex items-center gap-3 flex-1">
@@ -189,7 +189,7 @@ export default function TopBar() {
 
           {/* Search Results Dropdown */}
           {showSearchResults && searchQuery && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-[70] max-h-96 overflow-y-auto">
               {isSearching ? (
                 <div className="p-4 text-center">
                   <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-200 border-t-blue-600 mx-auto"></div>
@@ -287,7 +287,7 @@ export default function TopBar() {
 
             {/* Profile Dropdown */}
             {showProfileDropdown && (
-              <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+              <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-[70]">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center space-x-3">
                     <div className="h-10 w-10 rounded-full flex items-center justify-center overflow-hidden relative bg-gradient-to-br from-blue-500 to-orange-600">

@@ -24,7 +24,7 @@ function SettingsContent() {
 
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-6xl mx-auto">
+    <div className="px-4 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <BackButton className="mb-4" />
@@ -36,9 +36,9 @@ function SettingsContent() {
         </p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
         {/* Sidebar */}
-        <div className="lg:w-64">
+        <div className="lg:w-72">
           <nav className="space-y-1">
             <div className="px-3 mb-3">
               <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
