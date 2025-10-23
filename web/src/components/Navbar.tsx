@@ -37,6 +37,29 @@ export default function Navbar() {
   const [showMobileSuggestions, setShowMobileSuggestions] = useState(false);
   const [isApprovedSeller, setIsApprovedSeller] = useState(false);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (showMobileMenu) {
+      // Store the current scroll position
+      const scrollY = window.scrollY;
+      
+      // Lock the body scroll
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore scroll position when menu closes
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [showMobileMenu]);
+
   // Check if user is an approved seller
   useEffect(() => {
     const checkSellerStatus = async () => {
@@ -429,7 +452,13 @@ export default function Navbar() {
           />
           
           {/* Mobile Menu Panel */}
-          <div className="mobile-menu-container fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-50 md:hidden">
+          <div 
+            className="mobile-menu-container fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-50 md:hidden"
+            style={{
+              touchAction: 'pan-y',
+              overscrollBehavior: 'contain'
+            }}
+          >
             <div className="flex flex-col h-full">
               {/* Enhanced Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -524,7 +553,14 @@ export default function Navbar() {
               </div>
 
               {/* Navigation Items */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-2">
+              <div 
+                className="flex-1 overflow-y-auto p-6 space-y-2"
+                style={{
+                  touchAction: 'pan-y',
+                  overscrollBehavior: 'contain',
+                  WebkitOverflowScrolling: 'touch'
+                }}
+              >
                 {/* Quick Actions */}
                 <div className="space-y-1 mb-6">
                   <Link

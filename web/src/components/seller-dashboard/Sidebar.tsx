@@ -48,6 +48,29 @@ export default function Sidebar() {
     };
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  React.useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Store the current scroll position
+      const scrollY = window.scrollY;
+      
+      // Lock the body scroll
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore scroll position when menu closes
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isMobileMenuOpen]);
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -116,7 +139,11 @@ export default function Sidebar() {
         transform transition-transform duration-300 ease-in-out overflow-y-auto
         ${isMobileMenuOpen ? 'translate-x-0 z-[80]' : '-translate-x-full z-30'}
         lg:translate-x-0 lg:z-30
-      `}>
+      `}
+      style={{
+        touchAction: 'pan-y',
+        overscrollBehavior: 'contain'
+      }}>
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center h-20 px-5 border-b border-gray-200 dark:border-gray-800">

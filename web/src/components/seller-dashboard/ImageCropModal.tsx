@@ -39,6 +39,8 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
     const { width, height } = e.currentTarget;
     
+    console.log('Image loaded:', { width, height, aspect });
+    
     // Ensure we have valid dimensions
     if (width === 0 || height === 0) {
       console.log('Invalid image dimensions:', { width, height });
@@ -58,7 +60,20 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
       width,
       height
     );
+    
+    console.log('Setting initial crop:', crop);
     setCrop(crop);
+    
+    // Also set completed crop to enable the button
+    const pixelCrop = {
+      x: (crop.x / 100) * width,
+      y: (crop.y / 100) * height,
+      width: (crop.width / 100) * width,
+      height: (crop.height / 100) * height,
+      unit: 'px' as const
+    };
+    console.log('Setting initial completed crop:', pixelCrop);
+    setCompletedCrop(pixelCrop);
   }
 
   function onDownloadCropClick() {
@@ -159,8 +174,14 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
               <div className="relative max-h-96 overflow-auto">
                 <ReactCrop
                   crop={crop}
-                  onChange={(_, percentCrop) => setCrop(percentCrop)}
-                  onComplete={(c) => setCompletedCrop(c)}
+                  onChange={(_, percentCrop) => {
+                    console.log('Crop changed:', percentCrop);
+                    setCrop(percentCrop);
+                  }}
+                  onComplete={(c) => {
+                    console.log('Crop completed:', c);
+                    setCompletedCrop(c);
+                  }}
                   aspect={aspect}
                   minWidth={100}
                   minHeight={100}
@@ -234,33 +255,37 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
               </div>
 
               <div className="pt-4">
+                {!completedCrop && (
+                  <div className="text-sm text-gray-500 mb-2">
+                    Please select a crop area to enable the Apply Crop button
+                  </div>
+                )}
                 <button
-                  onClick={onDownloadCropClick}
-                  onTouchEnd={(e) => {
-                    if (isMobile) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (completedCrop) {
-                        onDownloadCropClick();
-                      }
-                    }
-                  }}
-                  onMouseDown={(e) => {
-                    if (isMobile) {
-                      e.preventDefault();
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Button clicked!', { completedCrop, isMobile });
+                    if (completedCrop) {
+                      onDownloadCropClick();
                     }
                   }}
                   disabled={!completedCrop}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors touch-manipulation"
+                  className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    completedCrop 
+                      ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800' 
+                      : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  }`}
                   style={{ 
                     WebkitTapHighlightColor: 'transparent',
                     touchAction: 'manipulation',
                     minHeight: isMobile ? '48px' : 'auto',
-                    fontSize: isMobile ? '16px' : '14px'
+                    fontSize: isMobile ? '16px' : '14px',
+                    pointerEvents: 'auto',
+                    zIndex: 10
                   }}
                 >
                   <Check size={isMobile ? 18 : 16} />
-                  Apply Crop
+                  Apply Crop {completedCrop ? '✓' : '✗'}
                 </button>
               </div>
             </div>
