@@ -163,14 +163,14 @@ export default function TopBar() {
           {/* Search */}
           <div className="flex-1 max-w-[140px] sm:max-w-lg relative search-container">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-2.5 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+            <Search className="absolute left-2.5 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
             <input
               type="text"
               placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={handleSearchInputChange}
               onFocus={() => searchQuery && setShowSearchResults(true)}
-              className="w-full pl-8 sm:pl-12 pr-8 sm:pr-12 py-2 sm:py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs sm:text-sm"
+              className="w-full pl-8 sm:pl-12 pr-8 sm:pr-12 py-2.5 sm:py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-sm"
             />
             {searchQuery && (
               <button
@@ -206,7 +206,7 @@ export default function TopBar() {
                       className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-sm"
                     >
                       <div className="flex items-center space-x-2">
-                        <Search size={14} className="text-gray-400" />
+                        <Search size={16} className="text-gray-400" />
                         <span>{t('searchInProducts')}</span>
                       </div>
                     </button>
@@ -215,7 +215,7 @@ export default function TopBar() {
                       className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md text-sm"
                     >
                       <div className="flex items-center space-x-2">
-                        <Search size={14} className="text-gray-400" />
+                        <Search size={16} className="text-gray-400" />
                         <span>{t('searchInOrders')}</span>
                       </div>
                     </button>

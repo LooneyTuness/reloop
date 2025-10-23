@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SupabaseDataService } from '@/lib/supabase/data-service';
-import { Eye, Package, Truck, CheckCircle, Clock, AlertCircle, X, ShoppingBag } from 'lucide-react';
+import { Package, Truck, CheckCircle, Clock, AlertCircle, ShoppingBag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface OrderItem {
@@ -75,7 +75,6 @@ export default function MyOrdersPage() {
   const router = useRouter();
   const [orders, setOrders] = useState<UserOrder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedOrder, setSelectedOrder] = useState<UserOrder | null>(null);
   const [imageViewer, setImageViewer] = useState<{
     isOpen: boolean;
     images: string[];
@@ -370,121 +369,11 @@ export default function MyOrdersPage() {
                   )}
                 </div>
 
-                {/* Order Actions */}
-                <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                  <button
-                    onClick={() => setSelectedOrder(order)}
-                    className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200"
-                  >
-                    <Eye size={16} />
-                    {t('viewDetails') || 'View Details'}
-                  </button>
-                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Order Details Modal */}
-        {selectedOrder && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 pt-24 z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                    {t('orderDetails') || 'Детали за нарачката'} #{selectedOrder.id.substring(0, 8).toUpperCase()}
-                  </h2>
-                  <button
-                    onClick={() => setSelectedOrder(null)}
-                    className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-              </div>
-              
-              <div className="p-6 space-y-6">
-                {/* Order Status */}
-                <div className="flex items-center gap-4">
-                  <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2 ${getStatusColor(selectedOrder.status)}`}>
-                    {getStatusIcon(selectedOrder.status)}
-                    {t(selectedOrder.status) || selectedOrder.status}
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {t('orderedOn') || 'Нарачано на'} {selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleDateString() : t('unknownDate') || 'Непознат датум'}
-                  </div>
-                </div>
-
-                {/* Shipping Address */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('shippingAddress') || 'Адреса за испорака'}</h3>
-                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
-                    <p className="font-medium text-gray-900 dark:text-white">{selectedOrder.full_name}</p>
-                    <p className="text-gray-600 dark:text-gray-400">{selectedOrder.address_line1}</p>
-                    {selectedOrder.address_line2 && (
-                      <p className="text-gray-600 dark:text-gray-400">{selectedOrder.address_line2}</p>
-                    )}
-                    <p className="text-gray-600 dark:text-gray-400">
-                      {selectedOrder.city}, {selectedOrder.postal_code}
-                    </p>
-                    <p className="text-gray-600 dark:text-gray-400">{selectedOrder.phone}</p>
-                  </div>
-                </div>
-
-                {/* Order Items */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('items') || 'Производи'}</h3>
-                  <div className="space-y-3">
-                    {selectedOrder.order_items?.map((item, index) => (
-                      <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                        <img
-                          src={
-                            item.items?.images && Array.isArray(item.items.images) && item.items.images.length > 0
-                              ? item.items.images[0]
-                              : item.items?.images && typeof item.items.images === 'string'
-                              ? item.items.images
-                              : '/placeholder.svg'
-                          }
-                          alt={item.items?.title || 'Item'}
-                          className="w-16 h-16 object-cover rounded-lg"
-                          onError={(e) => {
-                            e.currentTarget.src = '/placeholder.svg';
-                          }}
-                        />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 dark:text-white">
-                            {item.items?.title || 'Unknown Item'}
-                          </h4>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {t('quantity') || 'Количина'}: {item.quantity} × {item.price.toLocaleString()} {t('currency') || 'MKD'}
-                          </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {item.items?.brand && `${item.items.brand} • `}
-                            {item.items?.size && `${t(`size${item.items.size}`) || item.items.size} • `}
-                            {item.items?.condition && t(item.items.condition) || item.items?.condition}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-gray-900 dark:text-white">
-                            {(item.quantity * item.price).toLocaleString()} {t('currency') || 'MKD'}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Order Summary */}
-                <div className="pt-6">
-                  <div className="flex justify-between items-center text-lg font-bold text-gray-900 dark:text-white">
-                    <span>{t('total') || 'Вкупно'}</span>
-                    <span>{selectedOrder.total_amount.toLocaleString()} {t('currency') || 'MKD'}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
