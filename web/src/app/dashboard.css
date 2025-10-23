@@ -44,14 +44,19 @@
     display: none;
   }
   
-  /* Ensure main content is visible on mobile */
-  main {
-    position: relative !important;
-    z-index: 20 !important;
-  }
-  
   /* Fix potential overflow issues */
   .overflow-x-hidden {
     overflow-x: hidden !important;
+  }
+  
+  /* Ensure smooth scrolling on mobile */
+  .mobile-scrollbar-hide {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Fix viewport height issues on mobile */
+  .min-h-\[calc\(100vh-4rem\)\] {
+    min-height: calc(100vh - 4rem) !important;
   }
 }
