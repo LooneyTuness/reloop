@@ -20,10 +20,10 @@ function AnalyticsContent() {
 
   return (
     <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl mx-auto">
-      <div className="max-w-2xl mx-auto text-center">
+      <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-center mb-4">
+          <div className="flex items-center mb-4">
             <div className="p-4 bg-blue-100 dark:bg-blue-900/20 rounded-full">
               <BarChart3 size={48} className="text-blue-600 dark:text-blue-400" />
             </div>

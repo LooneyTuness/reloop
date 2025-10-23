@@ -241,7 +241,7 @@ const OrdersContent = React.memo(function OrdersContent() {
       {/* Header */}
       <div className="px-3 sm:px-6 mb-8">
         <BackButton className="mb-4" />
-        <div className="text-center">
+        <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {t('ordersPageTitle')}
           </h1>

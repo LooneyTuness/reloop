@@ -26,7 +26,7 @@ function SettingsContent() {
   return (
     <div className="px-4 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="mb-8 text-center">
+      <div className="mb-8">
         <BackButton className="mb-4" />
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           {t('settings')}
