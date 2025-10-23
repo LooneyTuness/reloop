@@ -57,7 +57,7 @@ function SignInContent() {
               <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">V</span>
               </div>
-              <span className="text-gray-300 text-lg font-medium">vtoraraka</span>
+              <span className="text-white text-lg font-medium">vtoraraka.mk</span>
             </div>
 
             {/* Main heading and subheading */}
