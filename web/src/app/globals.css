@@ -103,14 +103,40 @@ html, body {
   display: none;  /* Safari and Chrome */
 }
 
-/* Ensure all scrollable elements hide scrollbars */
-* {
-  scrollbar-width: none;  /* Firefox */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-}
+/* Mobile-specific scrollbar hiding for better UX */
+@media (max-width: 768px) {
+  /* Only hide scrollbars on mobile for specific elements */
+  .mobile-scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
 
-*::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
+  .mobile-scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
+  /* Ensure body doesn't create duplicate scrollbars on mobile */
+  body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent nested scrollable containers on mobile */
+  .min-h-screen {
+    overflow-x: hidden;
+  }
+
+  /* Ensure proper scrolling behavior on mobile */
+  html {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+  }
+
+  /* Fix for iOS Safari viewport issues */
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
 }
 
 /* Mobile menu animations */

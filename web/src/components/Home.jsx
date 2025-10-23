@@ -91,7 +91,7 @@ export default function Home() {
 
   return (
     <div
-      className={`min-h-screen font-poppins ${
+      className={`min-h-screen font-poppins overflow-x-hidden ${
         isDarkMode
           ? "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
           : "bg-gradient-to-br from-green-50 via-white to-green-50"

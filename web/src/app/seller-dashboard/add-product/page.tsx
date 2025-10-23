@@ -104,7 +104,7 @@ function AddProductContent() {
     <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl">
         <div className="mb-8">
           <BackButton className="mb-6" onClick={() => router.back()} />
-          <div className="mb-8">
+          <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {t('addNewProduct')}
             </h1>

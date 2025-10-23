@@ -14,7 +14,7 @@ function SettingsContent() {
   const [activeTab, setActiveTab] = useState('profile');
 
   const tabs = [
-    { id: 'profile', label: t('settings'), icon: User }
+    { id: 'profile', label: t('sellerProfile'), icon: User }
   ];
 
 
@@ -32,7 +32,7 @@ function SettingsContent() {
           {t('settings')}
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          {t('manageSellerProfile')}
+          {t('manageYourStore')}
         </p>
       </div>
 
@@ -40,6 +40,11 @@ function SettingsContent() {
         {/* Sidebar */}
         <div className="lg:w-64">
           <nav className="space-y-1">
+            <div className="px-3 mb-3">
+              <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+                {t('settings')}
+              </h3>
+            </div>
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (

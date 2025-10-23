@@ -241,12 +241,14 @@ const OrdersContent = React.memo(function OrdersContent() {
       {/* Header */}
       <div className="px-3 sm:px-6 mb-8">
         <BackButton className="mb-4" />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          {t('ordersPageTitle')}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          {t('ordersPageDescription')}
-        </p>
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            {t('ordersPageTitle')}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t('ordersPageDescription')}
+          </p>
+        </div>
       </div>
 
         {/* Filters and Search */}

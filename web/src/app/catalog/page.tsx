@@ -175,7 +175,7 @@ function CatalogContent() {
 
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden scrollbar-hide">
+    <div className="min-h-screen bg-white overflow-x-hidden mobile-scrollbar-hide">
       
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-20 overflow-x-hidden min-h-screen">

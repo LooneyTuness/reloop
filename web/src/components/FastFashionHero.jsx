@@ -59,7 +59,7 @@ export default function FastFashionHero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen bg-black overflow-hidden">
+    <section className="relative min-h-screen bg-black overflow-hidden mobile-scrollbar-hide">
       {/* Video Background */}
       <div className="absolute inset-0 w-full h-full">
         {/* Fallback background image */}
