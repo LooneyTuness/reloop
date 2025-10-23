@@ -171,7 +171,7 @@ const OrdersContent = React.memo(function OrdersContent() {
   // Show zero state if no orders (only after loading is complete)
   if (!isLoading && orders.length === 0) {
     return (
-      <div className="px-3 sm:px-6 py-4 sm:py-8">
+      <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {t('orders')}
@@ -237,7 +237,7 @@ const OrdersContent = React.memo(function OrdersContent() {
   };
 
   return (
-    <div className="w-full py-4 sm:py-8 max-w-none">
+    <div className="w-full py-4 sm:py-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="px-3 sm:px-6 mb-8">
         <BackButton className="mb-4" />

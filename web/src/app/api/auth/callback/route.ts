@@ -30,8 +30,30 @@ export async function GET(request: NextRequest) {
 
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      // Determine the redirect URL - prioritize returnUrl, then next, then default to seller dashboard
-      const redirectPath = returnUrl || next || '/seller-dashboard'
+      // Get user to check seller status
+      const { data: { user } } = await supabase.auth.getUser()
+      let redirectPath = returnUrl || next || '/'
+      
+      if (user) {
+        // Check if user is a seller
+        const { data: sellerProfile } = await supabase
+          .from('seller_profiles')
+          .select('is_approved, role')
+          .eq('user_id', user.id)
+          .single()
+        
+        if (sellerProfile) {
+          // Check if user is an approved seller
+          const isApprovedSeller = sellerProfile.is_approved === true && 
+            (sellerProfile.role === 'seller' || sellerProfile.role === 'admin')
+          
+          if (isApprovedSeller) {
+            redirectPath = returnUrl || next || '/seller-dashboard'
+          } else {
+            redirectPath = returnUrl || next || '/seller-application'
+          }
+        }
+      }
       
       const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development'

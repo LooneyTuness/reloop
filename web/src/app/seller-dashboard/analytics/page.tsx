@@ -19,7 +19,7 @@ function AnalyticsContent() {
   }, [router]);
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-4xl mx-auto">
       <div className="max-w-2xl mx-auto text-center">
         {/* Header */}
         <div className="mb-8">
@@ -32,7 +32,7 @@ function AnalyticsContent() {
             Analytics Coming Soon
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            We're working on bringing you detailed analytics and insights for your products and sales.
+            We&apos;re working on bringing you detailed analytics and insights for your products and sales.
           </p>
         </div>
 

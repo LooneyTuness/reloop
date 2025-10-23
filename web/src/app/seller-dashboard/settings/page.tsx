@@ -24,7 +24,7 @@ function SettingsContent() {
 
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <BackButton className="mb-4" />

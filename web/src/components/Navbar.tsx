@@ -46,6 +46,7 @@ export default function Navbar() {
       }
 
       try {
+        console.log('Navbar: Checking seller status for user:', user.email);
         const { data, error } = await supabase
           .from('seller_profiles')
           .select('is_approved, role')
@@ -54,17 +55,22 @@ export default function Navbar() {
 
         if (!error && data) {
           const profile = data as { is_approved: boolean; role: string };
-          setIsApprovedSeller(profile.is_approved === true && (profile.role === 'seller' || profile.role === 'admin'));
+          const isApproved = profile.is_approved === true && (profile.role === 'seller' || profile.role === 'admin');
+          console.log('Navbar: Seller profile found:', { profile, isApproved });
+          setIsApprovedSeller(isApproved);
         } else {
+          console.log('Navbar: No seller profile found or error:', error);
           setIsApprovedSeller(false);
         }
       } catch (err) {
-        console.error('Error checking seller status:', err);
+        console.error('Navbar: Error checking seller status:', err);
         setIsApprovedSeller(false);
       }
     };
 
-    checkSellerStatus();
+    // Add a small delay to ensure the user state is fully established
+    const timeoutId = setTimeout(checkSellerStatus, 100);
+    return () => clearTimeout(timeoutId);
   }, [user]);
 
   // Close mobile menu when clicking outside
@@ -341,7 +347,11 @@ export default function Navbar() {
                       <Link
                         href={isApprovedSeller ? "/seller-dashboard" : "/seller-application"}
                         className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
-                        onClick={() => setShowUserMenu(false)}
+                        onClick={() => {
+                          console.log('Desktop menu: Dashboard clicked, isApprovedSeller:', isApprovedSeller);
+                          console.log('Desktop menu: Redirecting to:', isApprovedSeller ? "/seller-dashboard" : "/seller-application");
+                          setShowUserMenu(false);
+                        }}
                       >
                         {t("dashboard")}
                       </Link>
@@ -602,7 +612,11 @@ export default function Navbar() {
                   <Link
                     href={isApprovedSeller ? "/seller-dashboard" : "/seller-application"}
                         className="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 rounded-xl transition-all duration-200"
-                    onClick={() => setShowMobileMenu(false)}
+                    onClick={() => {
+                      console.log('Mobile menu: Dashboard clicked, isApprovedSeller:', isApprovedSeller);
+                      console.log('Mobile menu: Redirecting to:', isApprovedSeller ? "/seller-dashboard" : "/seller-application");
+                      setShowMobileMenu(false);
+                    }}
                   >
                         <Package size={20} />
                         <span>{t("dashboard")}</span>
@@ -631,7 +645,7 @@ export default function Navbar() {
                     </Link>
                     
                     <a
-                      href="mailto:support@vtoraraka.com"
+                      href="mailto:viktorijamatejevik@live.com"
                       className="block w-full text-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300"
                       onClick={() => setShowMobileMenu(false)}
                     >

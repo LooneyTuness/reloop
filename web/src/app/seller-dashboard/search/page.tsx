@@ -106,7 +106,7 @@ function SearchContent() {
   };
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-6xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Search Results

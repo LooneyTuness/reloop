@@ -76,15 +76,24 @@ export async function GET(request: NextRequest) {
         // Check if user is a seller
         const { data: sellerProfile, error: profileError } = await supabase
           .from('seller_profiles')
-          .select('is_approved')
+          .select('is_approved, role')
           .eq('user_id', user.id)
           .single()
         
         if (profileError) {
           console.log('No seller profile found for user:', user.email)
         } else if (sellerProfile) {
-          console.log('User is a seller, redirecting to dashboard (bypassing approval check)')
-          next = '/seller-dashboard'
+          // Check if user is an approved seller
+          const isApprovedSeller = sellerProfile.is_approved === true && 
+            (sellerProfile.role === 'seller' || sellerProfile.role === 'admin')
+          
+          if (isApprovedSeller) {
+            console.log('User is an approved seller, redirecting to dashboard')
+            next = '/seller-dashboard'
+          } else {
+            console.log('User is a seller but not approved, redirecting to application')
+            next = '/seller-application'
+          }
         } else {
           console.log('User is not a seller')
         }
@@ -130,13 +139,22 @@ export async function GET(request: NextRequest) {
         // Check if user is a seller
         const { data: sellerProfile } = await supabase
           .from('seller_profiles')
-          .select('is_approved')
+          .select('is_approved, role')
           .eq('user_id', user.id)
           .single()
         
         if (sellerProfile) {
-          console.log('User is a seller, redirecting to dashboard (bypassing approval check)')
-          next = '/seller-dashboard'
+          // Check if user is an approved seller
+          const isApprovedSeller = sellerProfile.is_approved === true && 
+            (sellerProfile.role === 'seller' || sellerProfile.role === 'admin')
+          
+          if (isApprovedSeller) {
+            console.log('User is an approved seller, redirecting to dashboard')
+            next = '/seller-dashboard'
+          } else {
+            console.log('User is a seller but not approved, redirecting to application')
+            next = '/seller-application'
+          }
         } else if (redirect) {
           // Use the provided redirect URL
           next = redirect

@@ -38,7 +38,7 @@ export default function AuthTest() {
               Go to Sign In
             </button>
             <a
-              href="mailto:support@vtoraraka.com"
+              href="mailto:viktorijamatejevik@live.com"
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-2 inline-block"
             >
               Contact Support
