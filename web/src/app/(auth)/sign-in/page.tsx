@@ -12,7 +12,7 @@ function SignInContent() {
   const router = useRouter();
 
   const handleBackClick = () => {
-    router.push('/');
+    router.back();
   };
 
   return (
