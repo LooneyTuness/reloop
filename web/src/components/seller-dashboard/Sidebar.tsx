@@ -11,13 +11,15 @@ import {
   ShoppingBag, 
   CreditCard, 
   Settings, 
-  LogOut
+  LogOut,
+  Home
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
 const getNavigationItems = (t: (key: string) => string) => [
+  { name: t('home'), href: '/', icon: Home },
   { name: t('dashboard'), href: '/seller-dashboard', icon: BarChart3 },
   { name: t('myListings'), href: '/seller-dashboard/listings', icon: Package },
   { name: t('addProduct'), href: '/seller-dashboard/add-product', icon: Plus },

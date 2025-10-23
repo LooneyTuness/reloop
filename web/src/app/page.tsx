@@ -26,30 +26,9 @@ export default function HomePage() {
         return;
       }
 
-      // If user is authenticated, check if they are a seller
-      if (user && !loading) {
-        setIsCheckingSeller(true);
-        try {
-          const { data: sellerProfile } = await supabase
-            .from('seller_profiles')
-            .select('is_approved, role')
-            .eq('user_id', user.id)
-            .single();
-
-          if (sellerProfile) {
-            const profile = sellerProfile as SellerProfile;
-            if (profile.is_approved === true && 
-                (profile.role === 'seller' || profile.role === 'admin')) {
-              // User is an approved seller, redirect to dashboard
-              router.push("/seller-dashboard");
-            }
-          }
-        } catch (error) {
-          console.error('Error checking seller status:', error);
-        } finally {
-          setIsCheckingSeller(false);
-        }
-      }
+      // Note: Removed automatic redirection to seller dashboard for authenticated sellers
+      // This allows users to access the home page even if they are sellers
+      // They can still access the dashboard through the navigation menu
     };
 
     checkSellerStatus();

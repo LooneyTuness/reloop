@@ -16,6 +16,7 @@ const DashboardLanguageContext = createContext<DashboardLanguageContextType | un
 const dashboardTranslations = {
   mk: {
     // Navigation
+    home: "Дома",
     dashboard: "Контролна табла",
     myListings: "Мои објави",
     addProduct: "Додај производ",
@@ -472,6 +473,7 @@ const dashboardTranslations = {
   },
   en: {
     // Navigation
+    home: "Home",
     dashboard: "Dashboard",
     myListings: "My Listings",
     addProduct: "Add Product",

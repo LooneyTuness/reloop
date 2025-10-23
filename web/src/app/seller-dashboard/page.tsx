@@ -214,6 +214,17 @@ const DashboardContent = React.memo(function DashboardContent() {
               </svg>
               <span className="font-medium">Instagram</span>
             </a>
+            <a 
+              href="https://secondhandstoregroup.slack.com/archives/C09N08EBS6P" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-4 py-3 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+            >
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52-2.523A2.528 2.528 0 0 1 5.042 10.12h2.52v2.522a2.528 2.528 0 0 1-2.52 2.523zm0-6.313H2.522A2.528 2.528 0 0 0 0 11.374a2.528 2.528 0 0 0 2.522 2.523h2.52V8.852zm6.313 6.313a2.528 2.528 0 0 1-2.523-2.523V8.852h2.523a2.528 2.528 0 0 1 2.523 2.522v2.522a2.528 2.528 0 0 1-2.523 2.523zm0-6.313H8.852v2.522a2.528 2.528 0 0 0 2.523 2.523h2.522V8.852a2.528 2.528 0 0 0-2.522-2.523zM21.478 8.852H18.956a2.528 2.528 0 0 0-2.523 2.523v2.522a2.528 2.528 0 0 0 2.523 2.523h2.522a2.528 2.528 0 0 0 2.523-2.523V11.375a2.528 2.528 0 0 0-2.523-2.523zM15.165 5.042a2.528 2.528 0 0 1 2.523-2.52A2.528 2.528 0 0 1 20.21 5.042v2.52h-2.522a2.528 2.528 0 0 1-2.523-2.52zM8.852 5.042a2.528 2.528 0 0 1 2.523-2.52A2.528 2.528 0 0 1 13.898 5.042v2.52H11.375a2.528 2.528 0 0 1-2.523-2.52z"/>
+              </svg>
+              <span className="font-medium">Slack</span>
+            </a>
           </div>
         </div>
       </div>
