@@ -14,7 +14,7 @@ const DashboardContent = React.memo(function DashboardContent() {
   const router = useRouter();
   const { products, isLoading, error } = useDashboard();
   const { t } = useDashboardLanguage();
-  const { profile: sellerProfile, loading: profileLoading } = useSellerProfile();
+  const { profile: sellerProfile } = useSellerProfile();
 
   // Personalized greeting based on time of day
   const getGreeting = () => {
@@ -190,203 +190,63 @@ const DashboardContent = React.memo(function DashboardContent() {
         <RecentOrders />
       </div>
 
-      {/* Dashboard Guide Section */}
-      <div>
-        <div className="mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl font-bold font-rounded text-gray-900 dark:text-white mb-3">
-            {t('howToUseDashboard')}
-          </h2>
-          <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-4">
-            {t('followTheseSteps')}
-          </p>
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
-            {t('yourPathToSuccess')}
-          </h3>
+      {/* Frequently Asked Questions Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+            <svg className="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Често поставувани прашања</h2>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Како можам да додадам нов производ?</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">Кликнете на копчето &ldquo;Додај нов производ&rdquo; во горниот дел од таблата или од менито за да започнете процесот на додавање на вашиот производ.</p>
+          </div>
           
-          {/* Enhanced clickable steps */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {/* Step 1: Add Product */}
-            <OptimizedButton 
-              onClick={() => router.push('/seller-dashboard/add-product')}
-              prefetchHref="/seller-dashboard/add-product"
-              className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 sm:p-4 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:shadow-lg transition-all duration-200 text-left group"
-            >
-              <div className="flex items-center mb-3">
-                <div className="h-8 w-8 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
-                  <span className="text-blue-600 dark:text-blue-300 font-bold text-sm">1</span>
-                </div>
-                <h4 className="font-semibold text-blue-800 dark:text-blue-200 group-hover:text-blue-900 dark:group-hover:text-blue-100">
-                  {t('addProduct')}
-                </h4>
-                <svg className="h-4 w-4 text-blue-600 dark:text-blue-400 ml-auto group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-              <p className="text-sm text-blue-700 dark:text-blue-300 group-hover:text-blue-800 dark:group-hover:text-blue-200">
-                {t('addNewProductDescription')}
-              </p>
-              <div className="mt-3 flex items-center text-xs text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300">
-                <span className="mr-1">{t('clickToStart')}</span>
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </OptimizedButton>
-
-            {/* Step 2: Manage Orders */}
-            <OptimizedButton 
-              onClick={() => router.push('/seller-dashboard/orders')}
-              prefetchHref="/seller-dashboard/orders"
-              className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 sm:p-4 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/30 hover:shadow-lg transition-all duration-200 text-left group"
-            >
-              <div className="flex items-center mb-3">
-                <div className="h-8 w-8 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
-                  <span className="text-green-600 dark:text-green-300 font-bold text-sm">2</span>
-                </div>
-                <h4 className="font-semibold text-green-800 dark:text-green-200 group-hover:text-green-900 dark:group-hover:text-green-100">
-                  {t('manageOrders')}
-                </h4>
-                <svg className="h-4 w-4 text-green-600 dark:text-green-400 ml-auto group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-              <p className="text-sm text-green-700 dark:text-green-300 group-hover:text-green-800 dark:group-hover:text-green-200">
-                {t('manageOrdersDescription')}
-              </p>
-              <div className="mt-3 flex items-center text-xs text-green-600 dark:text-green-400 group-hover:text-green-700 dark:group-hover:text-green-300">
-                <span className="mr-1">{t('clickToManage')}</span>
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </OptimizedButton>
-
-            {/* Step 3: Track Products */}
-            <OptimizedButton 
-              onClick={() => router.push('/seller-dashboard/analytics')}
-              prefetchHref="/seller-dashboard/analytics"
-              className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3 sm:p-4 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:shadow-lg transition-all duration-200 text-left group"
-            >
-              <div className="flex items-center mb-3">
-                <div className="h-8 w-8 bg-purple-100 dark:bg-purple-800 rounded-full flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
-                  <span className="text-purple-600 dark:text-purple-300 font-bold text-sm">3</span>
-                </div>
-                <h4 className="font-semibold text-purple-800 dark:text-purple-200 group-hover:text-purple-900 dark:group-hover:text-purple-100">
-                  {t('trackProductsThroughSalesFunnel')}
-                </h4>
-                <svg className="h-4 w-4 text-purple-600 dark:text-purple-400 ml-auto group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-              <p className="text-sm text-purple-700 dark:text-purple-300 group-hover:text-purple-800 dark:group-hover:text-purple-200">
-                {t('trackProductsDescription')}
-              </p>
-              <div className="mt-3 flex items-center text-xs text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300">
-                <span className="mr-1">{t('clickToTrack')}</span>
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </OptimizedButton>
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Како можам да ги следам моите нарачки?</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">Сите ваши нарачки се прикажани во делот &ldquo;Нарачки&rdquo; каде што можете да ги видите деталите и статусот на секоја нарачка.</p>
           </div>
-
-          {/* Enhanced Quick Actions */}
-          <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg p-4 sm:p-6 border border-orange-200 dark:border-orange-800 mb-6">
-            <div className="flex items-center mb-4">
-              <div className="h-8 w-8 bg-orange-100 dark:bg-orange-800 rounded-lg flex items-center justify-center mr-3">
-                <svg className="h-4 w-4 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h4 className="font-semibold text-orange-800 dark:text-orange-200 text-lg">{t('quickActions')}</h4>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <OptimizedButton 
-                onClick={() => router.push('/seller-dashboard/listings')}
-                prefetchHref="/seller-dashboard/listings"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
-              >
-                <div className="flex items-center mb-2">
-                  <div className="h-6 w-6 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mr-2 group-hover:scale-110 transition-transform duration-200">
-                    <svg className="h-3 w-3 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                    </svg>
-                  </div>
-                  <span className="text-sm font-medium text-orange-800 dark:text-orange-200 group-hover:text-orange-900 dark:group-hover:text-orange-100">
-                    {t('updateProducts')}
-                  </span>
-                </div>
-                <p className="text-xs text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300">
-                  Уреди производи
-                </p>
-              </OptimizedButton>
-              
-              <OptimizedButton 
-                onClick={() => router.push('/seller-dashboard/orders')}
-                prefetchHref="/seller-dashboard/orders"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
-              >
-                <div className="flex items-center mb-2">
-                  <div className="h-6 w-6 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mr-2 group-hover:scale-110 transition-transform duration-200">
-                    <svg className="h-3 w-3 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  </div>
-                  <span className="text-sm font-medium text-orange-800 dark:text-orange-200 group-hover:text-orange-900 dark:group-hover:text-orange-100">
-                    {t('checkNewOrders')}
-                  </span>
-                </div>
-                <p className="text-xs text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300">
-                  Провери нарачки
-                </p>
-              </OptimizedButton>
-              
-              <OptimizedButton 
-                onClick={() => router.push('/seller-dashboard/orders')}
-                prefetchHref="/seller-dashboard/orders"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
-              >
-                <div className="flex items-center mb-2">
-                  <div className="h-6 w-6 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mr-2 group-hover:scale-110 transition-transform duration-200">
-                    <svg className="h-3 w-3 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                  </div>
-                  <span className="text-sm font-medium text-orange-800 dark:text-orange-200 group-hover:text-orange-900 dark:group-hover:text-orange-100">
-                    {t('sendPackages')}
-                  </span>
-                </div>
-                <p className="text-xs text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300">
-                  Испрати пратки
-                </p>
-              </OptimizedButton>
-              
-              <OptimizedButton 
-                onClick={() => router.push('/seller-dashboard/payouts')}
-                prefetchHref="/seller-dashboard/payouts"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-orange-200 dark:border-orange-700 hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200 text-left"
-              >
-                <div className="flex items-center mb-2">
-                  <div className="h-6 w-6 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mr-2 group-hover:scale-110 transition-transform duration-200">
-                    <svg className="h-3 w-3 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                    </svg>
-                  </div>
-                  <span className="text-sm font-medium text-orange-800 dark:text-orange-200 group-hover:text-orange-900 dark:group-hover:text-orange-100">
-                    {t('reviewEarnings')}
-                  </span>
-                </div>
-                <p className="text-xs text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300">
-                  Прегледај заработка
-                </p>
-              </OptimizedButton>
-            </div>
+          
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Кога се одвива плаќањето за моите продажби?</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">Плаќањата се процесираат на месечна основа. Ќе добиете известување кога ќе се одвива исплатата.</p>
           </div>
-
-          {/* Expert Advice */}
-          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-lg p-4 border border-indigo-200 dark:border-indigo-800">
-            <h4 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">{t('expertAdvice')}</h4>
-            <p className="text-sm text-indigo-700 dark:text-indigo-300 italic">{t('expertAdviceText')}</p>
+          
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Како можам да го уредам мојот профил?</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">Одете во делот &ldquo;Поставки&rdquo; за да ги уредите вашите лични информации, бизнис детали и преференци.</p>
+          </div>
+        </div>
+        
+        {/* Contact Information */}
+        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Потребна ви е помош?</h3>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <a 
+              href="tel:075251009" 
+              className="flex items-center gap-3 px-4 py-3 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span className="font-medium">+ 389 75 251 009</span>
+            </a>
+            <a 
+              href="https://instagram.com/vtorarakamk" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-4 py-3 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-900/50 transition-colors"
+            >
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.014 5.367 18.647.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.418-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.928.875 1.418 2.026 1.418 3.323s-.49 2.448-1.418 3.244c-.875.807-2.026 1.297-3.323 1.297zm7.83-9.281h-1.595c-.387 0-.7-.313-.7-.7s.313-.7.7-.7h1.595c.387 0 .7.313.7.7s-.313.7-.7.7zm-5.262 1.418c-.807 0-1.418-.611-1.418-1.418s.611-1.418 1.418-1.418 1.418.611 1.418 1.418-.611 1.418-1.418 1.418zm5.262 4.163c0 2.026-1.642 3.668-3.668 3.668s-3.668-1.642-3.668-3.668 1.642-3.668 3.668-3.668 3.668 1.642 3.668 3.668z"/>
+              </svg>
+              <span className="font-medium">Instagram</span>
+            </a>
           </div>
         </div>
       </div>
