@@ -8,6 +8,11 @@ import LaunchPage from "@/components/LaunchPage";
 import LanguageProvider from "@/contexts/LanguageContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
+interface SellerProfile {
+  is_approved: boolean;
+  role: 'seller' | 'admin';
+}
+
 export default function HomePage() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -31,10 +36,13 @@ export default function HomePage() {
             .eq('user_id', user.id)
             .single();
 
-          if (sellerProfile && sellerProfile.is_approved === true && 
-              (sellerProfile.role === 'seller' || sellerProfile.role === 'admin')) {
-            // User is an approved seller, redirect to dashboard
-            router.push("/seller-dashboard");
+          if (sellerProfile) {
+            const profile = sellerProfile as SellerProfile;
+            if (profile.is_approved === true && 
+                (profile.role === 'seller' || profile.role === 'admin')) {
+              // User is an approved seller, redirect to dashboard
+              router.push("/seller-dashboard");
+            }
           }
         } catch (error) {
           console.error('Error checking seller status:', error);
