@@ -226,9 +226,12 @@ export function CategoryNavigationCompact({
           key={category.id}
           href={`/catalog/${category.slug}`}
           onClick={(e) => handleCategoryClick(category, e)}
-          className="block py-2 px-3 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+          className="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 rounded-xl transition-all duration-200 group"
         >
-          {translateCategory(category.name)}
+          <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H9L3 7V9C3 10.1 3.9 11 5 11V22H7V16H9V22H11V16H13V22H15V16H17V22H19V11C20.1 11 21 10.1 21 9ZM19 9H5V7.5L9 3.5H15L19 7.5V9Z"/>
+          </svg>
+          <span className="font-medium">{translateCategory(category.name)}</span>
         </Link>
       ))}
     </div>

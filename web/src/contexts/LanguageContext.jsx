@@ -61,7 +61,8 @@ const translations = {
     excellent: "Одлично",
     good: "Добро",
     fair: "Пристојно",
-    poor: "Лошо",
+    poor: "Со мали траги",
+    notSpecified: "Не е наведено",
     // Sizes
     sizeXS: "XS",
     sizeS: "S",
@@ -144,6 +145,9 @@ const translations = {
     dismiss: "Отфрли",
     dismissAll: "Отфрли ги сите",
     orderNumber: "Број на нарачка",
+    order: "Нарачка",
+    orderDetails: "Детали за нарачката",
+    orderedOn: "Нарачано на",
     items: "Производи",
     orderDeleted: "Нарачката е избришана",
 
@@ -176,7 +180,7 @@ const translations = {
     whyPayMore:
       "Прескокни ја маката од традиционална препродажба. Листај облека инстантно и откриј уникатни парчиња без проблем.",
     startShopping: "Започни купување",
-    addYourStory: "Додади ја својата приказна",
+    addYourStory: "Испразни го својот плакар",
     securePayments: "Безбедни плаќања",
     verifiedSellers: "Проверени продавачи",
     fastDelivery: "Брза достава",
@@ -841,6 +845,7 @@ const translations = {
     good: "Good",
     fair: "Fair",
     poor: "Poor",
+    notSpecified: "Not specified",
     // Sizes
     sizeXS: "XS",
     sizeS: "S",
@@ -921,6 +926,9 @@ const translations = {
     dismiss: "Dismiss",
     dismissAll: "Dismiss all",
     orderNumber: "Order number",
+    order: "Order",
+    orderDetails: "Order Details",
+    orderedOn: "Ordered on",
     items: "Items",
     orderDeleted: "Order deleted",
 
@@ -950,7 +958,7 @@ const translations = {
     whyPayMore:
       "Skip the hassle of traditional resale. Browse clothing instantly and discover unique pieces without trouble.",
     startShopping: "Start Shopping",
-    addYourStory: "Add Your Story",
+    addYourStory: "Empty Your Wardrobe",
     securePayments: "Secure Payments",
     verifiedSellers: "Verified Sellers",
     fastDelivery: "Fast Delivery",

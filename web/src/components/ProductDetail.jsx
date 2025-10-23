@@ -21,6 +21,7 @@ import {
   Eye,
   ChevronLeft,
   ChevronRight,
+  Home,
 } from "lucide-react";
 
 export default function ProductDetail() {
@@ -180,16 +181,20 @@ export default function ProductDetail() {
     <div className="min-h-screen bg-gray-50 font-poppins">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         {/* Back Button */}
-        <div className="mb-6">
+        <div className="mb-6 pt-24">
           <button
-            onClick={() => router.back()}
-            className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            onClick={() => {
+              // Navigate to catalog page
+              router.push("/catalog");
+            }}
+            className="inline-flex items-center px-4 py-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             {t("back")}
           </button>
         </div>
 
+        {/* Product Card */}
         <div className="grid md:grid-cols-2 gap-8">
           {/* Image Gallery */}
           <div className="space-y-4">
@@ -278,7 +283,7 @@ export default function ProductDetail() {
           </div>
 
           {/* Product Details */}
-          <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 p-8">
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 p-8 pt-12">
             {/* Title and Description */}
             <div className="mb-6">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -307,13 +312,20 @@ export default function ProductDetail() {
             <div className="mb-6">
               <div className="flex flex-wrap gap-3">
                 <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-xl text-sm font-semibold">
-                  {t("condition")}: {product.condition || t("Used")}
+                  {t("condition")}: {t(product.condition) || t("Used")}
                 </div>
-                {product.size && (
-                  <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-3 py-2 rounded-xl text-sm font-semibold">
-                    {t("size")}: {product.size}
-                  </div>
-                )}
+
+                {/* Size - always show, with fallback for missing data */}
+                <div
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold ${
+                    product.size
+                      ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
+                      : "bg-gray-50 dark:bg-gray-800/20 text-gray-500 dark:text-gray-400"
+                  }`}
+                >
+                  {t("size")}: {product.size || t("notSpecified")}
+                </div>
+
                 {product.brand && (
                   <div className="bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 px-3 py-2 rounded-xl text-sm font-semibold">
                     {product.brand}

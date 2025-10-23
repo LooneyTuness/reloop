@@ -380,13 +380,15 @@ function CategoryPageContent() {
                         {/* Condition and Size Tags */}
                         <div className="flex flex-wrap gap-2">
                           <div className="inline-flex items-center bg-gradient-to-r from-emerald-50/80 to-teal-50/80 backdrop-blur-sm border border-emerald-200/60 rounded-lg font-semibold text-emerald-700 shadow-sm px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm">
-                            <span className="tracking-wide">{t("condition")}: {item.condition || t("excellent")}</span>
+                            <span className="tracking-wide">{t("condition")}: {t(item.condition) || t("excellent")}</span>
                           </div>
-                          {item.size && (
-                            <div className="inline-flex items-center bg-gradient-to-r from-blue-50/80 to-indigo-50/80 backdrop-blur-sm border border-blue-200/60 rounded-lg font-semibold text-blue-700 shadow-sm px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm">
-                              <span className="tracking-wide">{t("size")}: {item.size}</span>
-                            </div>
-                          )}
+                          <div className={`inline-flex items-center backdrop-blur-sm border rounded-lg font-semibold shadow-sm px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm ${
+                            item.size 
+                              ? "bg-gradient-to-r from-blue-50/80 to-indigo-50/80 border-blue-200/60 text-blue-700"
+                              : "bg-gradient-to-r from-gray-50/80 to-gray-100/80 border-gray-200/60 text-gray-500"
+                          }`}>
+                            <span className="tracking-wide">{t("size")}: {item.size || t("notSpecified")}</span>
+                          </div>
                           {item.brand && (
                             <div className="inline-flex items-center bg-gradient-to-r from-purple-50/80 to-pink-50/80 backdrop-blur-sm border border-purple-200/60 rounded-lg font-semibold text-purple-700 shadow-sm px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm">
                               <span className="tracking-wide">{item.brand}</span>

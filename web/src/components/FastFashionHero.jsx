@@ -110,8 +110,8 @@ export default function FastFashionHero() {
       )}
 
       {/* Content Overlay */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 pt-28 pb-16 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24">
-        <div className="max-w-6xl mx-auto text-center w-full">
+      <div className="relative z-10 min-h-screen flex items-center justify-start sm:justify-center px-6 sm:px-8 lg:px-12 pt-32 pb-20 sm:pt-28 sm:pb-24 lg:pt-32 lg:pb-28">
+        <div className="max-w-4xl text-left sm:text-center w-full">
           {/* Badge */}
           <div className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6 sm:mb-8 lg:mb-10 animate-fade-in-up">
             <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full mr-2 animate-pulse"></div>
@@ -121,27 +121,32 @@ export default function FastFashionHero() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.85] sm:leading-[0.9] mb-6 sm:mb-8 lg:mb-10 text-white animate-fade-in-up delay-100">
-            <span className="block text-white">{t("shopSmarter")}</span>
-            <span className="block" style={{ color: "#80EF80" }}>
+          <h1 className="hero-title text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-8 sm:mb-10 lg:mb-12 text-white animate-fade-in-up delay-100">
+            <span className="block text-white leading-tight">
+              {t("shopSmarter")}
+            </span>
+            <span className="block leading-tight" style={{ color: "#80EF80" }}>
               {t("wasteLess")}
             </span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-medium leading-relaxed text-gray-200 mb-6 sm:mb-8 lg:mb-10 animate-fade-in-up delay-200 max-w-4xl mx-auto px-2">
+          <p className="hero-subtitle text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-200 mb-8 sm:mb-10 lg:mb-12 animate-fade-in-up delay-200 max-w-4xl">
             {t("buyAndSell")}
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col gap-4 sm:gap-6 justify-center items-center animate-fade-in-up delay-400 px-2">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-start sm:justify-center items-start sm:items-center animate-fade-in-up delay-400">
             <Link
               href="/catalog"
-              className="group inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 text-white font-medium rounded-lg border transition-all duration-300 text-base sm:text-lg max-w-xs w-full shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              className="group inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 text-white font-semibold rounded-lg border transition-all duration-300 text-base sm:text-lg w-auto shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               style={{
                 backgroundColor: "#4ADE80",
                 borderColor: "#4ADE80",
                 color: "#ffffff",
+                fontFamily:
+                  "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+                letterSpacing: "-0.01em",
               }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = "#22C55E";
@@ -157,7 +162,12 @@ export default function FastFashionHero() {
             </Link>
             <Link
               href="/seller-application"
-              className="group inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-medium rounded-lg border border-white/20 hover:border-white/40 transition-all duration-300 text-base sm:text-lg max-w-xs w-full shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              className="group inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold rounded-lg border border-white/20 hover:border-white/40 transition-all duration-300 text-base sm:text-lg w-auto shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              style={{
+                fontFamily:
+                  "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+                letterSpacing: "-0.01em",
+              }}
             >
               <span className="truncate">{t("addYourStory")}</span>
               <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0" />

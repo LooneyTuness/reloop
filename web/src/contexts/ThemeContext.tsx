@@ -28,16 +28,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // For dashboard pages, check for saved theme preference or default to dark mode
+    // For dashboard pages, check for saved theme preference or default to light mode
     const savedTheme = localStorage.getItem('theme');
     
-    if (savedTheme === 'light') {
-      setIsDarkMode(false);
-      document.documentElement.classList.remove('dark');
-    } else {
-      // Default to dark mode if no preference is saved or if preference is dark
+    if (savedTheme === 'dark') {
       setIsDarkMode(true);
       document.documentElement.classList.add('dark');
+    } else {
+      // Default to light mode if no preference is saved or if preference is light
+      setIsDarkMode(false);
+      document.documentElement.classList.remove('dark');
     }
     
     setIsLoaded(true);

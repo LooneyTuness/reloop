@@ -414,13 +414,15 @@ function CatalogContent() {
                         {/* Attributes */}
                         <div className="flex flex-wrap gap-2 mb-4">
                           <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-lg text-xs font-semibold">
-                            {t("condition")}: {item.condition || t("Used")}
+                            {t("condition")}: {t(item.condition) || t("Used")}
                           </div>
-                          {item.size && (
-                            <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-2 py-1 rounded-lg text-xs font-semibold">
-                              {t("size")}: {item.size}
-                            </div>
-                          )}
+                          <div className={`px-2 py-1 rounded-lg text-xs font-semibold ${
+                            item.size 
+                              ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
+                              : "bg-gray-50 dark:bg-gray-800/20 text-gray-500 dark:text-gray-400"
+                          }`}>
+                            {t("size")}: {item.size || t("notSpecified")}
+                          </div>
                           {item.brand && (
                             <div className="bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 px-2 py-1 rounded-lg text-xs font-semibold">
                               {item.brand}

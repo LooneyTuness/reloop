@@ -9,7 +9,7 @@ import { useLanguage } from "../contexts/LanguageContext.jsx";
 import { useCart } from "@/contexts/CartContext";
 
 import { supabase } from "@/lib/supabase";
-import { CategoryDropdown } from "./category/CategoryNavigation";
+import { CategoryDropdown, CategoryNavigationCompact } from "./category/CategoryNavigation";
 
 type Suggestion = {
   id: string | number;
@@ -187,7 +187,11 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 gap-1 sm:gap-2 md:gap-4">
             
             {/* Enhanced Logo */}
-            <Link href="/" className="flex-shrink-0 hover:scale-105 transition-all duration-300 group">
+            <Link 
+              href="/" 
+              className="flex-shrink-0 hover:scale-105 transition-all duration-300 group"
+              onClick={() => console.log('Navbar logo clicked, navigating to home')}
+            >
               <div className="flex items-center gap-3 sm:gap-4">
                 <div className="relative">
                   <div className="h-10 w-10 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
@@ -539,53 +543,10 @@ export default function Navbar() {
                   <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
                     {t("categories")}
                   </h3>
-                  <div className="space-y-1">
-                    <Link
-                      href="/catalog?category=women"
-                      className="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 rounded-xl transition-all duration-200 group"
-                      onClick={() => setShowMobileMenu(false)}
-                    >
-                      <svg className="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H9L3 7V9C3 10.1 3.9 11 5 11V22H7V16H9V22H11V16H13V22H15V16H17V22H19V11C20.1 11 21 10.1 21 9ZM19 9H5V7.5L9 3.5H15L19 7.5V9Z"/>
-                      </svg>
-                      <span>{t("womensfashion")}</span>
-                    </Link>
-                    
-                    <Link
-                      href="/catalog?category=men"
-                      className="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 rounded-xl transition-all duration-200 group"
-                      onClick={() => setShowMobileMenu(false)}
-                    >
-                      <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M16 4C18.2 4 20 5.8 20 8S18.2 12 16 12 12 10.2 12 8 13.8 4 16 4M16 6C14.9 6 14 6.9 14 8S14.9 10 16 10 18 9.1 18 8 17.1 6 16 6M8 4C10.2 4 12 5.8 12 8S10.2 12 8 12 4 10.2 4 8 5.8 4 8 4M8 6C6.9 6 6 6.9 6 8S6.9 10 8 10 10 9.1 10 8 9.1 6 8 6M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M8 14C10.7 14 16 15.3 16 18V20H0V18C0 15.3 5.3 14 8 14Z"/>
-                      </svg>
-                      <span>{t("mensfashion")}</span>
-                    </Link>
-                    
-                    <Link
-                      href="/catalog?category=accessories"
-                      className="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 rounded-xl transition-all duration-200 group"
-                      onClick={() => setShowMobileMenu(false)}
-                    >
-                      <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-                        <path d="M19 15L20.09 18.26L24 19L20.09 19.74L19 23L17.91 19.74L14 19L17.91 18.26L19 15Z"/>
-                        <path d="M5 15L6.09 18.26L10 19L6.09 19.74L5 23L3.91 19.74L0 19L3.91 18.26L5 15Z"/>
-                      </svg>
-                      <span>{t("accessories")}</span>
-                    </Link>
-                    
-                    <Link
-                      href="/catalog?category=shoes"
-                      className="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 rounded-xl transition-all duration-200 group"
-                      onClick={() => setShowMobileMenu(false)}
-                    >
-                      <svg className="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H9L3 7V9C3 10.1 3.9 11 5 11V22H7V16H9V22H11V16H13V22H15V16H17V22H19V11C20.1 11 21 10.1 21 9ZM19 9H5V7.5L9 3.5H15L19 7.5V9Z"/>
-                      </svg>
-                      <span>{t("shoes")}</span>
-                    </Link>
-                  </div>
+                  <CategoryNavigationCompact 
+                    className="space-y-1"
+                    onCategorySelect={() => setShowMobileMenu(false)}
+                  />
                 </div>
 
                 {/* Settings */}
