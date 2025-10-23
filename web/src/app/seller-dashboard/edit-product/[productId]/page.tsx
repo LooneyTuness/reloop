@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import SellerDashboardLayout from '@/components/seller-dashboard/SellerDashboardLayout';
 import { DashboardProvider, useDashboard } from '@/contexts/DashboardContext';
+import { useDashboardLanguage, DashboardLanguageProvider } from '@/contexts/DashboardLanguageContext';
 import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import BrandDropdown from '@/components/BrandDropdown';
@@ -13,6 +14,7 @@ function EditProductContent() {
   const params = useParams();
   const productId = params.productId as string;
   const { products, updateProduct } = useDashboard();
+  const { t } = useDashboardLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [product, setProduct] = useState<any>(null);
   
@@ -20,7 +22,6 @@ function EditProductContent() {
     title: '',
     description: '',
     price: '',
-    category_id: '',
     status: 'active'
   });
 
@@ -33,7 +34,6 @@ function EditProductContent() {
           title: foundProduct.title || '',
           description: foundProduct.description || '',
           price: foundProduct.price?.toString() || '',
-          category_id: foundProduct.category_id || '',
           status: foundProduct.status || 'active'
         });
       }
@@ -58,7 +58,6 @@ function EditProductContent() {
         title: formData.title,
         description: formData.description,
         price: parseFloat(formData.price),
-        category_id: formData.category_id,
         status: formData.status
       };
 
@@ -85,32 +84,32 @@ function EditProductContent() {
 
   return (
     <SellerDashboardLayout>
-      <div className="px-6 py-8">
+      <div className="px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex items-center mb-8">
+        <div className="mb-8">
           <button
             onClick={() => router.back()}
-            className="mr-4 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"
+            className="mb-4 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"
           >
             <ArrowLeft size={20} className="mr-2" />
-            Back
+            {t('back')}
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Edit Product
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              {t('editProduct')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Update your product information
+              {t('updateProductInformation')}
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div className="space-y-4">
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Product Title *
+                  {t('productTitle')} *
                 </label>
                 <input
                   id="title"
@@ -118,7 +117,7 @@ function EditProductContent() {
                   type="text"
                   value={formData.title}
                   onChange={handleInputChange}
-                  placeholder="Enter product title"
+                  placeholder={t('enterProductTitle')}
                   required
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -126,56 +125,39 @@ function EditProductContent() {
 
               <div>
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Description
+                  {t('description')}
                 </label>
                 <textarea
                   id="description"
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  placeholder="Describe your product"
+                  placeholder={t('describeYourProduct')}
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Price (MKD) *
-                  </label>
-                  <input
-                    id="price"
-                    name="price"
-                    type="number"
-                    step="0.01"
-                    value={formData.price}
-                    onChange={handleInputChange}
-                    placeholder="0.00"
-                    required
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Category ID
-                  </label>
-                  <input
-                    id="category_id"
-                    name="category_id"
-                    type="text"
-                    value={formData.category_id}
-                    onChange={handleInputChange}
-                    placeholder="e.g., Clothing, Electronics"
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+              <div>
+                <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {t('price')} (MKD) *
+                </label>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  step="0.01"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  placeholder="0.00"
+                  required
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
 
               <div>
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Status
+                  {t('status')}
                 </label>
                 <select
                   id="status"
@@ -184,10 +166,10 @@ function EditProductContent() {
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="draft">Draft</option>
-                  <option value="sold">Sold</option>
+                  <option value="active">{t('active')}</option>
+                  <option value="inactive">{t('inactive')}</option>
+                  <option value="draft">{t('draft')}</option>
+                  <option value="sold">{t('sold')}</option>
                 </select>
               </div>
             </div>
@@ -200,7 +182,7 @@ function EditProductContent() {
               onClick={() => router.back()}
               className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -210,12 +192,12 @@ function EditProductContent() {
               {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Updating...
+                  {t('updating')}...
                 </>
               ) : (
                 <>
                   <Save size={20} className="mr-2" />
-                  Update Product
+                  {t('updateProduct')}
                 </>
               )}
             </button>
@@ -230,7 +212,9 @@ export default function EditProductPage() {
   return (
     <SellerDashboardLayout>
       <DashboardProvider>
-        <EditProductContent />
+        <DashboardLanguageProvider>
+          <EditProductContent />
+        </DashboardLanguageProvider>
       </DashboardProvider>
     </SellerDashboardLayout>
   );

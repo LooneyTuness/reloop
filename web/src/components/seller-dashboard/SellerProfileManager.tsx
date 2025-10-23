@@ -283,10 +283,10 @@ export default function SellerProfileManager() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {/* Profile Picture */}
         <div className="lg:col-span-1 lg:order-1">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               {t('profilePicture')}
             </h2>
@@ -342,7 +342,7 @@ export default function SellerProfileManager() {
         <div className="lg:col-span-2 lg:order-2">
           <form onSubmit={handleSaveProfile} className="space-y-6">
             {/* Personal Information */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                 {t('personalInformation')}
               </h2>
@@ -444,7 +444,7 @@ export default function SellerProfileManager() {
             </div>
 
             {/* Business Information */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                 {t('businessInformation')}
               </h2>

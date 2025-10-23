@@ -38,7 +38,7 @@ function SettingsContent() {
 
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
         {/* Sidebar */}
-        <div className="lg:w-72">
+        <div className="lg:w-72 w-full">
           <nav className="space-y-1">
             <div className="px-3 mb-3">
               <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
@@ -66,8 +66,8 @@ function SettingsContent() {
         </div>
 
         {/* Content */}
-        <div className="flex-1">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div className="flex-1 min-w-0">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
             {activeTab === 'profile' && renderProfileTab()}
           </div>
         </div>
