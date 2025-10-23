@@ -78,12 +78,23 @@ function AuthSuccessContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="w-full max-w-md space-y-6 px-6 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <div className="space-y-2">
-            <p className="text-lg font-medium text-gray-900">{t("confirmingYourEmail")}</p>
-            <p className="text-sm text-gray-500">{t("pleaseWait")}</p>
+      <div 
+        className="h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/albert-vincent-wu-DekwzONAHbg-unsplash.jpg')",
+          minHeight: '100dvh'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="w-full max-w-md">
+            <div className="bg-black/90 rounded-2xl border border-gray-600/30 shadow-2xl p-6 sm:p-8 text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-6"></div>
+              <div className="space-y-2">
+                <p className="text-lg font-medium text-white">{t("confirmingYourEmail")}</p>
+                <p className="text-sm text-gray-300">{t("pleaseWait")}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -92,40 +103,51 @@ function AuthSuccessContent() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="w-full max-w-md space-y-6 px-6 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </div>
-          
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">{t("confirmationError")}</h1>
-            <p className="text-lg text-gray-600">
-              {t("thereWasAnError")}
-            </p>
-          </div>
-          
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
-            <p className="text-sm text-red-700">
-              <strong>{t("error")}</strong> {error}
-            </p>
-          </div>
-          
-          <div className="space-y-3">
-            <button
-              onClick={() => router.push('/sign-up')}
-              className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
-            >
-              {t("tryAgain")}
-            </button>
-            <button
-              onClick={() => router.push('/')}
-              className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm transition-colors"
-            >
-              {t("goToHomepage")}
-            </button>
+      <div 
+        className="h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/albert-vincent-wu-DekwzONAHbg-unsplash.jpg')",
+          minHeight: '100dvh'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="w-full max-w-md">
+            <div className="bg-black/90 rounded-2xl border border-gray-600/30 shadow-2xl p-6 sm:p-8 text-center">
+              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              
+              <div className="space-y-2 mb-6">
+                <h1 className="text-2xl font-bold text-white">{t("confirmationError")}</h1>
+                <p className="text-base text-gray-300">
+                  {t("thereWasAnError")}
+                </p>
+              </div>
+              
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-left mb-6">
+                <p className="text-sm text-red-300">
+                  <strong>{t("error")}</strong> {error}
+                </p>
+              </div>
+              
+              <div className="space-y-3">
+                <button
+                  onClick={() => router.push('/sign-up')}
+                  className="w-full h-12 bg-white hover:bg-gray-100 text-black font-medium rounded-lg transition-colors"
+                >
+                  {t("tryAgain")}
+                </button>
+                <button
+                  onClick={() => router.push('/')}
+                  className="w-full text-gray-300 hover:text-white py-2 text-sm transition-colors"
+                >
+                  {t("goToHomepage")}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -231,12 +253,23 @@ function AuthSuccessContent() {
 export default function AuthSuccessPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="w-full max-w-md space-y-6 px-6 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <div className="space-y-2">
-            <p className="text-lg font-medium text-gray-900">Confirming your email...</p>
-            <p className="text-sm text-gray-500">Please wait a moment</p>
+      <div 
+        className="h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/albert-vincent-wu-DekwzONAHbg-unsplash.jpg')",
+          minHeight: '100dvh'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="w-full max-w-md">
+            <div className="bg-black/90 rounded-2xl border border-gray-600/30 shadow-2xl p-6 sm:p-8 text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-6"></div>
+              <div className="space-y-2">
+                <p className="text-lg font-medium text-white">Confirming your email...</p>
+                <p className="text-sm text-gray-300">Please wait a moment</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
