@@ -114,7 +114,7 @@ export default function Sidebar() {
       <div className={`
         fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 
         transform transition-transform duration-300 ease-in-out overflow-y-auto
-        ${isMobileMenuOpen ? 'translate-x-0 z-[58]' : '-translate-x-full z-30'}
+        ${isMobileMenuOpen ? 'translate-x-0 z-[60]' : '-translate-x-full z-30'}
         lg:translate-x-0 lg:z-30
       `}>
         <div className="flex flex-col h-full">

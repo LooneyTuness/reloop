@@ -25,9 +25,11 @@ export default function SellerDashboardLayout({ children }: SellerDashboardLayou
             <TopBar />
             
             {/* Main Content */}
-            <main className="absolute left-0 lg:left-64 top-16 sm:top-20 right-0 bottom-0 z-10">
+            <main className="absolute left-0 lg:left-64 top-16 sm:top-20 right-0 bottom-0 z-20">
               <div className="w-full h-full overflow-y-auto overflow-x-hidden transition-opacity duration-200 ease-in-out mobile-scrollbar-hide">
-                {children}
+                <div className="min-h-full bg-gray-50 dark:bg-gray-900">
+                  {children}
+                </div>
               </div>
             </main>
           </div>

@@ -32,3 +32,26 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.7 0 0);
 }
+
+/* Mobile-specific fixes */
+@media (max-width: 1023px) {
+  .mobile-scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .mobile-scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Ensure main content is visible on mobile */
+  main {
+    position: relative !important;
+    z-index: 20 !important;
+  }
+  
+  /* Fix potential overflow issues */
+  .overflow-x-hidden {
+    overflow-x: hidden !important;
+  }
+}

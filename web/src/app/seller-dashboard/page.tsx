@@ -71,7 +71,7 @@ const DashboardContent = React.memo(function DashboardContent() {
   }
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8 min-h-screen">
       {/* Dashboard Instructions Section */}
       <div className="mb-6 sm:mb-8">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 p-4 sm:p-8 lg:p-10 text-white mb-6 sm:mb-8 shadow-2xl">
