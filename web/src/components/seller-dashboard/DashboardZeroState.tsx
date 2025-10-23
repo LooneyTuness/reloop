@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, ShoppingBag, Plus, ArrowRight } from 'lucide-react';
+import { Package, ShoppingBag, Plus } from 'lucide-react';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
 interface DashboardZeroStateProps {
@@ -78,7 +78,6 @@ export default function DashboardZeroState({ onAddProduct }: DashboardZeroStateP
         >
           <Plus className="w-4 h-4 mr-2" />
           <span className="text-sm sm:text-base">{t('addYourFirstProduct')}</span>
-          <ArrowRight className="w-4 h-4 ml-2" />
         </button>
         
 

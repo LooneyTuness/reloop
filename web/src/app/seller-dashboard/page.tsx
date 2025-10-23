@@ -9,6 +9,7 @@ import { useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { useSellerProfile } from '@/contexts/SellerProfileContext';
 import { OptimizedButton } from '@/components/seller-dashboard/OptimizedLink';
+import { Plus, ShoppingBag, Package } from 'lucide-react';
 
 const DashboardContent = React.memo(function DashboardContent() {
   const router = useRouter();
@@ -117,7 +118,7 @@ const DashboardContent = React.memo(function DashboardContent() {
                 className="flex items-center space-x-3 bg-white/25 backdrop-blur-md rounded-full px-4 py-3 shadow-lg hover:bg-white/30 transition-all duration-200"
               >
                 <div className="h-6 w-6 bg-green-400/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-300 font-bold text-sm">1</span>
+                  <Plus className="text-green-300 w-4 h-4" />
                 </div>
                 <span className="font-semibold text-sm truncate">{t('addNewProduct')}</span>
               </OptimizedButton>
@@ -127,7 +128,7 @@ const DashboardContent = React.memo(function DashboardContent() {
                 className="flex items-center space-x-3 bg-white/25 backdrop-blur-md rounded-full px-4 py-3 shadow-lg hover:bg-white/30 transition-all duration-200"
               >
                 <div className="h-6 w-6 bg-yellow-400/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-yellow-300 font-bold text-sm">2</span>
+                  <ShoppingBag className="text-yellow-300 w-4 h-4" />
                 </div>
                 <span className="font-semibold text-sm truncate">{t('manageOrders')}</span>
               </OptimizedButton>
@@ -137,7 +138,7 @@ const DashboardContent = React.memo(function DashboardContent() {
                 className="flex items-center space-x-3 bg-white/25 backdrop-blur-md rounded-full px-4 py-3 shadow-lg hover:bg-white/30 transition-all duration-200 sm:col-span-2 lg:col-span-1"
               >
                 <div className="h-6 w-6 bg-emerald-400/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-emerald-300 font-bold text-sm">3</span>
+                  <Package className="text-emerald-300 w-4 h-4" />
                 </div>
                 <span className="font-semibold text-sm truncate">{t('manageListings')}</span>
               </OptimizedButton>
@@ -147,40 +148,6 @@ const DashboardContent = React.memo(function DashboardContent() {
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
-        </div>
-        
-        {/* Quick Actions */}
-        <div className="flex flex-wrap items-center gap-3 justify-start">
-          <OptimizedButton
-            onClick={() => router.push('/seller-dashboard/add-product')}
-            prefetchHref="/seller-dashboard/add-product"
-            className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-          >
-            <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            {t('addNewProduct')}
-          </OptimizedButton>
-          <OptimizedButton
-            onClick={() => router.push('/seller-dashboard/orders')}
-            prefetchHref="/seller-dashboard/orders"
-            className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-          >
-            <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-            {t('viewAllOrders')}
-          </OptimizedButton>
-          <OptimizedButton
-            onClick={() => router.push('/seller-dashboard/listings')}
-            prefetchHref="/seller-dashboard/listings"
-            className="px-6 py-3 bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 rounded-xl hover:bg-emerald-200 dark:hover:bg-emerald-900/30 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-          >
-            <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-            {t('viewAllListings')}
-          </OptimizedButton>
         </div>
       </div>
 
