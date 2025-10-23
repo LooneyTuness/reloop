@@ -237,7 +237,7 @@ const OrdersContent = React.memo(function OrdersContent() {
   };
 
   return (
-    <div className="w-full py-4 sm:py-8 max-w-7xl mx-auto">
+    <div className="w-full py-4 sm:py-8">
       {/* Header */}
       <div className="px-3 sm:px-6 mb-8">
         <BackButton className="mb-4" />
