@@ -29,6 +29,12 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                             window.innerWidth <= 768 || 
                             'ontouchstart' in window;
       setIsMobile(isMobileDevice);
+      console.log('Mobile detection:', { 
+        userAgent: navigator.userAgent, 
+        width: window.innerWidth, 
+        touchSupport: 'ontouchstart' in window,
+        isMobile: isMobileDevice 
+      });
     };
     
     checkMobile();
@@ -262,9 +268,15 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                 )}
                 <button
                   onClick={(e) => {
+                    console.log('Button onClick triggered!', { completedCrop, isMobile });
+                    if (completedCrop) {
+                      onDownloadCropClick();
+                    }
+                  }}
+                  onTouchEnd={(e) => {
+                    console.log('Button onTouchEnd triggered!', { completedCrop, isMobile });
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Button clicked!', { completedCrop, isMobile });
                     if (completedCrop) {
                       onDownloadCropClick();
                     }
@@ -281,11 +293,14 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                     minHeight: isMobile ? '48px' : 'auto',
                     fontSize: isMobile ? '16px' : '14px',
                     pointerEvents: 'auto',
-                    zIndex: 10
+                    zIndex: 10,
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    WebkitTouchCallout: 'none'
                   }}
                 >
                   <Check size={isMobile ? 18 : 16} />
-                  Apply Crop {completedCrop ? '✓' : '✗'}
+                  Apply Crop
                 </button>
               </div>
             </div>

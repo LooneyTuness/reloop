@@ -75,17 +75,14 @@ function EditProductContent() {
 
   if (!product) {
     return (
-      <SellerDashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      </SellerDashboardLayout>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
     );
   }
 
   return (
-    <SellerDashboardLayout>
-      <div className="px-3 sm:px-6 py-4 sm:py-8">
+    <div className="px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
         <div className="mb-8">
           <button
@@ -204,8 +201,7 @@ function EditProductContent() {
             </button>
           </div>
         </form>
-      </div>
-    </SellerDashboardLayout>
+    </div>
   );
 }
 
