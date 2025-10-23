@@ -146,19 +146,17 @@ export default function TopBar() {
         {/* Mobile hamburger menu + Search */}
         <div className="flex items-center gap-3 flex-1">
           {/* Mobile hamburger menu */}
-          {!isMobileMenuOpen && (
-            <button
-              onClick={() => {
-                // This will be handled by the Sidebar component
-                const event = new CustomEvent('toggleMobileMenu');
-                window.dispatchEvent(event);
-              }}
-              className="lg:hidden p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
-              aria-label={t('mobileMenu')}
-            >
-              <Menu size={18} />
-            </button>
-          )}
+          <button
+            onClick={() => {
+              // This will be handled by the Sidebar component
+              const event = new CustomEvent('toggleMobileMenu');
+              window.dispatchEvent(event);
+            }}
+            className="lg:hidden p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
+            aria-label={isMobileMenuOpen ? t('closeMenu') : t('mobileMenu')}
+          >
+            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
           
           {/* Search */}
           <div className="flex-1 max-w-[140px] sm:max-w-lg relative search-container">

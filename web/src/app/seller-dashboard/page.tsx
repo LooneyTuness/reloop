@@ -186,7 +186,7 @@ const DashboardContent = React.memo(function DashboardContent() {
           
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Како можам да го уредам мојот профил?</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">Одете во делот &ldquo;Поставки&rdquo; за да ги уредите вашите лични информации, бизнис детали и преференци.</p>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">Одете во делот &ldquo;Подесувања&rdquo; за да ги уредите вашите лични информации, бизнис детали и преференци.</p>
           </div>
         </div>
         

@@ -18,11 +18,33 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [aspect, setAspect] = useState<number | undefined>(1);
+  const [isMobile, setIsMobile] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Detect mobile device
+  React.useEffect(() => {
+    const checkMobile = () => {
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                            window.innerWidth <= 768 || 
+                            'ontouchstart' in window;
+      setIsMobile(isMobileDevice);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
     const { width, height } = e.currentTarget;
+    
+    // Ensure we have valid dimensions
+    if (width === 0 || height === 0) {
+      console.log('Invalid image dimensions:', { width, height });
+      return;
+    }
+    
     const crop = centerCrop(
       makeAspectCrop(
         {
@@ -40,7 +62,16 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
   }
 
   function onDownloadCropClick() {
+    console.log('onDownloadCropClick called', { 
+      completedCrop: !!completedCrop, 
+      canvas: !!canvasRef.current, 
+      img: !!imgRef.current,
+      isMobile,
+      userAgent: navigator.userAgent
+    });
+    
     if (!completedCrop || !canvasRef.current || !imgRef.current) {
+      console.log('Missing required elements for crop:', { completedCrop, canvas: !!canvasRef.current, img: !!imgRef.current });
       return;
     }
 
@@ -48,39 +79,54 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
     const canvas = canvasRef.current;
     const crop = completedCrop;
 
+    // Ensure image is fully loaded
+    if (!image.complete || image.naturalWidth === 0) {
+      console.log('Image not fully loaded');
+      return;
+    }
+
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
     const ctx = canvas.getContext('2d');
 
     if (!ctx) {
-      throw new Error('No 2d context');
+      console.error('No 2d context available');
+      return;
     }
 
-    const pixelRatio = window.devicePixelRatio;
+    // Use a more conservative pixel ratio for mobile devices
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = crop.width * pixelRatio * scaleX;
     canvas.height = crop.height * pixelRatio * scaleY;
 
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
-    ctx.drawImage(
-      image,
-      crop.x * scaleX,
-      crop.y * scaleY,
-      crop.width * scaleX,
-      crop.height * scaleY,
-      0,
-      0,
-      crop.width * scaleX,
-      crop.height * scaleY
-    );
+    try {
+      ctx.drawImage(
+        image,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
+        0,
+        0,
+        crop.width * scaleX,
+        crop.height * scaleY
+      );
 
-    canvas.toBlob((blob) => {
-      if (blob) {
-        onCrop(blob);
-        onClose();
-      }
-    }, 'image/jpeg', 0.9);
+      canvas.toBlob((blob) => {
+        if (blob) {
+          onCrop(blob);
+          onClose();
+        } else {
+          console.error('Failed to create blob from canvas');
+        }
+      }, 'image/jpeg', 0.9);
+    } catch (error) {
+      console.error('Error drawing image to canvas:', error);
+    }
   }
 
   const handleRotate = () => {
@@ -90,8 +136,8 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4" style={{ touchAction: 'none' }}>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ touchAction: 'auto' }}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -127,9 +173,14 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                       transform: `scale(${scale}) rotate(${rotate}deg)`,
                       maxHeight: '400px',
                       maxWidth: '100%',
+                      touchAction: 'none',
+                      userSelect: 'none',
+                      WebkitUserSelect: 'none',
+                      WebkitTouchCallout: 'none'
                     }}
                     onLoad={onImageLoad}
                     className="max-w-full h-auto"
+                    draggable={false}
                   />
                 </ReactCrop>
               </div>
@@ -185,10 +236,30 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
               <div className="pt-4">
                 <button
                   onClick={onDownloadCropClick}
+                  onTouchEnd={(e) => {
+                    if (isMobile) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (completedCrop) {
+                        onDownloadCropClick();
+                      }
+                    }
+                  }}
+                  onMouseDown={(e) => {
+                    if (isMobile) {
+                      e.preventDefault();
+                    }
+                  }}
                   disabled={!completedCrop}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors touch-manipulation"
+                  style={{ 
+                    WebkitTapHighlightColor: 'transparent',
+                    touchAction: 'manipulation',
+                    minHeight: isMobile ? '48px' : 'auto',
+                    fontSize: isMobile ? '16px' : '14px'
+                  }}
                 >
-                  <Check size={16} />
+                  <Check size={isMobile ? 18 : 16} />
                   Apply Crop
                 </button>
               </div>
