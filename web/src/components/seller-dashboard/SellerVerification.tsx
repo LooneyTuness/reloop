@@ -113,9 +113,9 @@ export default function SellerVerification({ children }: SellerVerificationProps
         });
         
         if (!isApprovedSeller) {
-          // Not approved - redirect to application page
-          console.log('User is not approved, redirecting to application');
-          router.push('/seller-application');
+          // Not approved - redirect to sign in page
+          console.log('User is not approved, redirecting to sign-in');
+          router.push('/sign-in');
           return;
         }
 

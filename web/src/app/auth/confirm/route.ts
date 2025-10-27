@@ -81,8 +81,8 @@ export async function GET(request: NextRequest) {
             console.log('User is an approved seller, redirecting to dashboard')
             next = '/seller-dashboard'
           } else {
-            console.log('User is a seller but not approved, redirecting to application')
-            next = '/seller-application'
+            console.log('User is a seller but not approved, redirecting to sign-in')
+            next = '/sign-in'
           }
         } else {
           console.log('User is not a seller')
@@ -152,8 +152,8 @@ export async function GET(request: NextRequest) {
             console.log('User is an approved seller, redirecting to dashboard')
             next = '/seller-dashboard'
           } else {
-            console.log('User is a seller but not approved, redirecting to application')
-            next = '/seller-application'
+            console.log('User is a seller but not approved, redirecting to sign-in')
+            next = '/sign-in'
           }
         } else {
           console.log('User is not a seller')
