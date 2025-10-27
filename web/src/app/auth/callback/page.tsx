@@ -64,6 +64,14 @@ export default function AuthCallbackPage() {
           console.log('AuthCallback: User authenticated:', session.user.email);
           console.log('AuthCallback: User ID:', session.user.id);
           
+          // Wait for auth state to propagate by triggering a session refresh
+          // This ensures the AuthContext receives the session update
+          console.log('AuthCallback: Triggering session refresh to propagate auth state...');
+          await supabase.auth.refreshSession();
+          
+          // Wait a bit longer to ensure AuthContext has processed the auth state change
+          await new Promise(resolve => setTimeout(resolve, 300));
+          
           // If redirecting to seller dashboard, check if user is a seller
           if (redirectUrl.includes('seller-dashboard')) {
             const { data: sellerProfile, error: profileError } = await supabase
@@ -83,10 +91,7 @@ export default function AuthCallbackPage() {
             } else if (sellerProfile) {
               console.log('AuthCallback: User is a seller, redirecting to dashboard');
               console.log('AuthCallback: Redirecting to:', redirectUrl);
-              // Add a small delay to ensure the session is properly set
-              setTimeout(() => {
-                router.push(redirectUrl);
-              }, 100);
+              router.push(redirectUrl);
             } else {
               console.log('AuthCallback: User is not a seller, redirecting to home');
               router.push('/');
