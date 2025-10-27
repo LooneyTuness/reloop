@@ -3,11 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { createBrowserClient } from "@/lib/supabase/supabase.browser";
+import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-
-const supabase = createBrowserClient();
 
 export default function SellerApplicationPage() {
   const { user, loading: authLoading } = useAuth();
@@ -23,26 +21,30 @@ export default function SellerApplicationPage() {
     try {
       console.log('Creating seller profile for user:', user.id);
       
-      // Create seller profile with automatic approval
-      const { data: profile, error: profileError } = await supabase
-        .from('seller_profiles')
-        .insert({
-          user_id: user.id,
+      // Call the API route to create seller profile
+      const response = await fetch('/api/create-seller-profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
           email: user.email,
-          role: 'seller',
-          is_approved: true, // Automatically approve
-          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Seller'
-        })
-        .select()
-        .single();
+          role: 'seller'
+        }),
+      });
 
-      if (profileError) {
-        console.error('Error creating seller profile:', profileError);
-        toast.error('Error creating seller profile: ' + profileError.message);
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error('Error creating seller profile:', result);
+        toast.error('Error creating seller profile: ' + (result.error || 'Unknown error'));
+        setIsProcessing(false);
+        setChecking(false);
         return;
       }
 
-      console.log('Seller profile created successfully:', profile);
+      console.log('Seller profile created successfully:', result);
       toast.success('Seller profile created successfully! Redirecting to dashboard...');
       
       // Wait a moment for the toast to show, then redirect
@@ -52,7 +54,6 @@ export default function SellerApplicationPage() {
     } catch (err) {
       console.error('Error creating seller profile:', err);
       toast.error('Error creating seller profile');
-    } finally {
       setIsProcessing(false);
       setChecking(false);
     }
