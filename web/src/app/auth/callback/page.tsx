@@ -83,10 +83,10 @@ export default function AuthCallbackPage() {
             } else if (sellerProfile) {
               console.log('AuthCallback: User is a seller, redirecting to dashboard');
               console.log('AuthCallback: Redirecting to:', redirectUrl);
-              // Wait longer to ensure session is established and AuthContext has updated
+              // Add a small delay to ensure the session is properly set
               setTimeout(() => {
                 router.push(redirectUrl);
-              }, 2000);
+              }, 100);
             } else {
               console.log('AuthCallback: User is not a seller, redirecting to home');
               router.push('/');

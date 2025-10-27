@@ -26,8 +26,6 @@ export async function GET(request: NextRequest) {
   // Handle OTP-based confirmation (token_hash + type)
   if (token_hash && type) {
     console.log('Attempting OTP verification...')
-    console.log('Token details:', { token_hash: token_hash.substring(0, 20) + '...', type })
-    
     const { error } = await supabase.auth.verifyOtp({
       type,
       token_hash,

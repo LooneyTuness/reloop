@@ -70,7 +70,7 @@ export function useSignInWithSocial() {
   });
 }
 
-export function useSignInWithMagicLink(onError?: (error: Error) => void, t?: (key: string) => string) {
+export function useSignInWithMagicLink(onError?: (error: any) => void) {
   const router = useRouter();
   const posthog = usePostHog();
 
@@ -93,10 +93,9 @@ export function useSignInWithMagicLink(onError?: (error: Error) => void, t?: (ke
       // Include redirect URL in the magic link callback URL
       // Use environment variable for production, fallback to window.location.origin for development
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
-      // Use api/auth/callback which properly handles PKCE magic links from Supabase
       const emailRedirectTo = redirectUrl 
-        ? `${baseUrl}/api/auth/callback?next=${encodeURIComponent(redirectUrl)}`
-        : `${baseUrl}/api/auth/callback`;
+        ? `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(redirectUrl)}`
+        : `${baseUrl}/auth/confirm`;
       
       console.log('=== MAGIC LINK CONFIGURATION ===');
       console.log('Base URL:', baseUrl);
@@ -108,19 +107,14 @@ export function useSignInWithMagicLink(onError?: (error: Error) => void, t?: (ke
       localStorage.setItem('auth_redirect', redirectUrl || '');
       console.log('Stored redirect URL in localStorage:', redirectUrl || '');
       
-      console.log('Attempting to send magic link to:', email);
-      
-      const { error, data } = await supabase.auth.signInWithOtp({
+      const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
           emailRedirectTo,
         },
       });
       
-      console.log('Magic link response:', { error, data: !!data });
-      
       if (error) {
-        console.error('Magic link error:', error);
         throw error;
       }
     },
@@ -130,40 +124,11 @@ export function useSignInWithMagicLink(onError?: (error: Error) => void, t?: (ke
       router.push('/auth/success?from=magiclink');
     },
     onError: (error) => {
-      console.error('Magic link mutation error:', error);
       posthog.captureException(error);
-      
-      // Provide more specific error messages
-      let errorMessage = t ? t('magicLinkFailed') : 'Failed to send magic link. Please try again.';
-      
-      if (error.message) {
-        // Rate limiting error - check for specific countdown message
-        if (error.message.includes('can only request this after')) {
-          const match = error.message.match(/after (\d+) seconds/);
-          const seconds = match ? match[1] : '60';
-          if (t) {
-            errorMessage = t('magicLinkWaitXSeconds').replace('{seconds}', seconds);
-          } else {
-            errorMessage = `Please wait ${seconds} more seconds before requesting another magic link.`;
-          }
-        }
-        else if (error.message.includes('rate limit') || error.message.includes('too many')) {
-          errorMessage = t ? t('magicLinkTooManyRequests') : 'Too many requests. Please wait a minute and try again.';
-        }
-        // Email not found or invalid
-        else if (error.message.includes('not found') || error.message.includes('invalid')) {
-          errorMessage = t ? t('magicLinkInvalidEmail') : 'Invalid email address. Please check and try again.';
-        }
-        // Network error
-        else if (error.message.includes('network') || error.message.includes('timeout')) {
-          errorMessage = t ? t('magicLinkNetworkError') : 'Network error. Please check your connection and try again.';
-        }
-      }
-      
       if (onError) {
         onError(error);
       } else {
-        toast.error(errorMessage);
+        toast.error('Failed to send magic link. Please try again.');
       }
     },
   });

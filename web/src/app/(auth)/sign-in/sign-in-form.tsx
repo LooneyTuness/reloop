@@ -27,7 +27,7 @@ export function SignInForm() {
   const { t } = useLanguage();
   const signInWithMagicLink = useSignInWithMagicLink(() => {
     toast.error(t("magicLinkFailed"));
-  }, t);
+  });
 
   const form = useForm<MagicLinkFormValues>({
     resolver: zodResolver(magicLinkSchema),
