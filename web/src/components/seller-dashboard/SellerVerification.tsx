@@ -36,22 +36,33 @@ export default function SellerVerification({ children }: SellerVerificationProps
 
   useEffect(() => {
     // Only run if we have a user and auth is not loading
-    if (authLoading || !user) {
-      if (!authLoading && !user) {
-        // User not authenticated, redirect to login with return URL
-        const currentPath = window.location.pathname;
-        router.push(`/sign-in?returnUrl=${encodeURIComponent(currentPath)}`);
-      }
+    if (authLoading) {
       return;
     }
 
-    // If we already have a seller profile, don't check again
-    if (sellerProfile) {
+    if (!user) {
+      // User not authenticated, redirect to login with return URL
+      const currentPath = window.location.pathname;
+      console.log('No user found, redirecting to sign-in from:', currentPath);
+      router.push(`/sign-in?returnUrl=${encodeURIComponent(currentPath)}`);
       return;
+    }
+
+    // If we already have a seller profile for this user, don't check again
+    if (sellerProfile && sellerProfile.user_id === user.id) {
+      return;
+    }
+
+    // Reset profile if user has changed
+    if (sellerProfile && sellerProfile.user_id !== user.id) {
+      console.log('User changed, resetting seller profile');
+      setSellerProfile(null);
     }
 
     const checkSellerProfile = async () => {
       try {
+        console.log('Checking seller profile for user:', user.id, user.email);
+        
         // Check if user has a seller profile
         const { data: profile, error: profileError } = await supabase
           .from('seller_profiles')
@@ -60,8 +71,10 @@ export default function SellerVerification({ children }: SellerVerificationProps
           .single();
 
         if (profileError) {
+          console.error('Error fetching seller profile:', profileError);
           if (profileError.code === 'PGRST116') {
             // No profile found - redirect to home page
+            console.log('No seller profile found, redirecting to home');
             router.push('/');
             return;
           }
@@ -70,12 +83,18 @@ export default function SellerVerification({ children }: SellerVerificationProps
 
         if (!profile) {
           // No profile found - redirect to home page
+          console.log('No seller profile data returned, redirecting to home');
           router.push('/');
           return;
         }
 
         // Type assertion to help TypeScript understand the profile type
         const sellerProfile = profile as SellerProfile;
+
+        console.log('Seller profile found:', { 
+          is_approved: sellerProfile.is_approved, 
+          role: sellerProfile.role 
+        });
 
         // Check if user has seller or admin role
         if (sellerProfile.role !== 'seller' && sellerProfile.role !== 'admin') {
@@ -84,6 +103,23 @@ export default function SellerVerification({ children }: SellerVerificationProps
           return;
         }
 
+        // Check if user is an approved seller (or admin)
+        const isApprovedSeller = sellerProfile.is_approved === true || sellerProfile.role === 'admin';
+        
+        console.log('Approval check:', { 
+          is_approved: sellerProfile.is_approved, 
+          role: sellerProfile.role,
+          isApprovedSeller 
+        });
+        
+        if (!isApprovedSeller) {
+          // Not approved - redirect to application page
+          console.log('User is not approved, redirecting to application');
+          router.push('/seller-application');
+          return;
+        }
+
+        console.log('User verified as approved seller, allowing access to dashboard');
         setSellerProfile(sellerProfile);
       } catch (err) {
         console.error('Error checking seller profile:', err);
@@ -93,7 +129,8 @@ export default function SellerVerification({ children }: SellerVerificationProps
     };
 
     checkSellerProfile();
-  }, [user, authLoading, router, sellerProfile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, authLoading, router]);
 
   // If we have a valid seller profile, render the children
   if (sellerProfile) {

@@ -37,8 +37,8 @@ export async function GET(request: NextRequest) {
     }
   )
 
-  // Default redirect to home, but will be updated based on user role
-  let next = redirect || '/'
+  // Will be set based on user role and redirect parameter
+  let next = '/'
 
   // Handle OTP-based confirmation (token_hash + type)
   if (token_hash && type) {
@@ -82,6 +82,12 @@ export async function GET(request: NextRequest) {
         
         if (profileError) {
           console.log('No seller profile found for user:', user.email)
+          // No seller profile - use redirect or default to home
+          if (redirect) {
+            next = redirect
+          } else {
+            next = '/'
+          }
         } else if (sellerProfile) {
           // Check if user is an approved seller
           const isApprovedSeller = sellerProfile.is_approved === true && 
@@ -96,11 +102,12 @@ export async function GET(request: NextRequest) {
           }
         } else {
           console.log('User is not a seller')
-        }
-        
-        if (redirect && next === '/') {
-          // Use the provided redirect URL if no seller-specific redirect
-          next = redirect
+          // Not a seller - use redirect or default to home
+          if (redirect) {
+            next = redirect
+          } else {
+            next = '/'
+          }
         }
       }
       
@@ -137,13 +144,21 @@ export async function GET(request: NextRequest) {
       
       if (user) {
         // Check if user is a seller
-        const { data: sellerProfile } = await supabase
+        const { data: sellerProfile, error: profileError } = await supabase
           .from('seller_profiles')
           .select('is_approved, role')
           .eq('user_id', user.id)
           .single()
         
-        if (sellerProfile) {
+        if (profileError) {
+          console.log('No seller profile found for user:', user.email)
+          // No seller profile - use redirect or default to home
+          if (redirect) {
+            next = redirect
+          } else {
+            next = '/'
+          }
+        } else if (sellerProfile) {
           // Check if user is an approved seller
           const isApprovedSeller = sellerProfile.is_approved === true && 
             (sellerProfile.role === 'seller' || sellerProfile.role === 'admin')
@@ -155,12 +170,14 @@ export async function GET(request: NextRequest) {
             console.log('User is a seller but not approved, redirecting to application')
             next = '/seller-application'
           }
-        } else if (redirect) {
-          // Use the provided redirect URL
-          next = redirect
         } else {
-          // Default to home page
-          next = '/'
+          console.log('User is not a seller')
+          // Not a seller - use redirect or default to home
+          if (redirect) {
+            next = redirect
+          } else {
+            next = '/'
+          }
         }
       }
       
