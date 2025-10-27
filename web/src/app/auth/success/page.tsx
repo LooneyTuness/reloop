@@ -225,7 +225,7 @@ function AuthSuccessContent() {
                     onClick={() => router.push('/seller-dashboard')}
                     className="w-full h-10 sm:h-12 bg-white hover:bg-gray-100 text-black font-semibold text-sm sm:text-base rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
-                    Оди на продавачкиот панел
+                    Оди кон Продавачкиот панел
                   </button>
                 ) : (
                   <button

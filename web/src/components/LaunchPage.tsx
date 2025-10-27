@@ -67,7 +67,7 @@ export default function LaunchPage() {
                   onClick={handleDashboardAccess}
                   className="bg-white text-black font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg text-base sm:text-lg transition-all duration-200 hover:bg-gray-100 hover:scale-105 flex-1 sm:flex-none shadow-lg"
                 >
-                  Оди на Продавачкиот панел
+                  Оди кон Продавачкиот панел
                 </button>
               </div>
             </div>
