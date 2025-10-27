@@ -31,8 +31,9 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Log for debugging
-  if (request.nextUrl.pathname.startsWith('/auth/callback')) {
-    console.log('Middleware: auth callback request, user:', user?.email || 'none')
+  console.log('Middleware: Processing request to:', request.nextUrl.pathname)
+  if (request.nextUrl.pathname.startsWith('/auth')) {
+    console.log('Middleware: Auth route detected, user:', user?.email || 'none')
   }
 
   return supabaseResponse

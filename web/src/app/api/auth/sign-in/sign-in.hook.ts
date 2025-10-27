@@ -97,7 +97,11 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
         ? `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(redirectUrl)}`
         : `${baseUrl}/auth/confirm`;
       
+      console.log('=== MAGIC LINK CONFIGURATION ===');
+      console.log('Base URL:', baseUrl);
+      console.log('Redirect URL from params/storage:', redirectUrl);
       console.log('Magic link email redirect to:', emailRedirectTo);
+      console.log('==================================');
       
       // Store redirect URL in localStorage as backup (even if empty, so callback can determine)
       localStorage.setItem('auth_redirect', redirectUrl || '');
