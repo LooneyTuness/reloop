@@ -5,10 +5,12 @@ import * as Routes from "@/lib/routes";
 import { toast } from "sonner";
 import { usePostHog } from "posthog-js/react";
 import posthog from "posthog-js";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function useSignInWithEmail() {
   const router = useRouter();
   const posthog = usePostHog();
+  const { t } = useLanguage();
 
   return useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
@@ -32,14 +34,14 @@ export function useSignInWithEmail() {
     onError: (error) => {
       switch (error.message) {
         case 'Invalid login credentials':
-          toast.error('Invalid email or password.');
+          toast.error(t('invalidEmailOrPassword'));
           break;
         case 'Email not confirmed':
-          toast.error('Your email is not confirmed. Please open the confirmation email we sent you.');
+          toast.error(t('emailNotConfirmed'));
           break;
         default:
           posthog.captureException(error);
-          toast.error('Something went wrong. Please try again.');
+          toast.error(t('somethingWentWrong'));
           break;
       }
     },
@@ -48,6 +50,7 @@ export function useSignInWithEmail() {
 
 export function useSignInWithSocial() {
   const searchParams = useSearchParams();
+  const { t } = useLanguage();
   
   return useMutation({
     mutationFn: async (provider: "google") => {
@@ -65,14 +68,15 @@ export function useSignInWithSocial() {
     },
     onError: (error) => {
       posthog.captureException(error);
-      toast.error('Something went wrong. Please try again.');
+      toast.error(t('somethingWentWrong'));
     }
   });
 }
 
-export function useSignInWithMagicLink(onError?: (error: any) => void) {
+export function useSignInWithMagicLink(onError?: (error: Error) => void) {
   const router = useRouter();
   const posthog = usePostHog();
+  const { t } = useLanguage();
 
   return useMutation({
     mutationFn: async (email: string) => {
@@ -119,7 +123,7 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       }
     },
     onSuccess: () => {
-      toast.success('Check your email for the magic link!');
+      toast.success(t('checkEmailForMagicLink'));
       // Redirect to success page with magic link indicator
       router.push('/auth/success?from=magiclink');
     },
@@ -128,7 +132,7 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       if (onError) {
         onError(error);
       } else {
-        toast.error('Failed to send magic link. Please try again.');
+        toast.error(t('magicLinkFailed'));
       }
     },
   });

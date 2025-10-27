@@ -679,6 +679,12 @@ const translations = {
     tryAgain: "Обиди се повторно",
     goToHomepage: "Оди на почетна страница",
     error: "Грешка:",
+    checkEmailForMagicLink: "Проверете ја вашата е-пошта за магичниот линк!",
+    invalidEmailOrPassword: "Невалидна е-пошта или лозинка.",
+    emailNotConfirmed:
+      "Вашата е-пошта не е потврдена. Ве молиме отворете ја вашата е-пошта.",
+    magicLinkFailed:
+      "Неуспешно испраќање на магичниот линк. Обидете се повторно.",
 
     // Waitlist Component
     waitlistTitle: "Досадно ти е од скапата брза мода?",
@@ -1448,6 +1454,10 @@ const translations = {
     tryAgain: "Try Again",
     goToHomepage: "Go to Homepage",
     error: "Error:",
+    checkEmailForMagicLink: "Check your email for the magic link!",
+    invalidEmailOrPassword: "Invalid email or password.",
+    emailNotConfirmed:
+      "Your email is not confirmed. Please open the confirmation email we sent you.",
 
     // Waitlist Component
     waitlistTitle: "Tired of Overpriced Fast Fashion?",
