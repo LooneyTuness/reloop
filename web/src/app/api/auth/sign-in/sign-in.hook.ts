@@ -70,7 +70,7 @@ export function useSignInWithSocial() {
   });
 }
 
-export function useSignInWithMagicLink(onError?: (error: any) => void) {
+export function useSignInWithMagicLink(onError?: (error: Error) => void, t?: (key: string) => string) {
   const router = useRouter();
   const posthog = usePostHog();
 
@@ -133,20 +133,29 @@ export function useSignInWithMagicLink(onError?: (error: any) => void) {
       posthog.captureException(error);
       
       // Provide more specific error messages
-      let errorMessage = 'Failed to send magic link. Please try again.';
+      let errorMessage = t ? t('magicLinkFailed') : 'Failed to send magic link. Please try again.';
       
       if (error.message) {
-        // Rate limiting error
-        if (error.message.includes('rate limit') || error.message.includes('too many')) {
-          errorMessage = 'Too many requests. Please wait a minute and try again.';
+        // Rate limiting error - check for specific countdown message
+        if (error.message.includes('can only request this after')) {
+          const match = error.message.match(/after (\d+) seconds/);
+          const seconds = match ? match[1] : '60';
+          if (t) {
+            errorMessage = t('magicLinkWaitXSeconds').replace('{seconds}', seconds);
+          } else {
+            errorMessage = `Please wait ${seconds} more seconds before requesting another magic link.`;
+          }
+        }
+        else if (error.message.includes('rate limit') || error.message.includes('too many')) {
+          errorMessage = t ? t('magicLinkTooManyRequests') : 'Too many requests. Please wait a minute and try again.';
         }
         // Email not found or invalid
         else if (error.message.includes('not found') || error.message.includes('invalid')) {
-          errorMessage = 'Invalid email address. Please check and try again.';
+          errorMessage = t ? t('magicLinkInvalidEmail') : 'Invalid email address. Please check and try again.';
         }
         // Network error
         else if (error.message.includes('network') || error.message.includes('timeout')) {
-          errorMessage = 'Network error. Please check your connection and try again.';
+          errorMessage = t ? t('magicLinkNetworkError') : 'Network error. Please check your connection and try again.';
         }
       }
       
