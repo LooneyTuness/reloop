@@ -20,16 +20,16 @@ export default function HomePage() {
       const type = urlParams.get('type');
       const code = urlParams.get('code');
       
-      // If there are auth tokens in the URL, redirect to /auth/confirm
+      // If there are auth tokens in the URL, redirect to api/auth/callback
       if (token_hash || code) {
-        console.log('Root page: Detected auth tokens in URL, redirecting to /auth/confirm');
+        console.log('Root page: Detected auth tokens in URL, redirecting to api/auth/callback');
         const authParams = new URLSearchParams();
         if (token_hash) authParams.set('token_hash', token_hash);
         if (type) authParams.set('type', type);
         if (code) authParams.set('code', code);
         
         // Use window.location.href to force a full page reload and hit the server route
-        window.location.href = `/auth/confirm?${authParams.toString()}`;
+        window.location.href = `/api/auth/callback?${authParams.toString()}`;
         return;
       }
       

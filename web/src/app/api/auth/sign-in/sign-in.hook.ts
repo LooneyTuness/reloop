@@ -93,9 +93,10 @@ export function useSignInWithMagicLink(onError?: (error: Error) => void, t?: (ke
       // Include redirect URL in the magic link callback URL
       // Use environment variable for production, fallback to window.location.origin for development
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      // Use api/auth/callback which properly handles PKCE magic links from Supabase
       const emailRedirectTo = redirectUrl 
-        ? `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(redirectUrl)}`
-        : `${baseUrl}/auth/confirm`;
+        ? `${baseUrl}/api/auth/callback?next=${encodeURIComponent(redirectUrl)}`
+        : `${baseUrl}/api/auth/callback`;
       
       console.log('=== MAGIC LINK CONFIGURATION ===');
       console.log('Base URL:', baseUrl);
