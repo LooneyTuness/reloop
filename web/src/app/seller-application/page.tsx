@@ -3,12 +3,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 export default function SellerApplicationPage() {
   const { user, loading: authLoading } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [checking, setChecking] = useState(true);
@@ -38,14 +40,14 @@ export default function SellerApplicationPage() {
 
       if (!response.ok) {
         console.error('Error creating seller profile:', result);
-        toast.error('Error creating seller profile: ' + (result.error || 'Unknown error'));
+        toast.error(t('errorCreatingSellerProfile') + ': ' + (result.error || t('unknownError')));
         setIsProcessing(false);
         setChecking(false);
         return;
       }
 
       console.log('Seller profile created successfully:', result);
-      toast.success('Seller profile created successfully! Redirecting to dashboard...');
+      toast.success(t('sellerProfileCreatedSuccess'));
       
       // Wait a moment for the toast to show, then redirect
       setTimeout(() => {
@@ -53,11 +55,11 @@ export default function SellerApplicationPage() {
       }, 1500);
     } catch (err) {
       console.error('Error creating seller profile:', err);
-      toast.error('Error creating seller profile');
+      toast.error(t('errorCreatingSellerProfile'));
       setIsProcessing(false);
       setChecking(false);
     }
-  }, [user, router]);
+  }, [user, router, t]);
 
   useEffect(() => {
     const checkSellerProfile = async () => {
@@ -91,7 +93,7 @@ export default function SellerApplicationPage() {
             await createSellerProfile();
           } else {
             console.error('Error checking seller profile:', profileError);
-            toast.error('Error checking seller profile');
+            toast.error(t('errorCheckingSellerProfile'));
             setChecking(false);
           }
         } else if (profile) {
@@ -101,13 +103,13 @@ export default function SellerApplicationPage() {
         }
       } catch (err) {
         console.error('Error checking seller profile:', err);
-        toast.error('Error processing request');
+        toast.error(t('errorProcessingRequest'));
         setChecking(false);
       }
     };
 
     checkSellerProfile();
-  }, [user, authLoading, router, createSellerProfile]);
+  }, [user, authLoading, router, createSellerProfile, t]);
 
   // Show loading state
   if (authLoading || checking || isProcessing) {
@@ -131,20 +133,20 @@ export default function SellerApplicationPage() {
             {/* Loading spinner */}
             <div className="mb-8 flex justify-center">
               <Loader2 className="h-12 w-12 animate-spin text-white" />
-            </div>
-            
+                  </div>
+
             {/* Title */}
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-              Setting up your seller account
+              {t('settingUpYourSellerAccount')}
             </h2>
             
             {/* Status message */}
             <p className="text-base sm:text-lg text-gray-300">
-              {isProcessing ? 'Creating your seller profile...' : 'Checking your account...'}
+              {isProcessing ? t('creatingYourSellerProfile') : t('checkingYourAccount')}
             </p>
-          </div>
-        </div>
-      </div>
+                    </div>
+                  </div>
+                </div>
     );
   }
 
@@ -161,7 +163,7 @@ export default function SellerApplicationPage() {
       {/* Header */}
       <div className="absolute top-4 left-4 sm:top-6 sm:left-6 lg:top-8 lg:left-8 z-20">
         <h1 className="text-white text-lg sm:text-xl font-medium">vtoraraka.mk</h1>
-      </div>
+              </div>
 
       {/* Main content - centered */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -169,18 +171,18 @@ export default function SellerApplicationPage() {
           {/* Loading spinner */}
           <div className="mb-8 flex justify-center">
             <Loader2 className="h-12 w-12 animate-spin text-white" />
-          </div>
-          
+              </div>
+
           {/* Title */}
           <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-            Please wait...
+            {t('pleaseWait')}
           </h2>
           
           {/* Status message */}
           <p className="text-base sm:text-lg text-gray-300">
-            Loading...
+            {t('loading')}
           </p>
-        </div>
+            </div>
       </div>
     </div>
   );

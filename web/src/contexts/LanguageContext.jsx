@@ -308,6 +308,17 @@ const translations = {
     alreadyInvitedToSell: "Веќе сте поканети за продавање?",
     logInToSellerAccount: "Најави се на твојата продавачка сметка тука",
 
+    // Seller application setup
+    settingUpYourSellerAccount: "Поставување на вашата продавачка сметка",
+    creatingYourSellerProfile: "Создавање на вашиот продавачки профил...",
+    checkingYourAccount: "Проверка на вашата сметка...",
+    sellerProfileCreatedSuccess:
+      "Продавачкиот профил е успешно креиран! Пренасочување кон панелот...",
+    errorCreatingSellerProfile: "Грешка при создавање на продавачки профил",
+    errorCheckingSellerProfile: "Грешка при проверка на продавачки профил",
+    errorProcessingRequest: "Грешка при процесирање на барање",
+    loading: "Се вчитува...",
+
     loadingProducts: "Се вчитуваат продукти...",
     unableToLoadProducts: "Не можам да ги вчитам продуктите",
     productsLoadError:
@@ -1090,6 +1101,17 @@ const translations = {
     submitApplication: "Submit Application",
     alreadyInvitedToSell: "Already invited to sell?",
     logInToSellerAccount: "Log in to your seller account here",
+
+    // Seller application setup
+    settingUpYourSellerAccount: "Setting up your seller account",
+    creatingYourSellerProfile: "Creating your seller profile...",
+    checkingYourAccount: "Checking your account...",
+    sellerProfileCreatedSuccess:
+      "Seller profile created successfully! Redirecting to dashboard...",
+    errorCreatingSellerProfile: "Error creating seller profile",
+    errorCheckingSellerProfile: "Error checking seller profile",
+    errorProcessingRequest: "Error processing request",
+    loading: "Loading...",
 
     loadingProducts: "Loading products...",
     unableToLoadProducts: "Unable to load products",
