@@ -1,7 +1,6 @@
 import { type EmailOtpType } from '@supabase/supabase-js'
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/supabase.server'
-import { supabaseAdmin } from '@/lib/supabase/supabase.admin'
 
 export async function GET(request: NextRequest) {
   console.log('=== CONFIRM ROUTE HIT ===');
@@ -10,9 +9,8 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get('type') as EmailOtpType | null
   const code = searchParams.get('code')
   const redirect = searchParams.get('redirect')
-  const isVendor = searchParams.get('vendor') === 'true'
   
-  console.log('Confirm route called with:', { token_hash: !!token_hash, type, code: !!code, redirect, isVendor })
+  console.log('Confirm route called with:', { token_hash: !!token_hash, type, code: !!code, redirect })
 
   // Add error handling for missing parameters
   if (!token_hash && !code) {
@@ -57,45 +55,6 @@ export async function GET(request: NextRequest) {
       
       if (user) {
         console.log('User authenticated:', user.email)
-        
-        // Handle vendor sign-up by creating seller profile
-        if (isVendor && user.user_metadata?.is_vendor && supabaseAdmin) {
-          console.log('Vendor sign-up detected, creating seller profile...')
-          
-          try {
-            // Check if seller profile already exists
-            const { data: existingProfile } = await supabaseAdmin
-              .from('seller_profiles')
-              .select('id')
-              .eq('user_id', user.id)
-              .single()
-            
-            if (!existingProfile) {
-              // Create seller profile
-              const isApproved = process.env.NODE_ENV !== 'production'
-              
-              const { data: sellerProfile, error: createError } = await supabaseAdmin
-                .from('seller_profiles')
-                .insert({
-                  user_id: user.id,
-                  email: user.email || '',
-                  full_name: user.user_metadata?.full_name || '',
-                  role: 'seller',
-                  is_approved: isApproved
-                })
-                .select()
-                .single()
-              
-              if (createError) {
-                console.error('Error creating seller profile:', createError)
-              } else {
-                console.log('Seller profile created successfully:', sellerProfile?.id)
-              }
-            }
-          } catch (error) {
-            console.error('Error in vendor profile creation:', error)
-          }
-        }
         
         // Check if user is a seller
         const { data: profile, error: profileError } = await supabase
