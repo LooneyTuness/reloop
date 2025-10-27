@@ -240,12 +240,6 @@ function AuthSuccessContent() {
                 {/* Action Buttons */}
                 <div className="space-y-2 sm:space-y-3 pb-1 sm:pb-2">
                   <button
-                    onClick={() => router.push('/')}
-                    className="w-full h-10 sm:h-12 bg-white hover:bg-gray-100 text-black font-semibold text-sm sm:text-base rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-                  >
-                    {t("browseProductsMeantime")}
-                  </button>
-                  <button
                     onClick={() => window.location.reload()}
                     className="w-full text-gray-300 hover:text-white py-1 sm:py-2 text-xs sm:text-sm transition-colors"
                   >
