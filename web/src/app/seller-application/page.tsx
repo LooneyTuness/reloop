@@ -3,9 +3,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@/lib/supabase/supabase.browser";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+
+const supabase = createBrowserClient();
 
 export default function SellerApplicationPage() {
   const { user, loading: authLoading } = useAuth();
