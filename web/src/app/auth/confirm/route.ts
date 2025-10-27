@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/supabase.server'
 
 export async function GET(request: NextRequest) {
+  console.log('=== CONFIRM ROUTE HIT ===');
   const { searchParams, origin } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
