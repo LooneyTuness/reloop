@@ -11,20 +11,20 @@ interface DashboardThemeContextType {
 const DashboardThemeContext = createContext<DashboardThemeContextType | undefined>(undefined);
 
 export function DashboardThemeProvider({ children }: { children: React.ReactNode }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Check for saved theme preference or default to light mode
+    // Check for saved theme preference or default to dark mode
     const savedTheme = localStorage.getItem('dashboard-theme');
     
-    if (savedTheme === 'dark') {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      // Default to light mode if no preference is saved or if preference is light
+    if (savedTheme === 'light') {
       setIsDarkMode(false);
       document.documentElement.classList.remove('dark');
+    } else {
+      // Default to dark mode if no preference is saved or if preference is dark
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
     }
     
     setIsLoaded(true);
