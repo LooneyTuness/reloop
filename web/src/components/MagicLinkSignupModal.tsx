@@ -11,11 +11,9 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { VtorarakaLogo } from '@/components/icons';
 import { toast } from 'sonner';
 
-const magicLinkSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-});
-
-type MagicLinkFormValues = z.infer<typeof magicLinkSchema>;
+type MagicLinkFormValues = {
+  email: string;
+};
 
 interface MagicLinkSignupModalProps {
   isOpen: boolean;
@@ -31,6 +29,10 @@ export default function MagicLinkSignupModal({
 }: MagicLinkSignupModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { t } = useLanguage();
+  
+  const magicLinkSchema = z.object({
+    email: z.string().email(t("emailInvalid")),
+  });
   const signInWithMagicLink = useSignInWithMagicLink(() => {
     toast.error(t("magicLinkFailed"));
   });

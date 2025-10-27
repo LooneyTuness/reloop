@@ -17,14 +17,16 @@ import { useSignInWithMagicLink } from "@/app/api/auth/sign-in/sign-in.hook";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "sonner";
 
-const magicLinkSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-});
-
-type MagicLinkFormValues = z.infer<typeof magicLinkSchema>;
+type MagicLinkFormValues = {
+  email: string;
+};
 
 export function SignInForm() {
   const { t } = useLanguage();
+  
+  const magicLinkSchema = z.object({
+    email: z.string().email(t("emailInvalid")),
+  });
   const signInWithMagicLink = useSignInWithMagicLink(() => {
     toast.error(t("magicLinkFailed"));
   });
