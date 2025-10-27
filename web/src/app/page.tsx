@@ -28,7 +28,8 @@ export default function HomePage() {
         if (type) authParams.set('type', type);
         if (code) authParams.set('code', code);
         
-        router.push(`/auth/confirm?${authParams.toString()}`);
+        // Use window.location.href to force a full page reload and hit the server route
+        window.location.href = `/auth/confirm?${authParams.toString()}`;
         return;
       }
       
