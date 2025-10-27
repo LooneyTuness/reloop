@@ -20,32 +20,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const isDashboardPage = pathname?.startsWith('/seller-dashboard') || pathname?.startsWith('/admin');
 
   useEffect(() => {
-    // For non-dashboard pages, always use light mode
-    if (!isDashboardPage) {
-      setIsDarkMode(false);
-      document.documentElement.classList.remove('dark');
+    // Always use light mode for non-dashboard pages
+    // For dashboard pages, the DashboardThemeProvider handles the theme
+    if (isDashboardPage) {
+      // Don't manage theme for dashboard pages, let DashboardThemeProvider handle it
       setIsLoaded(true);
       return;
     }
 
-    // For dashboard pages, check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme');
-    
-    if (savedTheme === 'dark') {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      // Default to light mode if no preference is saved or if preference is light
-      setIsDarkMode(false);
-      document.documentElement.classList.remove('dark');
-    }
-    
+    // For non-dashboard pages, always use light mode
+    setIsDarkMode(false);
+    document.documentElement.classList.remove('dark');
     setIsLoaded(true);
   }, [isDashboardPage]);
 
   const toggleDarkMode = () => {
-    // Only allow theme toggle on dashboard pages
-    if (!isDashboardPage) return;
+    // Don't manage theme for dashboard pages, let DashboardThemeProvider handle it
+    if (isDashboardPage) return;
     
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
@@ -60,8 +51,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   const setDarkMode = (isDark: boolean) => {
-    // Only allow theme changes on dashboard pages
-    if (!isDashboardPage) return;
+    // Don't manage theme for dashboard pages, let DashboardThemeProvider handle it
+    if (isDashboardPage) return;
     
     setIsDarkMode(isDark);
     
