@@ -7,7 +7,7 @@ export default function LaunchPage() {
   const router = useRouter();
 
   const handleDashboardAccess = () => {
-    router.push('/seller-dashboard');
+    router.push('/seller-application');
   };
 
   return (
