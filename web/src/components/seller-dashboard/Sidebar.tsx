@@ -9,7 +9,6 @@ import {
   Package, 
   Plus, 
   ShoppingBag, 
-  CreditCard, 
   Settings, 
   LogOut,
   Home
@@ -24,7 +23,6 @@ const getNavigationItems = (t: (key: string) => string) => [
   { name: t('myListings'), href: '/seller-dashboard/listings', icon: Package },
   { name: t('addProduct'), href: '/seller-dashboard/add-product', icon: Plus },
   { name: t('orders'), href: '/seller-dashboard/orders', icon: ShoppingBag },
-  { name: t('payouts'), href: '/seller-dashboard/payouts', icon: CreditCard },
   { name: t('settings'), href: '/seller-dashboard/settings', icon: Settings },
 ];
 
