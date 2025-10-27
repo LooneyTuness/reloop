@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
         console.log('User authenticated:', user.email)
         
         // Check if user is a seller
-        const { data: sellerProfile, error: profileError } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('seller_profiles')
           .select('is_approved, role')
           .eq('user_id', user.id)
@@ -70,8 +70,9 @@ export async function GET(request: NextRequest) {
           } else {
             next = '/'
           }
-        } else if (sellerProfile) {
+        } else if (profile) {
           // Check if user is an approved seller
+          const sellerProfile = profile as { is_approved: boolean; role: string }
           const isApprovedSeller = sellerProfile.is_approved === true && 
             (sellerProfile.role === 'seller' || sellerProfile.role === 'admin')
           
@@ -126,7 +127,7 @@ export async function GET(request: NextRequest) {
       
       if (user) {
         // Check if user is a seller
-        const { data: sellerProfile, error: profileError } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('seller_profiles')
           .select('is_approved, role')
           .eq('user_id', user.id)
@@ -140,8 +141,9 @@ export async function GET(request: NextRequest) {
           } else {
             next = '/'
           }
-        } else if (sellerProfile) {
+        } else if (profile) {
           // Check if user is an approved seller
+          const sellerProfile = profile as { is_approved: boolean; role: string }
           const isApprovedSeller = sellerProfile.is_approved === true && 
             (sellerProfile.role === 'seller' || sellerProfile.role === 'admin')
           
