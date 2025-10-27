@@ -9,6 +9,8 @@ function AuthSuccessContent() {
   const [user, setUser] = useState<{ id: string; email?: string; email_confirmed_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isVendor, setIsVendor] = useState(false);
+  const [checkingVendor, setCheckingVendor] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useLanguage();
@@ -76,7 +78,35 @@ function AuthSuccessContent() {
     return () => subscription.unsubscribe();
   }, [confirmed, errorParam, errorDescription]);
 
-  if (loading) {
+  // Check if user is a vendor
+  useEffect(() => {
+    if (!user?.id) {
+      setCheckingVendor(false);
+      return;
+    }
+
+    const checkVendorStatus = async () => {
+      try {
+        const { data: profile, error } = await supabase
+          .from('seller_profiles')
+          .select('is_approved, role')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!error && profile) {
+          setIsVendor(true);
+        }
+      } catch (err) {
+        console.error('Error checking vendor status:', err);
+      } finally {
+        setCheckingVendor(false);
+      }
+    };
+
+    checkVendorStatus();
+  }, [user]);
+
+  if (loading || checkingVendor) {
     return (
       <div 
         className="h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
@@ -181,27 +211,40 @@ function AuthSuccessContent() {
                     {t("welcomeToVtoraraka")}!
                   </h1>
                   <p className="text-sm sm:text-base text-gray-300 leading-relaxed px-1">
-                    {fromMagicLink 
-                      ? t("youreNowSignedIn")
-                      : t("emailConfirmed")}
+                    {isVendor
+                      ? "Сега сте најавени! Започнете го вашето патување кон одржлива мода."
+                      : fromMagicLink 
+                        ? t("youreNowSignedIn")
+                        : t("emailConfirmed")}
                   </p>
                 </div>
 
                 {/* Action Button */}
-                <button
-                  onClick={() => router.push('/')}
-                  className="w-full h-10 sm:h-12 bg-white hover:bg-gray-100 text-black font-semibold text-sm sm:text-base rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                  {t("startShopping")}
-                </button>
+                {isVendor ? (
+                  <button
+                    onClick={() => router.push('/seller-dashboard')}
+                    className="w-full h-10 sm:h-12 bg-white hover:bg-gray-100 text-black font-semibold text-sm sm:text-base rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    Отвори го таблата за продавачи
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => router.push('/')}
+                    className="w-full h-10 sm:h-12 bg-white hover:bg-gray-100 text-black font-semibold text-sm sm:text-base rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    {t("startShopping")}
+                  </button>
+                )}
 
                 {/* Playful annotation */}
-                <div className="text-center pt-1 sm:pt-2 pb-1 sm:pb-2">
-                  <p className="text-xs sm:text-sm text-green-400 font-medium">
-                    {t("readyToMakeDifference")}
-                    <span className="ml-1 text-sm sm:text-base">♻️</span>
-                  </p>
-                </div>
+                {!isVendor && (
+                  <div className="text-center pt-1 sm:pt-2 pb-1 sm:pb-2">
+                    <p className="text-xs sm:text-sm text-green-400 font-medium">
+                      {t("readyToMakeDifference")}
+                      <span className="ml-1 text-sm sm:text-base">♻️</span>
+                    </p>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-center space-y-4 sm:space-y-6">
