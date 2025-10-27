@@ -17,12 +17,24 @@ export function AuthProvider({ children }) {
     // Always try to get the session first
     const initializeAuth = async () => {
       try {
+        console.log("AuthContext: Initializing auth...");
+
         const {
           data: { session },
           error,
         } = await supabase.auth.getSession();
 
+        console.log("AuthContext: Initial session check:", {
+          hasSession: !!session,
+          userEmail: session?.user?.email,
+          error: error?.message,
+        });
+
         if (session?.user) {
+          console.log(
+            "AuthContext: Session found, setting user:",
+            session.user.email
+          );
           setUser(session.user);
           setLoading(false);
 
@@ -34,11 +46,17 @@ export function AuthProvider({ children }) {
             window.history.replaceState({}, "", url);
           }
         } else {
+          console.log("AuthContext: No session found initially");
+
           // Check if this is a confirmation redirect and retry
           const urlParams = new URLSearchParams(window.location.search);
           const isConfirmed = urlParams.get("confirmed") === "true";
 
           if (isConfirmed) {
+            console.log(
+              "AuthContext: Confirmed redirect detected, retrying session..."
+            );
+
             // Wait a bit and try again
             setTimeout(async () => {
               const {
@@ -47,6 +65,10 @@ export function AuthProvider({ children }) {
               } = await supabase.auth.getSession();
 
               if (retrySession?.user) {
+                console.log(
+                  "AuthContext: Session found on retry:",
+                  retrySession.user.email
+                );
                 setUser(retrySession.user);
                 setLoading(false);
 
@@ -76,15 +98,23 @@ export function AuthProvider({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("AuthContext: Auth state change event:", event, {
+        hasSession: !!session,
+        userEmail: session?.user?.email,
+      });
+
       // Handle different auth events
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        console.log("AuthContext: Signed in or token refreshed, updating user");
         setUser(session?.user ?? null);
         setLoading(false);
       } else if (event === "SIGNED_OUT") {
+        console.log("AuthContext: Signed out");
         setUser(null);
         setLoading(false);
       } else {
         // For other events, update user state
+        console.log("AuthContext: Other auth event, updating user state");
         setUser(session?.user ?? null);
         setLoading(false);
       }
