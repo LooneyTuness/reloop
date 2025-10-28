@@ -105,7 +105,7 @@ function AddProductContent() {
         <div className="mb-8">
           <BackButton className="mb-6" onClick={() => router.back()} />
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {t('addNewProduct')}
             </h1>
             <p className="text-gray-400">
@@ -126,13 +126,13 @@ function AddProductContent() {
           </div>
 
           {/* Product Details Section */}
-          <div className="bg-gray-900 rounded-2xl shadow-lg border border-gray-800 p-8">
-            <h2 className="text-2xl font-bold text-white mb-6">
+          <div className="bg-white dark:bg-black rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
               {t('productDetails') || 'Product Details'}
             </h2>
             <div className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-base font-semibold text-white mb-2">
+                <label htmlFor="name" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                   {t('productName')} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -143,12 +143,12 @@ function AddProductContent() {
                   onChange={handleInputChange}
                   placeholder={t('enterProductName')}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-black text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label htmlFor="description" className="block text-base font-semibold text-white mb-2">
+                <label htmlFor="description" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                   {t('description')}
                 </label>
                 <textarea
@@ -158,13 +158,13 @@ function AddProductContent() {
                   onChange={handleInputChange}
                   placeholder={t('describeYourProduct')}
                   rows={5}
-                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-black text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="price" className="block text-base font-semibold text-white mb-2">
+                  <label htmlFor="price" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                     {t('priceMKD')} <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -176,12 +176,12 @@ function AddProductContent() {
                     onChange={handleInputChange}
                     placeholder="0.00"
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-black text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-base font-semibold text-white mb-2">
+                  <label className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                     {t('category')} <span className="text-red-500">*</span>
                   </label>
                   <CategorySelector
@@ -196,7 +196,7 @@ function AddProductContent() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="condition" className="block text-base font-semibold text-white mb-2">
+                  <label htmlFor="condition" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                     {t('condition')}
                   </label>
                   <select
@@ -204,7 +204,7 @@ function AddProductContent() {
                     name="condition"
                     value={formData.condition}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-black text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
                   >
                     <option value="excellent">{t('excellent')}</option>
                     <option value="good">{t('good')}</option>
@@ -214,7 +214,7 @@ function AddProductContent() {
                 </div>
 
                 <div>
-                  <label htmlFor="size" className="block text-base font-semibold text-white mb-2">
+                  <label htmlFor="size" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                     {t('size')}
                   </label>
                   <input
@@ -224,14 +224,14 @@ function AddProductContent() {
                     value={formData.size}
                     onChange={handleInputChange}
                     placeholder={t('sizePlaceholder')}
-                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-black text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="brand" className="block text-base font-semibold text-white mb-2">
+                  <label htmlFor="brand" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                     {t('brand')} <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -242,12 +242,12 @@ function AddProductContent() {
                     onChange={handleInputChange}
                     placeholder={t('brandPlaceholder') || 'Enter brand name'}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-black text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="quantity" className="block text-base font-semibold text-white mb-2">
+                  <label htmlFor="quantity" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                     {t('quantity')}
                   </label>
                   <input
@@ -257,14 +257,14 @@ function AddProductContent() {
                     min="1"
                     value={formData.quantity}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-black text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="status" className="block text-base font-semibold text-white mb-2">
+                  <label htmlFor="status" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                     {t('status')}
                   </label>
                   <select
@@ -272,7 +272,7 @@ function AddProductContent() {
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-black text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
                   >
                     <option value="active">{t('active')}</option>
                     <option value="draft">{t('draft')}</option>
@@ -288,7 +288,7 @@ function AddProductContent() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-3 border border-gray-600 rounded-lg text-gray-300 font-medium hover:bg-gray-800 transition-colors"
+              className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               {t('cancel')}
             </button>

@@ -23,7 +23,7 @@ const RecentOrders = memo(function RecentOrders() {
   // Show zero state if no orders
   if (!isLoading && orders.length === 0) {
     return (
-      <div className="bg-gray-900 rounded-lg border border-gray-800 p-6">
+      <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-800 p-6">
         <div className="flex items-center mb-6">
           <div className="h-8 w-8 bg-blue-900/20 rounded-lg flex items-center justify-center mr-3">
             <ShoppingBag className="h-4 w-4 text-blue-400" />
@@ -85,7 +85,7 @@ const RecentOrders = memo(function RecentOrders() {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-900 rounded-lg border border-gray-800 p-6">
+      <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-800 p-6">
         <div className="flex items-center mb-6">
           <div className="h-8 w-8 bg-gray-700 rounded-lg mr-3 animate-pulse"></div>
           <div>
@@ -110,7 +110,7 @@ const RecentOrders = memo(function RecentOrders() {
   }
 
   return (
-    <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
+    <div className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <div className="h-12 w-12 bg-gradient-to-br from-blue-900/20 to-indigo-900/20 rounded-2xl flex items-center justify-center mr-4">
@@ -135,7 +135,7 @@ const RecentOrders = memo(function RecentOrders() {
         {orders.slice(0, 5).map((order) => (
           <div
             key={order.id}
-            className="group p-4 bg-gray-800 rounded-xl hover:bg-gray-700 hover:shadow-md transition-all duration-200 border border-gray-700"
+            className="group p-4 bg-white dark:bg-black rounded-xl hover:bg-gray-100 dark:hover:bg-gray-900 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-800"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-start space-x-3 flex-1 min-w-0">
@@ -157,14 +157,14 @@ const RecentOrders = memo(function RecentOrders() {
                   <span className="capitalize hidden sm:inline">{order.status}</span>
                 </span>
                 <div className="relative group">
-                  <button className="p-1 hover:bg-gray-700 rounded">
+                  <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-900 rounded">
                     <MoreVertical className="h-4 w-4 text-gray-400" />
                   </button>
-                  <div className="absolute right-0 top-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <div className="absolute right-0 top-8 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     {order.status === 'pending' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'processing')}
-                        className="block w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                        className="block w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900"
                       >
 {t('markAsProcessing')}
                       </button>
@@ -172,7 +172,7 @@ const RecentOrders = memo(function RecentOrders() {
                     {order.status === 'processing' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'shipped')}
-                        className="block w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                        className="block w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900"
                       >
 {t('markAsShipped')}
                       </button>
@@ -180,7 +180,7 @@ const RecentOrders = memo(function RecentOrders() {
                     {order.status === 'shipped' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'delivered')}
-                        className="block w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                        className="block w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900"
                       >
 {t('markAsDelivered')}
                       </button>

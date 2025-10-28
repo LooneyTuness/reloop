@@ -30,7 +30,7 @@ export default function SummaryCard({
   };
 
   return (
-    <div className={`group bg-gray-900 rounded-2xl border border-gray-800 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 hover:border-blue-800 ${className}`}>
+    <div className={`group bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 hover:border-blue-800 ${className}`}>
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">

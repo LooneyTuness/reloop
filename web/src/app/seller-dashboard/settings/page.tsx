@@ -67,7 +67,7 @@ function SettingsContent() {
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+          <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
             {activeTab === 'profile' && renderProfileTab()}
           </div>
         </div>
