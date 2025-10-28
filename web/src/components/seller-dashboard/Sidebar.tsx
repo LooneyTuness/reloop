@@ -82,6 +82,9 @@ export default function Sidebar() {
     }
   };
 
+  // Extract and memoize avatar URL to prevent unnecessary rerenders
+  const avatarUrl = React.useMemo(() => sellerProfile?.avatar_url || null, [sellerProfile?.avatar_url]);
+
   // Get user display name
   const getUserDisplayName = useCallback(() => {
     if (sellerProfile?.full_name) {
@@ -97,13 +100,6 @@ export default function Sidebar() {
     const name = getUserDisplayName();
     return name.charAt(0).toUpperCase();
   }, [getUserDisplayName]);
-
-  const getUserAvatar = useCallback(() => {
-    if (sellerProfile?.avatar_url) {
-      return sellerProfile.avatar_url;
-    }
-    return null;
-  }, [sellerProfile?.avatar_url]);
 
 
 
@@ -188,17 +184,17 @@ export default function Sidebar() {
                 <span className="text-white text-sm font-semibold">
                   {getUserInitial()}
                 </span>
-                {getUserAvatar() && (
+                {avatarUrl && (
                   <Image
-                    key={`sidebar-avatar-${sellerProfile?.avatar_url}`}
-                    src={getUserAvatar() as string}
+                    key={`sidebar-avatar-${avatarUrl}`}
+                    src={avatarUrl}
                     alt="Profile"
                     width={40}
                     height={40}
                     unoptimized
                     className="w-full h-full object-cover rounded-full absolute inset-0"
                     onError={() => {
-                      console.error('Error loading avatar in sidebar:', getUserAvatar());
+                      console.error('Error loading avatar in sidebar:', avatarUrl);
                     }}
                   />
                 )}

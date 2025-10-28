@@ -81,6 +81,9 @@ export default function TopBar() {
     }
   };
 
+  // Extract and memoize avatar URL to prevent unnecessary rerenders
+  const avatarUrl = React.useMemo(() => sellerProfile?.avatar_url || null, [sellerProfile?.avatar_url]);
+
   // Get user display name and avatar - memoized to prevent unnecessary rerenders
   const getUserDisplayName = useCallback(() => {
     if (sellerProfile?.full_name) {
@@ -99,13 +102,6 @@ export default function TopBar() {
     const name = getUserDisplayName();
     return name.charAt(0).toUpperCase();
   }, [getUserDisplayName]);
-
-  const getUserAvatar = useCallback(() => {
-    if (sellerProfile?.avatar_url) {
-      return sellerProfile.avatar_url;
-    }
-    return null;
-  }, [sellerProfile?.avatar_url]);
 
 
   return (
@@ -234,16 +230,16 @@ export default function TopBar() {
               <span className="text-white text-sm font-semibold">
                 {getUserInitial()}
               </span>
-              {getUserAvatar() && (
+              {avatarUrl && (
                 <Image
-                  key={`avatar-${sellerProfile?.avatar_url}`}
-                  src={getUserAvatar() as string}
+                  key={`avatar-${avatarUrl}`}
+                  src={avatarUrl}
                   alt="Profile"
                   width={40}
                   height={40}
                   unoptimized={true}
                   onError={() => {
-                    console.error('Error loading main avatar:', getUserAvatar());
+                    console.error('Error loading main avatar:', avatarUrl);
                   }}
                   className="w-full h-full object-cover rounded-full absolute inset-0"
                   priority
@@ -260,17 +256,17 @@ export default function TopBar() {
                       <span className="text-white text-sm font-semibold">
                         {getUserInitial()}
                       </span>
-                      {getUserAvatar() && (
+                      {avatarUrl && (
                         <Image
-                          key={`dropdown-avatar-${sellerProfile?.avatar_url}`}
-                          src={getUserAvatar() as string}
+                          key={`dropdown-avatar-${avatarUrl}`}
+                          src={avatarUrl}
                           alt="Profile"
                           width={40}
                           height={40}
                           unoptimized={true}
                           className="w-full h-full object-cover rounded-full absolute inset-0"
                           onError={() => {
-                            console.error('Error loading avatar in dropdown:', getUserAvatar());
+                            console.error('Error loading avatar in dropdown:', avatarUrl);
                           }}
                         />
                       )}

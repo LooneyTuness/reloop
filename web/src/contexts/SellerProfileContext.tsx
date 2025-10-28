@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/lib/supabase';
 
@@ -138,13 +138,14 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
     fetchProfile();
   }, [fetchProfile]);
 
-  const value = {
+  // Memoize the context value to prevent unnecessary rerenders
+  const value = useMemo(() => ({
     profile,
     loading,
     error,
     refreshProfile,
     updateProfile,
-  };
+  }), [profile, loading, error, refreshProfile, updateProfile]);
 
   return (
     <SellerProfileContext.Provider value={value}>
