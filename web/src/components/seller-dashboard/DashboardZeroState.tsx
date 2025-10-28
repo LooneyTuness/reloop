@@ -43,7 +43,7 @@ export default function DashboardZeroState({ onAddProduct }: DashboardZeroStateP
 
       {/* Quick Start Steps */}
       <div className="w-full max-w-sm sm:max-w-md mx-auto mb-6 sm:mb-8">
-        <div className="bg-white dark:bg-black rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
+        <div className="bg-gray-800 rounded-lg p-3 sm:p-4">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 text-left">
             {t('quickStartChecklist')}
           </h3>

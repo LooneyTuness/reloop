@@ -166,7 +166,7 @@ const DashboardContent = React.memo(function DashboardContent() {
       </div>
 
       {/* Frequently Asked Questions Section */}
-      <div className="bg-white dark:bg-black rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-200 dark:border-gray-800">
+      <div className="bg-gray-900 rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-800">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-10 w-10 bg-blue-900/30 rounded-full flex items-center justify-center">
             <svg className="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

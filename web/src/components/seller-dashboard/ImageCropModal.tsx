@@ -158,10 +158,10 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4 overflow-y-auto" style={{ touchAction: 'auto' }}>
-      <div className="bg-gray-900 rounded-lg shadow-xl max-w-4xl w-full my-auto" style={{ touchAction: 'auto', pointerEvents: 'auto' }}>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full my-auto" style={{ touchAction: 'auto', pointerEvents: 'auto' }}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800">
-          <h2 className="text-xl font-semibold text-white">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             Crop Profile Picture
           </h2>
           <button
@@ -175,7 +175,7 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
               e.stopPropagation();
               onClose();
             }}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             style={{ 
               touchAction: 'manipulation',
               WebkitTapHighlightColor: 'transparent',
@@ -186,7 +186,7 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
               justifyContent: 'center'
             }}
           >
-            <X size={20} className="text-gray-400" />
+            <X size={20} className="text-gray-500" />
           </button>
         </div>
 
@@ -236,7 +236,7 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
             {/* Controls */}
             <div className="lg:w-80 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Scale
                 </label>
                 <input
@@ -248,11 +248,11 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                   onChange={(e) => setScale(Number(e.target.value))}
                   className="w-full"
                 />
-                <div className="text-xs text-gray-400 mt-1">{Math.round(scale * 100)}%</div>
+                <div className="text-xs text-gray-500 mt-1">{Math.round(scale * 100)}%</div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Rotate
                 </label>
                 <button
@@ -266,7 +266,7 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                     e.stopPropagation();
                     handleRotate();
                   }}
-                  className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                   style={{ 
                     touchAction: 'manipulation',
                     WebkitTapHighlightColor: 'transparent',
@@ -279,13 +279,13 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Aspect Ratio
                 </label>
                 <select
                   value={aspect || 'free'}
                   onChange={(e) => setAspect(e.target.value === 'free' ? undefined : Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-700 rounded-lg bg-black text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="free">Free</option>
                   <option value="1">1:1 (Square)</option>
@@ -296,7 +296,7 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
 
               <div className="pt-4" style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}>
                 {!completedCrop && (
-                  <div className="text-sm text-gray-400 mb-2">
+                  <div className="text-sm text-gray-500 mb-2">
                     Please select a crop area to enable the Apply Crop button
                   </div>
                 )}
@@ -335,7 +335,7 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                     className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-colors ${
                       completedCrop 
                         ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 cursor-pointer' 
-                        : 'bg-gray-700 text-gray-400 cursor-not-allowed opacity-50'
+                        : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-50'
                     }`}
                     aria-disabled={!completedCrop}
                     style={{ 

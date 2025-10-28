@@ -243,8 +243,7 @@ const ListingsContent = React.memo(function ListingsContent() {
             
             
             return (
-              <div key={product.id} className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-md transition-shadow">
-
+              <div key={product.id} className="bg-gray-900 rounded-lg shadow-sm border border-gray-800 overflow-hidden hover:shadow-md transition-shadow">
                 <div className="aspect-square bg-gray-800 relative">
                   <div className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs px-1 py-0.5 rounded z-10">
                     #{index + 1}

@@ -286,37 +286,37 @@ const OrdersContent = React.memo(function OrdersContent() {
         )}
 
         {/* Orders Table */}
-        <div className="w-full bg-white dark:bg-black shadow-sm border-t border-b border-gray-200 dark:border-gray-800 overflow-hidden mx-0 sm:mx-0 lg:mx-0 rounded-lg">
+        <div className="w-full bg-gray-900 shadow-sm border-t border-b border-gray-800 overflow-hidden mx-0 sm:mx-0 lg:mx-0 rounded-lg">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     {t('orderId')}
                   </th>
-                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden sm:table-cell">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">
                     {t('customer')}
                   </th>
-                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     {t('product')}
                   </th>
-                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden md:table-cell">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
                     {t('total')}
                   </th>
-                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     {t('status')}
                   </th>
-                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden sm:table-cell">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">
                     {t('date')}
                   </th>
-                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+                  <th className="pl-3 sm:pl-6 pr-3 sm:pr-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     {t('actions')}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-900/30" onClick={(e) => {
+                  <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50" onClick={(e) => {
                     // Prevent row click from interfering with image clicks
                     if (e.target !== e.currentTarget) {
                       e.stopPropagation();
@@ -526,7 +526,7 @@ const OrdersContent = React.memo(function OrdersContent() {
               </button>
 
               {/* Image container */}
-              <div className="relative bg-white dark:bg-black rounded-lg overflow-hidden">
+              <div className="relative bg-gray-900 rounded-lg overflow-hidden">
                 {/* Image */}
                 <div className="relative">
                   <img
