@@ -65,11 +65,11 @@ export async function GET(request: NextRequest) {
         
         if (profileError) {
           console.log('No seller profile found for user:', user.email)
-          // No seller profile - use redirect or default to home
+          // No seller profile - redirect to seller application to create profile
           if (redirect) {
             next = redirect
           } else {
-            next = '/'
+            next = '/seller-application'
           }
         } else if (profile) {
           // Check if user is an approved seller
@@ -86,11 +86,11 @@ export async function GET(request: NextRequest) {
           }
         } else {
           console.log('User is not a seller')
-          // Not a seller - use redirect or default to home
+          // Not a seller - redirect to seller application to create profile
           if (redirect) {
             next = redirect
           } else {
-            next = '/'
+            next = '/seller-application'
           }
         }
       }
@@ -157,11 +157,11 @@ export async function GET(request: NextRequest) {
           }
         } else {
           console.log('User is not a seller')
-          // Not a seller - use redirect or default to home
+          // Not a seller - redirect to seller application to create profile
           if (redirect) {
             next = redirect
           } else {
-            next = '/'
+            next = '/seller-application'
           }
         }
       }
