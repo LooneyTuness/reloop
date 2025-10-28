@@ -23,7 +23,6 @@ export default function TopBar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Close search results and profile dropdown when clicking outside
   useEffect(() => {
@@ -128,17 +127,6 @@ export default function TopBar() {
     }
   }, [sellerProfile, getUserAvatar]);
 
-  // Listen for mobile menu state changes
-  React.useEffect(() => {
-    const handleMobileMenuToggle = () => {
-      setIsMobileMenuOpen(prev => !prev);
-    };
-
-    window.addEventListener('toggleMobileMenu', handleMobileMenuToggle);
-    return () => {
-      window.removeEventListener('toggleMobileMenu', handleMobileMenuToggle);
-    };
-  }, []);
 
   return (
     <div className="fixed top-0 right-0 left-0 lg:left-64 h-16 sm:h-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-[70] shadow-md">
@@ -153,9 +141,9 @@ export default function TopBar() {
               window.dispatchEvent(event);
             }}
             className="lg:hidden p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
-            aria-label={isMobileMenuOpen ? t('closeMenu') : t('mobileMenu')}
+            aria-label={t('mobileMenu')}
           >
-            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            <Menu size={18} />
           </button>
           
           {/* Search */}

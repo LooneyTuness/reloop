@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { X, Check, RotateCw } from 'lucide-react';
@@ -157,16 +157,34 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4" style={{ touchAction: 'none' }}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ touchAction: 'auto' }}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4 overflow-y-auto" style={{ touchAction: 'auto' }}>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full my-auto" style={{ touchAction: 'auto', pointerEvents: 'auto' }}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             Crop Profile Picture
           </h2>
           <button
+            type="button"
             onClick={onClose}
+            onTouchStart={(e) => {
+              e.stopPropagation();
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            style={{ 
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
             <X size={20} className="text-gray-500" />
           </button>
@@ -236,8 +254,22 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                   Rotate
                 </label>
                 <button
+                  type="button"
                   onClick={handleRotate}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleRotate();
+                  }}
                   className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  style={{ 
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
+                    minHeight: '44px'
+                  }}
                 >
                   <RotateCw size={16} />
                   Rotate 90°
@@ -260,60 +292,64 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                 </select>
               </div>
 
-              <div className="pt-4" style={{ touchAction: 'manipulation' }}>
+              <div className="pt-4" style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}>
                 {!completedCrop && (
                   <div className="text-sm text-gray-500 mb-2">
                     Please select a crop area to enable the Apply Crop button
                   </div>
                 )}
-                <button
-                  onClick={(e) => {
-                    console.log('Button onClick triggered!', { completedCrop, isMobile });
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (completedCrop) {
-                      onDownloadCropClick();
-                    }
-                  }}
-                  onTouchStart={(e) => {
-                    console.log('Button onTouchStart triggered!', { completedCrop, isMobile });
-                    if (completedCrop) {
-                      // Only prevent default for enabled buttons
-                      e.stopPropagation();
-                    }
-                  }}
-                  onTouchEnd={(e) => {
-                    console.log('Button onTouchEnd triggered!', { completedCrop, isMobile });
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (completedCrop) {
-                      onDownloadCropClick();
-                    }
-                  }}
-                  disabled={!completedCrop}
-                  className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    completedCrop 
-                      ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800' 
-                      : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                  }`}
-                  style={{ 
-                    WebkitTapHighlightColor: 'transparent',
-                    touchAction: 'manipulation',
-                    minHeight: '48px',
-                    fontSize: '16px',
-                    pointerEvents: 'auto',
-                    position: 'relative',
-                    zIndex: 1000,
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    WebkitTouchCallout: 'none',
-                    WebkitAppearance: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <Check size={18} />
-                  Apply Crop
-                </button>
+                <div style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      console.log('Button onClick triggered!', { completedCrop, isMobile });
+                      if (completedCrop) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onDownloadCropClick();
+                      }
+                    }}
+                    onTouchStart={(e) => {
+                      console.log('Button onTouchStart triggered!', { completedCrop, isMobile });
+                      if (completedCrop) {
+                        e.stopPropagation();
+                      }
+                    }}
+                    onTouchEnd={(e) => {
+                      console.log('Button onTouchEnd triggered!', { completedCrop, isMobile });
+                      if (completedCrop) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onDownloadCropClick();
+                      }
+                    }}
+                    disabled={!completedCrop}
+                    className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-colors ${
+                      completedCrop 
+                        ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800' 
+                        : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                    }`}
+                    style={{ 
+                      WebkitTapHighlightColor: 'transparent',
+                      touchAction: 'manipulation',
+                      minHeight: '48px',
+                      fontSize: '16px',
+                      pointerEvents: 'auto',
+                      position: 'relative',
+                      zIndex: 1000,
+                      userSelect: 'none',
+                      WebkitUserSelect: 'none',
+                      WebkitTouchCallout: 'none',
+                      WebkitAppearance: 'none',
+                      cursor: completedCrop ? 'pointer' : 'not-allowed',
+                      border: 'none',
+                      outline: 'none'
+                    }}
+                  >
+                    <Check size={18} />
+                    Apply Crop
+                  </button>
+                </div>
               </div>
             </div>
           </div>
