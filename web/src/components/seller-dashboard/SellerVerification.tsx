@@ -32,7 +32,20 @@ interface SellerProfile {
 export default function SellerVerification({ children }: SellerVerificationProps) {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [sellerProfile, setSellerProfile] = useState<SellerProfile | null>(null);
+  const [sellerProfile, setSellerProfile] = useState<SellerProfile | null>(() => {
+    // Try to get cached profile from sessionStorage on mount
+    if (typeof window !== 'undefined') {
+      const cached = sessionStorage.getItem('seller_profile_cache');
+      if (cached) {
+        try {
+          return JSON.parse(cached);
+        } catch {
+          return null;
+        }
+      }
+    }
+    return null;
+  });
 
   useEffect(() => {
     // Only run if we have a user and auth is not loading
@@ -44,11 +57,12 @@ export default function SellerVerification({ children }: SellerVerificationProps
       // User not authenticated, redirect to login with return URL
       const currentPath = window.location.pathname;
       console.log('No user found, redirecting to sign-in from:', currentPath);
+      sessionStorage.removeItem('seller_profile_cache'); // Clear cache on logout
       router.push(`/sign-in?returnUrl=${encodeURIComponent(currentPath)}`);
       return;
     }
 
-    // If we already have a seller profile for this user, don't check again
+    // If we already have a seller profile for this user from cache, skip check
     if (sellerProfile && sellerProfile.user_id === user.id) {
       return;
     }
@@ -57,6 +71,7 @@ export default function SellerVerification({ children }: SellerVerificationProps
     if (sellerProfile && sellerProfile.user_id !== user.id) {
       console.log('User changed, resetting seller profile');
       setSellerProfile(null);
+      sessionStorage.removeItem('seller_profile_cache');
     }
 
     const checkSellerProfile = async () => {
@@ -121,8 +136,14 @@ export default function SellerVerification({ children }: SellerVerificationProps
 
         console.log('User verified as approved seller, allowing access to dashboard');
         setSellerProfile(sellerProfile);
+        
+        // Cache the profile in sessionStorage to avoid re-checking on navigation
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('seller_profile_cache', JSON.stringify(sellerProfile));
+        }
       } catch (err) {
         console.error('Error checking seller profile:', err);
+        sessionStorage.removeItem('seller_profile_cache'); // Clear cache on error
         // On error, redirect to home page
         router.push('/');
       }
