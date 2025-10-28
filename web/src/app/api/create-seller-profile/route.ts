@@ -19,6 +19,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // FIRST: Verify the user exists in auth.users
+    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.getUserById(userId);
+    
+    if (authError || !authUser || !authUser.user) {
+      console.error("Error: User does not exist in auth.users:", authError?.message || "User not found");
+      return NextResponse.json(
+        { error: "User does not exist in authentication system. Please sign in first." },
+        { status: 404 }
+      );
+    }
+
+    console.log("Verified user exists in auth.users:", authUser.user.email);
+
     // Check if seller profile already exists
     const { data: existingProfile } = await supabaseAdmin
       .from("seller_profiles")
