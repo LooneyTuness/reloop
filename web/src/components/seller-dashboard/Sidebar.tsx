@@ -202,7 +202,6 @@ export default function Sidebar() {
                 </span>
                 {getUserAvatar() && (
                   <Image
-                    key={getUserAvatar()}
                     src={getUserAvatar() as string}
                     alt="Profile"
                     width={40}

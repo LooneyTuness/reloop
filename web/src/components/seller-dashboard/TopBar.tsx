@@ -256,7 +256,6 @@ export default function TopBar() {
               </span>
               {getUserAvatar() && (
                 <Image
-                  key={getUserAvatar()}
                   src={getUserAvatar() as string}
                   alt="Profile"
                   width={40}
