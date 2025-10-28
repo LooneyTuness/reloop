@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { Clock, Package, DollarSign, ShoppingBag, MoreVertical, ArrowRight } from 'lucide-react';
+import { Clock, Package, ShoppingBag, MoreVertical, ArrowRight } from 'lucide-react';
 import { useDashboard } from '@/contexts/DashboardContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import { OrdersZeroState } from './ZeroStates';

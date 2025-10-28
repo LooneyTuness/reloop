@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Bell, X, Check, AlertCircle, Info, ShoppingBag, Package, DollarSign } from 'lucide-react';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
