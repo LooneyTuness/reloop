@@ -260,7 +260,7 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                 </select>
               </div>
 
-              <div className="pt-4">
+              <div className="pt-4" style={{ touchAction: 'manipulation' }}>
                 {!completedCrop && (
                   <div className="text-sm text-gray-500 mb-2">
                     Please select a crop area to enable the Apply Crop button
@@ -269,8 +269,17 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                 <button
                   onClick={(e) => {
                     console.log('Button onClick triggered!', { completedCrop, isMobile });
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (completedCrop) {
                       onDownloadCropClick();
+                    }
+                  }}
+                  onTouchStart={(e) => {
+                    console.log('Button onTouchStart triggered!', { completedCrop, isMobile });
+                    if (completedCrop) {
+                      // Only prevent default for enabled buttons
+                      e.stopPropagation();
                     }
                   }}
                   onTouchEnd={(e) => {
@@ -290,16 +299,19 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                   style={{ 
                     WebkitTapHighlightColor: 'transparent',
                     touchAction: 'manipulation',
-                    minHeight: isMobile ? '48px' : 'auto',
-                    fontSize: isMobile ? '16px' : '14px',
+                    minHeight: '48px',
+                    fontSize: '16px',
                     pointerEvents: 'auto',
-                    zIndex: 10,
+                    position: 'relative',
+                    zIndex: 1000,
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
-                    WebkitTouchCallout: 'none'
+                    WebkitTouchCallout: 'none',
+                    WebkitAppearance: 'none',
+                    cursor: 'pointer'
                   }}
                 >
-                  <Check size={isMobile ? 18 : 16} />
+                  <Check size={18} />
                   Apply Crop
                 </button>
               </div>

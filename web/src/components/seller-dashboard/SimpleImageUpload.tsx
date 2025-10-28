@@ -142,8 +142,21 @@ export default function SimpleImageUpload({
                     fileInputRef.current?.click();
                   }
                 }}
+                onTouchStart={(e) => {
+                  if (!isUploading) {
+                    e.stopPropagation();
+                  }
+                }}
                 disabled={isUploading}
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                style={{ 
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
+                  minHeight: '48px',
+                  fontSize: '18px',
+                  display: 'inline-block',
+                  padding: '8px 24px'
+                }}
               >
                 {isUploading ? t('uploading') : t('clickToUpload')}
               </button>
@@ -175,8 +188,22 @@ export default function SimpleImageUpload({
               <button
                 type="button"
                 onClick={() => removeImage(index)}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                  removeImage(index);
+                }}
                 className="absolute -top-2 -right-2 p-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 hover:scale-110 transition-all opacity-0 group-hover:opacity-100"
                 title="Remove image"
+                style={{ 
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
+                  minWidth: '36px',
+                  minHeight: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  pointerEvents: 'auto'
+                }}
               >
                 <X size={14} />
               </button>

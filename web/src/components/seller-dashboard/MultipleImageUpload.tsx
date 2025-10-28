@@ -181,7 +181,18 @@ export default function MultipleImageUpload({
                   console.log('Upload button clicked, fileInputRef:', fileInputRef.current);
                   fileInputRef.current?.click();
                 }}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                }}
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                style={{ 
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
+                  minHeight: '44px',
+                  fontSize: '16px',
+                  display: 'inline-block',
+                  padding: '8px 16px'
+                }}
               >
                 Click to upload
               </button>
@@ -214,16 +225,42 @@ export default function MultipleImageUpload({
                   <button
                     type="button"
                     onClick={() => handleImageClick(index)}
+                    onTouchStart={(e) => {
+                      e.stopPropagation();
+                      handleImageClick(index);
+                    }}
                     className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
                     title="Edit image"
+                    style={{ 
+                      touchAction: 'manipulation',
+                      WebkitTapHighlightColor: 'transparent',
+                      minWidth: '44px',
+                      minHeight: '44px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
                   >
                     <Camera size={16} className="text-gray-600" />
                   </button>
                   <button
                     type="button"
                     onClick={() => removeImage(index)}
+                    onTouchStart={(e) => {
+                      e.stopPropagation();
+                      removeImage(index);
+                    }}
                     className="p-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
                     title="Remove image"
+                    style={{ 
+                      touchAction: 'manipulation',
+                      WebkitTapHighlightColor: 'transparent',
+                      minWidth: '44px',
+                      minHeight: '44px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
                   >
                     <X size={16} />
                   </button>

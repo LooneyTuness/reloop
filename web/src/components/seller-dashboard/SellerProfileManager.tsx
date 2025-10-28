@@ -316,11 +316,28 @@ export default function SellerProfileManager() {
                     </div>
                   )}
                 </div>
-                <label className={`absolute bottom-0 right-0 p-3 sm:p-2 rounded-full transition-colors shadow-lg z-10 ${
-                  isUploadingImage 
-                    ? 'bg-gray-400 cursor-not-allowed' 
-                    : 'bg-blue-600 text-white cursor-pointer hover:bg-blue-700 active:scale-95'
-                }`}>
+                <label 
+                  className={`absolute bottom-0 right-0 p-3 sm:p-2 rounded-full transition-colors shadow-lg z-10 ${
+                    isUploadingImage 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-blue-600 text-white cursor-pointer hover:bg-blue-700 active:scale-95'
+                  }`}
+                  style={{ 
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
+                    pointerEvents: isUploadingImage ? 'none' : 'auto',
+                    minWidth: '48px',
+                    minHeight: '48px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  onTouchStart={(e) => {
+                    if (!isUploadingImage) {
+                      e.stopPropagation();
+                    }
+                  }}
+                >
                   <Camera size={18} className="sm:w-4 sm:h-4" />
                   <input
                     type="file"
