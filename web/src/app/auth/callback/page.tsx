@@ -16,7 +16,7 @@ export default function AuthCallbackPage() {
         console.log('AuthCallback: Handling auth callback...');
         
         // Get the redirect URL from query params
-        const redirectUrl = searchParams.get('redirect') || '/';
+        const redirectUrl = searchParams.get('redirect') || '/seller-application';
         console.log('AuthCallback: Redirect URL:', redirectUrl);
         
         // Get the session - force refresh if this is a confirmation redirect
@@ -86,15 +86,15 @@ export default function AuthCallbackPage() {
             });
 
             if (profileError) {
-              console.log('AuthCallback: No seller profile found, redirecting to seller application');
-              router.push('/seller-application');
+              console.log('AuthCallback: No seller profile found, redirecting to home');
+              router.push('/');
             } else if (sellerProfile) {
               console.log('AuthCallback: User is a seller, redirecting to dashboard');
               console.log('AuthCallback: Redirecting to:', redirectUrl);
               router.push(redirectUrl);
             } else {
-              console.log('AuthCallback: User is not a seller, redirecting to seller application');
-              router.push('/seller-application');
+              console.log('AuthCallback: User is not a seller, redirecting to home');
+              router.push('/');
             }
           } else if (redirectUrl.includes('seller-application')) {
             // If redirecting to seller application, wait a bit more to ensure auth is fully established
