@@ -96,6 +96,12 @@ export default function AuthCallbackPage() {
               console.log('AuthCallback: User is not a seller, redirecting to home');
               router.push('/');
             }
+          } else if (redirectUrl.includes('seller-application')) {
+            // If redirecting to seller application, wait a bit more to ensure auth is fully established
+            console.log('AuthCallback: Redirecting to seller application, ensuring auth is established...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            console.log('AuthCallback: Redirecting to:', redirectUrl);
+            router.push(redirectUrl);
           } else {
             // For other redirects, just go to the specified URL
             console.log('AuthCallback: Redirecting to:', redirectUrl);
