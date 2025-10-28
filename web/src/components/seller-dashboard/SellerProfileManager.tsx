@@ -222,10 +222,10 @@ export default function SellerProfileManager() {
   return (
     <div className="p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           {t('sellerProfile')}
         </h1>
-        <p className="text-gray-400">
+        <p className="text-gray-600 dark:text-gray-400">
           {t('manageSellerProfile')}
         </p>
       </div>
@@ -286,13 +286,13 @@ export default function SellerProfileManager() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {/* Profile Picture */}
         <div className="lg:col-span-1 lg:order-1">
-          <div className="bg-gray-900 rounded-lg shadow-sm border border-gray-800 p-4 sm:p-6">
-            <h2 className="text-xl font-semibold text-white mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               {t('profilePicture')}
             </h2>
             <div>
               <div className="relative inline-block">
-                <div className="w-32 h-32 bg-gray-800 rounded-full overflow-hidden mb-4 relative">
+                <div className="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mb-4 relative">
                   {isUploadingImage ? (
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -312,14 +312,14 @@ export default function SellerProfileManager() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <User size={48} className="text-gray-500" />
+                      <User size={48} className="text-gray-400" />
                     </div>
                   )}
                 </div>
                 <label 
                   className={`absolute bottom-0 right-0 p-3 sm:p-2 rounded-full transition-colors shadow-lg z-10 ${
                     isUploadingImage 
-                      ? 'bg-gray-600 cursor-not-allowed' 
+                      ? 'bg-gray-400 cursor-not-allowed' 
                       : 'bg-blue-600 text-white cursor-pointer hover:bg-blue-700 active:scale-95'
                   }`}
                   style={{ 
@@ -348,7 +348,7 @@ export default function SellerProfileManager() {
                   />
                 </label>
               </div>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {t('clickCameraIcon')}
               </p>
             </div>
@@ -359,78 +359,78 @@ export default function SellerProfileManager() {
         <div className="lg:col-span-2 lg:order-2">
           <form onSubmit={handleSaveProfile} className="space-y-6">
             {/* Personal Information */}
-            <div className="bg-gray-900 rounded-lg shadow-sm border border-gray-800 p-4 sm:p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                 {t('personalInformation')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('fullName')}
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                     <input
                       type="text"
                       name="full_name"
                       value={formData.full_name}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder={t('enterFullName')}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('email')}
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder={t('enterEmail')}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('phone')}
                   </label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                     <input
                       type="tel"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder={t('enterPhoneNumber')}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('location')}
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                     <input
                       type="text"
                       name="location"
                       value={formData.location}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder={t('enterLocation')}
                     />
                   </div>
                 </div>
               </div>
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('bio')}
                 </label>
                 <textarea
@@ -438,16 +438,16 @@ export default function SellerProfileManager() {
                   value={formData.bio}
                   onChange={handleInputChange}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder={t('tellCustomersAboutYourself')}
                 />
               </div>
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('website')}
                 </label>
                 <div className="relative">
-                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                   <input
                     type="url"
                     name="website"
@@ -461,13 +461,13 @@ export default function SellerProfileManager() {
             </div>
 
             {/* Business Information */}
-            <div className="bg-gray-900 rounded-lg shadow-sm border border-gray-800 p-4 sm:p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                 {t('businessInformation')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('businessName')}
                   </label>
                   <input
@@ -475,19 +475,19 @@ export default function SellerProfileManager() {
                     name="business_name"
                     value={formData.business_name}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder={t('enterBusinessName')}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('businessType')}
                   </label>
                   <select
                     name="business_type"
                     value={formData.business_type}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">{t('selectBusinessType')}</option>
                     <option value="individual">{t('individualSeller')}</option>
@@ -498,7 +498,7 @@ export default function SellerProfileManager() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('taxId')}
                   </label>
                   <input
@@ -506,12 +506,12 @@ export default function SellerProfileManager() {
                     name="tax_id"
                     value={formData.tax_id}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder={t('enterTaxId')}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('bankAccount')}
                   </label>
                   <input
@@ -519,7 +519,7 @@ export default function SellerProfileManager() {
                     name="bank_account"
                     value={formData.bank_account}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-800 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder={t('enterBankAccountInfo')}
                   />
                 </div>
