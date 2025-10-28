@@ -168,34 +168,34 @@ const DashboardContent = React.memo(function DashboardContent() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Често поставувани прашања</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('frequentlyAskedQuestions')}</h2>
         </div>
         
         <div className="space-y-4">
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Како можам да додадам нов производ?</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">Кликнете на копчето &ldquo;Додај нов производ&rdquo; во горниот дел од таблата или од менито за да започнете процесот на додавање на вашиот производ.</p>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{t('faqQuestion1')}</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">{t('faqAnswer1')}</p>
           </div>
           
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Како можам да ги следам моите нарачки?</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">Сите ваши нарачки се прикажани во делот &ldquo;Нарачки&rdquo; каде што можете да ги видите деталите и статусот на секоја нарачка.</p>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{t('faqQuestion2')}</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">{t('faqAnswer2')}</p>
           </div>
           
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Кога се одвива плаќањето за моите продажби?</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">Плаќањата се процесираат на месечна основа. Ќе добиете известување кога ќе се одвива исплатата.</p>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{t('faqQuestion3')}</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">{t('faqAnswer3')}</p>
           </div>
           
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Како можам да го уредам мојот профил?</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">Одете во делот &ldquo;Подесувања&rdquo; за да ги уредите вашите лични информации, бизнис детали и преференци.</p>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{t('faqQuestion4')}</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">{t('faqAnswer4')}</p>
           </div>
         </div>
         
         {/* Contact Information */}
         <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Потребна ви е помош?</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-4">{t('needHelp')}</h3>
           <div className="flex flex-col sm:flex-row gap-4">
             <a 
               href="tel:075251009" 

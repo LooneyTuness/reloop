@@ -469,6 +469,18 @@ const dashboardTranslations = {
     automatedPayoutScheduling: "Автоматско закажување на исплати",
     detailedTransactionHistory: "Детална историја на трансакции",
     taxReportingTools: "Алатки за даночно пријавување",
+    
+    // FAQ Section
+    frequentlyAskedQuestions: "Често поставувани прашања",
+    faqQuestion1: "Како можам да додадам нов производ?",
+    faqAnswer1: "Кликнете на копчето \"Додај нов производ\" во горниот дел од таблата или од менито за да го започнете процесот на додавање на вашиот производ.",
+    faqQuestion2: "Како можам да ги следам моите нарачки?",
+    faqAnswer2: "Сите ваши нарачки се прикажани во делот \"Нарачки\" каде што можете да ги видите деталите и статусот на секоја нарачка.",
+    faqQuestion3: "Кога се одвива плаќањето за моите продажби?",
+    faqAnswer3: "Плаќањата се процесираат на месечна основа. Ќе добиете известување кога ќе се одвива исплатата.",
+    faqQuestion4: "Како можам да го уредам мојот профил?",
+    faqAnswer4: "Одете во делот \"Подесувања\" за да ги уредите вашите лични информации, бизнис детали и преференци.",
+    needHelp: "Потребна ви е помош?",
 
   },
   en: {
@@ -908,6 +920,18 @@ const dashboardTranslations = {
     multiplePaymentMethods: "Multiple payment methods",
     automatedPayoutScheduling: "Automated payout scheduling",
     detailedTransactionHistory: "Detailed transaction history",
+    
+    // FAQ Section
+    frequentlyAskedQuestions: "Frequently Asked Questions",
+    faqQuestion1: "How can I add a new product?",
+    faqAnswer1: "Click the \"Add New Product\" button at the top of the dashboard or from the menu to start the process of adding your product.",
+    faqQuestion2: "How can I track my orders?",
+    faqAnswer2: "All your orders are displayed in the \"Orders\" section where you can view details and status of each order.",
+    faqQuestion3: "When does payment for my sales occur?",
+    faqAnswer3: "Payments are processed on a monthly basis. You'll receive a notification when the payout occurs.",
+    faqQuestion4: "How can I edit my profile?",
+    faqAnswer4: "Go to the \"Settings\" section to edit your personal information, business details, and preferences.",
+    needHelp: "Need help?",
   }
 };
 

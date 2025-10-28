@@ -317,7 +317,9 @@ const translations = {
     errorCreatingSellerProfile: "Грешка при создавање на продавачки профил",
     errorCheckingSellerProfile: "Грешка при проверка на продавачки профил",
     errorProcessingRequest: "Грешка при процесирање на барање",
+    unknownError: "Непозната грешка",
     loading: "Се вчитува...",
+    completingAuthentication: "Се завршува автентификацијата...",
 
     loadingProducts: "Се вчитуваат продукти...",
     unableToLoadProducts: "Не можам да ги вчитам продуктите",
@@ -1111,7 +1113,9 @@ const translations = {
     errorCreatingSellerProfile: "Error creating seller profile",
     errorCheckingSellerProfile: "Error checking seller profile",
     errorProcessingRequest: "Error processing request",
+    unknownError: "Unknown error",
     loading: "Loading...",
+    completingAuthentication: "Completing authentication...",
 
     loadingProducts: "Loading products...",
     unableToLoadProducts: "Unable to load products",

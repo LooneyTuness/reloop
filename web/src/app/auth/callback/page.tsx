@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,8 +138,8 @@ export default function AuthCallbackPage() {
             <div className="bg-black/90 rounded-2xl border border-gray-600/30 shadow-2xl p-6 sm:p-8 text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-6"></div>
               <div className="space-y-2">
-                <p className="text-lg font-medium text-white">Completing authentication...</p>
-                <p className="text-sm text-gray-300">Please wait a moment</p>
+                <p className="text-lg font-medium text-white">{t('completingAuthentication')}</p>
+                <p className="text-sm text-gray-300">{t('pleaseWait')}</p>
               </div>
             </div>
           </div>
