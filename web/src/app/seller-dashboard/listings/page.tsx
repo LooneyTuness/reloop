@@ -139,14 +139,17 @@ const ListingsContent = React.memo(function ListingsContent() {
   // Show zero state if no products (only after loading is complete)
   if (!isLoading && products.length === 0) {
     return (
-      <div className="px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {t('productListings')}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            {t('manageProductInventory')}
-          </p>
+      <div className="w-full py-4 sm:py-8">
+        <div className="px-3 sm:px-6">
+          <BackButton className="mb-6" />
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              {t('productListings')}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              {t('manageProductInventory')}
+            </p>
+          </div>
         </div>
         <ProductsZeroState
           onAddProduct={() => router.push('/seller-dashboard/add-product')}
@@ -157,30 +160,22 @@ const ListingsContent = React.memo(function ListingsContent() {
   }
 
   return (
-    <div className="px-3 sm:px-6 py-4 sm:py-8">
-        {/* Header */}
-        <div className="mb-6">
-          <BackButton className="mb-4" />
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {t('myListings')}
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                {t('manageProductInventory')}
-              </p>
-            </div>
-            <button 
-              onClick={() => router.push('/seller-dashboard/add-product')}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Plus size={20} className="mr-2" />
-              {t('addProduct')}
-            </button>
-          </div>
+    <div className="w-full py-4 sm:py-8">
+      {/* Header */}
+      <div className="px-3 sm:px-6 mb-8">
+        <BackButton className="mb-4" />
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            {t('myListings')}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t('manageProductInventory')}
+          </p>
         </div>
+      </div>
 
-        {/* Filters and Search */}
+      {/* Filters and Search */}
+      <div className="px-3 sm:px-6">
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1">
             <div className="relative">
@@ -219,15 +214,19 @@ const ListingsContent = React.memo(function ListingsContent() {
             </select>
           </div>
         </div>
+      </div>
 
-        {/* Error Message */}
+      {/* Error Message */}
+      <div className="px-3 sm:px-6">
         {error && (
           <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
             <p className="text-red-800 dark:text-red-200">{error}</p>
           </div>
         )}
+      </div>
 
-        {/* Products Grid */}
+      {/* Products Grid */}
+      <div className="px-3 sm:px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredProducts.map((product, index) => {
             // Simplified image handling
@@ -337,6 +336,7 @@ const ListingsContent = React.memo(function ListingsContent() {
           </div>
         )}
       </div>
+    </div>
   );
 });
 

@@ -165,14 +165,17 @@ const OrdersContent = React.memo(function OrdersContent() {
   // Show zero state if no orders (only after loading is complete)
   if (!isLoading && orders.length === 0) {
     return (
-      <div className="px-3 sm:px-6 py-4 sm:py-8 max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {t('orders')}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            {t('manageCustomerOrders')}
-          </p>
+      <div className="w-full py-4 sm:py-8">
+        <div className="px-3 sm:px-6">
+          <BackButton className="mb-6" />
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              {t('orders')}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              {t('manageCustomerOrders')}
+            </p>
+          </div>
         </div>
         <OrdersZeroState
           onViewOrders={() => router.push('/seller-dashboard/orders')}
