@@ -19,31 +19,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // FIRST: Verify the user exists in auth.users
-    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.getUserById(userId);
-    
-    if (authError || !authUser || !authUser.user) {
-      console.error("Error: User does not exist in auth.users:", authError?.message || "User not found");
-      return NextResponse.json(
-        { error: "User does not exist in authentication system. Please sign in first." },
-        { status: 404 }
-      );
-    }
-
-    console.log("Verified user exists in auth.users:", authUser.user.email);
+    console.log("Creating seller profile for user:", userId, email);
 
     // Check if seller profile already exists
-    const { data: existingProfile } = await supabaseAdmin
+    const { data: existingProfile, error: checkError } = await supabaseAdmin
       .from("seller_profiles")
       .select("id")
       .eq("user_id", userId)
-      .single();
+      .maybeSingle();
+
+    // If checkError exists and it's not a "no rows" error, log it but continue
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error("Error checking for existing profile:", checkError);
+    }
 
     if (existingProfile) {
-      return NextResponse.json(
-        { error: "Seller profile already exists" },
-        { status: 409 }
-      );
+      console.log("Seller profile already exists for user:", userId);
+      return NextResponse.json({
+        success: true,
+        profile: existingProfile,
+        message: "Seller profile already exists"
+      });
     }
 
     // Create seller profile

@@ -21,7 +21,7 @@ export default function SellerApplicationPage() {
     setIsProcessing(true);
 
     try {
-      console.log('Creating seller profile for user:', user.id);
+      console.log('Creating seller profile for user:', user.id, user.email);
       
       // Call the API route to create seller profile
       const response = await fetch('/api/create-seller-profile', {
@@ -36,18 +36,46 @@ export default function SellerApplicationPage() {
         }),
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
-        console.error('Error creating seller profile:', result);
-        toast.error(t('errorCreatingSellerProfile') + ': ' + (result.error || t('unknownError')));
+        const errorText = await response.text();
+        let result;
+        try {
+          result = JSON.parse(errorText);
+        } catch {
+          result = { error: errorText };
+        }
+        
+        console.error('Error creating seller profile:', result, 'Status:', response.status);
+        
+        // If it's a 404, the API route doesn't exist (deployment issue)
+        if (response.status === 404) {
+          toast.error(t('errorCreatingSellerProfile') + ': API endpoint not found. Please contact support.');
+        } else if (response.status === 409) {
+          // Profile already exists, redirect to dashboard
+          console.log('Profile already exists, redirecting to dashboard');
+          toast.success('Welcome back!');
+          setTimeout(() => {
+            router.push('/seller-dashboard');
+          }, 500);
+          return;
+        } else {
+          toast.error(t('errorCreatingSellerProfile') + ': ' + (result.error || t('unknownError')));
+        }
+        
         setIsProcessing(false);
         setChecking(false);
         return;
       }
 
+      const result = await response.json();
       console.log('Seller profile created successfully:', result);
-      toast.success(t('sellerProfileCreatedSuccess'));
+      
+      // Success message based on whether it was created or already existed
+      if (result.message && result.message.includes('already exists')) {
+        toast.success('Welcome back!');
+      } else {
+        toast.success(t('sellerProfileCreatedSuccess'));
+      }
       
       // Wait a moment for the toast to show, then redirect
       setTimeout(() => {
@@ -55,7 +83,7 @@ export default function SellerApplicationPage() {
       }, 1500);
     } catch (err) {
       console.error('Error creating seller profile:', err);
-      toast.error(t('errorCreatingSellerProfile'));
+      toast.error(t('errorCreatingSellerProfile') + ': ' + (err instanceof Error ? err.message : t('unknownError')));
       setIsProcessing(false);
       setChecking(false);
     }
@@ -63,17 +91,31 @@ export default function SellerApplicationPage() {
 
   useEffect(() => {
     const checkSellerProfile = async () => {
+      // Always wait for auth to finish loading
       if (authLoading) {
+        console.log('Auth still loading, waiting...');
         return;
       }
 
-      // If not authenticated, redirect to sign-in
+      // If not authenticated, immediately redirect to sign-in
       if (!user) {
         console.log('No user found, redirecting to sign-in');
-        router.push('/sign-in?returnUrl=/seller-application');
+        // Store the redirect URL in localStorage for the magic link flow
+        localStorage.setItem('auth_redirect', '/seller-application');
+        router.push('/sign-in?redirect=/seller-application');
         return;
       }
 
+      // Additional validation: ensure user has required fields
+      if (!user.id || !user.email) {
+        console.log('User missing required fields, redirecting to sign-in');
+        // Store the redirect URL in localStorage for the magic link flow
+        localStorage.setItem('auth_redirect', '/seller-application');
+        router.push('/sign-in?redirect=/seller-application');
+        return;
+      }
+
+      console.log('User authenticated, proceeding to check seller profile');
       setChecking(true);
 
       try {
@@ -84,15 +126,16 @@ export default function SellerApplicationPage() {
           .from('seller_profiles')
           .select('*')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
         if (profileError) {
-          if (profileError.code === 'PGRST116') {
-            // No profile found - create one automatically
-            console.log('No seller profile found, creating one automatically');
+          console.error('Error checking seller profile:', profileError);
+          
+          // If it's a 406 or other error, try to create a profile anyway
+          if (profileError.code === 'PGRST116' || profileError.code === '42501' || profileError.code?.includes('406')) {
+            console.log('No seller profile found or access error, creating one automatically');
             await createSellerProfile();
           } else {
-            console.error('Error checking seller profile:', profileError);
             toast.error(t('errorCheckingSellerProfile'));
             setChecking(false);
           }
@@ -100,6 +143,10 @@ export default function SellerApplicationPage() {
           console.log('Seller profile found:', profile);
           // Profile exists, redirect to dashboard
           router.push('/seller-dashboard');
+        } else {
+          // No profile found - create one automatically
+          console.log('No seller profile found, creating one automatically');
+          await createSellerProfile();
         }
       } catch (err) {
         console.error('Error checking seller profile:', err);
@@ -112,7 +159,7 @@ export default function SellerApplicationPage() {
   }, [user, authLoading, router, createSellerProfile, t]);
 
   // Show loading state
-  if (authLoading || checking || isProcessing) {
+  if (authLoading || checking || isProcessing || !user) {
     return (
       <div className="min-h-screen bg-black text-white relative bg-cover bg-center bg-no-repeat overflow-hidden"
         style={{
@@ -133,20 +180,25 @@ export default function SellerApplicationPage() {
             {/* Loading spinner */}
             <div className="mb-8 flex justify-center">
               <Loader2 className="h-12 w-12 animate-spin text-white" />
-                  </div>
+            </div>
 
             {/* Title */}
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-              {t('settingUpYourSellerAccount')}
+              {authLoading || !user ? t('pleaseWait') : t('settingUpYourSellerAccount')}
             </h2>
             
             {/* Status message */}
             <p className="text-base sm:text-lg text-gray-300">
-              {isProcessing ? t('creatingYourSellerProfile') : t('checkingYourAccount')}
+              {authLoading || !user 
+                ? t('checkingYourAccount') 
+                : isProcessing 
+                  ? t('creatingYourSellerProfile') 
+                  : t('checkingYourAccount')
+              }
             </p>
-                    </div>
-                  </div>
-                </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
