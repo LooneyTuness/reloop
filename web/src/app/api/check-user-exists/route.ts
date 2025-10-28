@@ -22,20 +22,28 @@ export async function POST(req: NextRequest) {
     // Check if user exists in auth.users
     const { data: user, error: userError } = await supabaseAdmin.auth.admin.getUserById(userId);
 
+    console.log('Check user exists - userId:', userId);
+    console.log('Check user exists - result:', { user, userError });
+
     if (userError) {
+      console.error('User lookup error:', userError);
       return NextResponse.json({
         exists: false,
-        error: userError.message
+        error: userError.message,
+        code: userError.status
       });
     }
 
     if (!user || !user.user) {
+      console.log('User not found in auth.users for ID:', userId);
       return NextResponse.json({
         exists: false,
         message: "User not found"
       });
     }
 
+    console.log('User found in auth.users:', user.user.email);
+    
     return NextResponse.json({
       exists: true,
       user: {

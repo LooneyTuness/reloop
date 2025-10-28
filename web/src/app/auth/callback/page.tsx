@@ -16,7 +16,7 @@ export default function AuthCallbackPage() {
         console.log('AuthCallback: Handling auth callback...');
         
         // Get the redirect URL from query params
-        const redirectUrl = searchParams.get('redirect') || '/seller-application';
+        const redirectUrl = searchParams.get('redirect') || '/';
         console.log('AuthCallback: Redirect URL:', redirectUrl);
         
         // Get the session - force refresh if this is a confirmation redirect
