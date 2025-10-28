@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Reloop Web Application
 
-## Getting Started
+The frontend application for the Reloop marketplace platform, built with Next.js 14 and TypeScript.
 
-First, run the development server:
+## 🚀 Getting Started
+
+For complete setup instructions, see the [**Root Setup Manual**](../SETUP_MANUAL.md).
+
+### Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp env.example .env.local
+# Edit .env.local with your configuration
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+web/
+├── src/
+│   ├── app/                    # Next.js App Router pages
+│   ├── components/             # React components
+│   ├── contexts/               # React contexts
+│   ├── lib/                    # Utility functions and configurations
+│   │   └── supabase/          # Supabase client setup
+│   └── types/                  # TypeScript type definitions
+├── public/                     # Static assets
+├── .env.local                  # Environment variables (create from env.example)
+├── env.example                 # Environment variables template
+├── next.config.js              # Next.js configuration
+├── tailwind.config.js          # Tailwind CSS configuration
+└── package.json
+```
 
-## Learn More
+## 🔧 Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env.local` file based on `env.example`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+# Supabase Configuration (REQUIRED)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Application Configuration
+NEXT_PUBLIC_WAITLIST_ONLY=false
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-## Deploy on Vercel
+# Email Notifications (REQUIRED)
+EMAIL_USER=your-email@gmail.com
+EMAIL_APP_PASSWORD=your_gmail_app_password
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# PostHog Analytics (Optional)
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_key
+NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [SETUP_MANUAL.md](../SETUP_MANUAL.md) for detailed setup instructions.
+
+## 📦 Available Scripts
+
+```bash
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run start            # Start production server
+npm run lint             # Run ESLint
+npm run lint:fix         # Fix linting issues
+npm run type-check       # TypeScript type checking
+npm run db:types         # Generate Supabase types
+```
+
+## 🎨 Technologies
+
+- **Next.js 14** - React framework with App Router
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first CSS
+- **Radix UI** - Accessible UI components
+- **React Hook Form** - Form management
+- **Zod** - Schema validation
+- **TanStack Query** - Server state management
+- **Supabase** - Backend-as-a-Service
+
+## 📚 Documentation
+
+- [Setup Manual](../SETUP_MANUAL.md) - Complete setup guide
+- [Environment Setup Guide](./ENVIRONMENT_SETUP_GUIDE.md) - Environment configuration
+- [Production Deployment Guide](./PRODUCTION_DEPLOYMENT_GUIDE.md) - Deployment instructions
+
+## 🔒 Security
+
+- Never commit `.env.local`
+- Keep API keys secure
+- Review security headers in `next.config.js`
+
+## 🤝 Contributing
+
+1. Follow the code style guidelines
+2. Run linting before committing: `npm run lint:fix`
+3. Ensure TypeScript checks pass: `npm run type-check`

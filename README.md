@@ -1,70 +1,154 @@
-# Getting Started with Create React App
+# Reloop - Second-hand Marketplace Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern e-commerce platform for buying and selling second-hand items, built with Next.js, NestJS, and Supabase.
 
-## Available Scripts
+## 🚀 Quick Start
 
-In the project directory, you can run:
+For detailed setup instructions, see the [**Setup Manual**](SETUP_MANUAL.md).
 
-### `npm start`
+```bash
+# Clone the repository
+git clone <repository-url>
+cd reloop
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# Install all dependencies
+npm run install:all
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Set up environment variables (see SETUP_MANUAL.md)
+# Copy web/env.example to web/.env.local and configure
 
-### `npm test`
+# Start the development server
+npm run dev
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Visit http://localhost:3000 to see the application.
 
-### `npm run build`
+## 📁 Project Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+reloop/
+├── web/              # Next.js frontend application
+│   ├── src/          # Source code
+│   ├── public/       # Static assets
+│   ├── env.example   # Environment variables template
+│   └── package.json
+├── server/           # NestJS backend server
+│   ├── src/          # Source code
+│   ├── test/         # E2E tests
+│   └── package.json
+├── SETUP_MANUAL.md   # Complete setup guide
+├── package.json      # Root package.json with scripts
+└── README.md
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🛠️ Tech Stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Frontend
 
-### `npm run eject`
+- **Next.js 14** - React framework with App Router
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Radix UI** - UI components
+- **React Hook Form** - Form handling
+- **Zod** - Schema validation
+- **TanStack Query** - Data fetching
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Backend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **NestJS** - Node.js framework
+- **TypeScript** - Type safety
+- **Supabase** - Database and authentication
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Infrastructure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Supabase** - PostgreSQL database, authentication, storage
+- **PostHog** - Analytics (optional)
 
-## Learn More
+## 📦 Available Scripts
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Root Level
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm run dev              # Start web development server
+npm run dev:server       # Start server development server
+npm run build            # Build web application
+npm run build:server     # Build server application
+npm run start            # Start web in production mode
+npm run start:server     # Start server in production mode
+npm run lint             # Lint web application
+npm run install:all      # Install all dependencies
+```
 
-### Code Splitting
+### Web Application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+cd web
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run start            # Start production server
+npm run lint             # Run ESLint
+npm run type-check       # TypeScript type checking
+npm run db:types         # Generate Supabase types
+```
 
-### Analyzing the Bundle Size
+### Server Application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+cd server
+npm run start:dev        # Start development server
+npm run build            # Build application
+npm run start:prod       # Start production server
+跟他 run test             # Run tests
+npm run test:e2e         # Run end-to-end tests
+```
 
-### Making a Progressive Web App
+## 🔧 Environment Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Copy the environment template:
 
-### Advanced Configuration
+   ```bash
+   cd web
+   cp env.example .env.local
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+2. Configure your environment variables (see [SETUP_MANUAL.md](SETUP_MANUAL.md) for details):
 
-### Deployment
+   - Supabase credentials
+   - Email configuration
+   - Optional: PostHog analytics
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+3. Set up your Supabase database (see [SETUP_MANUAL.md](SETUP_MANUAL.md))
 
-### `npm run build` fails to minify
+## 📚 Documentation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [**Setup Manual**](SETUP_MANUAL.md) - Complete setup guide for new developers
+- [**Web Documentation**](web/README.md) - Frontend-specific documentation
+- [**Server Documentation**](server/README.md) - Backend-specific documentation
+- [**Environment Setup Guide**](web/ENVIRONMENT_SETUP_GUIDE.md) - Environment configuration
+- [**Production Deployment Guide**](web/PRODUCTION_DEPLOYMENT_GUIDE.md) - Production deployment
+
+## 🔒 Security
+
+- Never commit `.env.local` or `.env` files
+- Keep all API keys and credentials secure
+- Use different credentials for development and production
+- Review and update security policies regularly
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📝 License
+
+This project is private and proprietary.
+
+## 🆘 Support
+
+For setup issues, refer to the [Setup Manual](SETUP_MANUAL.md) or check the troubleshooting section.
+
+---
+
+**Happy coding! 🚀**
