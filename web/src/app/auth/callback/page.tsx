@@ -86,15 +86,15 @@ export default function AuthCallbackPage() {
             });
 
             if (profileError) {
-              console.log('AuthCallback: No seller profile found, redirecting to home');
-              router.push('/');
+              console.log('AuthCallback: No seller profile found, redirecting to seller application');
+              router.push('/seller-application');
             } else if (sellerProfile) {
               console.log('AuthCallback: User is a seller, redirecting to dashboard');
               console.log('AuthCallback: Redirecting to:', redirectUrl);
               router.push(redirectUrl);
             } else {
-              console.log('AuthCallback: User is not a seller, redirecting to home');
-              router.push('/');
+              console.log('AuthCallback: User is not a seller, redirecting to seller application');
+              router.push('/seller-application');
             }
           } else if (redirectUrl.includes('seller-application')) {
             // If redirecting to seller application, wait a bit more to ensure auth is fully established
