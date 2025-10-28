@@ -81,15 +81,8 @@ export default function TopBar() {
     }
   };
 
-  // Reset avatar loaded state when avatar URL changes
-  useEffect(() => {
-    if (sellerProfile?.avatar_url) {
-      console.log('TopBar - Avatar URL changed:', sellerProfile.avatar_url);
-    }
-  }, [sellerProfile?.avatar_url]);
-
-  // Get user display name and avatar
-  const getUserDisplayName = () => {
+  // Get user display name and avatar - memoized to prevent unnecessary rerenders
+  const getUserDisplayName = useCallback(() => {
     if (sellerProfile?.full_name) {
       return sellerProfile.full_name.split(' ')[0];
     }
@@ -100,12 +93,12 @@ export default function TopBar() {
       return user.email.split('@')[0];
     }
     return 'User';
-  };
+  }, [sellerProfile?.full_name, sellerProfile?.business_name, user?.email]);
 
-  const getUserInitial = () => {
+  const getUserInitial = useCallback(() => {
     const name = getUserDisplayName();
     return name.charAt(0).toUpperCase();
-  };
+  }, [getUserDisplayName]);
 
   const getUserAvatar = useCallback(() => {
     if (sellerProfile?.avatar_url) {
@@ -113,19 +106,6 @@ export default function TopBar() {
     }
     return null;
   }, [sellerProfile?.avatar_url]);
-
-
-  // Debug avatar URL and profile data
-  React.useEffect(() => {
-    console.log('TopBar - Full profile data:', sellerProfile);
-    if (sellerProfile?.avatar_url) {
-      console.log('TopBar - Avatar URL:', sellerProfile.avatar_url);
-      const avatarUrl = getUserAvatar();
-      console.log('TopBar - getUserAvatar():', avatarUrl);
-    } else {
-      console.log('TopBar - No avatar URL found');
-    }
-  }, [sellerProfile, getUserAvatar]);
 
 
   return (
@@ -256,6 +236,7 @@ export default function TopBar() {
               </span>
               {getUserAvatar() && (
                 <Image
+                  key={`avatar-${sellerProfile?.avatar_url}`}
                   src={getUserAvatar() as string}
                   alt="Profile"
                   width={40}
@@ -281,7 +262,7 @@ export default function TopBar() {
                       </span>
                       {getUserAvatar() && (
                         <Image
-                          key={`${getUserAvatar()}-dropdown`}
+                          key={`dropdown-avatar-${sellerProfile?.avatar_url}`}
                           src={getUserAvatar() as string}
                           alt="Profile"
                           width={40}

@@ -106,18 +106,6 @@ export default function Sidebar() {
   }, [sellerProfile?.avatar_url]);
 
 
-  // Debug avatar URL and profile data
-  React.useEffect(() => {
-    console.log('Sidebar - Full profile data:', sellerProfile);
-    console.log('Sidebar - getUserAvatar():', getUserAvatar());
-    console.log('Sidebar - getUserDisplayName():', getUserDisplayName());
-    console.log('Sidebar - getUserInitial():', getUserInitial());
-    if (sellerProfile?.avatar_url) {
-      console.log('Sidebar - Avatar URL:', sellerProfile.avatar_url);
-    } else {
-      console.log('Sidebar - No avatar URL found');
-    }
-  }, [sellerProfile, getUserAvatar, getUserDisplayName, getUserInitial]);
 
   return (
     <>
@@ -202,6 +190,7 @@ export default function Sidebar() {
                 </span>
                 {getUserAvatar() && (
                   <Image
+                    key={`sidebar-avatar-${sellerProfile?.avatar_url}`}
                     src={getUserAvatar() as string}
                     alt="Profile"
                     width={40}
