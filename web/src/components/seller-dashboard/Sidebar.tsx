@@ -84,6 +84,20 @@ const Sidebar = React.memo(function Sidebar() {
 
   // Extract and memoize avatar URL to prevent unnecessary rerenders
   const avatarUrl = React.useMemo(() => sellerProfile?.avatar_url || null, [sellerProfile?.avatar_url]);
+  
+  // Create a stable key for the avatar image to prevent unnecessary re-renders
+  const avatarKey = React.useMemo(() => {
+    if (!avatarUrl) return 'no-avatar';
+    // Use just the filename part of the URL to make the key stable
+    try {
+      const url = new URL(avatarUrl);
+      const pathname = url.pathname;
+      return pathname.substring(pathname.lastIndexOf('/') + 1);
+    } catch {
+      // If URL parsing fails, use a hash of the URL
+      return `avatar-${avatarUrl}`;
+    }
+  }, [avatarUrl]);
 
   // Get user display name
   const getUserDisplayName = useCallback(() => {
@@ -186,7 +200,7 @@ const Sidebar = React.memo(function Sidebar() {
                 </span>
                 {avatarUrl && (
                   <Image
-                    key={`sidebar-avatar-${avatarUrl}`}
+                    key={`sidebar-${avatarKey}`}
                     src={avatarUrl}
                     alt="Profile"
                     width={40}

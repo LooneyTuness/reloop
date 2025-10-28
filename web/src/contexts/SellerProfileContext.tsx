@@ -51,11 +51,18 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
   const [profile, setProfile] = useState<SellerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const lastFetchedUserIdRef = React.useRef<string | null>(null);
 
   const fetchProfile = useCallback(async () => {
     if (!user) {
       setProfile(null);
       setLoading(false);
+      lastFetchedUserIdRef.current = null;
+      return;
+    }
+
+    // Don't refetch if we already fetched for this user
+    if (lastFetchedUserIdRef.current === user.id) {
       return;
     }
 
@@ -80,6 +87,7 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
       } else {
         setProfile(data);
         setError(null);
+        lastFetchedUserIdRef.current = user.id;
       }
     } catch (err) {
       console.error('Error fetching seller profile:', err);
@@ -91,6 +99,7 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
   }, [user]);
 
   const refreshProfile = useCallback(async () => {
+    lastFetchedUserIdRef.current = null;
     await fetchProfile();
   }, [fetchProfile]);
 
