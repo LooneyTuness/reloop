@@ -12,7 +12,7 @@ import { useDashboardTheme } from '@/contexts/DashboardThemeContext';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 import Notifications from './Notifications';
 
-export default function TopBar() {
+const TopBar = React.memo(function TopBar() {
   const router = useRouter();
   const { user, signOut } = useAuth();
   const { profile: sellerProfile } = useSellerProfile();
@@ -322,4 +322,6 @@ export default function TopBar() {
       )}
     </div>
   );
-}
+});
+
+export default TopBar;

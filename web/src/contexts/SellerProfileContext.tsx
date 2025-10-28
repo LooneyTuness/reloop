@@ -90,11 +90,11 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
     }
   }, [user]);
 
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     await fetchProfile();
-  };
+  }, [fetchProfile]);
 
-  const updateProfile = async (updates: Partial<SellerProfile>): Promise<boolean> => {
+  const updateProfile = useCallback(async (updates: Partial<SellerProfile>): Promise<boolean> => {
     if (!user || !profile) return false;
 
     try {
@@ -132,7 +132,7 @@ export function SellerProfileProvider({ children }: SellerProfileProviderProps) 
       console.error('Error updating seller profile:', err);
       return false;
     }
-  };
+  }, [user, profile]);
 
   useEffect(() => {
     fetchProfile();

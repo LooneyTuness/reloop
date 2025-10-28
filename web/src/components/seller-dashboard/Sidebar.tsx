@@ -24,7 +24,7 @@ const getNavigationItems = (t: (key: string) => string) => [
   { name: t('settings'), href: '/seller-dashboard/settings', icon: Settings },
 ];
 
-export default function Sidebar() {
+const Sidebar = React.memo(function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useAuth();
@@ -236,4 +236,6 @@ export default function Sidebar() {
       </div>
     </>
   );
-}
+});
+
+export default Sidebar;
