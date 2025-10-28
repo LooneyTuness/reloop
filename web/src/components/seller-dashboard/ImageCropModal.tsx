@@ -300,32 +300,44 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                     Please select a crop area to enable the Apply Crop button
                   </div>
                 )}
-                <div style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}>
+                <div 
+                  style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}
+                  onClick={() => {
+                    console.log('Wrapper clicked!', { completedCrop, isMobile });
+                    if (completedCrop) {
+                      console.log('Calling onDownloadCropClick from wrapper...');
+                      onDownloadCropClick();
+                    }
+                  }}
+                >
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={(e) => {
                       console.log('Apply Crop button clicked!', { completedCrop, isMobile });
+                      e.preventDefault();
+                      e.stopPropagation();
                       if (completedCrop) {
-                        console.log('Calling onDownloadCropClick...');
+                        console.log('Calling onDownloadCropClick from onClick...');
                         onDownloadCropClick();
                       } else {
                         console.log('Button is disabled, completedCrop:', completedCrop);
                       }
                     }}
-                    onPointerDown={(e) => {
-                      console.log('Pointer down on button', { completedCrop, pointerType: e.pointerType });
-                      if (completedCrop && e.pointerType === 'touch') {
-                        console.log('Touch detected, triggering crop immediately');
-                        e.stopPropagation();
+                    onTouchEnd={(e) => {
+                      console.log('Touch end on button', { completedCrop, touchType: e.type });
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (completedCrop) {
+                        console.log('Calling onDownloadCropClick from onTouchEnd...');
                         onDownloadCropClick();
                       }
                     }}
-                    disabled={!completedCrop}
                     className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-colors ${
                       completedCrop 
-                        ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800' 
-                        : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                        ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 cursor-pointer' 
+                        : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-50'
                     }`}
+                    aria-disabled={!completedCrop}
                     style={{ 
                       WebkitTapHighlightColor: 'transparent',
                       touchAction: 'manipulation',
