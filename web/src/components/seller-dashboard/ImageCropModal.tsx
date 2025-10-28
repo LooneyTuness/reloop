@@ -195,7 +195,7 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Image Crop Area */}
             <div className="flex-1">
-              <div className="relative max-h-96 overflow-auto">
+              <div className="relative max-h-96 overflow-auto" style={{ touchAction: 'manipulation' }}>
                 <ReactCrop
                   crop={crop}
                   onChange={(_, percentCrop) => {
@@ -205,10 +205,12 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                   onComplete={(c) => {
                     console.log('Crop completed:', c);
                     setCompletedCrop(c);
+                    console.log('completedCrop state updated to:', c);
                   }}
                   aspect={aspect}
                   minWidth={100}
                   minHeight={100}
+                  disabled={false}
                 >
                   <img
                     ref={imgRef}
@@ -301,24 +303,19 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                 <div style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}>
                   <button
                     type="button"
-                    onClick={(e) => {
-                      console.log('Button onClick triggered!', { completedCrop, isMobile });
+                    onClick={() => {
+                      console.log('Apply Crop button clicked!', { completedCrop, isMobile });
                       if (completedCrop) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                        console.log('Calling onDownloadCropClick...');
                         onDownloadCropClick();
+                      } else {
+                        console.log('Button is disabled, completedCrop:', completedCrop);
                       }
                     }}
-                    onTouchStart={(e) => {
-                      console.log('Button onTouchStart triggered!', { completedCrop, isMobile });
-                      if (completedCrop) {
-                        e.stopPropagation();
-                      }
-                    }}
-                    onTouchEnd={(e) => {
-                      console.log('Button onTouchEnd triggered!', { completedCrop, isMobile });
-                      if (completedCrop) {
-                        e.preventDefault();
+                    onPointerDown={(e) => {
+                      console.log('Pointer down on button', { completedCrop, pointerType: e.pointerType });
+                      if (completedCrop && e.pointerType === 'touch') {
+                        console.log('Touch detected, triggering crop immediately');
                         e.stopPropagation();
                         onDownloadCropClick();
                       }
@@ -343,7 +340,8 @@ export default function ImageCropModal({ isOpen, onClose, onCrop, imageSrc }: Im
                       WebkitAppearance: 'none',
                       cursor: completedCrop ? 'pointer' : 'not-allowed',
                       border: 'none',
-                      outline: 'none'
+                      outline: 'none',
+                      msTouchAction: 'manipulation'
                     }}
                   >
                     <Check size={18} />
