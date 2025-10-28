@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Bell, X, Check, AlertCircle, Info, ShoppingBag, Package, DollarSign } from 'lucide-react';
 import { useDashboardLanguage } from '@/contexts/DashboardLanguageContext';
 
@@ -88,12 +88,12 @@ export default function Notifications({ notifications, onMarkAsRead, onMarkAllAs
       <div className="absolute inset-0 bg-black bg-opacity-25" onClick={onClose} />
       
       {/* Notifications Panel */}
-      <div className="absolute right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out">
+      <div className="absolute right-0 top-0 h-full w-full max-w-sm bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between p-4 border-b border-gray-800">
           <div className="flex items-center space-x-2">
-            <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <Bell className="w-5 h-5 text-gray-400" />
+            <h2 className="text-lg font-semibold text-white">
               {t('notifications')}
             </h2>
             {unreadCount > 0 && (

@@ -185,7 +185,7 @@ const ListingsContent = React.memo(function ListingsContent() {
                 placeholder={t('searchProducts')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-700 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -193,7 +193,7 @@ const ListingsContent = React.memo(function ListingsContent() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 border border-gray-700 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">{t('allStatus')}</option>
               <option value="active">{t('statusAvailable')}</option>
@@ -204,7 +204,7 @@ const ListingsContent = React.memo(function ListingsContent() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 border border-gray-700 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="newest">{t('newestFirst')}</option>
               <option value="oldest">{t('oldestFirst')}</option>
@@ -243,8 +243,8 @@ const ListingsContent = React.memo(function ListingsContent() {
             
             
             return (
-              <div key={product.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
-                <div className="aspect-square bg-gray-100 dark:bg-gray-700 relative">
+              <div key={product.id} className="bg-gray-900 rounded-lg shadow-sm border border-gray-800 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="aspect-square bg-gray-800 relative">
                   <div className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs px-1 py-0.5 rounded z-10">
                     #{index + 1}
                   </div>
@@ -296,7 +296,7 @@ const ListingsContent = React.memo(function ListingsContent() {
                     <select
                       value={product.status || 'active'}
                       onChange={(e) => handleStatusUpdate(product.id, e.target.value)}
-                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="text-xs px-2 py-1 border border-gray-700 rounded bg-black text-white"
                     >
                       <option value="active">{t('statusAvailable')}</option>
                       <option value="inactive">{t('statusHidden')}</option>

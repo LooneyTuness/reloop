@@ -258,7 +258,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                 placeholder={t('searchOrders')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-700 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -266,7 +266,7 @@ const OrdersContent = React.memo(function OrdersContent() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium text-sm"
+              className="px-6 py-2 border border-gray-600 rounded-lg bg-black text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium text-sm"
             >
               <option value="all">{t('allOrders')}</option>
               <option value="pending">{t('pending')}</option>
@@ -286,7 +286,7 @@ const OrdersContent = React.memo(function OrdersContent() {
         )}
 
         {/* Orders Table */}
-        <div className="w-full bg-white dark:bg-gray-800 shadow-sm border-t border-b border-gray-200 dark:border-gray-700 overflow-hidden mx-0 sm:mx-0 lg:mx-0 rounded-lg">
+        <div className="w-full bg-gray-900 shadow-sm border-t border-b border-gray-800 overflow-hidden mx-0 sm:mx-0 lg:mx-0 rounded-lg">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -425,7 +425,7 @@ const OrdersContent = React.memo(function OrdersContent() {
                         <select
                           value={order.status}
                           onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
-                          className="text-xs px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium"
+                          className="text-xs px-3 py-2 border border-gray-600 rounded-lg bg-black text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm cursor-pointer font-medium"
                         >
                           <option value="pending" className="py-2">🕐 {t('pending')}</option>
                           <option value="processing" className="py-2">📦 {t('processing')}</option>
@@ -526,7 +526,7 @@ const OrdersContent = React.memo(function OrdersContent() {
               </button>
 
               {/* Image container */}
-              <div className="relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="relative bg-gray-900 rounded-lg overflow-hidden">
                 {/* Image */}
                 <div className="relative">
                   <img
