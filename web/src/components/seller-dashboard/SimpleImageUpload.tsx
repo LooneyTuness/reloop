@@ -173,7 +173,7 @@ export default function SimpleImageUpload({
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {images.map((image, index) => (
             <div key={index} className="relative group">
-              <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 ring-2 ring-gray-200 dark:ring-gray-600 hover:ring-blue-500 dark:hover:ring-blue-400 transition-all">
+              <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-black ring-2 ring-gray-200 dark:ring-gray-600 hover:ring-blue-500 dark:hover:ring-blue-400 transition-all">
                 <Image
                   src={image}
                   alt={`Product image ${index + 1}`}
@@ -219,7 +219,7 @@ export default function SimpleImageUpload({
 
       {/* Empty state when no images */}
       {images.length === 0 && (
-        <div className="py-12 text-center bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="py-12 text-center bg-gray-50 dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700">
           <div className="flex justify-center mb-3">
             <Upload size={56} className="text-gray-400 dark:text-gray-500" />
           </div>
