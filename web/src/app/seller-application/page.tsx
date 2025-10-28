@@ -169,26 +169,26 @@ export default function SellerApplicationPage() {
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/70"></div>
         
-        {/* Header */}
-        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 lg:top-8 lg:left-8 z-20">
-          <h1 className="text-white text-lg sm:text-xl font-medium">vtoraraka.mk</h1>
+        {/* Header - optimized for small screens */}
+        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 md:top-6 md:left-6 lg:top-8 lg:left-8 z-20">
+          <h1 className="text-white text-sm sm:text-base md:text-lg font-medium">vtoraraka.mk</h1>
         </div>
 
         {/* Main content - centered */}
-        <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-md w-full">
-            {/* Loading spinner */}
-            <div className="mb-8 flex justify-center">
-              <Loader2 className="h-12 w-12 animate-spin text-white" />
+        <div className="relative z-10 min-h-screen flex items-center justify-center px-3 sm:px-4 md:px-6">
+          <div className="text-center max-w-xs sm:max-w-md w-full">
+            {/* Loading spinner - smaller on mobile */}
+            <div className="mb-4 sm:mb-6 md:mb-8 flex justify-center">
+              <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 animate-spin text-white" />
             </div>
 
-            {/* Title */}
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            {/* Title - responsive sizing */}
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
               {authLoading || !user ? t('pleaseWait') : t('settingUpYourSellerAccount')}
             </h2>
             
-            {/* Status message */}
-            <p className="text-base sm:text-lg text-gray-300">
+            {/* Status message - responsive sizing */}
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 leading-relaxed">
               {authLoading || !user 
                 ? t('checkingYourAccount') 
                 : isProcessing 
@@ -212,29 +212,29 @@ export default function SellerApplicationPage() {
       {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-black/70"></div>
       
-      {/* Header */}
-      <div className="absolute top-4 left-4 sm:top-6 sm:left-6 lg:top-8 lg:left-8 z-20">
-        <h1 className="text-white text-lg sm:text-xl font-medium">vtoraraka.mk</h1>
-              </div>
+      {/* Header - optimized for small screens */}
+      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 md:top-6 md:left-6 lg:top-8 lg:left-8 z-20">
+        <h1 className="text-white text-sm sm:text-base md:text-lg font-medium">vtoraraka.mk</h1>
+      </div>
 
       {/* Main content - centered */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-md w-full">
-          {/* Loading spinner */}
-          <div className="mb-8 flex justify-center">
-            <Loader2 className="h-12 w-12 animate-spin text-white" />
-              </div>
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-3 sm:px-4 md:px-6">
+        <div className="text-center max-w-xs sm:max-w-md w-full">
+          {/* Loading spinner - smaller on mobile */}
+          <div className="mb-4 sm:mb-6 md:mb-8 flex justify-center">
+            <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 animate-spin text-white" />
+          </div>
 
-          {/* Title */}
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+          {/* Title - responsive sizing */}
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
             {t('pleaseWait')}
           </h2>
           
-          {/* Status message */}
-          <p className="text-base sm:text-lg text-gray-300">
+          {/* Status message - responsive sizing */}
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 leading-relaxed">
             {t('loading')}
           </p>
-            </div>
+        </div>
       </div>
     </div>
   );
