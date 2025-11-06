@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Link from "next/link";
 
 export default function SellerApplicationSuccess() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
@@ -74,7 +74,7 @@ export default function SellerApplicationSuccess() {
             {t("followUsForLatest")}
           </p>
           <a
-            href="https://www.instagram.com/relovedmk/"
+            href="https://www.instagram.com/vtoraraka.mkd/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium"

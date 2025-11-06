@@ -78,7 +78,7 @@ export default function LaunchPage() {
                 Возбудени сте да стапите во контакт со нас?
               </p>
               <p className="text-base sm:text-lg leading-relaxed">
-                Заследете не на <a href="https://instagram.com/vtorarakamk" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline font-medium">@vtorarakamk</a> на Инстаграм за новости и информации.
+                Заследете не на <a href="https://www.instagram.com/vtoraraka.mkd/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline font-medium">@vtoraraka.mkd</a> на Инстаграм за новости и информации.
               </p>
             </div>
           </div>

@@ -207,7 +207,7 @@ const DashboardContent = React.memo(function DashboardContent() {
               <span className="font-medium">+ 389 75 251 009</span>
             </a>
             <a 
-              href="https://instagram.com/vtorarakamk" 
+              href="https://www.instagram.com/vtoraraka.mkd/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-3 px-4 py-3 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-900/50 transition-colors"

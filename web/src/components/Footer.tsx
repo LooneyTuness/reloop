@@ -113,7 +113,7 @@ export default function Footer() {
               </span>
               <div className="flex">
                 <a 
-                  href="https://instagram.com/vtorarakamk" 
+                  href="https://www.instagram.com/vtoraraka.mkd/" 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-14 h-14 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-xl flex items-center justify-center hover:from-purple-600 hover:via-pink-600 hover:to-orange-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"

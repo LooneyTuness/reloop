@@ -19,8 +19,7 @@ export async function POST(req: NextRequest) {
       storeName,
       websiteSocial,
       productDescription,
-      understandsApplication,
-      language = "mk"
+      understandsApplication
     }: {
       fullName: string;
       email: string;
@@ -28,7 +27,6 @@ export async function POST(req: NextRequest) {
       websiteSocial?: string;
       productDescription: string;
       understandsApplication: boolean;
-      language?: string;
     } = await req.json();
 
     // Validate required fields
@@ -126,8 +124,6 @@ export async function POST(req: NextRequest) {
     }
 
     // Send confirmation email to applicant
-    const isMacedonian = language === "mk";
-    
     const subject = "Seller Application Confirmation - vtoraraka";
 
     const emailContent = `
@@ -164,7 +160,7 @@ export async function POST(req: NextRequest) {
         
         <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
           <p style="color: #6b7280; font-size: 14px;">
-            Follow us on <a href="https://www.instagram.com/relovedmk/" style="color: #059669;">Instagram</a> for the latest pieces!
+            Follow us on <a href="https://www.instagram.com/vtoraraka.mkd/" style="color: #059669;">Instagram</a> for the latest pieces!
           </p>
           <p style="color: #9ca3af; font-size: 12px; margin-top: 10px;">
             © 2024 vtoraraka.mk. All rights reserved.
