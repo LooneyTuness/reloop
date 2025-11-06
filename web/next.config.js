@@ -14,6 +14,7 @@ const nextConfig = {
     domains: [
       process.env.NEXT_PUBLIC_SUPABASE_URL?.replace("https://", "") ||
         "localhost",
+      "vtoraraka.mk",
       "localhost",
       "127.0.0.1",
     ],
@@ -61,7 +62,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://app.posthog.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://app.posthog.com;",
+              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://app.posthog.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://app.posthog.com https://vtoraraka.mk;",
           },
         ],
       },
