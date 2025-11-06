@@ -24,7 +24,11 @@ export default function TestMagicLinkPage() {
       console.log('Testing magic link for:', email);
       
       // Test the magic link configuration
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      // In development (localhost), always use window.location.origin to avoid port mismatches
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const baseUrl = isLocalhost 
+        ? window.location.origin 
+        : (process.env.NEXT_PUBLIC_APP_URL || window.location.origin);
       const redirectUrl = `${baseUrl}/auth/confirm`;
       
       console.log('Magic link redirect URL:', redirectUrl);

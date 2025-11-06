@@ -17,8 +17,18 @@ export default function AuthCallbackPage() {
       try {
         console.log('AuthCallback: Handling auth callback...');
         
-        // Get the redirect URL from query params
-        const redirectUrl = searchParams.get('redirect') || '/';
+        // Get the redirect URL from query params, or fallback to localStorage
+        let redirectUrl = searchParams.get('redirect') || '/';
+        if (redirectUrl === '/' && typeof window !== 'undefined') {
+          // Check localStorage for stored redirect
+          const storedRedirect = localStorage.getItem('auth_redirect');
+          if (storedRedirect) {
+            redirectUrl = storedRedirect;
+            console.log('AuthCallback: Using stored redirect from localStorage:', redirectUrl);
+            // Clear it after use
+            localStorage.removeItem('auth_redirect');
+          }
+        }
         console.log('AuthCallback: Redirect URL:', redirectUrl);
         
         // Get the session - force refresh if this is a confirmation redirect

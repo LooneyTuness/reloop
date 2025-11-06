@@ -14,6 +14,7 @@ import ConditionalNavbar from "@/components/ConditionalNavbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageTransitionWrapper from "@/components/PageTransitionWrapper";
 import GlobalErrorHandler from "@/components/GlobalErrorHandler";
+import { PostHogPageView } from "@/components/PostHogPageView";
 
 
 export const metadata: Metadata = {
@@ -69,6 +70,7 @@ export default function RootLayout({
                       <CategoryProvider>
                         <DropdownStateProvider>
                           <GlobalProvider>
+                            <PostHogPageView />
                             <ConditionalNavbar />
                             <PageTransitionWrapper>
                               {children}

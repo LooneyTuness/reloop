@@ -48,10 +48,16 @@ export default function AuthTest() {
       // Store the current page as redirect URL (dashboard for sellers)
       localStorage.setItem('auth_redirect', '/seller-dashboard');
       
+      // In development (localhost), always use window.location.origin to avoid port mismatches
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const baseUrl = isLocalhost 
+        ? window.location.origin 
+        : (process.env.NEXT_PUBLIC_APP_URL || window.location.origin);
+      
       const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/auth/confirm?redirect=${encodeURIComponent('/seller-dashboard')}`
+          emailRedirectTo: `${baseUrl}/auth/confirm?redirect=${encodeURIComponent('/seller-dashboard')}`
         }
       });
       

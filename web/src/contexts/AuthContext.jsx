@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
+import posthog from "posthog-js";
 
 const AuthContext = createContext();
 
@@ -38,6 +39,19 @@ export function AuthProvider({ children }) {
           setUser(session.user);
           setLoading(false);
 
+          // Identify user in PostHog
+          if (typeof window !== "undefined") {
+            try {
+              posthog.identify(session.user.id, {
+                email: session.user.email,
+                user_id: session.user.id,
+              });
+            } catch (error) {
+              // PostHog might not be initialized yet, ignore
+              console.debug("PostHog not ready for identification:", error);
+            }
+          }
+
           // Clean up URL parameters if this was a confirmation redirect
           const urlParams = new URLSearchParams(window.location.search);
           if (urlParams.get("confirmed") === "true") {
@@ -71,6 +85,22 @@ export function AuthProvider({ children }) {
                 );
                 setUser(retrySession.user);
                 setLoading(false);
+
+                // Identify user in PostHog
+                if (typeof window !== "undefined") {
+                  try {
+                    posthog.identify(retrySession.user.id, {
+                      email: retrySession.user.email,
+                      user_id: retrySession.user.id,
+                    });
+                  } catch (error) {
+                    // PostHog might not be initialized yet, ignore
+                    console.debug(
+                      "PostHog not ready for identification:",
+                      error
+                    );
+                  }
+                }
 
                 // Clean up URL parameters
                 const url = new URL(window.location);
@@ -106,17 +136,50 @@ export function AuthProvider({ children }) {
       // Handle different auth events
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
         console.log("AuthContext: Signed in or token refreshed, updating user");
-        setUser(session?.user ?? null);
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
         setLoading(false);
+
+        // Identify user in PostHog
+        if (currentUser && typeof window !== "undefined") {
+          try {
+            posthog.identify(currentUser.id, {
+              email: currentUser.email,
+              user_id: currentUser.id,
+            });
+          } catch (error) {
+            // PostHog might not be initialized yet, ignore
+            console.debug("PostHog not ready for identification:", error);
+          }
+        }
       } else if (event === "SIGNED_OUT") {
         console.log("AuthContext: Signed out");
         setUser(null);
         setLoading(false);
+
+        // Reset PostHog user
+        if (typeof window !== "undefined") {
+          try {
+            posthog.reset();
+          } catch (error) {
+            // PostHog might not be initialized yet, ignore
+            console.debug("PostHog not ready for reset:", error);
+          }
+        }
       } else {
         // For other events, update user state
         console.log("AuthContext: Other auth event, updating user state");
-        setUser(session?.user ?? null);
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
         setLoading(false);
+
+        // Identify user in PostHog if user exists
+        if (currentUser && typeof window !== "undefined" && posthog.__loaded) {
+          posthog.identify(currentUser.id, {
+            email: currentUser.email,
+            user_id: currentUser.id,
+          });
+        }
       }
     });
 
@@ -127,6 +190,16 @@ export function AuthProvider({ children }) {
     const { error } = await supabase.auth.signOut();
     if (error) {
       // Handle sign out error silently in production
+    } else {
+      // Reset PostHog user on sign out
+      if (typeof window !== "undefined") {
+        try {
+          posthog.reset();
+        } catch (error) {
+          // PostHog might not be initialized yet, ignore
+          console.debug("PostHog not ready for reset:", error);
+        }
+      }
     }
   };
 

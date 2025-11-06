@@ -8,8 +8,10 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
   const code = searchParams.get('code')
-  const redirect = searchParams.get('redirect')
+  let redirect = searchParams.get('redirect')
   
+  // If no redirect in URL, we'll let the client-side callback handle it via localStorage
+  // This helps avoid 504 errors when Supabase doesn't support query params in redirect URLs
   console.log('Confirm route called with:', { token_hash: !!token_hash, type, code: !!code, redirect })
 
   // Add error handling for missing parameters
